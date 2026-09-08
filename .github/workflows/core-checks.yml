@@ -103,7 +103,7 @@ jobs:
         working-directory: contracts/dart
       - run: flutter pub get --enforce-lockfile
         working-directory: apps/mobile
-      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test
+      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
         working-directory: apps/mobile
       - run: flutter analyze && flutter test
         working-directory: apps/mobile
@@ -129,7 +129,7 @@ jobs:
           target: google_apis
           profile: pixel_6
           disable-animations: true
-          script: cd apps/mobile && flutter test integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080
+          script: cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080
 
   flutter-ios:
     name: flutter-ios
@@ -164,7 +164,7 @@ jobs:
           xcrun simctl bootstatus "$device" -b
           echo "IOS_SIMULATOR=$device" >> "$GITHUB_ENV"
       - name: iOS Simulator connects through the generated Dart client
-        run: flutter test integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080
         working-directory: apps/mobile
       - name: Install the regular shell and capture it (integration test app is removed after tests)
         run: |
