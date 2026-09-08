@@ -296,7 +296,7 @@
       "title": "Monorepo compilável, contratos e CI",
       "release": "v1.0",
       "area": "foundation",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-000",

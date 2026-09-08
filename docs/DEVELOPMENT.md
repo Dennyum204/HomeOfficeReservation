@@ -87,9 +87,13 @@ Ver [STATUS.md](../STATUS.md), [PR #25](https://github.com/Dennyum204/HomeOffice
 
 O check foi observado no [run real](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655), antes de o tornar obrigatório. Estes são os checks documentais disponíveis em HO-000; HO-002 acrescentará os checks reais das aplicações. Não foi exigida aprovação independente impossível, nem criado Project board, release/tag ou deployment.
 
+## Proteções atualizadas em HO-002
+
+Em 2026-09-08, após observar os nomes reais dos jobs, a API GitHub confirmou como obrigatórios **project-docs, backend-contracts, web, flutter-android e flutter-ios**, todos de GitHub Actions (`app_id: 15368`), com `strict: true`. Foram preservadas as restantes proteções HO-000, incluindo zero aprovações independentes e proibição de force-push/eliminação. Um check vermelho bloqueia a entrega e o merge; o PR #28 só sai de draft quando todos passarem no último commit. [Checks reais do PR](https://github.com/Dennyum204/HomeOfficeReservation/pull/28/checks). Nenhum merge ou auto-merge foi executado.
+
 ## Autenticação GitHub neste ambiente
 
-O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. O check obrigatório continua `project-docs`. HO-002 acrescentará builds reais do core conforme ADR-004.
+O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. HO-002 acrescenta os quatro checks obrigatórios do core abaixo, conforme ADR-004.
 
 GitHub CLI e connector têm autenticações separadas. Nesta entrega, o connector recusou escrita com HTTP 403; a autenticação GitHub CLI resolveu o acesso Git e API, verificado com permissão ADMIN. Com `gh` instalado, o procedimento é:
 
