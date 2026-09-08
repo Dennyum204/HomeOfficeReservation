@@ -1,0 +1,8 @@
+# Copy to .github/CODEOWNERS after resolving real GitHub users/teams.
+# Replace OWNER_LOGIN; do not activate placeholder identities.
+# * @OWNER_LOGIN
+# /apps/api/ @BACKEND_OWNER
+# /apps/web/ @WEB_OWNER
+# /apps/mobile/ @MOBILE_OWNER
+# /contracts/ @BACKEND_OWNER @WEB_OWNER @MOBILE_OWNER
+# /docs/adr/ @OWNER_LOGIN

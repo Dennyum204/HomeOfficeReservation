@@ -1,0 +1,41 @@
+name: Funcionalidade
+description: Trabalho ligado ao backlog versionado
+title: "[HO-XXX] "
+body:
+  - type: input
+    id: work_id
+    attributes:
+      label: Work item ID
+      description: ID estável em docs/backlog.json; não é o número desta issue.
+      placeholder: HO-004
+    validations:
+      required: true
+  - type: dropdown
+    id: release
+    attributes:
+      label: Release
+      options:
+        - v1.0
+        - v1.1
+        - v1.2
+        - v2.0
+    validations:
+      required: true
+  - type: textarea
+    id: objective
+    attributes:
+      label: Problema e resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceitação
+      description: Comportamentos observáveis e exemplos.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependências e áreas afetadas
+      description: IDs HO, contratos, credenciais de teste e decisões pendentes.

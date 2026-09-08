@@ -1,0 +1,83 @@
+# Roadmap
+
+Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
+
+Atualizado: 2026-09-08.
+
+Sequência proposta; datas de entrega dependem de acessos, capacidade e aceitação. Nenhuma release foi lançada.
+
+Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
+
+A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.md).
+
+## v1.0 — Primeira versão utilizável
+
+**Quando:** Após o estudo Microsoft, implementação e gates de aceitação; piloto inicial de duas semanas.
+
+**Gate:** HO-000 a HO-012 integrados, duas contas reais autorizadas e critérios de QUALITY.md cumpridos.
+
+**Reavaliar:** No fecho do estudo Outlook e semanalmente durante a construção.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-001 | Identidade, papéis e relação colaborador/chefe | HO-001, HO-003 |
+| FEAT-002 | Dashboard, calendário e padrão base explícito | HO-005, HO-010 |
+| FEAT-003 | Pedidos por datas, rascunhos e comentários | HO-004, HO-005, HO-010 |
+| FEAT-004 | Aprovação parcial, contrapropostas e revisões | HO-004, HO-005, HO-010 |
+| FEAT-005 | Compromissos presenciais, leitura e conflitos | HO-006, HO-011 |
+| FEAT-006 | Tarefas simples associadas a projetos/presenças | HO-006, HO-011 |
+| FEAT-007 | Notificações internas e push mobile | HO-007, HO-011 |
+| FEAT-008 | Sincronização Outlook completa no âmbito V1 | HO-001, HO-008, HO-009, HO-011 |
+| FEAT-009 | Histórico, privacidade e recuperação | HO-003, HO-004, HO-009, HO-011 |
+| FEAT-010 | Férias/indisponibilidade manual para planeamento | HO-004, HO-005, HO-010 |
+
+## v1.1 — Rotina e acompanhamento
+
+**Quando:** Primeira iteração após duas semanas de utilização da V1; correções críticas têm prioridade.
+
+**Gate:** Piloto V1 aceite e HO-101 a HO-103 integrados.
+
+**Reavaliar:** Na retrospetiva do piloto e antes de iniciar a iteração.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-011 | Lembretes, resumo semanal e email | HO-101 |
+| FEAT-012 | Exportação mensal e totais por período | HO-102 |
+| FEAT-013 | Preferências de notificações e idiomas PT/EN/DE | HO-103 |
+
+## v1.2 — Planeamento mais flexível
+
+**Quando:** Iteração seguinte, após validar V1.1 e confirmar feedback sobre recorrência/viagens.
+
+**Gate:** V1.1 estável e HO-201 a HO-203 integrados.
+
+**Reavaliar:** No lançamento de V1.1.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-014 | Padrões recorrentes de pedidos | HO-201 |
+| FEAT-015 | Meios dias, horários e dias de deslocação | HO-202 |
+| FEAT-016 | Indicador de viagem já reservada | HO-203 |
+| FEAT-017 | Planeamento provisório e datas flexíveis | HO-203 |
+
+## v2.0 — Expansão por necessidade comprovada
+
+**Quando:** Depois de estabilizar V1.x; selecionar o âmbito antes de iniciar cada tarefa.
+
+**Gate:** Necessidade confirmada, ADRs de expansão e aceitação dos itens selecionados. Mudanças de âmbito exigem atualização versionada.
+
+**Reavaliar:** No lançamento de V1.2 e em cada proposta de expansão.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-018 | Vários colaboradores e substituto do aprovador | HO-301 |
+| FEAT-019 | Outlook com calendários adicionais/partilhados | HO-302 |
+| FEAT-020 | Integração Google Calendar | HO-303 |
+| FEAT-021 | Anexos e gestão de tarefas mais completa | HO-304 |
+| FEAT-022 | Consulta e edição offline com resolução de conflitos | HO-305 |
+
+## Regra de acompanhamento
+
+Rever tarefas abertas no fecho de cada PR, o plano da release semanalmente durante o desenvolvimento e as funcionalidades futuras no marco indicado. Estes são rituais do projeto; não foi criado um lembrete automático fora da aplicação.
+
+Uma data de lançamento só passa a compromisso quando acessos, capacidade e âmbito forem confirmados. Defeitos críticos precedem novas funcionalidades.
