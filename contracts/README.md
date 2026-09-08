@@ -4,7 +4,7 @@ HO-002 implementa `GET /api/v1/workspace` e gera [openapi.json](openapi.json) a 
 
 ## Regenerar e verificar
 
-Requer .NET SDK de `global.json`, Java Temurin 21.0.12.1+1 e Python 3.10+. Restaurar o backend antes. Na raiz:
+Requer .NET SDK de `global.json`, Java Temurin 21.0.12+8 e Python 3.10+. Restaurar o backend antes. Na raiz:
 
 ```sh
 dotnet restore apps/api/HomeOffice.slnx --locked-mode

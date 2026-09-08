@@ -14,7 +14,7 @@ Estudo/probe Microsoft preservados como referência histórica opcional. Onboard
 
 ## Começar
 
-Pré-requisitos: .NET SDK **10.0.400**, Node **24.20.0**/npm **11.19.0**, Flutter **3.47.2** (Dart 3.13.2), Python 3.10+ e Docker/Compose v2. Java **21.0.12.1+1** para contratos/Android; Android SDK e emulador para Android; macOS/Xcode para iOS. [Versões/fontes](docs/HO-002-FOUNDATION.md). Sem contas/serviços Microsoft.
+Pré-requisitos: .NET SDK **10.0.400**, Node **24.20.0**/npm **11.19.0**, Flutter **3.47.2** (Dart 3.13.2), Python 3.10+ e Docker/Compose v2. Java **21.0.12+8** para contratos/Android; Android SDK e emulador para Android; macOS/Xcode para iOS. [Versões/fontes](docs/HO-002-FOUNDATION.md). Sem contas/serviços Microsoft.
 
 Na raiz, configuração inicial e backend:
 
