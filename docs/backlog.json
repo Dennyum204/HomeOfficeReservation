@@ -351,7 +351,7 @@
       "title": "Autenticação, membros e autorização",
       "release": "v1.0",
       "area": "backend",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-002"
@@ -370,7 +370,9 @@
         "Sessão/refresh expirados, logout, conta desativada, security stamp e armazenamento seguro mobile têm testes; nenhuma dependência de Entra/Graph."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/4",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/29"
+      ],
       "scope_history": [
         {
           "date": "2026-09-08",
