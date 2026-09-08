@@ -1,0 +1,28 @@
+name: Defeito
+description: Comportamento observável incorreto
+title: "[Bug] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Resultado esperado e observado
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Passos para reproduzir
+      description: Usar dados fictícios; não incluir tokens ou conteúdo privado Outlook.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Plataforma e versão
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto e evidência
+      description: Perda de dados, acesso indevido, datas erradas ou outro efeito concreto.

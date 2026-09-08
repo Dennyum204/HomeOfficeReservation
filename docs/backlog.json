@@ -1,0 +1,750 @@
+{
+  "schema_version": 1,
+  "project": "HomeOfficeReservation",
+  "updated_at": "2026-09-08",
+  "planning_note": "Sequência proposta; datas de entrega dependem de acessos, capacidade e aceitação. Nenhuma release foi lançada.",
+  "releases": [
+    {
+      "id": "v1.0",
+      "title": "Primeira versão utilizável",
+      "timing": "Após o estudo Microsoft, implementação e gates de aceitação; piloto inicial de duas semanas.",
+      "gate": "HO-000 a HO-012 integrados, duas contas reais autorizadas e critérios de QUALITY.md cumpridos.",
+      "review_trigger": "No fecho do estudo Outlook e semanalmente durante a construção.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1"
+    },
+    {
+      "id": "v1.1",
+      "title": "Rotina e acompanhamento",
+      "timing": "Primeira iteração após duas semanas de utilização da V1; correções críticas têm prioridade.",
+      "gate": "Piloto V1 aceite e HO-101 a HO-103 integrados.",
+      "review_trigger": "Na retrospetiva do piloto e antes de iniciar a iteração.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/2"
+    },
+    {
+      "id": "v1.2",
+      "title": "Planeamento mais flexível",
+      "timing": "Iteração seguinte, após validar V1.1 e confirmar feedback sobre recorrência/viagens.",
+      "gate": "V1.1 estável e HO-201 a HO-203 integrados.",
+      "review_trigger": "No lançamento de V1.1.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/3"
+    },
+    {
+      "id": "v2.0",
+      "title": "Expansão por necessidade comprovada",
+      "timing": "Depois de estabilizar V1.x; selecionar o âmbito antes de iniciar cada tarefa.",
+      "gate": "Necessidade confirmada, ADRs de expansão e aceitação dos itens selecionados. Mudanças de âmbito exigem atualização versionada.",
+      "review_trigger": "No lançamento de V1.2 e em cada proposta de expansão.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/4"
+    }
+  ],
+  "features": [
+    {
+      "id": "FEAT-001",
+      "title": "Identidade, papéis e relação colaborador/chefe",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-002",
+      "title": "Dashboard, calendário e padrão base explícito",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-003",
+      "title": "Pedidos por datas, rascunhos e comentários",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-004",
+      "title": "Aprovação parcial, contrapropostas e revisões",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-005",
+      "title": "Compromissos presenciais, leitura e conflitos",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-006",
+      "title": "Tarefas simples associadas a projetos/presenças",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-007",
+      "title": "Notificações internas e push mobile",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-008",
+      "title": "Sincronização Outlook completa no âmbito V1",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-009",
+      "title": "Histórico, privacidade e recuperação",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-010",
+      "title": "Férias/indisponibilidade manual para planeamento",
+      "release": "v1.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-011",
+      "title": "Lembretes, resumo semanal e email",
+      "release": "v1.1",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-012",
+      "title": "Exportação mensal e totais por período",
+      "release": "v1.1",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-013",
+      "title": "Preferências de notificações e idiomas PT/EN/DE",
+      "release": "v1.1",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-014",
+      "title": "Padrões recorrentes de pedidos",
+      "release": "v1.2",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-015",
+      "title": "Meios dias, horários e dias de deslocação",
+      "release": "v1.2",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-016",
+      "title": "Indicador de viagem já reservada",
+      "release": "v1.2",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-017",
+      "title": "Planeamento provisório e datas flexíveis",
+      "release": "v1.2",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-018",
+      "title": "Vários colaboradores e substituto do aprovador",
+      "release": "v2.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-019",
+      "title": "Outlook com calendários adicionais/partilhados",
+      "release": "v2.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-020",
+      "title": "Integração Google Calendar",
+      "release": "v2.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-021",
+      "title": "Anexos e gestão de tarefas mais completa",
+      "release": "v2.0",
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-022",
+      "title": "Consulta e edição offline com resolução de conflitos",
+      "release": "v2.0",
+      "status": "planned"
+    }
+  ],
+  "work_items": [
+    {
+      "id": "HO-000",
+      "title": "Repositório, documentação e tracking GitHub",
+      "release": "v1.0",
+      "area": "docs",
+      "status": "review",
+      "owner": "Fernando + Codex",
+      "depends_on": [],
+      "features": [],
+      "acceptance": [
+        "Starter integrado na raiz a partir da história real; commit bootstrap vazio apenas se o GitHub não tiver commits; branch docs/ho-000-project-foundation.",
+        "README e .gitignore descrevem o setup real e protegem outputs, configuração local, segredos e chaves sem excluir lockfiles, migrações ou exemplos seguros.",
+        "Documentos confirmam ASP.NET Core/.NET 10, PostgreSQL/EF Core, React/TypeScript e Flutter Android/iOS; Outlook obrigatório na V1; conta Microsoft e alojamento permanecem por validar.",
+        "Os 24 trabalhos, incluindo releases futuras, têm issues reais sem duplicados, critérios de aceitação, dependências, labels de release/área e milestones onde suportados; URLs no JSON.",
+        "AGENTS.md atribui branches, commits, issues e preparação de PRs ao Codex; exige evidência de merge e reconciliação de estados antes de verificar dependências; Fernando revê e faz merge, sem auto-merge.",
+        "Validação documental passa e documentos derivados estão atualizados; PR real registado, sem draft, CI relevante verde no último commit e sem conflitos.",
+        "Proteções documentadas da main configuradas e verificadas onde permitido, com nomes reais de checks e sem aprovação independente obrigatória para mantenedor único."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/1",
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/25"
+      ]
+    },
+    {
+      "id": "HO-001",
+      "title": "Estudo de identidade Microsoft e Outlook",
+      "release": "v1.0",
+      "area": "integration",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-000"
+      ],
+      "features": [
+        "FEAT-008",
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Tipo de conta/mailbox e políticas de consentimento identificados sem guardar segredos.",
+        "Login e fluxo de tokens API/Graph definidos, incluindo viabilidade Flutter.",
+        "Evento de teste próprio criado, alterado e removido com as permissões previstas.",
+        "Leitura delta, datas all-day e revogação/reconexão verificadas ou limitações explicitamente registadas.",
+        "ADR-002 atualizado com evidência; não confundir testes simulados com Graph real."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/2",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-002",
+      "title": "Monorepo compilável, contratos e CI",
+      "release": "v1.0",
+      "area": "foundation",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-000"
+      ],
+      "features": [],
+      "acceptance": [
+        "Projetos .NET, React e Flutter compilam com versões/lockfiles fixados.",
+        "Ambiente PostgreSQL local e configuração de exemplo sem segredos disponíveis.",
+        "OpenAPI e geração TypeScript/Dart reproduzíveis com verificação de diff.",
+        "CI de cada stack executa checks reais; não aceita código existente com jobs silenciosamente ignorados.",
+        "Comandos de setup/build/test estão documentados nas áreas correspondentes."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/3",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-003",
+      "title": "Autenticação, membros e autorização",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-001",
+        "HO-002"
+      ],
+      "features": [
+        "FEAT-001",
+        "FEAT-009"
+      ],
+      "acceptance": [
+        "Web usa sessão BFF com proteção CSRF; mobile obtém token destinado à API.",
+        "Colaborador/chefe pertencem a uma relação configurada; autoaprovação é negada.",
+        "Reads/writes por ID verificam organização, papel e relação, incluindo casos de negação.",
+        "Bootstrap de admin não permite atribuição livre de papéis pelo utilizador.",
+        "Login válido e sessão expirada demonstrados nas duas interfaces base."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/4",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-004",
+      "title": "Planeamento e aprovação transacional na API",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-003"
+      ],
+      "features": [
+        "FEAT-003",
+        "FEAT-004",
+        "FEAT-009",
+        "FEAT-010"
+      ],
+      "acceptance": [
+        "Rascunhos, submissão, retirada e decisões por subconjunto de dias funcionam.",
+        "Revisões/contrapropostas preservam datas já aprovadas até decisão final.",
+        "PlanDay distingue localização, disponibilidade, origem e versão.",
+        "Concorrência por colaborador e idempotência verificadas com PostgreSQL.",
+        "Auditoria e outbox gravadas na mesma transação; comentários têm contexto e autor."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/5",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-005",
+      "title": "Calendário Web e fluxos de pedido/decisão",
+      "release": "v1.0",
+      "area": "web",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-004"
+      ],
+      "features": [
+        "FEAT-002",
+        "FEAT-003",
+        "FEAT-004",
+        "FEAT-010"
+      ],
+      "acceptance": [
+        "Calendário mês/semana e dashboard mostram padrão base, confirmado e pendente de forma distinta.",
+        "Colaborador submete cinco dias e chefe aprova três através da Web.",
+        "Estados loading/erro/versão antiga mantêm rascunhos e recuperam corretamente.",
+        "Marcação manual de indisponibilidade não sobrescreve datas aprovadas.",
+        "Fluxo principal funciona por teclado e em largura reduzida."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/6",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-006",
+      "title": "Presenças, resolução de conflitos e tarefas",
+      "release": "v1.0",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-004"
+      ],
+      "features": [
+        "FEAT-005",
+        "FEAT-006"
+      ],
+      "acceptance": [
+        "Chefe cria presença com motivo, máquina/projeto e datas; colaborador confirma leitura da revisão.",
+        "Sobreposição com remoto aprovado gera NeedsResolution e preserva aprovação.",
+        "Resolução explícita atualiza presenças/plano atomicamente; corrida concorrente tem teste.",
+        "Tarefas têm responsável, prazo, estado e RequiresOnsite sem impor presença automaticamente.",
+        "API e Web expõem fluxo completo; contrato permite a implementação mobile."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/7",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-007",
+      "title": "Notificações duráveis e infraestrutura push",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-004"
+      ],
+      "features": [
+        "FEAT-007"
+      ],
+      "acceptance": [
+        "Submissão, decisão, mudança, presença e atribuição geram notificação para o destinatário correto.",
+        "Outbox e notificações internas deduplicam por evento/destinatário.",
+        "Registo/rotação/remoção de dispositivos e estado lido são autorizados.",
+        "Push contém resumo mínimo e deep link; não executa aprovações.",
+        "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/8",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-008",
+      "title": "Publicação de datas confirmadas no Outlook",
+      "release": "v1.0",
+      "area": "integration",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-001",
+        "HO-004",
+        "HO-007"
+      ],
+      "features": [
+        "FEAT-008"
+      ],
+      "acceptance": [
+        "Ligação delegada ao calendário principal guarda tokens apenas no backend.",
+        "Aprovação cria eventos só para as datas explícitas confirmadas; dias pendentes não são publicados.",
+        "Revisão/cancelamento altera ou remove apenas eventos com mapeamento válido.",
+        "Retry/timeout, ordenação de versões e data all-day não duplicam nem deslocam eventos.",
+        "API expõe estado de ligação/publicação, sem expor tokens."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/9",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-009",
+      "title": "Importação Outlook, webhooks e divergências",
+      "release": "v1.0",
+      "area": "integration",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-008"
+      ],
+      "features": [
+        "FEAT-008",
+        "FEAT-009"
+      ],
+      "acceptance": [
+        "Delta percorre páginas e guarda cursor por janela fixa; cursor inválido recupera.",
+        "Webhooks são validados, enfileirados e reconciliados; subscrições renovam antes de expirar.",
+        "Reconciliação periódica recupera notificações perdidas e respeita throttling.",
+        "Eventos privados são reduzidos a disponibilidade; próprios eventos não geram falsos conflitos.",
+        "Edição/apagamento externo gera divergência resolúvel, sem mudar aprovação.",
+        "Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/10",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-010",
+      "title": "Mobile: calendário e pedidos para ambos os papéis",
+      "release": "v1.0",
+      "area": "mobile",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-004"
+      ],
+      "features": [
+        "FEAT-002",
+        "FEAT-003",
+        "FEAT-004",
+        "FEAT-010"
+      ],
+      "acceptance": [
+        "Android/iOS apresentam mês compacto, agenda e detalhe do pedido.",
+        "Colaborador submete e chefe aprova parte dos dias no mobile.",
+        "Dados vêm do cliente gerado e convergem com a Web/API.",
+        "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
+        "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/11",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-011",
+      "title": "Integração das interfaces e testes de aceitação",
+      "release": "v1.0",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-005",
+        "HO-006",
+        "HO-007",
+        "HO-009",
+        "HO-010"
+      ],
+      "features": [
+        "FEAT-005",
+        "FEAT-006",
+        "FEAT-007",
+        "FEAT-008",
+        "FEAT-009"
+      ],
+      "acceptance": [
+        "Web e mobile completam presença, conflito, tarefa, notificações e gestão Outlook.",
+        "Push real abre o detalhe autenticado; permissão recusada mantém caixa interna.",
+        "Cenário cruzado: pedido Web, decisão mobile e evento Outlook correto.",
+        "Autorização negativa, concorrência, DST, retries e divergências têm evidência.",
+        "Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/12",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-012",
+      "title": "Staging, distribuição privada e piloto V1",
+      "release": "v1.0",
+      "area": "operations",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-011"
+      ],
+      "features": [],
+      "acceptance": [
+        "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+        "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+        "Worker sempre ativo, webhooks públicos e falhas de sync observáveis.",
+        "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+        "Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-101",
+      "title": "Lembretes e resumo semanal por email",
+      "release": "v1.1",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [
+        "FEAT-011"
+      ],
+      "acceptance": [
+        "Pedidos pendentes têm lembrete configurável sem spam.",
+        "Resumo semanal inclui datas confirmadas, pendentes e presenças.",
+        "Email respeita destinatário, idioma/zona e preferências.",
+        "Entregas têm deduplicação e não expõem conteúdo privado Outlook."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/14",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-102",
+      "title": "Exportação e resumos mensais",
+      "release": "v1.1",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [
+        "FEAT-012"
+      ],
+      "acceptance": [
+        "Exportação mensal legível separa aprovados, pendentes, presença e indisponibilidade.",
+        "Totais seguem as mesmas regras do calendário e distinguem padrão base de confirmação.",
+        "Acesso ao relatório segue a relação de gestão; não inclui detalhes privados de calendário."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/15",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-103",
+      "title": "Preferências de notificação e idiomas",
+      "release": "v1.1",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [
+        "FEAT-013"
+      ],
+      "acceptance": [
+        "Preferências por canal/tipo e períodos silenciosos guardadas por utilizador.",
+        "Textos PT-PT, EN e DE cobrem fluxos essenciais sem strings misturadas.",
+        "Formato de datas/zona é consistente nas duas interfaces e notificações."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/16",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-201",
+      "title": "Pedidos recorrentes",
+      "release": "v1.2",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-101",
+        "HO-102",
+        "HO-103"
+      ],
+      "features": [
+        "FEAT-014"
+      ],
+      "acceptance": [
+        "Padrão semanal gera proposta com pré-visualização e horizonte limitado.",
+        "Exceções e conflitos são visíveis antes de submeter.",
+        "Alterar uma ocorrência não muda retroativamente todas as aprovações da série."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/17",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-202",
+      "title": "Meios dias, horários e deslocações",
+      "release": "v1.2",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-101",
+        "HO-102",
+        "HO-103"
+      ],
+      "features": [
+        "FEAT-015"
+      ],
+      "acceptance": [
+        "Modelo de intervalos suporta meios dias e deslocações sem sobrepor disponibilidade incompatível.",
+        "Aprovação e conflitos aplicam-se ao intervalo correto.",
+        "Contratos e projeção Outlook evoluem com migração e testes de zonas/horário de verão."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/18",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-203",
+      "title": "Viagens reservadas e planeamento flexível",
+      "release": "v1.2",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-101",
+        "HO-102",
+        "HO-103"
+      ],
+      "features": [
+        "FEAT-016",
+        "FEAT-017"
+      ],
+      "acceptance": [
+        "Período pode indicar viagem reservada com comentário, sem guardar documentos pessoais por defeito.",
+        "Plano provisório de vários meses é claramente distinto de pedido/aprovação.",
+        "Datas fixas/flexíveis e alternativas são apresentadas ao chefe antes de propor mudanças."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/19",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-301",
+      "title": "Equipa maior e substituição de aprovador",
+      "release": "v2.0",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-201",
+        "HO-202",
+        "HO-203"
+      ],
+      "features": [
+        "FEAT-018"
+      ],
+      "acceptance": [
+        "Administração de colaboradores e relações mantém isolamento entre equipas.",
+        "Substituto tem vigência definida e poderes limitados, com auditoria.",
+        "Pedidos em curso têm encaminhamento explícito quando o aprovador está indisponível."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/20",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-302",
+      "title": "Calendários Outlook adicionais e partilhados",
+      "release": "v2.0",
+      "area": "integration",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-201",
+        "HO-202",
+        "HO-203"
+      ],
+      "features": [
+        "FEAT-019"
+      ],
+      "acceptance": [
+        "Estudo específico valida permissões/endpoints para calendários secundários e partilhados.",
+        "Seleção por calendário identifica leitura/escrita e propriedade dos eventos.",
+        "Cursores, notificações e regras de conflito não reutilizam indevidamente o fluxo do calendário principal."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/21",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-303",
+      "title": "Google Calendar",
+      "release": "v2.0",
+      "area": "integration",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-201",
+        "HO-202",
+        "HO-203"
+      ],
+      "features": [
+        "FEAT-020"
+      ],
+      "acceptance": [
+        "Adaptador Google preserva o contrato de autoridade e privacidade do produto.",
+        "Consentimento, retries, recuperação e calendários de teste têm validação própria.",
+        "O utilizador distingue claramente provedores e não cria loops entre calendários."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/22",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-304",
+      "title": "Anexos e tarefas avançadas",
+      "release": "v2.0",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-201",
+        "HO-202",
+        "HO-203"
+      ],
+      "features": [
+        "FEAT-021"
+      ],
+      "acceptance": [
+        "Necessidades de anexos/dependências são confirmadas com feedback real.",
+        "Ficheiros têm limites, autorização e ciclo de vida próprios.",
+        "Relatórios/tarefas adicionais não alteram automaticamente presença ou aprovações."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/23",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-305",
+      "title": "Funcionamento offline",
+      "release": "v2.0",
+      "area": "mobile",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-201",
+        "HO-202",
+        "HO-203"
+      ],
+      "features": [
+        "FEAT-022"
+      ],
+      "acceptance": [
+        "Consulta offline identifica atualidade do cache e protege dados locais.",
+        "Escritas pendentes têm fila e estado explícitos; só o servidor confirma decisões.",
+        "Reconexão resolve versões/conflitos sem last-write-wins sobre aprovações."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/24",
+      "pr_urls": []
+    }
+  ],
+  "repository_url": "https://github.com/Dennyum204/HomeOfficeReservation"
+}
