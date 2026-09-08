@@ -229,7 +229,9 @@
         "ADR-002 atualizado com evidência; não confundir testes simulados com Graph real."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/2",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/27"
+      ],
       "reason": "Outlook.com pessoal confirmado; registo/client ID e configuração ausentes, mailbox dedicada e consentimento de teste por confirmar. Estudo e probe preparados, sem chamadas Graph reais; CRUD/delta/datas/recorrência e reconexão pendentes. PR draft, issue aberta.",
       "study_path": "docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md",
       "account_type": "personal_microsoft_account",

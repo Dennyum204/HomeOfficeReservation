@@ -77,7 +77,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/2
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/27
 
 Motivo: Outlook.com pessoal confirmado; registo/client ID e configuração ausentes, mailbox dedicada e consentimento de teste por confirmar. Estudo e probe preparados, sem chamadas Graph reais; CRUD/delta/datas/recorrência e reconexão pendentes. PR draft, issue aberta.
 
