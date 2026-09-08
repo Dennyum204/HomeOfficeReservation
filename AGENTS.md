@@ -2,7 +2,7 @@
 
 ## Purpose and current phase
 
-Build a shared Switzerland/Portugal work-location planner for an employee and their manager. Outlook synchronization belongs to V1. The current repository contains planning and governance, not an implemented application. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
+Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). The current repository contains planning and governance, not an implemented application. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
 
 User instructions and applicable higher-priority instructions take precedence. These project conventions do not create new approval requirements for already-authorized work.
 
@@ -31,7 +31,7 @@ User instructions and applicable higher-priority instructions take precedence. T
 - Backend: .NET 10, ASP.NET Core, EF Core and PostgreSQL. Modular monolith; durable outbox/worker in the same host initially.
 - Web: React/TypeScript. Mobile: Flutter/Dart. Business authorization, approval transitions and conflict rules are authoritative in the API.
 - HTTP contract: OpenAPI with reproducibly generated TypeScript/Dart clients. Do not copy server DTOs manually between clients.
-- App authentication and calendar consent are distinct. Graph tokens stay on the backend. Use established OIDC/OAuth libraries, not handwritten cryptographic protocols.
+- App authentication uses ASP.NET Core Identity with EF Core/PostgreSQL: browser cookies and framework-issued opaque bearer/refresh tokens for Flutter (ADR-004). No custom cryptography or external identity infrastructure is needed. Optional Microsoft login is a future provider; calendar consent is separate and Graph tokens stay on the backend.
 - Infrastructure dependencies point inward toward application/domain abstractions. Do not introduce services, patterns or dependencies without a concrete need.
 
 ## Product invariants
@@ -42,9 +42,9 @@ User instructions and applicable higher-priority instructions take precedence. T
 - A presence requirement or Outlook edit cannot silently overwrite approved home office.
 - Serialize conflicting decisions for the same employee, re-check current calendar state in the transaction and reject stale writes.
 - Planning dates are date-only. Timed events preserve instant and timezone. Never convert an all-day date through UTC midnight.
-- Outlook V1 targets one linked account's primary calendar. Only mapped app-owned events may be changed/deleted by sync.
+- Optional Outlook publication targets the connected user's primary calendar: explicit confirmed location days only, availability free by default, app-owned events, no invitations. Imports/delta/webhooks/external-edit reconciliation are deferred and never core release gates.
 - External effects use a transactional outbox and idempotent consumers. Never call Graph inside the approval transaction.
-- Imported private calendar details do not become visible to the manager.
+- Core availability/conflicts come from the authoritative app calendar. Any future imported private calendar details must not become visible to the manager. Microsoft registration/live-probe onboarding is stopped; resume only within an explicitly selected optional integration task.
 
 ## Working conventions
 

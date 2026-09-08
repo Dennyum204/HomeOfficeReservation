@@ -8,18 +8,18 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 
 | ID | Tarefa | Release | Área | Estado | Depende de |
 |---|---|---|---|---|---|
-| HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Em revisão | — |
-| HO-001 | Estudo de identidade Microsoft e Outlook | v1.0 | integration | Planeado | HO-000 |
-| HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Planeado | HO-000 |
-| HO-003 | Autenticação, membros e autorização | v1.0 | backend | Planeado | HO-001, HO-002 |
+| HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Concluído | — |
+| HO-001 | Core autónomo, autenticação própria e Outlook opcional | v1.0 | docs | Em revisão | HO-000 |
+| HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Planeado | HO-000, HO-001 |
+| HO-003 | Autenticação, membros e autorização | v1.0 | backend | Planeado | HO-002 |
 | HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Planeado | HO-003 |
 | HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Planeado | HO-004 |
 | HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Planeado | HO-004 |
 | HO-007 | Notificações duráveis e infraestrutura push | v1.0 | backend | Planeado | HO-004 |
-| HO-008 | Publicação de datas confirmadas no Outlook | v1.0 | integration | Planeado | HO-001, HO-004, HO-007 |
-| HO-009 | Importação Outlook, webhooks e divergências | v1.0 | integration | Planeado | HO-008 |
+| HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
+| HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Mobile: calendário e pedidos para ambos os papéis | v1.0 | mobile | Planeado | HO-004 |
-| HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Planeado | HO-005, HO-006, HO-007, HO-009, HO-010 |
+| HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Planeado | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Planeado | HO-011 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
@@ -28,14 +28,14 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-202 | Meios dias, horários e deslocações | v1.2 | fullstack | Planeado | HO-101, HO-102, HO-103 |
 | HO-203 | Viagens reservadas e planeamento flexível | v1.2 | fullstack | Planeado | HO-101, HO-102, HO-103 |
 | HO-301 | Equipa maior e substituição de aprovador | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
-| HO-302 | Calendários Outlook adicionais e partilhados | v2.0 | integration | Planeado | HO-201, HO-202, HO-203 |
+| HO-302 | Calendários Outlook adicionais e partilhados | v2.0 | integration | Planeado | HO-201, HO-202, HO-203, HO-009 |
 | HO-303 | Google Calendar | v2.0 | integration | Planeado | HO-201, HO-202, HO-203 |
 | HO-304 | Anexos e tarefas avançadas | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
-Release: v1.0 · Área: docs · Estado: Em revisão
+Release: v1.0 · Área: docs · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -47,7 +47,7 @@ Critérios de aceitação:
 
 - Starter integrado na raiz a partir da história real; commit bootstrap vazio apenas se o GitHub não tiver commits; branch docs/ho-000-project-foundation.
 - README e .gitignore descrevem o setup real e protegem outputs, configuração local, segredos e chaves sem excluir lockfiles, migrações ou exemplos seguros.
-- Documentos confirmam ASP.NET Core/.NET 10, PostgreSQL/EF Core, React/TypeScript e Flutter Android/iOS; Outlook obrigatório na V1; conta Microsoft e alojamento permanecem por validar.
+- Stack .NET 10/PostgreSQL/EF Core/React/Flutter confirmada. Histórico HO-000 exigia Outlook V1; requisito substituído pela decisão de core autónomo em HO-001/ADR-004, sem alterar a evidência do merge original.
 - Os 24 trabalhos, incluindo releases futuras, têm issues reais sem duplicados, critérios de aceitação, dependências, labels de release/área e milestones onde suportados; URLs no JSON.
 - AGENTS.md atribui branches, commits, issues e preparação de PRs ao Codex; exige evidência de merge e reconciliação de estados antes de verificar dependências; Fernando revê e faz merge, sem auto-merge.
 - Validação documental passa e documentos derivados estão atualizados; PR real registado, sem draft, CI relevante verde no último commit e sem conflitos.
@@ -57,27 +57,28 @@ Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/1
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/25
 
-## HO-001 — Estudo de identidade Microsoft e Outlook
+## HO-001 — Core autónomo, autenticação própria e Outlook opcional
 
-Release: v1.0 · Área: integration · Estado: Planeado
+Release: v1.0 · Área: docs · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
 Dependências: HO-000
 
-Funcionalidades: FEAT-008, FEAT-001
+Funcionalidades: FEAT-001
 
 Critérios de aceitação:
 
-- Tipo de conta/mailbox e políticas de consentimento identificados sem guardar segredos.
-- Login e fluxo de tokens API/Graph definidos, incluindo viabilidade Flutter.
-- Evento de teste próprio criado, alterado e removido com as permissões previstas.
-- Leitura delta, datas all-day e revogação/reconexão verificadas ou limitações explicitamente registadas.
-- ADR-002 atualizado com evidência; não confundir testes simulados com Graph real.
+- Produto define calendário próprio autoritativo e todos os fluxos core Web/Mobile sem conta Microsoft ou ligação Outlook.
+- Autenticação própria ASP.NET Core Identity definida para React/Flutter, com sessões, recuperação, autorização e limitações; sem protocolos criptográficos próprios.
+- Outlook opcional em Definições publica apenas dias explícitos confirmados, showAs=free, eventos próprios e sem convites; importação/delta/webhooks/reconciliação em marco posterior.
+- Estudo/probe preservados como referência opcional; onboarding suspenso e validação Graph real adiada, nunca apresentada como aprovada. Sem credenciais/Graph nos checks normais.
+- ADRs com histórico, README/STATUS/produto/arquitetura e backlog/issues/milestones alinhados; dependências core sem gates Microsoft.
+- Documentos derivados regenerados, checks relevantes verdes no último commit e PR #27 sem conflitos, pronto para revisão do âmbito documental revisto.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/2
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/27
 
 ## HO-002 — Monorepo compilável, contratos e CI
 
@@ -85,7 +86,7 @@ Release: v1.0 · Área: foundation · Estado: Planeado
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-000
+Dependências: HO-000, HO-001
 
 Funcionalidades: Preparação/fundação da release.
 
@@ -96,6 +97,7 @@ Critérios de aceitação:
 - OpenAPI e geração TypeScript/Dart reproduzíveis com verificação de diff.
 - CI de cada stack executa checks reais; não aceita código existente com jobs silenciosamente ignorados.
 - Comandos de setup/build/test estão documentados nas áreas correspondentes.
+- Setup e CI do core funcionam sem conta Microsoft, tenant, tokens Graph ou probe; decisões de ADR-004 orientam scaffold, autenticação funcional fica em HO-003.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/3
 
@@ -107,17 +109,19 @@ Release: v1.0 · Área: backend · Estado: Planeado
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-001, HO-002
+Dependências: HO-002
 
 Funcionalidades: FEAT-001, FEAT-009
 
 Critérios de aceitação:
 
-- Web usa sessão BFF com proteção CSRF; mobile obtém token destinado à API.
+- ASP.NET Core Identity/EF Core/PostgreSQL com email/password: Web usa cookie Secure/HttpOnly e CSRF; Flutter usa bearer/refresh opacos do framework, conforme ADR-004.
 - Colaborador/chefe pertencem a uma relação configurada; autoaprovação é negada.
 - Reads/writes por ID verificam organização, papel e relação, incluindo casos de negação.
 - Bootstrap de admin não permite atribuição livre de papéis pelo utilizador.
 - Login válido e sessão expirada demonstrados nas duas interfaces base.
+- Ativação/recuperação usam mecanismos Identity, rate limits e lockout; não há autoatribuição de papéis nem exigência de email Microsoft.
+- Sessão/refresh expirados, logout, conta desativada, security stamp e armazenamento seguro mobile têm testes; nenhuma dependência de Entra/Graph.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/4
 
@@ -211,37 +215,41 @@ Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/8
 
 PR: ainda não criado.
 
-## HO-008 — Publicação de datas confirmadas no Outlook
+## HO-008 — Outlook opcional: publicar dias confirmados
 
-Release: v1.0 · Área: integration · Estado: Planeado
+Release: outlook-publish · Área: integration · Estado: Planeado
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-001, HO-004, HO-007
+Dependências: HO-012
 
-Funcionalidades: FEAT-008
+Funcionalidades: FEAT-023
 
 Critérios de aceitação:
 
-- Ligação delegada ao calendário principal guarda tokens apenas no backend.
-- Aprovação cria eventos só para as datas explícitas confirmadas; dias pendentes não são publicados.
-- Revisão/cancelamento altera ou remove apenas eventos com mapeamento válido.
-- Retry/timeout, ordenação de versões e data all-day não duplicam nem deslocam eventos.
-- API expõe estado de ligação/publicação, sem expor tokens.
+- Ligação opcional em Definições, desligada por defeito, com consentimento delegado associado ao MemberId local; login e calendário core funcionam sem Microsoft.
+- Tokens Graph só no backend; um registo conector não substitui autenticação da aplicação. Conta Outlook inicial pessoal; outros tipos exigem estudo próprio.
+- Publicação unidirecional só de dias explícitos confirmados, all-day local, showAs=free por defeito, sem attendees/convites; pendentes/padrão base não geram eventos.
+- CRUD real autorizado e limpeza de eventos próprios, DST Lisboa/Zurique, idempotência/timeout e precondições de escrita verificados; limitações e evidência sanitizada registadas.
+- Atualização/remoção exige mapeamento/propriedade na conta ligada; erro ou edição concorrente não altera plano nem causa escrita cega. Sem importação de disponibilidade, delta, webhook ou reconciliação de alterações externas.
+- Outbox/worker publica versões atuais; desligar/revogar para apenas a publicação e preserva core. Estado de publicação e erros apresentados sem tokens; eventos existentes ficam por defeito.
+- Web e mobile permitem ligar/desligar e consultar publicação sem transferir tokens Graph aos clientes; ligação explícita impede troca de conta/cross-member.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/9
 
 PR: ainda não criado.
 
+Motivo: Adiado por decisão de produto para marco opcional após core. Estudo HO-001 não validou Graph real.
+
 ## HO-009 — Importação Outlook, webhooks e divergências
 
-Release: v1.0 · Área: integration · Estado: Planeado
+Release: outlook-sync · Área: integration · Estado: Planeado
 
 Responsável pelo trabalho: Fernando + Codex.
 
 Dependências: HO-008
 
-Funcionalidades: FEAT-008, FEAT-009
+Funcionalidades: FEAT-008
 
 Critérios de aceitação:
 
@@ -251,10 +259,13 @@ Critérios de aceitação:
 - Eventos privados são reduzidos a disponibilidade; próprios eventos não geram falsos conflitos.
 - Edição/apagamento externo gera divergência resolúvel, sem mudar aprovação.
 - Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política.
+- Retomar ensaio real de delta/all-day/recorrência/paginação/revogação, provisionar HTTPS/fila/subscrições e rever estudo histórico; não tornar o conector requisito do core.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/10
 
 PR: ainda não criado.
+
+Motivo: Adiado para marco posterior à publicação opcional. Critérios de delta/webhooks/edição externa preservados; nenhum resultado real alegado.
 
 ## HO-010 — Mobile: calendário e pedidos para ambos os papéis
 
@@ -284,17 +295,17 @@ Release: v1.0 · Área: fullstack · Estado: Planeado
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-005, HO-006, HO-007, HO-009, HO-010
+Dependências: HO-005, HO-006, HO-007, HO-010
 
-Funcionalidades: FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009
+Funcionalidades: FEAT-005, FEAT-006, FEAT-007, FEAT-009
 
 Critérios de aceitação:
 
-- Web e mobile completam presença, conflito, tarefa, notificações e gestão Outlook.
-- Push real abre o detalhe autenticado; permissão recusada mantém caixa interna.
-- Cenário cruzado: pedido Web, decisão mobile e evento Outlook correto.
-- Autorização negativa, concorrência, DST, retries e divergências têm evidência.
-- Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks.
+- Web e mobile completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.
+- Push real abre detalhe autenticado; permissão recusada mantém caixa interna.
+- Cenário cruzado: pedido Web, decisão mobile e mesmos dias confirmados no calendário interno, sem conector configurado.
+- Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.
+- Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/12
 
@@ -314,9 +325,9 @@ Critérios de aceitação:
 
 - Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.
 - Staging/produção isolados; segredos externos; migração e restauro demonstrados.
-- Worker sempre ativo, webhooks públicos e falhas de sync observáveis.
+- Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.
 - Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.
-- Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação.
+- Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
 
@@ -417,7 +428,7 @@ Critérios de aceitação:
 
 - Modelo de intervalos suporta meios dias e deslocações sem sobrepor disponibilidade incompatível.
 - Aprovação e conflitos aplicam-se ao intervalo correto.
-- Contratos e projeção Outlook evoluem com migração e testes de zonas/horário de verão.
+- Contratos e calendário próprio evoluem com migração e testes de zonas/horário de verão. Se o conector opcional estiver instalado, atualizar a projeção sem torná-lo dependência deste item.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/18
 
@@ -469,7 +480,7 @@ Release: v2.0 · Área: integration · Estado: Planeado
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-201, HO-202, HO-203
+Dependências: HO-201, HO-202, HO-203, HO-009
 
 Funcionalidades: FEAT-019
 

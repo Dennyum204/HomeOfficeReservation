@@ -14,9 +14,10 @@ Estado: desenho. HO-002 cria a especificação OpenAPI gerada pelo backend e a c
 | `/api/v1/tasks` | Atribuir, consultar e atualizar estado |
 | `/api/v1/notifications` | Listar e marcar lida |
 | `/api/v1/devices` | Registar/atualizar/remover token push do próprio utilizador |
-| `/api/v1/integrations/outlook` | Ligar, estado, desligar e resolver divergência |
+| `/api/v1/auth` (HO-003) | Login/refresh/logout e conta, usando ASP.NET Core Identity |
+| `/api/v1/integrations/outlook` (HO-008) | Ligação opcional, estado de publicação e desligar; reconciliação apenas HO-009 |
 
-Estes são grupos de desenho, não endpoints implementados. Endpoints de decisão usam comandos explícitos; não expor um PATCH genérico que permita mudar `Approved=true` ignorando regras.
+Estes são grupos de desenho, não endpoints implementados. O scaffold/contrato core não depende de Microsoft; o contrato Identity deve refletir cookies Web e bearer/refresh opacos no mobile, sem inventar JWT/OAuth. Endpoints de decisão usam comandos explícitos; não expor um PATCH genérico que permita mudar `Approved=true` ignorando regras.
 
 - IDs estáveis, datas date-only e instantes distintos.
 - ETag/versão esperada e Idempotency-Key nos comandos relevantes.

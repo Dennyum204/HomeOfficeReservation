@@ -1,68 +1,52 @@
 # HomeOfficeReservation
 
-Planeamento de trabalho presencial na Suíça e home office em Portugal, com aprovações, tarefas e sincronização Outlook.
+Calendário próprio para planear trabalho remoto em Portugal e presencial na Suíça, com pedidos, aprovações, presenças obrigatórias, tarefas e notificações. **Core V1 completo sem conta Microsoft ou Outlook.**
 
-**Estado: fundação documental HO-000. A aplicação ainda não está implementada.** Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). A stack confirmada é ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter para Android/iOS. A sincronização Outlook é obrigatória na V1.
+Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter Android/iOS. Autenticação própria com ASP.NET Core Identity: cookie na Web e tokens opacos do framework no mobile. Web/mobile partilham backend e calendário autoritativo. [ADR-004](docs/adr/ADR-004-independent-core.md) regista a decisão.
 
-A entrega HO-000 está no [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), para revisão e merge humano. O estado verificável está em [STATUS.md](STATUS.md). O tracking usa [issues](https://github.com/Dennyum204/HomeOfficeReservation/issues) e [milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones) para os 24 trabalhos, incluindo releases futuras. Foram criadas 24 issues, 12 labels de release/área e quatro milestones; os URLs reais estão em [docs/backlog.json](docs/backlog.json).
+**Estado: documentação e desenho; aplicação ainda não implementada.** HO-000 integrado pelo [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25). HO-001 reformula o produto no [PR #27](https://github.com/Dennyum204/HomeOfficeReservation/pull/27). Próximo trabalho de implementação: HO-002 scaffolding, após revisão/merge humano. [STATUS.md](STATUS.md) contém evidência e continuidade.
+
+## Outlook opcional
+
+Ligação em Definições, num marco independente após o core. HO-008 publica unidirecionalmente dias explícitos confirmados, `showAs=free` por defeito, apenas eventos próprios e sem convites. HO-009 preserva importação de disponibilidade, delta, webhooks e reconciliação de alterações externas para um marco posterior. Nenhum deles bloqueia login, calendário ou lançamento core.
+
+Estudo/probe Microsoft preservados como referência histórica opcional. Onboarding parado e validação Graph real **adiada, não aprovada**. Não são necessárias credenciais Microsoft para desenvolver este repositório.
 
 ## Começar
 
-1. Ler [PLANO.md](PLANO.md) para a visão geral.
-2. Ler [AGENTS.md](AGENTS.md) e [STATUS.md](STATUS.md) antes de trabalhar.
-3. Consultar [ROADMAP.md](ROADMAP.md) e [BACKLOG.md](docs/BACKLOG.md).
-4. Seguir [DEVELOPMENT.md](docs/DEVELOPMENT.md) para branches, PRs e continuidade.
-5. Para clonar o repositório ou integrar novamente o starter, seguir [GIT_IMPORT.md](docs/GIT_IMPORT.md); nunca importar o histórico do bundle sobre o repositório real.
+1. Ler [AGENTS.md](AGENTS.md), [STATUS.md](STATUS.md) e [PLANO.md](PLANO.md).
+2. Consultar [ROADMAP.md](ROADMAP.md), [backlog gerado](docs/BACKLOG.md) e [DEVELOPMENT.md](docs/DEVELOPMENT.md).
+3. Seguir o item selecionado; não iniciar toda a aplicação a partir deste documento. [GIT_IMPORT.md](docs/GIT_IMPORT.md) preserva instruções históricas de importação.
 
 ## Documentação
 
-| Ficheiro | Responsabilidade |
+| Documento | Responsabilidade |
 |---|---|
-| [PRODUCT.md](docs/PRODUCT.md) | V1, permissões e comportamento esperado |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Tecnologias, componentes e fronteiras |
-| [DOMAIN.md](docs/DOMAIN.md) | Estados, dados e invariantes |
-| [OUTLOOK.md](docs/OUTLOOK.md) | Contrato de sincronização e recuperação |
-| [UX.md](docs/UX.md) | Ecrãs e comportamento Web/Mobile |
-| [QUALITY.md](docs/QUALITY.md) | Testes, segurança e critérios de lançamento |
-| [Decisões](docs/adr/README.md) | Decisões técnicas e pressupostos |
-| [Prompts](docs/CODEX_TASKS.md) | Arranque e tarefas para Codex Astra |
-| [Prompt HO-000 recebido](docs/CODEX_PROMPTS.md) | Pedido de fundação fornecido para esta entrega |
-| [Sources](docs/SOURCES.md) | Documentação oficial consultada |
+| [Produto](docs/PRODUCT.md) | Core V1 e aceitação sem Microsoft |
+| [Arquitetura](docs/ARCHITECTURE.md) / [ADRs](docs/adr/README.md) | Stack, Identity e fronteiras |
+| [Domínio](docs/DOMAIN.md) / [UX](docs/UX.md) | Regras, calendário e clientes |
+| [Qualidade](docs/QUALITY.md) | Gates core e gates opcionais separados |
+| [Outlook](docs/OUTLOOK.md) | Publicação opcional e sincronização posterior |
+| [Estudo histórico](docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md) | Fontes/pesquisa Microsoft; Graph real adiado |
+| [Tarefas Codex](docs/CODEX_TASKS.md) / [Fontes](docs/SOURCES.md) | Continuidade e referências |
 
-## Validação disponível agora
+## Checks disponíveis
 
-Requer Python 3.10 ou superior; sem pacotes externos.
+Python 3.10+ sem pacotes externos para a validação normal:
 
 ```bash
 python3 scripts/check_project.py
-```
-
-No Windows, usar `python scripts/check_project.py` se o executável instalado se chamar `python`; os mesmos argumentos aplicam-se a `--write`.
-
-O comando valida o backlog, dependências, cobertura das funcionalidades, documentos gerados e ligações locais. O workflow incluído executa apenas esta validação documental. Compilação e testes da aplicação serão adicionados com os respetivos projetos em HO-002; não existem ainda.
-
-Após editar `docs/backlog.json`, regenerar os documentos derivados:
-
-```bash
 python3 scripts/check_project.py --write
-python3 scripts/check_project.py
 ```
 
-## Estrutura preparada
+No Windows, usar o executável Python instalado com os mesmos argumentos. `--write` regenera ROADMAP.md e docs/BACKLOG.md a partir de docs/backlog.json. O validador verifica IDs, dependências, cobertura, documentos e ligações locais; não compila a aplicação.
 
-| Caminho | Trabalho futuro |
-|---|---|
-| `apps/api/` | ASP.NET Core, domínio, casos de uso, persistência e integrações |
-| `apps/web/` | React e TypeScript |
-| `apps/mobile/` | Flutter para Android/iOS |
-| `contracts/` | OpenAPI e instruções de geração dos clientes |
-| `infra/` | Ambiente local e configuração de deploy |
-| `docs/` | Produto, arquitetura, backlog e decisões |
+CI normal: `project-docs`. O workflow permite executar `outlook-probe-tests` apenas manualmente, com `run_outlook_reference=true`; são testes sintéticos opcionais, sem chamadas Microsoft. O [guia do probe](scripts/outlook_probe/README.md) não é setup obrigatório. HO-002 acrescentará comandos reais de build/test e versões/lockfiles para projetos que ainda não existem.
 
-Não foram escolhidos nome comercial, domínio, alojamento pago, conta de publicação mobile ou licença de distribuição. A ausência de uma licença aberta não concede autorização de distribuição.
+## Estrutura e tracking
 
-## Dados locais e colaboração
+`apps/api/`, `apps/web/`, `apps/mobile/`, `contracts/` e `infra/` contêm instruções de trabalho futuro. Nenhum projeto compilável, migração ou deployment criado neste PR.
 
-Manter segredos, dados privados do calendário, chaves de assinatura, configurações locais e outputs de build fora do Git. Versionar lockfiles, migrações e exemplos de configuração revistos e sem segredos. Os diretórios de aplicações contêm apenas instruções; HO-002 criará os projetos e os comandos reais de setup/build/test.
+[24 issues com IDs estáveis](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [milestones core/opcionais](https://github.com/Dennyum204/HomeOfficeReservation/milestones). URLs reais e histórico de mudanças de âmbito no backlog canónico. Repositório público; segredos, configuração privada e dados de calendário ficam fora do Git. Lockfiles, migrações e exemplos seguros devem ser versionados quando existirem.
 
-O Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. O trabalho mantém-se em `review` até existir evidência de integração. Cada tarefa verifica essa evidência e reconcilia estados antigos antes de avaliar dependências. Não fazer merge automático.
+Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. Não foram escolhidos fornecedor/região/domínio de alojamento, contas de distribuição mobile ou licença de distribuição.

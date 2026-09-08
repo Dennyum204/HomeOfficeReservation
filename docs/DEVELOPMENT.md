@@ -13,7 +13,7 @@ Uma só base reúne backend, Web, Mobile, contratos e documentos. Um PR pode alt
 - `STATUS.md`: contexto atual, bloqueios e próxima tarefa.
 - `docs/adr/`: decisões duráveis, incluindo alternativas e consequências.
 - [GitHub Issues](https://github.com/Dennyum204/HomeOfficeReservation/issues): uma issue por cada um dos 24 IDs HO, incluindo releases futuras. Pesquisar issues abertas e fechadas antes de criar; reutilizar a issue do mesmo ID. Cada issue inclui aceitação, dependências e o URL real no JSON. Alterar versão/âmbito no mesmo PR que altera o JSON.
-- Labels `release:v1.0`, `release:v1.1`, `release:v1.2`, `release:v2.0` e `area:<área>` refletem o backlog. Os [milestones de release](https://github.com/Dennyum204/HomeOfficeReservation/milestones) guardam os gates, sem inventar datas de entrega.
+- Labels `release:v1.0`, `release:v1.1`, `release:v1.2`, `release:v2.0`, `release:outlook-publish`, `release:outlook-sync` e `area:<área>` refletem o backlog. Os [milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones) guardam gates separados: [publicação opcional](https://github.com/Dennyum204/HomeOfficeReservation/milestone/5) e [sincronização posterior](https://github.com/Dennyum204/HomeOfficeReservation/milestone/6) não condicionam o core. Sem datas de entrega inventadas.
 - Issues, labels e milestones são o tracking obrigatório. Um Project board é opcional e não é necessário para concluir HO-000.
 
 HO-004 é um identificador de trabalho, não uma promessa de número de issue ou PR. Trabalhos grandes podem ser divididos em novos IDs com dependências e critérios próprios antes da implementação.
@@ -51,9 +51,11 @@ Disponibilidade e enforcement dependem do plano/permissões do repositório. Reg
 | Fase | Checks |
 |---|---|
 | HO-000 | `project-docs`: backlog, cobertura, dependências e documentos |
+| HO-001 revisto | `project-docs` normal; `outlook-probe-tests` só por workflow_dispatch com opção explícita, como referência sintética opcional |
 | HO-002 e projetos compiláveis | Format/lint/analyze, build, testes por stack e validação de contratos |
 | Funcionalidades críticas | Integração com PostgreSQL e cenários de autorização/concorrência |
-| Antes do piloto | E2E Web/Mobile, builds de distribuição, migração/restauro e Graph real de teste |
+| Antes do piloto core | E2E Web/Mobile com contas Identity, push real, builds, migração/restauro; sem Graph |
+| HO-008/HO-009 opcionais | Validação real Microsoft própria, quando estes itens forem selecionados |
 
 O scaffold deve acrescentar os jobs de cada stack no mesmo PR que cria o código. Checks obrigatórios usam nomes estáveis; não criar jobs que passam por saltar silenciosamente projetos existentes. Workflows de PR executam sem segredos de produção e sem `pull_request_target` para código não confiável.
 
@@ -84,6 +86,8 @@ Ver [STATUS.md](../STATUS.md), [PR #25](https://github.com/Dennyum204/HomeOffice
 O check foi observado no [run real](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655), antes de o tornar obrigatório. Estes são os checks documentais disponíveis em HO-000; HO-002 acrescentará os checks reais das aplicações. Não foi exigida aprovação independente impossível, nem criado Project board, release/tag ou deployment.
 
 ## Autenticação GitHub neste ambiente
+
+O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. O check obrigatório continua `project-docs`. HO-002 acrescentará builds reais do core conforme ADR-004.
 
 GitHub CLI e connector têm autenticações separadas. Nesta entrega, o connector recusou escrita com HTTP 403; a autenticação GitHub CLI resolveu o acesso Git e API, verificado com permissão ADMIN. Com `gh` instalado, o procedimento é:
 

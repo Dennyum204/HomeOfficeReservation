@@ -2,7 +2,7 @@
 
 ## Objetivo e utilizadores
 
-Um colaborador e o seu chefe planeiam localização e disponibilidade com antecedência. O desenho dos dados suporta mais utilizadores, mas a V1 não inclui administração completa de várias empresas.
+A aplicação tem calendário próprio autoritativo e funciona integralmente sem conta Microsoft ou ligação Outlook. Um colaborador e o seu chefe usam contas locais da aplicação para planear localização e disponibilidade com antecedência. O desenho dos dados suporta mais utilizadores, mas a V1 não inclui administração completa de várias empresas.
 
 | Papel | Pode fazer |
 |---|---|
@@ -10,13 +10,13 @@ Um colaborador e o seu chefe planeiam localização e disponibilidade com antece
 | Manager | Consultar colaboradores atribuídos, decidir pedidos, propor datas, criar compromissos presenciais e atribuir tarefas |
 | Admin | Configurar membros e relações de aprovação; não recebe automaticamente acesso a conteúdo privado do Outlook |
 
-Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identidades usam IDs estáveis do fornecedor; não confiar apenas no endereço de email. A associação de chefe é configurada pela aplicação, não inferida do Microsoft Graph.
+Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identidades usam IDs locais estáveis do ASP.NET Core Identity associados ao MemberId; não confiar apenas no endereço de email. A associação de chefe é configurada pela aplicação, não inferida do Microsoft Graph.
 
 ## V1: comportamento funcional
 
 ### Calendário e dashboard
 
-- Calendário mensal e semanal, com agenda compacta no mobile.
+- Calendário próprio mensal e semanal, com agenda compacta no mobile, mostrando remoto em Portugal, presencial na Suíça, pedidos pendentes e períodos presenciais obrigatórios. Web/mobile partilham o mesmo backend e dados autoritativos.
 - Localização confirmada, pedido pendente e obrigação presencial visíveis sem perder informação por sobreposição de cores.
 - Estados de disponibilidade separados: a trabalhar, férias e indisponível.
 - Padrão base configurável, inicialmente proposto como presencial nos dias úteis. A UI identifica o que vem do padrão e o que foi confirmado. Fins de semana são neutros, salvo seleção explícita.
@@ -43,7 +43,7 @@ Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identi
 - Se houver home office já aprovado, o compromisso fica `NeedsResolution`. A aprovação existente mantém-se; os dois veem a divergência.
 - Resolução: chefe altera/cancela o compromisso, ou inicia uma revisão das datas que o colaborador reconhece e o chefe aprova. A ativação da presença e substituição dos dias incompatíveis é atómica.
 - Confirmação de leitura não equivale a concordar com uma mudança de uma aprovação.
-- Reunião Outlook, por si só, é aviso de sobreposição. Só um compromisso criado/resolvido na aplicação impõe presença física.
+- Os conflitos do core são calculados com pedidos, plano confirmado, presenças e indisponibilidade manual da aplicação. Reuniões Outlook não são importadas no core.
 
 ### Tarefas
 
@@ -62,11 +62,11 @@ Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identi
 - Leituras sincronizadas entre dispositivos. Push é uma tentativa de entrega, não prova de leitura.
 - Emails, resumos semanais e lembretes automáticos entram em V1.1.
 
-### Outlook
+### Outlook opcional, após o core
 
-Sincronização do calendário principal da própria conta ligada, publicação de planeamento confirmado e importação de disponibilidade. Fonte e comportamento de alterações definidos em [OUTLOOK.md](OUTLOOK.md).
+Ligação apenas em Definições, sem requisito para login, planeamento ou lançamento. O primeiro marco opcional HO-008 publica unidirecionalmente dias explícitos de localização confirmada no calendário principal do utilizador ligado: disponibilidade livre por defeito, eventos próprios e sem convites. Trabalho remoto não é ausência. Sem ligação, o calendário interno e todos os fluxos permanecem completos.
 
-O chefe vê apenas intervalos indisponíveis necessários ao planeamento, não títulos/corpos de eventos privados. A ligação do chefe é opcional e independente; não é necessária para publicar no calendário do colaborador.
+Importação de disponibilidade, delta, webhooks e reconciliação de edições externas ficam em HO-009/marco posterior. Ambos permanecem no backlog. Contrato em [OUTLOOK.md](OUTLOOK.md); autenticação independente em [ADR-004](adr/ADR-004-independent-core.md).
 
 ### Férias e indisponibilidade
 
@@ -75,13 +75,13 @@ Registo manual para planeamento. Não substitui autorização de férias de RH. 
 ## Aceitação do produto
 
 1. Colaborador submete cinco dias pela Web; chefe aprova três pelo mobile; ambos veem os mesmos três dias confirmados.
-2. Dois dias rejeitados não aparecem no Outlook como home office aprovado.
+2. Dois dias rejeitados não aparecem como aprovados no calendário interno; não é preciso configurar integração externa.
 3. Uma instalação sobre um dia aprovado abre conflito e mantém a aprovação até à resolução explícita.
 4. Um segundo clique/retry da mesma decisão não duplica decisão, evento ou notificação interna.
 5. Uma decisão efetuada com versão antiga é recusada e a UI recupera com informação atual.
 6. O mesmo dia permanece o mesmo ao abrir o calendário em Lisboa e Zurique, incluindo mudanças de hora.
-7. Uma falha temporária do Outlook não desfaz a aprovação; apresenta sincronização pendente e recupera.
-8. O chefe não consulta pedidos de outro colaborador sem relação de gestão nem vê detalhes privados do Outlook.
+7. Todas as jornadas core funcionam com contas locais e nenhuma configuração Microsoft; indisponibilidade de um conector opcional não bloqueia decisões.
+8. O chefe não consulta pedidos de outro colaborador sem relação de gestão; detalhes privados de futuros calendários ligados não são expostos.
 9. Web e mobile cobrem os fluxos essenciais para ambos os papéis.
 10. O utilizador sabe se as datas vêm do padrão base, de aprovação ou de obrigação presencial.
 

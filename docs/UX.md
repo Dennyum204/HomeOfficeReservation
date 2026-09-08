@@ -9,7 +9,7 @@
 | Pedidos | Lista, filtros e detalhe | Lista com estados e detalhe completo |
 | Presenças/Tarefas | Contexto de máquina/projeto e prazos | Lista acionável e detalhe |
 | Notificações | Centro com não lidas | Centro e abertura por push |
-| Definições | Conta, Outlook e preferências | Conta, Outlook e permissões push |
+| Definições | Conta local e preferências; Outlook opcional posterior | Conta local e permissões push; Outlook opcional posterior |
 
 Ambas as plataformas suportam os dois papéis. O chefe consegue aprovar um subconjunto de dias no mobile. Não é suficiente entregar apenas ecrãs estáticos ou uma agenda de leitura.
 
@@ -33,7 +33,9 @@ Cores são propostas, sujeitas a contraste e teste. Não dependem de cor para co
 2. Abrir pedido, escolher dias, decidir e confirmar o resumo antes de enviar.
 3. Criar presença com motivo; pré-visualizar conflitos; publicar ou iniciar resolução.
 4. Abrir dia aprovado, pedir alteração; manter a indicação do plano vigente.
-5. Ligar Outlook, ver consentimento/estado; consultar último sucesso e recuperar divergências.
+5. Entrar com conta da aplicação, recuperar password e retomar sessão sem Microsoft.
+
+Após o core, HO-008 acrescenta Ligar Outlook em Definições e estado da publicação; sem ligação não há erro global ou bloqueio. Explicar que só publica dias confirmados, com disponibilidade livre e sem convites. Não mostrar disponibilidade importada ou ações de reconciliação externa antes de HO-009.
 
 ## Estados obrigatórios
 

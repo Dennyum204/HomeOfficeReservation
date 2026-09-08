@@ -1,0 +1,9 @@
+{
+  "tenant_id": "9188040d-6c67-4c5b-b112-36a304b66dad",
+  "client_id": "00000000-0000-0000-0000-000000000000",
+  "expected_object_id": "00000000-0000-0000-0000-000000000000",
+  "mailbox_type": "personal",
+  "dedicated_test_mailbox": false,
+  "consent_confirmed": false,
+  "year": 2026
+}

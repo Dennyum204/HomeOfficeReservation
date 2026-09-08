@@ -2,6 +2,10 @@
 
 Consultadas em 2026-09-07. As decisões de produto e intervalos operacionais são propostas deste projeto, não obrigações dos fornecedores. Revalidar documentação e versões quando implementar a integração.
 
+Direção atual: fontes de ASP.NET Core Identity, Identity API, Data Protection, recuperação de conta e armazenamento seguro Flutter consultadas em **2026-09-08**, com decisões/limitações em [ADR-004](adr/ADR-004-independent-core.md). Autenticação própria escolhida; ainda não implementada.
+
+Referência histórica opcional: fontes Microsoft Graph/MSAL/AppAuth consultadas em **2026-09-08** no [estudo HO-001](HO-001-MICROSOFT-OUTLOOK-STUDY.md). O estudo não valida Graph real e não define o login core. Onboarding interrompido, integração adiada para HO-008/HO-009.
+
 | Tema | Fonte |
 |---|---|
 | .NET suportado / LTS | [Microsoft .NET releases and support](https://learn.microsoft.com/en-us/dotnet/core/releases-and-support) |

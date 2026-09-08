@@ -1,8 +1,8 @@
 # Backend area
 
-Read the root AGENTS.md, docs/DOMAIN.md and docs/OUTLOOK.md first.
+Read root AGENTS.md, docs/DOMAIN.md and docs/adr/ADR-004-independent-core.md first. Read docs/OUTLOOK.md only for optional integration work.
 
-- Own business rules, authorization, transaction boundaries and API contracts here.
+- Own business rules, authorization, transaction boundaries and API contracts here. Core login/calendar use ASP.NET Core Identity and PostgreSQL without Microsoft credentials or Graph calls.
 - Domain must not reference EF Core, HTTP, Graph SDK or UI libraries.
 - Application defines use cases and adapter interfaces; Infrastructure implements persistence and external delivery.
 - Prefer explicit feature-focused use cases. Do not add a generic repository/unit-of-work framework over EF Core without a demonstrated need.

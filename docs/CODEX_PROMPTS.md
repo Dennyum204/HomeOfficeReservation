@@ -1,5 +1,7 @@
 # Prompt HO-000 recebido
 
+> Histórico do pedido original. A exigência de Outlook V1 foi substituída pelo responsável em HO-001; aplicar [ADR-004](adr/ADR-004-independent-core.md) e o backlog atual. Não retomar onboarding Microsoft com base neste texto.
+
 Fornecido pelo responsável em 2026-09-08. Este ficheiro conserva o pedido desta entrega; não foi fornecido um novo guia completo com prompts para os 24 trabalhos. Os exemplos do starter continuam em [CODEX_TASKS.md](CODEX_TASKS.md).
 
 ---

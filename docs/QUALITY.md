@@ -16,6 +16,8 @@ Tarefa com objetivo, área, dependências, release e critérios observáveis. Mu
 
 ## Testes que realmente importam
 
+Os cenários de Graph/consentimento/publicação são gates HO-008; webhooks/importação/edição externa são gates HO-009. Só os cenários core são exigidos para v1.0.
+
 | Risco | Verificação |
 |---|---|
 | Aprovação parcial incorreta | Datas aprovadas/rejeitadas/pendentes mantêm-se distintas |
@@ -38,7 +40,7 @@ Não impor cobertura de 100% como substituto dos cenários. Não escrever testes
 
 ## Segurança proporcional ao produto
 
-- OIDC/OAuth por bibliotecas estabelecidas; validação de tokens e sessões; CSRF no BFF.
+- ASP.NET Core Identity: password hashing/recuperação do framework, rate limiting/lockout, sessões e CSRF na Web; tokens opacos mobile em armazenamento seguro. OAuth/OIDC apenas em integrações opcionais futuras.
 - Roles mais relação Employee/Manager e OrganizationId em todas as operações sensíveis.
 - Segredos fora do Git; cache Graph cifrada; não expor secrets em app mobile/Web.
 - TLS, limites de input, paginação, rate limits de escrita e endpoints de autenticação/webhook.
@@ -47,15 +49,18 @@ Não impor cobertura de 100% como substituto dos cenários. Não escrever testes
 - Consentimento e preferência para partilhar disponibilidade, com conteúdo privado reduzido.
 - Backups cifrados, retenção definida pelo responsável antes do piloto, exercício de restauro.
 
-## Gate de lançamento V1
+## Gate de lançamento core V1
 
-1. HO-001 até HO-012 concluídos e PRs correspondentes integrados.
-2. Duas contas reais autorizadas percorrem submissão, decisão, presença e conflito.
-3. Outlook validado com eventos próprios de teste: criar, atualizar, cancelar, delta, reconectar e resolver divergência.
-4. Web utilizável em desktop; Android/iOS nos alvos de distribuição acordados. Builds sem assinatura não equivalem a apps distribuídas.
-5. Push real validado no dispositivo; caixa interna funciona mesmo com push recusado.
-6. Migração e restauro demonstrados em staging; operação do worker e subscrições observável.
-7. Nenhum defeito aberto que comprometa autorização, datas, perda de decisões ou corrupção de calendário.
-8. Limitações conhecidas e canais de suporte/feedback registados; responsável aceita iniciar piloto.
+1. HO-000 a HO-007 e HO-010 a HO-012 integrados; HO-008/HO-009 explicitamente excluídos do gate.
+2. Duas contas locais da aplicação percorrem login/recuperação, pedido, decisão, presença com motivo, conflito e tarefa, sem Microsoft/Outlook configurado.
+3. Calendário próprio autoritativo consistente entre Web/mobile, incluindo Portugal/Suíça, pendentes, alterações e datas/DST; autorização negativa e concorrência validadas.
+4. Web utilizável em desktop e Android/iOS distribuídos nos alvos acordados. Builds sem assinatura não equivalem a distribuição.
+5. Push real validado no dispositivo; caixa interna funciona com push recusado e falhas externas não perdem notificações.
+6. Migrações, restauro, keyring persistente/protegido, ativação/recuperação de conta e worker de notificações demonstrados em staging. Email de conta não exige fornecedor Microsoft; desenvolvimento usa entrega local segura.
+7. Nenhum defeito que comprometa autorização, datas, perda de decisões ou calendário; limitações/canais de suporte e aceitação do piloto registados.
+
+## Gates opcionais de integração
+
+HO-008 valida consentimento, CRUD de eventos próprios e limpeza, all-day/DST, retries, reconexão e UI de publicação; sem disponibilidade importada. HO-009 valida delta/páginas/recorrência, webhooks/lifecycle e reconciliação externa. Requisitos Graph da matriz acima pertencem exclusivamente a esses marcos. Não bloquear o core por um ensaio Microsoft adiado ou por referências de probe; nunca chamar uma simulação de evidência real.
 
 O objetivo do piloto é observar duas semanas de utilização antes de priorizar a primeira iteração V1.1. Se houver defeitos críticos, a correção tem prioridade sobre novas funcionalidades.

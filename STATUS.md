@@ -2,38 +2,24 @@
 
 Atualizado: 2026-09-08.
 
-## Situação verificável
+## Estado verificável
 
-- Fase: fundação documental HO-000; stack confirmada e implementação ainda não iniciada.
-- Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). Visibilidade preservada.
-- Branch: `docs/ho-000-project-foundation`. A inspeção inicial confirmou GitHub vazio; commit de bootstrap `378a111` publicado em `origin/main` tem árvore vazia; o commit existente `d17b150` foi preservado na branch. O histórico do bundle não foi importado.
-- HO-000: `review`; entrega documental e tracking no [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), ligado à [issue HO-000 #1](https://github.com/Dennyum204/HomeOfficeReservation/issues/1). Aguarda revisão e merge por Fernando; ainda não integrado na `main`.
-- GitHub CLI 2.100.0 autenticado como Dennyum204, com credencial no keyring, protocolo HTTPS e acesso ADMIN ao repositório. `gh auth setup-git --hostname github.com` e `gh auth status` executados; bloqueio de autenticação resolvido. O executável foi mantido numa instalação persistente fora do diretório temporário, para o helper Git continuar disponível.
-- Tracking: [24 issues](https://github.com/Dennyum204/HomeOfficeReservation/issues), [12 labels de release/área](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [quatro milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones). Pesquisa prévia não encontrou issues existentes; todos os URLs foram guardados em `docs/backlog.json`.
-- Proteções de `main` aplicadas e relidas pela API GitHub: PR obrigatório, `project-docs` do GitHub Actions obrigatório e branch atualizada, conversas resolvidas, histórico linear e enforcement para admins. Zero aprovações independentes obrigatórias; force-push e eliminação de `main` proibidos. Apenas squash merge; eliminação de branches após merge ativa e auto-merge desativado. Detalhes em [DEVELOPMENT.md](docs/DEVELOPMENT.md).
-- CI remota: o primeiro [run documental](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655) passou em `c2393b2`. A verificação do SHA final e os checks mais recentes ficam registados no PR; só retirar draft depois de CI verde no último commit e ausência de conflitos.
-- Validação: `scripts/check_project.py --write` e `scripts/check_project.py` passam (22 funcionalidades, 24 tarefas). É validação documental; não compila nem testa a aplicação.
-- Verificações adicionais: diff sem erros de whitespace; 16 caminhos de outputs/segredos ignorados e 15 caminhos de lockfiles/migrações/exemplos preservados, mais chave Apple `.p8`; todos os 38 ficheiros do starter presentes e validador original inalterado; ZIP/bundle excluídos e revisão de assinaturas de credenciais sem deteções.
-- Backend/Web/Mobile: apenas instruções e desenho; sem projetos compiláveis, SDKs fixados, migrações ou ambiente PostgreSQL configurado. HO-002 criará esses artefactos e os comandos reais.
-- Conta Outlook real: não consultada nem ligada; nenhum evento criado.
+- HO-000 integrado pelo [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), merge humano `7257a7b0c88f456b4322da396d45bd4c0aa0e862`, 2026-09-08 18:39:50Z. Commit confirmado em main após fetch e [CI de integração verde](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34264376475); estado canónico `done`.
+- HO-001 reformulado por instrução explícita do responsável: **core autónomo com calendário e contas próprios; Outlook opcional**. Mesmo [PR #27](https://github.com/Dennyum204/HomeOfficeReservation/pull/27), branch `docs/ho-001-microsoft-outlook-study`; estado canónico `review`, não `done` antes do merge verificado.
+- [ADR-004](docs/adr/ADR-004-independent-core.md) escolhe ASP.NET Core Identity/EF Core/PostgreSQL, cookie Web e bearer/refresh opacos do framework no Flutter. Sem Microsoft obrigatório nem infraestrutura de identidade adicional. Aplicação ainda não implementada.
+- HO-008 mantém issue/ID, agora no marco `outlook-publish` posterior ao core. HO-009 mantém issue/ID no marco `outlook-sync`, posterior à publicação. Gates de scaffold, autenticação, calendário, aceitação e piloto não exigem acesso Microsoft. As versões v1.1/v1.2/v2.0 preservam os restantes trabalhos.
+- Onboarding Microsoft e probe real **parados**. O utilizador confirmou uma mailbox dedicada vazia; houve erro de acesso ao diretório no portal Entra. Nenhum registo/consentimento Graph confirmado, evento ou leitura Graph real executado. A conta anteriormente indicada não é presumida como mailbox de teste; nenhum endereço publicado.
+- Configuração privada permanece fora do repositório, sem consentimento marcado. [Estudo](docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md), ADR-002 e probe preservados como referência histórica opcional. **Validação Graph adiada por âmbito, não aprovada.** Próximas verificações reais pertencem a HO-008/HO-009, sem exigir implementar clientes completos para fechar HO-001.
+- Evidência local anterior: 19 testes sintéticos do probe, pip check e plano offline de seis fixtures/DST 23/25 horas passaram. CI normal passa a executar apenas `project-docs`; testes do probe são opção manual explícita, nunca chamam Microsoft. Resultado do último SHA e ausência de conflitos registados no PR após o último push.
+- Repositório público e stack .NET 10/PostgreSQL/React/Flutter preservados. 24 issues estáveis, milestones core e dois marcos Outlook opcionais; URLs reais no JSON. HO-002 não iniciado; sem projetos compiláveis, migrações ou deployment.
+- Proteções main mantidas: PR/check estrito `project-docs`, conversas resolvidas, histórico linear, admins incluídos, zero aprovações independentes obrigatórias, force-push/deletion proibidos; sem auto-merge.
 
-## Próximo trabalho
+## Próxima tarefa
 
-HO-000 fica em `review` até ao merge humano. Não há bloqueio de autenticação pendente. Fernando revê o [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) e faz merge; o Codex não integra o PR nem ativa auto-merge.
+**HO-002 — Monorepo compilável, contratos e CI.** Após revisão/merge humano do PR #27, fazer fetch, verificar merge e CI, reconciliar HO-001 para `done` e criar branch de scaffold. Preparar .NET/React/Flutter, PostgreSQL local, versões/lockfiles e geração OpenAPI sem conta Microsoft. HO-003 implementará autenticação própria; não implementar já a aplicação inteira.
 
-Depois do merge humano: **HO-001 — Estudo de identidade Microsoft e Outlook**, com **Astra, reasoning `high`**. Verificar merge/CI de HO-000 e reconciliar o backlog antes de avaliar a dependência. HO-002 prepara os projetos numa tarefa posterior; nenhuma das duas está iniciada nesta entrega.
+A issue #2 fecha a reformulação documental quando este PR for integrado; nunca significa que Graph foi validado. HO-008/HO-009 permanecem planeados/abertos. Codex não faz merge nem ativa auto-merge.
 
-## Pressupostos a confirmar
+## Decisões externas pendentes
 
-| Tema | Pressuposto proposto | Quem resolve / quando |
-|---|---|---|
-| Outlook | Microsoft 365 empresarial / Exchange Online | Fernando e IT, HO-001 |
-| Identidade | Ambos podem usar contas do mesmo tenant autorizado | HO-001 |
-| Mobile | Android e iOS confirmados; meios de assinatura/distribuição privada por decidir | Fernando, HO-002/HO-012 |
-| Localização inicial | Dias úteis presumidos presenciais, com etiqueta de padrão base | Fernando e chefe, HO-003 |
-| Idioma | PT-PT inicialmente; estrutura preparada para outros idiomas | Fernando, HO-005 |
-| Alojar aplicação | Contentores Linux e PostgreSQL, fornecedor/região/domínio por decidir | Fernando/empresa, HO-012 |
-
-## Regra de continuidade
-
-Cada PR atualiza este ficheiro com o estado real, decisão relevante, bloqueio concreto e próxima tarefa. Antes de avaliar dependências, verificar merge e CI reais e reconciliar estados antigos em `docs/backlog.json`; regenerar ROADMAP.md e docs/BACKLOG.md. PR aberto é `review`, não `done`. Fernando faz merge; o Codex não integra PRs nem ativa auto-merge. Não guardar segredos ou detalhes privados do Outlook aqui.
+Alojamento/região/domínio, entrega de recuperação de conta, assinatura/distribuição mobile e piloto são trabalhos core posteriores. Configuração Microsoft só será retomada se o responsável selecionar o milestone opcional. Nenhum destes recursos foi contratado nesta entrega.
