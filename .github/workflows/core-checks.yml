@@ -11,6 +11,8 @@ concurrency:
   cancel-in-progress: true
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  POSTGRES_PASSWORD: ci-synthetic-only
+  HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
 
 jobs:
   backend-contracts:
@@ -40,6 +42,7 @@ jobs:
         run: python3 scripts/generate_contracts.py --check
       - name: Start the documented PostgreSQL environment
         run: docker compose -f infra/compose.yaml up -d --wait
+      - uses: ./.github/actions/setup-identity
       - name: Backend and real PostgreSQL integration tests
         run: dotnet test apps/api/HomeOffice.slnx -c Release --no-build --logger trx
       - name: Real process startup with database available and unavailable
@@ -65,6 +68,7 @@ jobs:
           global-json-file: global.json
       - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
       - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
+      - uses: ./.github/actions/setup-identity
       - run: npm ci
         working-directory: apps/web
       - run: npm run format:check && npm run typecheck && npm run lint && npm test && npm run build
@@ -79,8 +83,7 @@ jobs:
         with:
           name: web-evidence
           path: |
-            apps/web/test-results/
-            apps/web/playwright-report/
+            apps/web/test-results/shell-*.png
           retention-days: 14
 
   flutter-android:
@@ -109,6 +112,7 @@ jobs:
         working-directory: apps/mobile
       - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
       - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
+      - uses: ./.github/actions/setup-identity
       - name: Real API connectivity using the Flutter repository and generated Dart client
         run: python3 scripts/smoke_api.py --dart-client
       - name: Android release compilation (unsigned, no deployment)
@@ -120,6 +124,10 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Start local API for the Android emulator
+        env:
+          Auth__AccessTokenSeconds: '3'
+          Auth__RefreshTokenSeconds: '8'
+          Auth__RequestsPerMinute: '300'
         run: |
           ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://0.0.0.0:5080 > "$RUNNER_TEMP/android-api.log" 2>&1 &
       - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
@@ -129,7 +137,7 @@ jobs:
           target: google_apis
           profile: pixel_6
           disable-animations: true
-          script: cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080
+          script: cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
 
   flutter-ios:
     name: flutter-ios
@@ -156,7 +164,12 @@ jobs:
         working-directory: apps/mobile
       - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
       - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
+      - uses: ./.github/actions/setup-identity
       - name: Start API and boot an available iPhone simulator
+        env:
+          Auth__AccessTokenSeconds: '3'
+          Auth__RefreshTokenSeconds: '8'
+          Auth__RequestsPerMinute: '300'
         run: |
           ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080 > "$RUNNER_TEMP/ios-api.log" 2>&1 &
           device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for xs in d["devices"].values() for x in xs if "iPhone" in x["name"]))')
@@ -164,7 +177,8 @@ jobs:
           xcrun simctl bootstatus "$device" -b
           echo "IOS_SIMULATOR=$device" >> "$GITHUB_ENV"
       - name: iOS Simulator connects through the generated Dart client
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080
+        timeout-minutes: 12
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
         working-directory: apps/mobile
       - name: Install the regular shell and capture it (integration test app is removed after tests)
         run: |

@@ -1,11 +1,11 @@
 # Flutter Android/iOS
 
-Shell PT-PT equivalente à Web: navegação, estados em preparação e ligação real ao endpoint de metadados. Sem login, dados fictícios de calendário, aprovação, push ou Microsoft. Strings ARB em `lib/l10n/app_pt.arb`; `flutter pub get`/`flutter gen-l10n` geram código ignorado. Separação entre vista, repository e cliente Dart gerado, sem regras de negócio duplicadas.
+Shell PT-PT equivalente à Web: navegação, estados em preparação e ligação real ao endpoint de metadados. Login, ativação/recuperação, restauro, refresh limitado e logout próprios. Sem dados fictícios de calendário, aprovação, push ou Microsoft. [Setup Identity e credenciais privadas](../../docs/HO-003-AUTHENTICATION.md). Strings ARB em `lib/l10n/app_pt.arb`; `flutter pub get`/`flutter gen-l10n` geram código ignorado. Separação entre vista, repository e cliente Dart gerado, sem regras de negócio duplicadas.
 
 ## Ferramentas fixadas
 
 - Flutter **3.47.2**, revisão `d3b14c876900e553bc736ca19295fc09e3853e8e`, Dart **3.13.2** incluído. `.flutter-version` e pubspec registam a versão; instalação oficial ou clone da tag. Não atualizar automaticamente durante o setup.
-- Android: JDK Temurin **21.0.12+8**, SDK/target **36**, min **24**, NDK **28.2.13676358**, AGP **9.1.0**, Kotlin **2.4.0**, Gradle **9.3.1** com SHA-256. SDK/NDK vêm dos defaults do Flutter fixado. Android Studio/SDK e emulador são necessários para execução local.
+- Android: JDK Temurin **21.0.12+8**, compile SDK **37** (requisito flutter_secure_storage 11.0.0), target **36**, min **24**, NDK **28.2.13676358**, AGP **9.1.0**, Kotlin **2.4.0**, Gradle **9.3.1** com SHA-256. Target/min/NDK vêm dos defaults do Flutter fixado; compile SDK foi elevado para o plugin de secure storage. Android Studio/SDK e emulador são necessários para execução local.
 - iOS: macOS e Xcode; CI usa **macos-15/Xcode 26.3**, deployment target **iOS 15.0**. Assinatura/conta Apple só para dispositivos físicos/distribuição, não para compilar Simulator ou release sem assinatura. Não é possível compilar iOS em Windows/Linux.
 - `pubspec.lock` da app e do cliente gerado são versionados. Nenhuma chave de assinatura no Git. Os identificadores `dev.homeoffice.*` são de desenvolvimento; confirmar distribuição em HO-012.
 
@@ -46,10 +46,10 @@ dart run tool/smoke_api.dart http://localhost:5080
 flutter build apk --release --dart-define=API_BASE_URL=https://api.example.invalid
 ```
 
-O smoke usa o mesmo repository e cliente gerado da app com HTTP real; verifica o contrato e um timestamp recente, sem emitir dados pessoais. Os widget tests usam respostas sintéticas e cobrem falha/retry/navegação/ecrã pequeno. Teste de plataforma com API real:
+O smoke usa o mesmo repository e cliente gerado da app com HTTP real; verifica o contrato e um timestamp recente, sem emitir dados pessoais. Os widget tests usam respostas sintéticas e cobrem falha/retry/navegação/ecrã pequeno. Teste de plataforma com API/PG reais: primeiro seguir o guia HO-003 e iniciar API Development com access=3s/refresh=8s. Usar o ficheiro privado apenas neste entrypoint de testes; não distribuir o test bundle.
 
 ```sh
-flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <device-id> --dart-define=API_BASE_URL=http://10.0.2.2:5080
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <device-id> --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file=<private-dir>/client-test.json
 ```
 
 No Mac, com Simulator:
@@ -57,7 +57,7 @@ No Mac, com Simulator:
 ```sh
 flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
 flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api.example.invalid
-flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <simulator-id> --dart-define=API_BASE_URL=http://localhost:5080
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <simulator-id> --dart-define=API_BASE_URL=http://localhost:5080 --dart-define-from-file=<private-dir>/client-test.json
 ```
 
 CI exige análise/testes, cliente Dart contra Kestrel real, release Android sem assinatura, builds iOS Simulator/device sem assinatura e smoke de plataforma Android Emulator/iOS Simulator. Não substitui ensaio físico, assinatura, lojas ou push, trabalhos posteriores. O APK release é unsigned; usar `flutter run` para instalar debug. Resultados efetivos e limitações em [STATUS](../../STATUS.md) e no PR.
@@ -65,3 +65,5 @@ CI exige análise/testes, cliente Dart contra Kestrel real, release Android sem 
 O smoke executa os mesmos testes `integration_test` através do adaptador oficial [`integrationDriver`](https://api.flutter.dev/flutter/package-integration_test_integration_test_driver/integrationDriver.html), com `flutter drive --no-dds` (documentação consultada em 2026-09-08). No SDK fixado, `flutter test` falhou no arranque DDS e, sem DDS, na subscrição do stream de comparação de imagens, apesar de a asserção de ligação Android passar. O adaptador suportado evita esse mecanismo; mantém todas as asserções e devolve erro se qualquer teste falhar. Não modifica o SDK nem ignora falhas. A opção `--no-dds` consta de `flutter drive --help --verbose` e dispensa apenas o serviço auxiliar de debugging/IDE. As tentativas anteriores com erro não contam como checks verdes.
 
 Na raiz, `python scripts/check_native_config.py` verifica XML/plists/UTF-8 e exceções de transporte só em debug. É um check prévio, não substitui compilação nativa. O bundle XCTest do template não contém exemplos vazios que aparentem testes passados; os asserts reais são Dart/Flutter.
+
+HO-003 acrescenta `flutter_secure_storage` 11.0.0: refresh por origem API em armazenamento seguro, access em memória, passwords não persistidas. Android desativa backup; iOS declara Keychain entitlements, acessibilidade unlocked_this_device. Testes simulados cobrem refresh limitado, logout em corrida e membro desativado; integração nativa verifica armazenamento/restauro/expiração/logout contra API/PG. O plugin usa Swift Package Manager no template atual. Não foram validados assinatura, dispositivo físico ou loja.

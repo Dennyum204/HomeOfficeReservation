@@ -1,0 +1,34 @@
+name: Private local Identity setup
+description: Real PostgreSQL, explicit migrations and private synthetic accounts for core checks
+runs:
+  using: composite
+  steps:
+    - name: PostgreSQL on Ubuntu
+      if: runner.os == 'Linux'
+      shell: bash
+      run: docker compose -f infra/compose.yaml up -d --wait
+    - name: Native PostgreSQL on macOS
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        brew install postgresql@18
+        pg_bin="$(brew --prefix postgresql@18)/bin"
+        "$pg_bin/postgres" --version | grep -E '18\.6$'
+        umask 077
+        printf '%s' "$POSTGRES_PASSWORD" > "$RUNNER_TEMP/pg-password"
+        "$pg_bin/initdb" -D "$RUNNER_TEMP/pgdata" -U homeoffice --pwfile="$RUNNER_TEMP/pg-password" --auth=scram-sha-256 --locale=C -E UTF8
+        "$pg_bin/pg_ctl" -D "$RUNNER_TEMP/pgdata" -l "$RUNNER_TEMP/postgres.log" -o '-h 127.0.0.1 -p 5432' -w start
+        PGPASSWORD="$POSTGRES_PASSWORD" "$pg_bin/createdb" -h 127.0.0.1 -U homeoffice homeoffice
+    - name: Private keys, accounts and email capture
+      shell: bash
+      run: |
+        python3 scripts/init_auth.py --private-dir "$RUNNER_TEMP/identity" --database-from-env HO_TEST_DATABASE
+        echo "HO_DEV_ACCOUNTS=$RUNNER_TEMP/identity/accounts.json" >> "$GITHUB_ENV"
+    - name: Explicit migration and repeatable development provisioning
+      shell: bash
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
+      run: |
+        dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --migrate
+        dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --provision-dev "$RUNNER_TEMP/identity/accounts.json"
+        dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --provision-dev "$RUNNER_TEMP/identity/accounts.json"

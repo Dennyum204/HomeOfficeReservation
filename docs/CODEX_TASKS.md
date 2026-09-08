@@ -33,3 +33,7 @@ Trabalho completo é entregue sem draft com CI relevante verde e sem conflitos; 
 ## Integrações opcionais
 
 Retomar registo/consentimento/probe apenas ao selecionar HO-008 ou HO-009 explicitamente. Estudo legado é referência; adaptar ensaio ao âmbito autorizado. Não pedir Microsoft para scaffold, login ou calendário core. HO-008 publica dias confirmados; HO-009 retoma leituras e mecanismos avançados. Microsoft login opcional futuro não é requisito de nenhuma destas tarefas core.
+
+## Continuidade após HO-003
+
+HO-003 implementa autenticação/membros nas três áreas. Depois de revisão/merge humano e CI de integração verificados, selecionar **HO-004 — planeamento e aprovação transacional na API**. Fazer fetch, reconciliar o tracking e só então começar a tarefa separada. O prompt HO-002 acima é referência histórica, não instrução para repetir scaffold ou autenticação.

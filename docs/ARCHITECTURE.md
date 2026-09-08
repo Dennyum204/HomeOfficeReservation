@@ -46,7 +46,7 @@ Não separar estes módulos em bases de dados ou serviços de rede na V1. Planni
 | `contracts/` | Especificação e configuração dos clientes gerados |
 | `infra/` | Containers, ambiente local, migrações e deploy |
 
-HO-002 cria projetos compiláveis nas quatro fronteiras backend, React e Flutter Android/iOS. Cada fronteira backend tem utilização concreta na consulta pública de metadados ou persistência/health checks; não há repositories genéricos, módulos de negócio vazios ou serviços separados. Domain contém apenas as zonas suportadas; os modelos funcionais entram nas suas tarefas. O DbContext herda IdentityDbContext, sem criação de contas, migrations ou endpoints Identity nesta fase. Guias de execução nas áreas; versões/lockfiles fixados e CI por stack.
+HO-002 criou os projetos compiláveis. HO-003 acrescenta modelos Organization/Member/ReportingLine, migração Identity, autenticação e autorização atual por objeto. Application define contratos, Infrastructure implementa stores/email/provisionamento; API usa handlers Identity. Web e Flutter consomem AuthApi/AccessApi gerados. Sem repositories genéricos, mediator ou serviços separados. [ADR-005](adr/ADR-005-identity-implementation.md) e [setup/evidência](HO-003-AUTHENTICATION.md).
 
 ## Identidade e calendário independentes
 
@@ -54,7 +54,7 @@ HO-002 cria projetos compiláveis nas quatro fronteiras backend, React e Flutter
 
 Admissão de membros controlada pelo administrador; recuperação/ativação por mecanismos Identity, sem escolha livre de papéis. Sem Microsoft, email empresarial ou diretório Entra obrigatórios. Microsoft sign-in é apenas uma possível opção futura, distinta de consentimento de calendário. As limitações de sessão/revogação e os gates HO-003 estão no ADR.
 
-Planning/PostgreSQL possuirá o calendário e conflitos. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-002 cria somente o scaffold executável e a ligação API; HO-003 implementará autenticação e os itens seguintes acrescentarão regras/calendário.
+Planning/PostgreSQL possuirá o calendário e conflitos. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-003 implementa autenticação sobre o scaffold; HO-004 e seguintes acrescentarão regras/calendário.
 
 Quando HO-008 for selecionado, a ação explícita em Definições associa uma conta Microsoft ao MemberId já autenticado, sem exigir igualdade de email ou de IDs entre fornecedores. Estado/nonce/PKCE e callback validado por biblioteca impedem associação a outro membro; confirmar a conta escolhida antes de guardar. Tokens Graph ficam numa cache cifrada no backend. Revogação/desligar afetam apenas publicação. O [estudo anterior](HO-001-MICROSOFT-OUTLOOK-STUDY.md) é referência histórica, não o contrato de login atual.
 

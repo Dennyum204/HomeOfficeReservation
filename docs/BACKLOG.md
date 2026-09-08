@@ -10,8 +10,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 |---|---|---|---|---|---|
 | HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Concluído | — |
 | HO-001 | Core autónomo, autenticação própria e Outlook opcional | v1.0 | docs | Concluído | HO-000 |
-| HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Em revisão | HO-000, HO-001 |
-| HO-003 | Autenticação, membros e autorização | v1.0 | backend | Planeado | HO-002 |
+| HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Concluído | HO-000, HO-001 |
+| HO-003 | Autenticação, membros e autorização | v1.0 | backend | Em curso | HO-002 |
 | HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Planeado | HO-003 |
 | HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Planeado | HO-004 |
 | HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Planeado | HO-004 |
@@ -82,7 +82,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/27
 
 ## HO-002 — Monorepo compilável, contratos e CI
 
-Release: v1.0 · Área: foundation · Estado: Em revisão
+Release: v1.0 · Área: foundation · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -105,7 +105,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/28
 
 ## HO-003 — Autenticação, membros e autorização
 
-Release: v1.0 · Área: backend · Estado: Planeado
+Release: v1.0 · Área: backend · Estado: Em curso
 
 Responsável pelo trabalho: Fernando + Codex.
 

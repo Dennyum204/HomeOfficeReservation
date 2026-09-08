@@ -2,6 +2,8 @@
 
 Estado: **decisão de produto confirmada pelo responsável**, documentada em HO-001/PR #27 em 2026-09-08; implementação futura. Substitui [ADR-002](ADR-002-outlook.md) quanto à identidade obrigatória, âmbito V1 e sequência de integração. Stack de ADR-001 e workflow de ADR-003 mantêm-se.
 
+> Atualização de implementação em 2026-09-09: [ADR-005](ADR-005-identity-implementation.md) concretiza esta decisão em HO-003. O texto abaixo preserva o contexto e as propostas de HO-001; rotas e limites efetivos constam do novo ADR.
+
 ## Contexto e decisão
 
 O responsável retirou explicitamente Outlook dos requisitos de login, planeamento e lançamento. A aplicação possui o calendário autoritativo em PostgreSQL: remoto Portugal, presencial Suíça, pedidos/decisões/revisões, presenças obrigatórias com motivo, conflitos, tarefas e notificações. React e Flutter usam o mesmo backend. Duas contas locais Employee/Manager percorrem todos os fluxos sem Microsoft. Organização e relação de gestão são dados locais; não representam um tenant Entra.

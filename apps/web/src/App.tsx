@@ -2,6 +2,16 @@ import { useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { ConnectionCard } from "./features/workspace/ConnectionCard";
 
+import { AuthGate } from "./features/auth/AuthGate";
+
+export function App() {
+  return (
+    <AuthGate>
+      <WorkspaceShell />
+    </AuthGate>
+  );
+}
+
 type Section = keyof typeof s.nav;
 const icons: Record<Section, string> = {
   calendar: "▦",
@@ -11,7 +21,7 @@ const icons: Record<Section, string> = {
   settings: "⚙",
 };
 
-export function App() {
+export function WorkspaceShell() {
   const [section, setSection] = useState<Section>("calendar");
   const current = s.sections[section];
   return (

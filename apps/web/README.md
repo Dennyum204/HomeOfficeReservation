@@ -1,6 +1,6 @@
 # Web React/TypeScript
 
-Shell responsivo PT-PT com Calendário, Pedidos, Tarefas, Notificações e Definições. As áreas de negócio estão explicitamente em preparação. Só navegação e ligação/atualização do serviço funcionam nesta entrega. Sem login, aprovações fictícias ou dependência Microsoft.
+Shell responsivo PT-PT com Calendário, Pedidos, Tarefas, Notificações e Definições. As áreas de negócio estão explicitamente em preparação. Login, ativação, recuperação, logout e sessão autenticada funcionam com cookies Identity. Sem aprovações fictícias ou dependência Microsoft. [Preparar contas e obter credenciais privadas](../../docs/HO-003-AUTHENTICATION.md).
 
 Node **24.20.0**, npm **11.19.0**, React **19.2.8**, TypeScript **6.0.3**, Vite **8.2.2**. Versões exatas em package.json/package-lock.json; TypeScript 6 foi escolhido pela compatibilidade declarada com typescript-eslint.
 
@@ -27,13 +27,15 @@ npm --prefix apps/web test
 npm --prefix apps/web run build
 ```
 
-Testes de browser, a partir de `apps/web` (requer backend previamente compilado em Release):
+Testes de browser, a partir de `apps/web` (requer backend compilado em Release, PostgreSQL com migração/contas e HO_DEV_ACCOUNTS apontado ao accounts.json privado):
 
 ```sh
 npx playwright install chromium
 npm run test:e2e
 ```
 
-Em Linux CI, `npx playwright install --with-deps chromium` também instala bibliotecas do SO. Playwright arranca Vite e a API reais, testa o cliente gerado/navegação/retry/offline nos tamanhos desktop e mobile e guarda capturas em `test-results/`, relatório em `playwright-report/`. O projeto `small-screen` usa Chromium com viewport/toque iPhone; **não é validação de Safari/iOS nativo**. Os testes Flutter/iOS são separados.
+Em Linux CI, `npx playwright install --with-deps chromium` também instala bibliotecas do SO. Playwright arranca Vite e a API reais, testa o cliente gerado/navegação/retry/offline nos tamanhos desktop e mobile e guarda capturas do shell em `test-results/`; não grava traces/HAR nem publica snapshots de formulários. O projeto `small-screen` usa Chromium com viewport/toque iPhone; **não é validação de Safari/iOS nativo**. Os testes Flutter/iOS são separados.
 
-Para uma execução E2E isolada, parar instâncias locais em 5080/5173 ou definir `CI=true`; a CI nunca reutiliza outro processo. Sem mocks nos testes E2E de conectividade; os dois testes Vitest usam respostas sintéticas para os estados de UI.
+Playwright usa 5083/5174 com instâncias próprias e cookie de quatro segundos só em Development. Confirma login/restauro/expiração/logout reais e recuperação/erros em desktop e ecrã pequeno. Os servidores normais 5080/5173 podem continuar abertos. Três testes Vitest usam respostas sintéticas para UI/forbidden; estes não substituem E2E/PG.
+
+`features/auth` usa AuthApi/AccessApi gerados. Cookie HttpOnly, Secure em produção; o cliente pede CSRF atualizado antes de login/logout. Não guarda tokens em localStorage. Falha de verificação retira vistas privadas e apresenta estado de sessão/rede. HTTPS e mesma origem são requisitos de alojamento; HTTP é exclusivo do ambiente local Development.

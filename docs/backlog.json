@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-08",
+  "updated_at": "2026-09-09",
   "planning_note": "Core V1 autónomo, com calendário e autenticação próprios. Outlook opcional em marcos independentes posteriores; acesso Microsoft não bloqueia desenvolvimento nem lançamento do core.",
   "releases": [
     {
@@ -296,7 +296,7 @@
       "title": "Monorepo compilável, contratos e CI",
       "release": "v1.0",
       "area": "foundation",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-000",
@@ -333,14 +333,25 @@
             "Comandos de setup/build/test estão documentados nas áreas correspondentes."
           ]
         }
-      ]
+      ],
+      "merge_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/28",
+        "merge_commit": "2fb0f416193ef37ac79c18fd0dcae00f0b80494d",
+        "merged_at": "2026-09-08T21:33:47Z",
+        "verified_at": "2026-09-09",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34281298897",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34281298848"
+        ],
+        "note": "main fetched; merge commit ancestor verified. Core iOS first attempt timed out, isolated rerun succeeded; all required integration jobs successful."
+      }
     },
     {
       "id": "HO-003",
       "title": "Autenticação, membros e autorização",
       "release": "v1.0",
       "area": "backend",
-      "status": "planned",
+      "status": "in_progress",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-002"

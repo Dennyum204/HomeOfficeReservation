@@ -3,6 +3,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageReference Include="MailKit" Version="4.17.0" />
     <ProjectReference Include="../HomeOffice.Application/HomeOffice.Application.csproj" />
   </ItemGroup>
 </Project>
