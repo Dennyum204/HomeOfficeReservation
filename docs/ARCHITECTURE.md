@@ -50,10 +50,10 @@ Não estão criados projetos vazios que aparentem uma aplicação funcional. HO-
 
 ## Identidade
 
-Pressuposto: Microsoft 365 empresarial. HO-001 valida tenant, tipo de mailbox, consentimento e biblioteca de autenticação Flutter antes de estabilizar esta decisão.
+Alvo confirmado por Fernando em HO-001: Outlook.com pessoal (MSA), substituindo a hipótese empresarial. O [estudo](HO-001-MICROSOFT-OUTLOOK-STUDY.md) detalha três registos propostos (API/BFF, Flutter público e conector confidencial), audiência pessoal/authority consumers, consentimento e recuperação. O probe e os testes simulados estão preparados; registo, consentimento e Graph real continuam por validar, conforme [ADR-002](adr/ADR-002-outlook.md). Admissão de membros e papéis são controlados pela aplicação; o tenant consumer comum a todos os MSA não concede acesso. A conta do gestor permanece por confirmar.
 
 - Web: login OIDC pelo backend; cookie Secure/HttpOnly, proteção CSRF e origem única para UI/API. Tokens Microsoft não ficam em localStorage.
-- Mobile: OIDC authorization code + PKCE no browser do sistema. Token de acesso destinado à nossa API, guardado pelo mecanismo seguro da plataforma. Não enviar ID token nem token Graph como se fosse token da API.
+- Mobile: OIDC authorization code + PKCE no browser do sistema, proposto com Flutter AppAuth. Token de acesso destinado à nossa API, guardado pelo mecanismo seguro da plataforma. Não enviar ID token nem token Graph como se fosse token da API. Políticas broker/Intune exigem avaliar integração nativa MSAL; ainda não foram identificadas nem testadas.
 - API: valida assinatura, emissor, audiência, expiração, scopes e tenant permitido; mapeia identidade para membro ativo. A autorização ao objeto/relação é verificada em cada caso de uso.
 - Ligação Outlook: consentimento delegado separado, iniciado pelo backend e associado à sessão/utilizador através de estado verificável. O mobile abre esse fluxo autenticado no browser e recebe apenas um resultado/link, nunca um segredo no URL.
 - O worker usa uma cache MSAL persistida e cifrada no servidor, com chaves fora do banco. Revogação de consentimento suspende sincronização e solicita reconexão.

@@ -2,7 +2,7 @@
 
 ## Âmbito e autoridade
 
-V1 usa Microsoft Graph v1.0 e uma ligação por utilizador ao calendário principal da sua própria mailbox. O estudo HO-001 valida Microsoft 365/Exchange Online, tenant e consentimento. Calendários partilhados/delegados, outros provedores e seleção de calendários secundários ficam para V2.
+V1 usa Microsoft Graph v1.0 e uma ligação por utilizador ao calendário principal da sua própria mailbox. Fernando confirmou Outlook.com pessoal em HO-001. O [estudo](HO-001-MICROSOFT-OUTLOOK-STUDY.md), de 2026-09-08, define os fluxos MSA e prepara o [probe](../scripts/outlook_probe/README.md); a validação real continua bloqueada por registo/configuração/consentimento ainda não preparados. Calendários partilhados/delegados, outros provedores e seleção de calendários secundários ficam para V2.
 
 | Informação | Fonte autorizada | Comportamento |
 |---|---|---|
@@ -20,7 +20,7 @@ Esta é sincronização nos dois sentidos com autoridade por tipo de informaçã
 - Usar permissões delegadas `Calendars.ReadWrite` para ler e publicar no calendário do utilizador e os scopes OIDC/offline necessários ao fluxo. Não pedir permissões de email ou acesso a todas as mailboxes.
 - O scope delegado de escrita abrange mais do que apenas os nossos eventos. A restrição a eventos geridos pela aplicação é imposta pelo código e pelos testes; não é uma limitação garantida pelo scope Microsoft.
 - Políticas empresariais podem exigir consentimento de IT mesmo quando o scope delegado não exige admin por definição. Não presumir que instalar a aplicação concede acesso ao tenant.
-- Guardar cache de tokens cifrada no backend, com controlo de acesso e chaves fora da base de dados. Não guardar tokens nos logs, issues, payloads push ou clientes Web.
+- Guardar cache de tokens Graph cifrada no backend, com controlo de acesso e chaves fora da base de dados. Não guardar tokens Graph nos logs, issues, payloads push ou clientes Web/Mobile. Mobile recebe apenas tokens destinados à nossa API.
 - Revogação, conta desativada ou refresh inválido originam `ReconnectRequired`; parar retries de autenticação infinitos.
 
 As permissões e tipos de conta suportados devem ser confirmados na [referência Microsoft Graph](https://learn.microsoft.com/en-us/graph/permissions-reference) e no [fluxo OIDC/PKCE](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow).
@@ -55,7 +55,7 @@ Esta estratégia e limitações são baseadas em [event: delta](https://learn.mi
 
 O webhook recebe notificações básicas sem resource data, valida `clientState`, associação à subscrição e formato, enfileira um pedido de reconciliação e responde rapidamente. Implementar corretamente o desafio de validação do endpoint. O corpo recebido não é uma instrução para aprovar nem modificar negócio. [Entrega por webhooks](https://learn.microsoft.com/en-us/graph/change-notifications-delivery-webhooks).
 
-Uma subscrição expira. Guardar a expiração devolvida pelo Graph, renovar com antecedência e tratar notificações de ciclo de vida quando aplicáveis. Não assumir que uma subscrição é permanente. [Tipos e duração de subscrições](https://learn.microsoft.com/en-us/graph/change-notifications-overview).
+Uma subscrição expira. Para notificações Outlook básicas, pedir seis dias dentro do limite documentado de 10 080 minutos, guardar a expiração devolvida e renovar diariamente com margem mínima proposta de 24 horas. Tratar `reauthorizationRequired`, `subscriptionRemoved` e `missed`; recriar/reconciliar conforme o caso. Os intervalos são uma proposta operacional. Endpoint HTTPS público, validação em até 10 segundos e fila durável ainda não existem; nenhum webhook foi testado. [Duração oficial](https://learn.microsoft.com/en-us/graph/api/resources/subscription?view=graph-rest-1.0), [desenho e recuperação HO-001](HO-001-MICROSOFT-OUTLOOK-STUDY.md).
 
 Webhooks aceleram a atualização, mas podem chegar duplicados ou fora de ordem. Coalescer os sinais e reconciliar o estado atual. Executar uma leitura incremental periódica, proposta a cada 15 minutos, e uma verificação de saúde mais ampla diária. Estes intervalos são decisões de produto a validar em operação, não garantias da Microsoft.
 

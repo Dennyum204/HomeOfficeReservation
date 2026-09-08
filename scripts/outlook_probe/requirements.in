@@ -1,0 +1,4 @@
+# Direct dependencies; requirements.txt pins the complete resolved environment.
+msal==1.38.0
+requests==2.34.2
+tzdata==2026.3

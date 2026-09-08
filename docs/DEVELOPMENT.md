@@ -51,6 +51,7 @@ Disponibilidade e enforcement dependem do plano/permissões do repositório. Reg
 | Fase | Checks |
 |---|---|
 | HO-000 | `project-docs`: backlog, cobertura, dependências e documentos |
+| HO-001 | `outlook-probe-tests`: probe isolado com dependências fixadas, testes sintéticos e plano offline; sem acesso Microsoft |
 | HO-002 e projetos compiláveis | Format/lint/analyze, build, testes por stack e validação de contratos |
 | Funcionalidades críticas | Integração com PostgreSQL e cenários de autorização/concorrência |
 | Antes do piloto | E2E Web/Mobile, builds de distribuição, migração/restauro e Graph real de teste |
@@ -84,6 +85,8 @@ Ver [STATUS.md](../STATUS.md), [PR #25](https://github.com/Dennyum204/HomeOffice
 O check foi observado no [run real](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655), antes de o tornar obrigatório. Estes são os checks documentais disponíveis em HO-000; HO-002 acrescentará os checks reais das aplicações. Não foi exigida aprovação independente impossível, nem criado Project board, release/tag ou deployment.
 
 ## Autenticação GitHub neste ambiente
+
+HO-001 acrescenta o [guia do probe Microsoft](../scripts/outlook_probe/README.md). A venv e o journal ficam fora do repositório; configuração privada não entra no Git. GitHub CI executa apenas testes simulados. O check obrigatório existente continua a ser `project-docs`; o novo check do probe também deve passar no último SHA do PR, sem alterar silenciosamente proteções durante uma entrega parcial.
 
 GitHub CLI e connector têm autenticações separadas. Nesta entrega, o connector recusou escrita com HTTP 403; a autenticação GitHub CLI resolveu o acesso Git e API, verificado com permissão ADMIN. Com `gh` instalado, o procedimento é:
 

@@ -2,9 +2,9 @@
 
 Planeamento de trabalho presencial na Suíça e home office em Portugal, com aprovações, tarefas e sincronização Outlook.
 
-**Estado: fundação documental HO-000. A aplicação ainda não está implementada.** Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). A stack confirmada é ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter para Android/iOS. A sincronização Outlook é obrigatória na V1.
+**Estado: HO-000 integrado; estudo HO-001 preparado, com validação Microsoft real pendente. A aplicação ainda não está implementada.** Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). A stack confirmada é ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter para Android/iOS. A sincronização Outlook é obrigatória na V1.
 
-A entrega HO-000 está no [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), para revisão e merge humano. O estado verificável está em [STATUS.md](STATUS.md). O tracking usa [issues](https://github.com/Dennyum204/HomeOfficeReservation/issues) e [milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones) para os 24 trabalhos, incluindo releases futuras. Foram criadas 24 issues, 12 labels de release/área e quatro milestones; os URLs reais estão em [docs/backlog.json](docs/backlog.json).
+A entrega HO-000 foi integrada pelo [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), com merge e CI de main verificados em HO-001. O estado verificável está em [STATUS.md](STATUS.md). O tracking usa [issues](https://github.com/Dennyum204/HomeOfficeReservation/issues) e [milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones) para os 24 trabalhos, incluindo releases futuras. Foram criadas 24 issues, 12 labels de release/área e quatro milestones; os URLs reais estão em [docs/backlog.json](docs/backlog.json).
 
 ## Começar
 
@@ -22,6 +22,7 @@ A entrega HO-000 está no [PR #25](https://github.com/Dennyum204/HomeOfficeReser
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Tecnologias, componentes e fronteiras |
 | [DOMAIN.md](docs/DOMAIN.md) | Estados, dados e invariantes |
 | [OUTLOOK.md](docs/OUTLOOK.md) | Contrato de sincronização e recuperação |
+| [Estudo HO-001](docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md) | Identidade, fontes oficiais, probe e evidência pendente |
 | [UX.md](docs/UX.md) | Ecrãs e comportamento Web/Mobile |
 | [QUALITY.md](docs/QUALITY.md) | Testes, segurança e critérios de lançamento |
 | [Decisões](docs/adr/README.md) | Decisões técnicas e pressupostos |
@@ -39,7 +40,7 @@ python3 scripts/check_project.py
 
 No Windows, usar `python scripts/check_project.py` se o executável instalado se chamar `python`; os mesmos argumentos aplicam-se a `--write`.
 
-O comando valida o backlog, dependências, cobertura das funcionalidades, documentos gerados e ligações locais. O workflow incluído executa apenas esta validação documental. Compilação e testes da aplicação serão adicionados com os respetivos projetos em HO-002; não existem ainda.
+O comando valida o backlog, dependências, cobertura das funcionalidades, documentos gerados e ligações locais. O workflow executa `project-docs` e `outlook-probe-tests`; este último instala as dependências fixadas do [probe HO-001](scripts/outlook_probe/README.md) e testa cenários sintéticos sem autenticação Microsoft. Não constitui evidência Graph real. Compilação e testes da aplicação serão adicionados com os respetivos projetos em HO-002; não existem ainda.
 
 Após editar `docs/backlog.json`, regenerar os documentos derivados:
 

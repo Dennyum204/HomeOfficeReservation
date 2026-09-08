@@ -2,6 +2,8 @@
 
 Consultadas em 2026-09-07. As decisões de produto e intervalos operacionais são propostas deste projeto, não obrigações dos fornecedores. Revalidar documentação e versões quando implementar a integração.
 
+Atualização HO-001: fontes Microsoft de identidade/Graph e documentação oficial MSAL Python/Flutter AppAuth consultadas em **2026-09-08**, ligadas junto de cada decisão no [estudo HO-001](HO-001-MICROSOFT-OUTLOOK-STUDY.md). Inclui consentimento empresarial, audiences, cache/renovação, limites mobile/broker, CRUD/delta/recorrência e lifecycle. Consulta documental não equivale a validação com uma conta real.
+
 | Tema | Fonte |
 |---|---|
 | .NET suportado / LTS | [Microsoft .NET releases and support](https://learn.microsoft.com/en-us/dotnet/core/releases-and-support) |

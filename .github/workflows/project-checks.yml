@@ -24,3 +24,20 @@ jobs:
           persist-credentials: false
       - name: Validate project planning
         run: python3 scripts/check_project.py
+
+  outlook-probe-tests:
+    name: outlook-probe-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install isolated probe dependencies
+        run: |
+          python3 -m venv "$RUNNER_TEMP/ho001-venv"
+          "$RUNNER_TEMP/ho001-venv/bin/python" -m pip install --disable-pip-version-check -r scripts/outlook_probe/requirements.txt
+      - name: Test synthetic probe scenarios without Microsoft access
+        run: |
+          "$RUNNER_TEMP/ho001-venv/bin/python" -m unittest discover -s scripts/outlook_probe -p 'test_*.py' -v
+          "$RUNNER_TEMP/ho001-venv/bin/python" scripts/outlook_probe/probe.py plan

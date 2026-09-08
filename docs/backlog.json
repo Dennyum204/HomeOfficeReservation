@@ -181,7 +181,7 @@
       "title": "Repositório, documentação e tracking GitHub",
       "release": "v1.0",
       "area": "docs",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [],
       "features": [],
@@ -197,14 +197,22 @@
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/1",
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/25"
-      ]
+      ],
+      "merge_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/25",
+        "merge_commit": "7257a7b0c88f456b4322da396d45bd4c0aa0e862",
+        "merged_at": "2026-09-08T18:39:50Z",
+        "integration_ci_url": "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34264376475",
+        "integration_ci_conclusion": "success",
+        "verified_at": "2026-09-08"
+      }
     },
     {
       "id": "HO-001",
       "title": "Estudo de identidade Microsoft e Outlook",
       "release": "v1.0",
       "area": "integration",
-      "status": "planned",
+      "status": "blocked",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-000"
@@ -221,7 +229,11 @@
         "ADR-002 atualizado com evidência; não confundir testes simulados com Graph real."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/2",
-      "pr_urls": []
+      "pr_urls": [],
+      "reason": "Outlook.com pessoal confirmado; registo/client ID e configuração ausentes, mailbox dedicada e consentimento de teste por confirmar. Estudo e probe preparados, sem chamadas Graph reais; CRUD/delta/datas/recorrência e reconexão pendentes. PR draft, issue aberta.",
+      "study_path": "docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md",
+      "account_type": "personal_microsoft_account",
+      "live_graph_verified": false
     },
     {
       "id": "HO-002",

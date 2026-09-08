@@ -1,6 +1,6 @@
 # Plano inicial — Home Office Reservation
 
-Atualizado: 8 de setembro de 2026. Versão do plano: 0.2. Estado: stack confirmada; fundação HO-000 em revisão no PR #25.
+Atualizado: 8 de setembro de 2026. Versão do plano: 0.3. Estado: HO-000 integrado pelo PR #25; HO-001 preparado para Outlook.com pessoal, com validação real pendente.
 
 ## Objetivo
 
@@ -14,7 +14,7 @@ Fernando e o seu chefe planeiam os dias presenciais na Suíça e os dias de trab
 | Base de dados | PostgreSQL + Entity Framework Core | Transações para decisões, conflitos e histórico |
 | Web | React + TypeScript + Vite | Dashboard e calendário adaptados ao desktop |
 | Mobile | Flutter / Dart | Aplicação Android/iOS, aproveitando experiência existente |
-| Identidade | Microsoft Entra ID, por confirmar no estudo inicial | Conta profissional e integração com Microsoft 365 |
+| Identidade | Microsoft identity platform, conta MSA confirmada em HO-001 | Outlook.com pessoal; registo/consentimento e ensaio real pendentes |
 | Outlook | Microsoft Graph v1.0, através do backend | Sincronização sem guardar credenciais Microsoft nas interfaces |
 | Contrato | OpenAPI, clientes TypeScript e Dart gerados | Mantém Web e Mobile alinhados com a API |
 | Código | Um monorepo Git | Uma fonte de contexto para o Codex e PRs por funcionalidade |
@@ -48,7 +48,7 @@ No sentido inverso, a aplicação importa intervalos de disponibilidade do calen
 
 Editar ou apagar um evento gerado pela aplicação no Outlook cria uma divergência visível; não altera uma aprovação nem recria silenciosamente um evento eliminado. A interface permite restaurar o evento ou iniciar uma alteração do planeamento. Calendários partilhados, múltiplas contas e aprovação por edição no Outlook ficam fora da V1.
 
-Antes da implementação principal, HO-001 confirma se a conta é Microsoft 365/Exchange Online, quais as políticas de consentimento da empresa e se conseguimos criar, alterar e remover um evento de teste. Esta é a primeira dependência externa a resolver.
+HO-001 confirmou com Fernando que o alvo é Outlook.com pessoal. O [estudo](docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md) e o probe estão preparados; falta preparar registo, consentimento e mailbox dedicada para criar, alterar e remover eventos de teste e verificar delta/datas. Uma conta empresarial futura exige nova validação de IT; a conta do gestor ainda deve ser confirmada. Esta dependência externa permanece aberta.
 
 ## Quando entram as próximas funcionalidades
 

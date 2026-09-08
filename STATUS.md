@@ -4,36 +4,35 @@ Atualizado: 2026-09-08.
 
 ## Situação verificável
 
-- Fase: fundação documental HO-000; stack confirmada e implementação ainda não iniciada.
-- Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). Visibilidade preservada.
-- Branch: `docs/ho-000-project-foundation`. A inspeção inicial confirmou GitHub vazio; commit de bootstrap `378a111` publicado em `origin/main` tem árvore vazia; o commit existente `d17b150` foi preservado na branch. O histórico do bundle não foi importado.
-- HO-000: `review`; entrega documental e tracking no [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), ligado à [issue HO-000 #1](https://github.com/Dennyum204/HomeOfficeReservation/issues/1). Aguarda revisão e merge por Fernando; ainda não integrado na `main`.
-- GitHub CLI 2.100.0 autenticado como Dennyum204, com credencial no keyring, protocolo HTTPS e acesso ADMIN ao repositório. `gh auth setup-git --hostname github.com` e `gh auth status` executados; bloqueio de autenticação resolvido. O executável foi mantido numa instalação persistente fora do diretório temporário, para o helper Git continuar disponível.
-- Tracking: [24 issues](https://github.com/Dennyum204/HomeOfficeReservation/issues), [12 labels de release/área](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [quatro milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones). Pesquisa prévia não encontrou issues existentes; todos os URLs foram guardados em `docs/backlog.json`.
-- Proteções de `main` aplicadas e relidas pela API GitHub: PR obrigatório, `project-docs` do GitHub Actions obrigatório e branch atualizada, conversas resolvidas, histórico linear e enforcement para admins. Zero aprovações independentes obrigatórias; force-push e eliminação de `main` proibidos. Apenas squash merge; eliminação de branches após merge ativa e auto-merge desativado. Detalhes em [DEVELOPMENT.md](docs/DEVELOPMENT.md).
-- CI remota: o primeiro [run documental](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655) passou em `c2393b2`. A verificação do SHA final e os checks mais recentes ficam registados no PR; só retirar draft depois de CI verde no último commit e ausência de conflitos.
-- Validação: `scripts/check_project.py --write` e `scripts/check_project.py` passam (22 funcionalidades, 24 tarefas). É validação documental; não compila nem testa a aplicação.
-- Verificações adicionais: diff sem erros de whitespace; 16 caminhos de outputs/segredos ignorados e 15 caminhos de lockfiles/migrações/exemplos preservados, mais chave Apple `.p8`; todos os 38 ficheiros do starter presentes e validador original inalterado; ZIP/bundle excluídos e revisão de assinaturas de credenciais sem deteções.
-- Backend/Web/Mobile: apenas instruções e desenho; sem projetos compiláveis, SDKs fixados, migrações ou ambiente PostgreSQL configurado. HO-002 criará esses artefactos e os comandos reais.
-- Conta Outlook real: não consultada nem ligada; nenhum evento criado.
+- **HO-000 concluído e integrado** pelo [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), merge humano em 2026-09-08 às 18:39:50Z, SHA `7257a7b0c88f456b4322da396d45bd4c0aa0e862`. Fetch confirmou o commit em `origin/main`; [CI de integração](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34264376475) passou com `project-docs`. Backlog reconciliado antes de verificar a dependência de HO-001.
+- **HO-001 bloqueado parcialmente** na branch `docs/ho-001-microsoft-outlook-study`, criada de main atualizada. [Issue #2](https://github.com/Dennyum204/HomeOfficeReservation/issues/2) permanece aberta; PR deve permanecer draft até cumprir os critérios. Estudo/probe preparados; ensaio Microsoft real não executado.
+- Fernando confirmou **Outlook.com pessoal (MSA)**. O endereço indicado permanece privado; informou que nada estava preparado. Registo de teste, configuração, consentimento e confirmação de mailbox dedicada continuam em falta. O diretório que aloja o registo da aplicação é distinto do tenant consumer da mailbox.
+- [Estudo HO-001](docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md) e [ADR-002](docs/adr/ADR-002-outlook.md) documentam login BFF, Flutter AppAuth/PKCE com token da API, conector de consentimento separado, cache Graph apenas no backend e desenho de delta/subscrições/recuperação. ADR continua proposto; preserva a hipótese empresarial anterior como histórico.
+- [Probe isolado](scripts/outlook_probe/README.md) preparado com MSAL Python, configuração sintética, binding explícito da conta, eventos próprios e limpeza recuperável. **19 testes passaram com Graph simulado**. Plano offline confirmou seis fixtures e dias DST de 23/25 horas em Lisboa/Zurique; zero chamadas Microsoft. `pip check` e validador documental passam; CI do PR deve verificar `project-docs` e `outlook-probe-tests` no último SHA.
+- Nenhuma autenticação Microsoft, chamada Graph real, evento real, subscrição ou webhook executado. Login de produção Web/Flutter, armazenamento durável de tokens e infraestrutura não foram implementados. Suporte real a ETag/412, aliases de timezone, delta/paginação, recorrência e revogação/reconexão permanece sem evidência.
+- Repositório [público](https://github.com/Dennyum204/HomeOfficeReservation), stack preservada: .NET 10/ASP.NET Core, PostgreSQL/EF Core, React/TypeScript, Flutter Android/iOS; Outlook obrigatório na V1. HO-002 não iniciado. Não existem projetos compiláveis, migrações ou ambiente PostgreSQL.
+- Tracking existente preservado: [24 issues](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [quatro milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones), com URLs reais no backlog. GitHub CLI autenticado e acesso Git/API operacional.
+- Proteções documentadas de main preservadas: PR obrigatório, check estrito `project-docs`, conversas resolvidas, histórico linear, enforcement para admins e zero aprovações independentes obrigatórias. Force-push/deletion proibidos; apenas squash; auto-merge desativado. [Detalhes](docs/DEVELOPMENT.md).
 
-## Próximo trabalho
+## Próxima ação — continuar HO-001
 
-HO-000 fica em `review` até ao merge humano. Não há bloqueio de autenticação pendente. Fernando revê o [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) e faz merge; o Codex não integra o PR nem ativa auto-merge.
+Fernando prepara acesso a registo Entra para MSA, client ID e mailbox dedicada; confirma consentimento e execução do ensaio. Seguir o [guia](scripts/outlook_probe/README.md), guardar configuração privada fora do Git e executar binding/CRUD/delta/limpeza apenas após essa confirmação. Não enviar tokens, passwords, endereços ou conteúdo do calendário para GitHub.
 
-Depois do merge humano: **HO-001 — Estudo de identidade Microsoft e Outlook**, com **Astra, reasoning `high`**. Verificar merge/CI de HO-000 e reconciliar o backlog antes de avaliar a dependência. HO-002 prepara os projetos numa tarefa posterior; nenhuma das duas está iniciada nesta entrega.
+Depois, completar a matriz de evidência de HO-001, validar fluxos reais/limitações, atualizar ADR/issue e só retirar draft se todos os critérios estiverem satisfeitos, CI verde no último SHA e sem conflitos. **Não iniciar HO-002 nem outro trabalho.** Fernando revê e faz merge; o Codex não integra PRs nem ativa auto-merge.
 
-## Pressupostos a confirmar
+## Decisões e pressupostos pendentes
 
-| Tema | Pressuposto proposto | Quem resolve / quando |
+| Tema | Estado | Quem resolve / quando |
 |---|---|---|
-| Outlook | Microsoft 365 empresarial / Exchange Online | Fernando e IT, HO-001 |
-| Identidade | Ambos podem usar contas do mesmo tenant autorizado | HO-001 |
-| Mobile | Android e iOS confirmados; meios de assinatura/distribuição privada por decidir | Fernando, HO-002/HO-012 |
-| Localização inicial | Dias úteis presumidos presenciais, com etiqueta de padrão base | Fernando e chefe, HO-003 |
-| Idioma | PT-PT inicialmente; estrutura preparada para outros idiomas | Fernando, HO-005 |
-| Alojar aplicação | Contentores Linux e PostgreSQL, fornecedor/região/domínio por decidir | Fernando/empresa, HO-012 |
+| Outlook | MSA/Outlook.com pessoal confirmado; ensaio real pendente | Fernando, continuação HO-001 |
+| Registo de aplicações | Acesso ao diretório/portal e client IDs ainda não preparados | Fernando, continuação HO-001 |
+| Segundo participante | Conta do gestor e admissão explícita por confirmar | Fernando, antes do piloto |
+| Identidade empresarial futura | Requer nova validação IT/consentimento/broker; não autorizada pela conta pessoal | Se esse cenário surgir |
+| Mobile | Android/iOS confirmados; assinatura/distribuição privada por decidir | Fernando, HO-002/HO-012 |
+| Localização inicial | Dias úteis presumidos presenciais com etiqueta de padrão base | Fernando e chefe, HO-003 |
+| Idioma | PT-PT inicialmente; estrutura para outros idiomas | Fernando, HO-005 |
+| Alojamento | Linux/PostgreSQL, fornecedor/região/domínio por decidir | Fernando, HO-012 |
 
 ## Regra de continuidade
 
-Cada PR atualiza este ficheiro com o estado real, decisão relevante, bloqueio concreto e próxima tarefa. Antes de avaliar dependências, verificar merge e CI reais e reconciliar estados antigos em `docs/backlog.json`; regenerar ROADMAP.md e docs/BACKLOG.md. PR aberto é `review`, não `done`. Fernando faz merge; o Codex não integra PRs nem ativa auto-merge. Não guardar segredos ou detalhes privados do Outlook aqui.
+Cada PR atualiza o estado real. Verificar merge e CI antes de reconciliar backlog e avaliar dependências; regenerar ROADMAP.md e docs/BACKLOG.md. `done` exige integração verificada; entrega parcial mantém `blocked` com motivo e PR draft. Não guardar segredos nem detalhes privados Outlook no tracking público.
