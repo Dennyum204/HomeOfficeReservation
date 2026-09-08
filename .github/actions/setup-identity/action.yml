@@ -13,7 +13,7 @@ runs:
       run: |
         brew install postgresql@18
         pg_bin="$(brew --prefix postgresql@18)/bin"
-        "$pg_bin/postgres" --version | grep -E '18\.6$'
+        "$pg_bin/postgres" --version | grep -E '^postgres [(]PostgreSQL[)] 18[.]6([[:space:]]|$)'
         umask 077
         printf '%s' "$POSTGRES_PASSWORD" > "$RUNNER_TEMP/pg-password"
         "$pg_bin/initdb" -D "$RUNNER_TEMP/pgdata" -U homeoffice --pwfile="$RUNNER_TEMP/pg-password" --auth=scram-sha-256 --locale=C -E UTF8
