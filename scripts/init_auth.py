@@ -20,19 +20,22 @@ def private_write(path, data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     base = Path(os.environ.get("LOCALAPPDATA", str(Path.home() / ".local/share")))
-    parser.add_argument("--private-dir", type=Path, default=base / "HomeOfficeReservation/identity")
+    parser.add_argument("--private-dir", type=Path, help="Private directory; otherwise reuse the existing configured key directory's parent")
     parser.add_argument("--database-from-env", help="Use this environment variable as the local connection, without displaying it")
     args = parser.parse_args()
-    folder = args.private_dir.resolve()
+    settings = ROOT / "apps/api/src/HomeOffice.Api/appsettings.Local.json"
+    if not settings.exists() and not args.database_from_env:
+        subprocess.run([sys.executable, str(ROOT / "scripts/init_local.py")], check=True)
+    config = json.loads(settings.read_text(encoding="utf-8")) if settings.exists() else {}
+    existing_keys = config.get("DataProtection", {}).get("KeyDirectory")
+    default_folder = Path(existing_keys).parent if existing_keys else base / "HomeOfficeReservation/identity"
+    # Reuse the same credentials even when Codex/MSIX and a normal terminal have different LOCALAPPDATA.
+    folder = (args.private_dir or default_folder).resolve()
     if folder.is_relative_to(ROOT):
         raise SystemExit("Private account/key/email material must be outside the repository.")
     folder.mkdir(parents=True, exist_ok=True)
     if os.name != "nt":
         folder.chmod(0o700)
-    settings = ROOT / "apps/api/src/HomeOffice.Api/appsettings.Local.json"
-    if not settings.exists() and not args.database_from_env:
-        subprocess.run([sys.executable, str(ROOT / "scripts/init_local.py")], check=True)
-    config = json.loads(settings.read_text(encoding="utf-8")) if settings.exists() else {}
     if args.database_from_env:
         connection = os.environ.get(args.database_from_env)
         if not connection:

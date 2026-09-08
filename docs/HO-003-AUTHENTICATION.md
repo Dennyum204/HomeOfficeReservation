@@ -14,7 +14,7 @@ dotnet restore apps/api/HomeOffice.slnx --locked-mode
 dotnet build apps/api/HomeOffice.slnx -c Release --no-restore
 $env:ASPNETCORE_ENVIRONMENT = 'Development'
 dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --migrate
-$private = Join-Path $env:LOCALAPPDATA 'HomeOfficeReservation/identity'
+$private = Split-Path (Get-Content apps/api/src/HomeOffice.Api/appsettings.Local.json -Raw | ConvertFrom-Json).DataProtection.KeyDirectory -Parent
 dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --provision-dev "$private/accounts.json"
 dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080
 ```
