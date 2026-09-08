@@ -8,7 +8,7 @@ Atualizado: 2026-09-08.
 - Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). Visibilidade preservada.
 - Branch: `docs/ho-000-project-foundation`. A inspeção inicial confirmou GitHub vazio; commit local de bootstrap `378a111` tem árvore vazia. O histórico do bundle não foi importado.
 - HO-000: `blocked`; ficheiros integrados na raiz e documentação validada. Push, tracking e PR ainda dependem da autenticação Git local. Nenhuma issue, milestone, label, proteção ou PR remoto foi criado nesta entrega.
-- A ligação GitHub lê o repositório, mas a criação de issue devolveu HTTP 403, `Resource not accessible by integration`. Git Credential Manager iniciou o login; nenhum token foi guardado no repositório.
+- A ligação GitHub lê o repositório, mas a criação de issue devolveu HTTP 403, `Resource not accessible by integration`. O login de dispositivo do Git Credential Manager expirou sem autenticação (`expired_token`); é necessário iniciar e concluir novo login. Nenhum token foi guardado no repositório.
 - Validação: `scripts/check_project.py --write` e `scripts/check_project.py` passam (22 funcionalidades, 24 tarefas). É validação documental; não compila nem testa a aplicação.
 - Verificações adicionais: diff sem erros de whitespace; 16 caminhos de outputs/segredos ignorados e 15 caminhos de lockfiles/migrações/exemplos preservados, mais chave Apple `.p8`; todos os 38 ficheiros do starter presentes e validador original inalterado; ZIP/bundle excluídos e revisão de assinaturas de credenciais sem deteções.
 - Backend/Web/Mobile: apenas instruções e desenho; sem projetos compiláveis, SDKs fixados, migrações ou ambiente PostgreSQL configurado. HO-002 criará esses artefactos e os comandos reais.
