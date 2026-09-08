@@ -59,6 +59,8 @@ Disponibilidade e enforcement dependem do plano/permissões do repositório. Reg
 
 O scaffold deve acrescentar os jobs de cada stack no mesmo PR que cria o código. Checks obrigatórios usam nomes estáveis; não criar jobs que passam por saltar silenciosamente projetos existentes. Workflows de PR executam sem segredos de produção e sem `pull_request_target` para código não confiável.
 
+HO-002 acrescenta `backend-contracts`, `web`, `flutter-android` e `flutter-ios` sem filtros de paths. [Matriz e fontes](HO-002-FOUNDATION.md), comandos em [API](../apps/api/README.md), [Web](../apps/web/README.md) e [Mobile](../apps/mobile/README.md). PostgreSQL usa o Compose documentado no runner Linux; iOS usa macOS/Xcode 26.3. O código Dart gerado também é analisado. Lockfiles são obrigatórios e os clientes regenerados têm check de diff; os testes normais não precisam de Microsoft. Builds unsigned/Simulator não equivalem a lojas ou dispositivos físicos.
+
 Fixar actions em SHAs verificados e ativar atualização de dependências. O workflow documental usa um commit fixo de checkout; deve ser atualizado normalmente, sem tratar este pacote como uma lista imutável de versões.
 
 Deploy automático para staging só depois de configurar o ambiente. Produção e lojas mobile seguem a autorização existente e os gates de release; este plano não publicou nenhum ambiente.
@@ -85,9 +87,13 @@ Ver [STATUS.md](../STATUS.md), [PR #25](https://github.com/Dennyum204/HomeOffice
 
 O check foi observado no [run real](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655), antes de o tornar obrigatório. Estes são os checks documentais disponíveis em HO-000; HO-002 acrescentará os checks reais das aplicações. Não foi exigida aprovação independente impossível, nem criado Project board, release/tag ou deployment.
 
+## Proteções atualizadas em HO-002
+
+Em 2026-09-08, após observar os nomes reais dos jobs, a API GitHub confirmou como obrigatórios **project-docs, backend-contracts, web, flutter-android e flutter-ios**, todos de GitHub Actions (`app_id: 15368`), com `strict: true`. Foram preservadas as restantes proteções HO-000, incluindo zero aprovações independentes e proibição de force-push/eliminação. Um check vermelho bloqueia a entrega e o merge; o PR #28 só sai de draft quando todos passarem no último commit. [Checks reais do PR](https://github.com/Dennyum204/HomeOfficeReservation/pull/28/checks). Nenhum merge ou auto-merge foi executado.
+
 ## Autenticação GitHub neste ambiente
 
-O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. O check obrigatório continua `project-docs`. HO-002 acrescentará builds reais do core conforme ADR-004.
+O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. HO-002 acrescenta os quatro checks obrigatórios do core abaixo, conforme ADR-004.
 
 GitHub CLI e connector têm autenticações separadas. Nesta entrega, o connector recusou escrita com HTTP 403; a autenticação GitHub CLI resolveu o acesso Git e API, verificado com permissão ADMIN. Com `gh` instalado, o procedimento é:
 

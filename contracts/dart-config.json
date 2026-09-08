@@ -1,0 +1,9 @@
+{
+  "hideGenerationTimestamp": true,
+  "pubName": "homeoffice_api",
+  "pubVersion": "0.1.0",
+  "pubPublishTo": "none",
+  "pubDescription": "Generated HomeOfficeReservation API client. Do not edit.",
+  "pubRepository": "https://github.com/Dennyum204/HomeOfficeReservation",
+  "useFinalProperties": true
+}

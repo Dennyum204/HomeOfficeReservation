@@ -2,7 +2,7 @@
 
 ## Purpose and current phase
 
-Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). The current repository contains planning and governance, not an implemented application. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
+Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). HO-002 adds runnable API/Web/Flutter foundations; functional authentication and business flows are later tasks. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
 
 User instructions and applicable higher-priority instructions take precedence. These project conventions do not create new approval requirements for already-authorized work.
 
@@ -63,7 +63,7 @@ python3 scripts/check_project.py
 python3 scripts/check_project.py --write
 ```
 
-The second command only regenerates the roadmap/backlog from JSON. Backend/web/mobile build commands are not available until HO-002 creates those projects. Add the exact tested commands to the relevant area README and CI when implementing; never report planned commands as executed.
+The second command only regenerates the roadmap/backlog from JSON. Build/test/start commands are in apps/api/README.md, apps/web/README.md and apps/mobile/README.md. Use pinned SDKs and locked restores. Run scripts/generate_contracts.py --check for contract drift. PostgreSQL integration tests require HO_TEST_DATABASE and fail rather than silently skip when it is missing. Optional Outlook reference tests are outside normal core CI. Report local versus remote/platform validation accurately.
 
 ## Before handing off a PR
 

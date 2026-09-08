@@ -6,6 +6,8 @@ Direção atual: fontes de ASP.NET Core Identity, Identity API, Data Protection,
 
 Referência histórica opcional: fontes Microsoft Graph/MSAL/AppAuth consultadas em **2026-09-08** no [estudo HO-001](HO-001-MICROSOFT-OUTLOOK-STUDY.md). O estudo não valida Graph real e não define o login core. Onboarding interrompido, integração adiada para HO-008/HO-009.
 
+Scaffold HO-002: [versões resolvidas e fontes oficiais](HO-002-FOUNDATION.md), consultadas em **2026-09-08**, incluindo .NET/EF, Vite/React, Flutter, Java/geradores, PostgreSQL e runners nativos. Preserva-se o histórico das fontes anteriores.
+
 | Tema | Fonte |
 |---|---|
 | .NET suportado / LTS | [Microsoft .NET releases and support](https://learn.microsoft.com/en-us/dotnet/core/releases-and-support) |

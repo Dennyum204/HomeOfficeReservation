@@ -1,0 +1,181 @@
+name: Core application
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: core-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+
+jobs:
+  backend-contracts:
+    name: backend-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      POSTGRES_PASSWORD: ci-synthetic-only
+      HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: '21.0.12+8.0.LTS' # Temurin API's exact SemVer for JDK 21.0.12+8
+      - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
+      - run: dotnet format apps/api/HomeOffice.slnx --no-restore --verify-no-changes
+      - run: dotnet build apps/api/HomeOffice.slnx -c Release --no-restore
+      - name: Native source encoding and debug-only transport configuration
+        run: python3 scripts/check_native_config.py
+      - name: Contract regeneration must match committed OpenAPI and both clients
+        run: python3 scripts/generate_contracts.py --check
+      - name: Start the documented PostgreSQL environment
+        run: docker compose -f infra/compose.yaml up -d --wait
+      - name: Backend and real PostgreSQL integration tests
+        run: dotnet test apps/api/HomeOffice.slnx -c Release --no-build --logger trx
+      - name: Real process startup with database available and unavailable
+        run: |
+          python3 scripts/smoke_api.py --database
+          python3 scripts/smoke_api.py
+      - if: always()
+        run: docker compose -f infra/compose.yaml down
+
+  web:
+    name: web
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          global-json-file: global.json
+      - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
+      - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
+      - run: npm ci
+        working-directory: apps/web
+      - run: npm run format:check && npm run typecheck && npm run lint && npm test && npm run build
+        working-directory: apps/web
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - name: Browser tests with real API and generated TypeScript client
+        run: npm run test:e2e
+        working-directory: apps/web
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: web-evidence
+          path: |
+            apps/web/test-results/
+            apps/web/playwright-report/
+          retention-days: 14
+
+  flutter-android:
+    name: flutter-android
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-flutter
+      - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c
+        with:
+          distribution: temurin
+          java-version: '21.0.12+8.0.LTS'
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          global-json-file: global.json
+      - run: dart pub get --enforce-lockfile && dart analyze
+        working-directory: contracts/dart
+      - run: flutter pub get --enforce-lockfile
+        working-directory: apps/mobile
+      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
+        working-directory: apps/mobile
+      - run: flutter analyze && flutter test
+        working-directory: apps/mobile
+      - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
+      - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
+      - name: Real API connectivity using the Flutter repository and generated Dart client
+        run: python3 scripts/smoke_api.py --dart-client
+      - name: Android release compilation (unsigned, no deployment)
+        run: flutter build apk --release --dart-define=API_BASE_URL=https://api.example.invalid
+        working-directory: apps/mobile
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Start local API for the Android emulator
+        run: |
+          ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://0.0.0.0:5080 > "$RUNNER_TEMP/android-api.log" 2>&1 &
+      - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          script: cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080
+
+  flutter-ios:
+    name: flutter-ios
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-flutter
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          global-json-file: global.json
+      - run: xcodebuild -version
+      - run: flutter pub get --enforce-lockfile
+        working-directory: apps/mobile
+      - name: iOS Simulator build
+        run: flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
+        working-directory: apps/mobile
+      - name: iOS device release compilation (unsigned, no deployment)
+        run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api.example.invalid
+        working-directory: apps/mobile
+      - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
+      - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
+      - name: Start API and boot an available iPhone simulator
+        run: |
+          ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080 > "$RUNNER_TEMP/ios-api.log" 2>&1 &
+          device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for xs in d["devices"].values() for x in xs if "iPhone" in x["name"]))')
+          xcrun simctl boot "$device"
+          xcrun simctl bootstatus "$device" -b
+          echo "IOS_SIMULATOR=$device" >> "$GITHUB_ENV"
+      - name: iOS Simulator connects through the generated Dart client
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080
+        working-directory: apps/mobile
+      - name: Install the regular shell and capture it (integration test app is removed after tests)
+        run: |
+          flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
+          xcrun simctl install "$IOS_SIMULATOR" build/ios/iphonesimulator/Runner.app
+          xcrun simctl launch "$IOS_SIMULATOR" dev.homeoffice.homeofficeMobile
+          sleep 5
+          xcrun simctl io "$IOS_SIMULATOR" screenshot "$RUNNER_TEMP/ios-shell.png"
+        working-directory: apps/mobile
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ios-evidence
+          path: ${{ runner.temp }}/ios-shell.png
+          retention-days: 14

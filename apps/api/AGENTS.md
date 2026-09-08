@@ -10,4 +10,4 @@ Read root AGENTS.md, docs/DOMAIN.md and docs/adr/ADR-004-independent-core.md fir
 - Coordinate approval/presence conflicts through employee planning version and a transaction. An ETag on one aggregate alone is insufficient.
 - Keep Graph calls outside the business transaction; use durable outbox, idempotency and reconciliation.
 - Integration tests use PostgreSQL for relational/concurrency behavior; an in-memory EF provider does not verify these properties.
-- HO-002 must add exact restore/build/test/format commands and compatible SDK/package pins. No backend project or build command exists yet in this directory.
+- Follow README.md for pinned SDK/packages and exact restore/build/test/format commands. Integration tests require PostgreSQL; they never silently skip. HO-002 prepares the Identity model, but does not provision accounts, functional authentication or migrations.

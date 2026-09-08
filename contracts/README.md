@@ -1,6 +1,24 @@
 # Contrato entre backend, Web e Mobile
 
-Estado: desenho. HO-002 cria a especificação OpenAPI gerada pelo backend e a configuração reprodutível de geração dos clientes TypeScript/Dart. Não existe aqui uma especificação fictícia apresentada como completa.
+HO-002 implementa `GET /api/v1/workspace` e gera [openapi.json](openapi.json) a partir dos metadados ASP.NET Core. OpenAPI **3.0** escolhido explicitamente tanto no build como no endpoint Development, pela compatibilidade dos dois geradores estáveis. Não inclui endpoints de negócio fictícios.
+
+## Regenerar e verificar
+
+Requer .NET SDK de `global.json`, Java Temurin 21.0.12+8 e Python 3.10+. Restaurar o backend antes. Na raiz:
+
+```sh
+dotnet restore apps/api/HomeOffice.slnx --locked-mode
+python scripts/generate_contracts.py
+python scripts/generate_contracts.py --check
+```
+
+O build executa geração oficial Microsoft.Extensions.ApiDescription.Server, sem ouvir numa porta nem ligar à base de dados. O script ordena JSON, gera TypeScript/Dart com **OpenAPI Generator 7.25.0**, verifica SHA-256 do JAR antes de o executar e uniformiza whitespace. Cache em `~/.cache/homeoffice-tools` ou `HO_TOOLS_CACHE`. Os 20 ficheiros gerados são comparados, incluindo deteção de ficheiros obsoletos; `--check` falha sem alterar os ficheiros versionados. CI exige correspondência, sem credenciais.
+
+`typescript/` é importado pela Web; `dart/` é package de dependência por caminho do Flutter. Tipos vêm do backend: não copiar DTOs nem editar outputs. Os pequenos [templates de dependências/compatibilidade Dart](templates/README.md) são entradas da geração, com origem/licença registadas. Os geradores incluem helpers genéricos de autenticação sem utilização; não implementam o login da aplicação.
+
+Após mudar dependências do template, executar `dart pub get` em `contracts/dart` e `flutter pub get` em `apps/mobile` e versionar os lockfiles. Em CI usar `--enforce-lockfile`; analisar o cliente Dart além da aplicação. Tests Web E2E e `apps/mobile/tool/smoke_api.dart` consomem os clientes gerados contra API real.
+
+Fontes oficiais consultadas em 2026-09-08: [OpenAPI ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/aspnetcore-openapi?view=aspnetcore-10.0), [TypeScript Fetch](https://openapi-generator.tech/docs/generators/typescript-fetch/), [Dart](https://openapi-generator.tech/docs/generators/dart/).
 
 ## Convenções propostas
 

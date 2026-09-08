@@ -29,4 +29,4 @@ Outlook não decide aprovações nem condiciona lançamento. Onboarding Microsof
 
 ## Continuidade
 
-PR #27 entrega apenas documentação/decisões e tracking. Fernando revê e faz merge; Codex não integra nem ativa auto-merge. Próxima tarefa é HO-002 numa branch própria a partir de main verificada. Consultar [STATUS](STATUS.md), [DEVELOPMENT](docs/DEVELOPMENT.md) e os [prompts](docs/CODEX_TASKS.md); não iniciar outro item sem pedido.
+PR #27 integrou documentação/decisões e tracking, com merge/CI verificados. HO-002 entrega fundações executáveis no [PR #28](https://github.com/Dennyum204/HomeOfficeReservation/pull/28); depois de integração humana verificada, a próxima tarefa é HO-003. Fernando revê e faz merge; Codex não integra nem ativa auto-merge. Consultar [STATUS](STATUS.md), [DEVELOPMENT](docs/DEVELOPMENT.md) e os [prompts](docs/CODEX_TASKS.md); não iniciar outro item sem pedido.
