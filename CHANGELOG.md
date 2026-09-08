@@ -7,5 +7,6 @@
 - Preparação de arquitetura, âmbito V1 com Outlook e roadmap.
 - Backlog com dependências e critérios de aceitação.
 - Regras Codex, modelos de issue/PR e validação documental.
+- Proteções de main verificadas com o check real `project-docs`, PR obrigatório e zero aprovações independentes para mantenedor único.
 
 Nenhuma versão da aplicação foi lançada.

@@ -181,7 +181,7 @@
       "title": "Repositório, documentação e tracking GitHub",
       "release": "v1.0",
       "area": "docs",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [],
       "features": [],
@@ -195,7 +195,9 @@
         "Proteções documentadas da main configuradas e verificadas onde permitido, com nomes reais de checks e sem aprovação independente obrigatória para mantenedor único."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/1",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/25"
+      ]
     },
     {
       "id": "HO-001",

@@ -1,6 +1,6 @@
 # Plano inicial — Home Office Reservation
 
-Atualizado: 8 de setembro de 2026. Versão do plano: 0.2. Estado: stack confirmada; fundação HO-000 em preparação para revisão.
+Atualizado: 8 de setembro de 2026. Versão do plano: 0.2. Estado: stack confirmada; fundação HO-000 em revisão no PR #25.
 
 ## Objetivo
 

@@ -18,7 +18,7 @@ Ler AGENTS.md e STATUS.md. Verificar merge/CI dos PRs e reconciliar estados anti
 
 ## Bootstrap executado para HO-000
 
-A inspeção inicial encontrou apenas o ZIP na workspace, sem `.git`, e nenhum commit/ref no GitHub. Foi criado localmente um repositório novo com um único commit vazio em `main`, `chore: bootstrap repository`, para estabelecer a base do PR. A branch de trabalho é `docs/ho-000-project-foundation`. Consultar [STATUS.md](../STATUS.md) para a confirmação do push e o PR real.
+A inspeção inicial encontrou apenas o ZIP na workspace, sem `.git`, e nenhum commit/ref no GitHub. Foi criado um repositório local novo e publicado o único commit vazio `378a111` em `origin/main`, `chore: bootstrap repository`, para estabelecer a base do PR. A branch de trabalho é `docs/ho-000-project-foundation`. Consultar [STATUS.md](../STATUS.md) para a confirmação do push e o PR real.
 
 Se repetir o processo noutro checkout, verificar primeiro `git ls-remote origin` e a história real. Havendo commits, usar essa base, sem criar outro bootstrap ou substituir a história. Toda a integração de ficheiros deve ocorrer numa branch de âmbito definido.
 

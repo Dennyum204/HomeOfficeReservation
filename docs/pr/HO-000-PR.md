@@ -14,10 +14,13 @@ Closes #1 — [HO-000](https://github.com/Dennyum204/HomeOfficeReservation/issue
 
 ## Validação e continuidade
 
-- Validador original: `scripts/check_project.py --write` e `scripts/check_project.py` passam, sem dependências Python externas.
-- Workflow documental: `project-docs`. Resultados remotos e proteções só serão registados depois de verificados no GitHub.
-- Tracking remoto criado e autenticação Git/gh resolvida. PR, CI e proteções em verificação; ver [STATUS.md](../../STATUS.md).
-- Próxima tarefa depois do merge humano: HO-001, Astra reasoning `high`.
+- `python scripts/check_project.py --write` e `python scripts/check_project.py`: passam, 22 funcionalidades e 24 tarefas; validador original sem dependências externas.
+- `git diff --check`: passa; regras de ignore verificadas para outputs/segredos e preservação de lockfiles, migrações e exemplos.
+- GitHub API: 24 issues únicas verificadas contra IDs, títulos, aceitação, dependências ligadas, labels, milestones e URLs do JSON. Quatro milestones sem datas artificiais.
+- `project-docs` passou no [primeiro run](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655). O [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) regista a evidência do último SHA; retirar draft apenas depois de verificar CI final verde e ausência de conflitos.
+- Proteções de `main` aplicadas e relidas: PR obrigatório, check `project-docs` associado ao GitHub Actions, base atualizada, conversas resolvidas, histórico linear, enforcement para admins e zero aprovações independentes. Force-push/eliminação de main bloqueados; squash apenas; auto-merge desativado.
+- Bootstrap vazio publicado em `main`; branch e commit preexistente `d17b150` preservados. Autenticação Git/gh resolvida; visibilidade pública preservada.
+- HO-000 em `review` até ao merge humano. Próxima tarefa depois do merge: HO-001, Astra reasoning `high`; não iniciada nesta entrega.
 
 ## Impacto e recuperação
 

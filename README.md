@@ -4,7 +4,7 @@ Planeamento de trabalho presencial na Suíça e home office em Portugal, com apr
 
 **Estado: fundação documental HO-000. A aplicação ainda não está implementada.** Repositório público: [Dennyum204/HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation). A stack confirmada é ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter para Android/iOS. A sincronização Outlook é obrigatória na V1.
 
-O estado verificável da entrega está em [STATUS.md](STATUS.md). O tracking usa [issues](https://github.com/Dennyum204/HomeOfficeReservation/issues) e [milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones) para os 24 trabalhos, incluindo releases futuras. Foram criadas 24 issues, 12 labels de release/área e quatro milestones; os URLs reais estão em [docs/backlog.json](docs/backlog.json).
+A entrega HO-000 está no [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25), para revisão e merge humano. O estado verificável está em [STATUS.md](STATUS.md). O tracking usa [issues](https://github.com/Dennyum204/HomeOfficeReservation/issues) e [milestones](https://github.com/Dennyum204/HomeOfficeReservation/milestones) para os 24 trabalhos, incluindo releases futuras. Foram criadas 24 issues, 12 labels de release/área e quatro milestones; os URLs reais estão em [docs/backlog.json](docs/backlog.json).
 
 ## Começar
 

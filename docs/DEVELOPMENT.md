@@ -63,7 +63,38 @@ Deploy automático para staging só depois de configurar o ambiente. Produção 
 
 ## Evidência HO-000
 
-Ver [STATUS.md](../STATUS.md) e [notas do PR](pr/HO-000-PR.md) para a entrega atual. As proteções só serão descritas como ativas depois de a API GitHub devolver os valores configurados. A validação documental local não comprova CI remota nem integração na `main`.
+Ver [STATUS.md](../STATUS.md), [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) e [notas do PR](pr/HO-000-PR.md). Configuração aplicada e confirmada por leitura da API GitHub em 2026-09-08:
+
+| Definição | Valor verificado |
+|---|---|
+| Branch | `main` |
+| Pull request obrigatório | Sim; inclui administradores |
+| Check obrigatório | `project-docs`, GitHub Actions (`app_id: 15368`) |
+| Branch atualizada antes de merge | Sim (`strict: true`) |
+| Conversas resolvidas | Obrigatório |
+| Aprovações independentes | `0`, adequado ao mantenedor único |
+| Aprovação CODEOWNERS / último push por outra pessoa | Não exigidas |
+| Force-push / eliminação de main | Proibidos |
+| Histórico linear | Obrigatório |
+| Método de merge | Apenas squash |
+| Eliminar branch depois de merge | Ativo |
+| Auto-merge | Desativado |
+| Visibilidade | Pública, preservada |
+
+O check foi observado no [run real](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34263607655), antes de o tornar obrigatório. Estes são os checks documentais disponíveis em HO-000; HO-002 acrescentará os checks reais das aplicações. Não foi exigida aprovação independente impossível, nem criado Project board, release/tag ou deployment.
+
+## Autenticação GitHub neste ambiente
+
+GitHub CLI e connector têm autenticações separadas. Nesta entrega, o connector recusou escrita com HTTP 403; a autenticação GitHub CLI resolveu o acesso Git e API, verificado com permissão ADMIN. Com `gh` instalado, o procedimento é:
+
+```bash
+gh auth login --hostname github.com --git-protocol https --web --scopes workflow
+gh auth setup-git --hostname github.com
+gh auth status
+gh repo view Dennyum204/HomeOfficeReservation
+```
+
+Concluir o login no browser enquanto o código está válido. Não publicar palavras-passe, tokens ou o conteúdo do keyring; credenciais ficam fora do repositório. Manter o executável usado pelo helper Git numa instalação persistente. O scope `workflow` permite publicar o workflow de CI incluído nesta entrega.
 
 ## O que não deve ficar só no chat
 
