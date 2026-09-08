@@ -52,7 +52,7 @@ def main():
                     target == "dart" and (rel.parts[0] == "lib" or str(rel) in {"pubspec.yaml", "analysis_options.yaml"}))
                 if selected:
                     expected[Path("contracts") / target / rel] = "\n".join(
-                        line.rstrip() for line in source.read_text(encoding="utf-8").splitlines()) + "\n"
+                        line.rstrip() for line in source.read_text(encoding="utf-8").splitlines()).rstrip() + "\n"
     owned = {Path("contracts/openapi.json")}
     for folder in [ROOT / "contracts/typescript", ROOT / "contracts/dart/lib"]:
         if folder.exists():

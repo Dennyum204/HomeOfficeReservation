@@ -312,7 +312,9 @@
         "Setup e CI do core funcionam sem conta Microsoft, tenant, tokens Graph ou probe; decisões de ADR-004 orientam scaffold, autenticação funcional fica em HO-003."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/3",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/28"
+      ],
       "scope_history": [
         {
           "date": "2026-09-08",

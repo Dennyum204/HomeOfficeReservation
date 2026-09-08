@@ -82,4 +82,3 @@ export function WorkspaceInfoToJSONTyped(value?: WorkspaceInfo | null, ignoreDis
         'serverTimeUtc': value['serverTimeUtc'] == null ? value['serverTimeUtc'] : serializeDateTime(value['serverTimeUtc']),
     };
 }
-
