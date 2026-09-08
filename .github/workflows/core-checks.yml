@@ -34,6 +34,8 @@ jobs:
       - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
       - run: dotnet format apps/api/HomeOffice.slnx --no-restore --verify-no-changes
       - run: dotnet build apps/api/HomeOffice.slnx -c Release --no-restore
+      - name: Native source encoding and debug-only transport configuration
+        run: python3 scripts/check_native_config.py
       - name: Contract regeneration must match committed OpenAPI and both clients
         run: python3 scripts/generate_contracts.py --check
       - name: Start the documented PostgreSQL environment
@@ -127,7 +129,7 @@ jobs:
           target: google_apis
           profile: pixel_6
           disable-animations: true
-          script: cd apps/mobile && flutter test integration_test/app_test.dart -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080
+          script: cd apps/mobile && flutter test integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080
 
   flutter-ios:
     name: flutter-ios
@@ -162,10 +164,16 @@ jobs:
           xcrun simctl bootstatus "$device" -b
           echo "IOS_SIMULATOR=$device" >> "$GITHUB_ENV"
       - name: iOS Simulator connects through the generated Dart client
-        run: flutter test integration_test/app_test.dart -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080
+        run: flutter test integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080
         working-directory: apps/mobile
-      - name: Capture the actual iOS shell
-        run: xcrun simctl io "$IOS_SIMULATOR" screenshot "$RUNNER_TEMP/ios-shell.png"
+      - name: Install the regular shell and capture it (integration test app is removed after tests)
+        run: |
+          flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
+          xcrun simctl install "$IOS_SIMULATOR" build/ios/iphonesimulator/Runner.app
+          xcrun simctl launch "$IOS_SIMULATOR" dev.homeoffice.homeofficeMobile
+          sleep 5
+          xcrun simctl io "$IOS_SIMULATOR" screenshot "$RUNNER_TEMP/ios-shell.png"
+        working-directory: apps/mobile
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ios-evidence

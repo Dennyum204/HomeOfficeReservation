@@ -49,7 +49,7 @@ flutter build apk --release --dart-define=API_BASE_URL=https://api.example.inval
 O smoke usa o mesmo repository e cliente gerado da app com HTTP real; verifica o contrato e um timestamp recente, sem emitir dados pessoais. Os widget tests usam respostas sintéticas e cobrem falha/retry/navegação/ecrã pequeno. Teste de plataforma com API real:
 
 ```sh
-flutter test integration_test/app_test.dart -d <device-id> --dart-define=API_BASE_URL=http://10.0.2.2:5080
+flutter test integration_test/app_test.dart --no-dds -d <device-id> --dart-define=API_BASE_URL=http://10.0.2.2:5080
 ```
 
 No Mac, com Simulator:
@@ -57,7 +57,11 @@ No Mac, com Simulator:
 ```sh
 flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
 flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api.example.invalid
-flutter test integration_test/app_test.dart -d <simulator-id> --dart-define=API_BASE_URL=http://localhost:5080
+flutter test integration_test/app_test.dart --no-dds -d <simulator-id> --dart-define=API_BASE_URL=http://localhost:5080
 ```
 
 CI exige análise/testes, cliente Dart contra Kestrel real, release Android sem assinatura, builds iOS Simulator/device sem assinatura e smoke de plataforma Android Emulator/iOS Simulator. Não substitui ensaio físico, assinatura, lojas ou push, trabalhos posteriores. O APK release é unsigned; usar `flutter run` para instalar debug. Resultados efetivos e limitações em [STATUS](../../STATUS.md) e no PR.
+
+O smoke usa a opção suportada `--no-dds`: o serviço auxiliar de debugging DDS falhou no runner Android antes de carregar qualquer teste. A ligação direta ao VM Service mantém todos os testes/asserts; esta opção apenas dispensa DDS/integração IDE no runner. Confirmada no `flutter test --help --verbose` do SDK fixado e no [código oficial](https://github.com/flutter/flutter/blob/3.47.2/packages/flutter_tools/lib/src/test/integration_test_device.dart). Não se apresenta uma tentativa que falhou no arranque como teste passado.
+
+Na raiz, `python scripts/check_native_config.py` verifica XML/plists/UTF-8 e exceções de transporte só em debug. É um check prévio, não substitui compilação nativa. O bundle XCTest do template não contém exemplos vazios que aparentem testes passados; os asserts reais são Dart/Flutter.

@@ -69,6 +69,6 @@
 	<key>NSAppTransportSecurity</key>
 	<dict><key>NSAllowsArbitraryLoads</key><true/><key>NSAllowsLocalNetworking</key><true/></dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Ligar à API de desenvolvimento na sua rede local.</string>
+	<string>Ligar Ã  API de desenvolvimento na sua rede local.</string>
 </dict>
 </plist>
