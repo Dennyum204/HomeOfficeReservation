@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/HomeOffice.Api/HomeOffice.Api.csproj" />
+    <Project Path="src/HomeOffice.Application/HomeOffice.Application.csproj" />
+    <Project Path="src/HomeOffice.Domain/HomeOffice.Domain.csproj" />
+    <Project Path="src/HomeOffice.Infrastructure/HomeOffice.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/HomeOffice.Api.Tests/HomeOffice.Api.Tests.csproj" />
+    <Project Path="tests/HomeOffice.IntegrationTests/HomeOffice.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

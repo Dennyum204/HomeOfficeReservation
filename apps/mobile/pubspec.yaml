@@ -1,0 +1,25 @@
+name: homeoffice_mobile
+description: Espaço de planeamento Portugal e Suíça.
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: '>=3.13.2 <4.0.0'
+  flutter: '3.47.2'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  homeoffice_api:
+    path: ../../contracts/dart
+  intl: 0.20.3
+  http: 1.6.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+flutter:
+  uses-material-design: true
+  generate: true

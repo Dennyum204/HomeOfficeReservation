@@ -10,4 +10,4 @@ Read root AGENTS.md and docs/UX.md.
 - A push opens the authenticated detail screen and never performs approval directly. Handle permission denied, token rotation and revoked sessions.
 - Writes require network in V1; label cached reads as stale. Do not imply offline decisions were submitted.
 - Do not commit signing keys. Record actual supported targets and distribution validation.
-- Add pinned Flutter SDK and exact analyze/test/build commands in HO-002. No mobile project/build has been created yet.
+- Follow README.md for the pinned Flutter SDK, generated localization, connection settings and exact analyze/test/build commands. Keep debug-only HTTP transport exceptions out of release builds. Unsigned compilation/simulator checks are distinct from physical-device and store validation.

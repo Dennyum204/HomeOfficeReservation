@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../HomeOffice.Domain/HomeOffice.Domain.csproj" />
+  </ItemGroup>
+</Project>

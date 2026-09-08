@@ -236,7 +236,7 @@
       "title": "Core autónomo, autenticação própria e Outlook opcional",
       "release": "v1.0",
       "area": "docs",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-000"
@@ -281,14 +281,22 @@
           ]
         }
       ],
-      "live_graph_disposition": "deferred_by_product_direction"
+      "live_graph_disposition": "deferred_by_product_direction",
+      "merge_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/27",
+        "merge_commit": "7f783bf9bde5a72ac8271c42cc2916b054170d17",
+        "merged_at": "2026-09-08T20:02:47Z",
+        "integration_ci_url": "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34272493270",
+        "integration_ci_conclusion": "success",
+        "verified_at": "2026-09-08"
+      }
     },
     {
       "id": "HO-002",
       "title": "Monorepo compilável, contratos e CI",
       "release": "v1.0",
       "area": "foundation",
-      "status": "planned",
+      "status": "in_progress",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-000",

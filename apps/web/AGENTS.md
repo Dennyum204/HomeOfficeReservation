@@ -10,4 +10,4 @@ Read root AGENTS.md and docs/UX.md.
 - Implement loading, empty, error, stale-version and offline states for every critical flow.
 - Preserve user drafts on request failure; definitive approvals wait for API success.
 - Use focused interaction/E2E tests. Include screenshots when reviewing UI changes.
-- Add exact package manager, lockfile and lint/typecheck/build/test commands in HO-002. There is no React application here yet.
+- Follow README.md/package.json for exact npm, lockfile and lint/typecheck/build/test commands. HO-002's shell clearly marks business features as unfinished; connectivity must use the generated client and a real API in browser smoke tests.

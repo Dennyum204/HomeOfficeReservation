@@ -32,9 +32,9 @@ Esta stack foi confirmada pelo responsável no pedido HO-000. Aproveita a experi
 
 Não separar estes módulos em bases de dados ou serviços de rede na V1. Planning e Onsite partilham transações quando precisam de preservar invariantes. A auditoria e a outbox são escritas na mesma transação das alterações de negócio.
 
-## Organização prevista de código
+## Organização de código
 
-| Caminho previsto | Conteúdo |
+| Caminho | Conteúdo |
 |---|---|
 | `apps/api/src/HomeOffice.Domain/` | Entidades, valores e regras puras, organizadas por módulo |
 | `apps/api/src/HomeOffice.Application/` | Casos de uso, políticas e interfaces de adaptadores |
@@ -46,7 +46,7 @@ Não separar estes módulos em bases de dados ou serviços de rede na V1. Planni
 | `contracts/` | Especificação e configuração dos clientes gerados |
 | `infra/` | Containers, ambiente local, migrações e deploy |
 
-Não estão criados projetos vazios que aparentem uma aplicação funcional. HO-002 cria os projetos compiláveis, versões fixadas e pipelines correspondentes.
+HO-002 cria projetos compiláveis nas quatro fronteiras backend, React e Flutter Android/iOS. Cada fronteira backend tem utilização concreta na consulta pública de metadados ou persistência/health checks; não há repositories genéricos, módulos de negócio vazios ou serviços separados. Domain contém apenas as zonas suportadas; os modelos funcionais entram nas suas tarefas. O DbContext herda IdentityDbContext, sem criação de contas, migrations ou endpoints Identity nesta fase. Guias de execução nas áreas; versões/lockfiles fixados e CI por stack.
 
 ## Identidade e calendário independentes
 
@@ -54,7 +54,7 @@ Não estão criados projetos vazios que aparentem uma aplicação funcional. HO-
 
 Admissão de membros controlada pelo administrador; recuperação/ativação por mecanismos Identity, sem escolha livre de papéis. Sem Microsoft, email empresarial ou diretório Entra obrigatórios. Microsoft sign-in é apenas uma possível opção futura, distinta de consentimento de calendário. As limitações de sessão/revogação e os gates HO-003 estão no ADR.
 
-Planning/PostgreSQL possui o calendário e conflitos. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-002 cria somente o scaffold, HO-003 implementa autenticação; este PR não cria aplicação.
+Planning/PostgreSQL possuirá o calendário e conflitos. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-002 cria somente o scaffold executável e a ligação API; HO-003 implementará autenticação e os itens seguintes acrescentarão regras/calendário.
 
 Quando HO-008 for selecionado, a ação explícita em Definições associa uma conta Microsoft ao MemberId já autenticado, sem exigir igualdade de email ou de IDs entre fornecedores. Estado/nonce/PKCE e callback validado por biblioteca impedem associação a outro membro; confirmar a conta escolhida antes de guardar. Tokens Graph ficam numa cache cifrada no backend. Revogação/desligar afetam apenas publicação. O [estudo anterior](HO-001-MICROSOFT-OUTLOOK-STUDY.md) é referência histórica, não o contrato de login atual.
 
@@ -85,4 +85,4 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 
 ## Versões e dependências
 
-.NET 10 é a base confirmada; consultar o ciclo de suporte na [Microsoft](https://learn.microsoft.com/en-us/dotnet/core/releases-and-support). HO-002 fixa o patch SDK efetivamente instalado, versões compatíveis de EF/Npgsql, Node, React, Flutter e ferramentas geradoras em ficheiros e lockfiles. Não usar tags `latest` em produção nem inventar versões de pacotes nesta fase.
+.NET 10 é a base confirmada; consultar o ciclo de suporte na [Microsoft](https://learn.microsoft.com/en-us/dotnet/core/releases-and-support). HO-002 fixa SDK 10.0.400, pacotes Microsoft 10.0.11/Npgsql EF 10.0.3, Node 24.20.0/npm 11.19.0, React 19.2.8, TypeScript 6.0.3, Flutter 3.47.2/Dart 3.13.2 e OpenAPI Generator 7.25.0. Fontes/versionamento em [HO-002](HO-002-FOUNDATION.md); builds/lockfiles nas áreas. Sem tags latest.

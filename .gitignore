@@ -109,6 +109,11 @@ htmlcov/
 /HomeOfficeReservation-Architecture-Starter.zip
 *.bundle
 
+# Scaffold tools, generated localization and disposable visual evidence.
+.tools/
+/apps/mobile/lib/l10n/generated/
+/apps/mobile/ios/Flutter/FlutterGeneratedPluginSwiftPackage/
+
 # HO-001: real account configuration remains local; receipts must live outside Git.
 /scripts/outlook_probe/config.local.json
 /scripts/outlook_probe/state/

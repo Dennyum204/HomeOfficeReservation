@@ -1,0 +1,66 @@
+{
+  "components": {
+    "schemas": {
+      "WorkspaceInfo": {
+        "properties": {
+          "apiVersion": {
+            "type": "string"
+          },
+          "planningTimeZones": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "serverTimeUtc": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "productName",
+          "apiVersion",
+          "serverTimeUtc",
+          "planningTimeZones"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "HomeOfficeReservation API",
+    "version": "v1"
+  },
+  "openapi": "3.0.4",
+  "paths": {
+    "/api/v1/workspace": {
+      "get": {
+        "operationId": "GetWorkspaceInfo",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceInfo"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Public workspace metadata and a fresh server timestamp; no personal data.",
+        "tags": [
+          "Workspace"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Workspace"
+    }
+  ]
+}
