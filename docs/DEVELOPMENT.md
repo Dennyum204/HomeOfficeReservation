@@ -26,7 +26,7 @@ HO-004 é um identificador de trabalho, não uma promessa de número de issue ou
 4. Executar verificações relevantes, rever o diff e atualizar documentos.
 5. Criar commits claros, por exemplo `feat(planning): support partial day approvals`.
 6. Abrir PR em draft cedo quando já houver mudança concreta. Usar o modelo incluído; associar a issue real com `Closes #N` apenas quando o PR cumprir integralmente essa issue.
-7. Rever código e comportamento; resolver checks, conversas e conflitos. Quando cumprir a tarefa, retirar o draft, fazer o último push e verificar CI no SHA mais recente. Entregar um PR sem draft, com checks relevantes verdes e sem conflitos. Se incompleto, manter draft e enumerar os critérios pendentes.
+7. Rever código e comportamento; resolver checks, conversas e conflitos. Quando cumprir a tarefa, fazer o último push e verificar CI no SHA mais recente antes de retirar o draft. Entregar um PR sem draft, com checks relevantes verdes e sem conflitos. Qualquer push posterior exige nova verificação. Se incompleto, manter draft e enumerar os critérios pendentes.
 8. Fernando revê e faz merge, preferencialmente por squash. O Codex é responsável por branches, commits, pushes, issues e preparação do PR; não faz merge nem ativa auto-merge.
 9. Após merge humano, a tarefa seguinte confirma integração/CI e passa o item a `done` com URL/evidência, antes de avaliar as suas próprias dependências. Atualizar STATUS com a próxima tarefa.
 

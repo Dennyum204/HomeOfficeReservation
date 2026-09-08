@@ -10,7 +10,8 @@
       "timing": "Após o estudo Microsoft, implementação e gates de aceitação; piloto inicial de duas semanas.",
       "gate": "HO-000 a HO-012 integrados, duas contas reais autorizadas e critérios de QUALITY.md cumpridos.",
       "review_trigger": "No fecho do estudo Outlook e semanalmente durante a construção.",
-      "status": "planned"
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1"
     },
     {
       "id": "v1.1",
@@ -18,7 +19,8 @@
       "timing": "Primeira iteração após duas semanas de utilização da V1; correções críticas têm prioridade.",
       "gate": "Piloto V1 aceite e HO-101 a HO-103 integrados.",
       "review_trigger": "Na retrospetiva do piloto e antes de iniciar a iteração.",
-      "status": "planned"
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/2"
     },
     {
       "id": "v1.2",
@@ -26,7 +28,8 @@
       "timing": "Iteração seguinte, após validar V1.1 e confirmar feedback sobre recorrência/viagens.",
       "gate": "V1.1 estável e HO-201 a HO-203 integrados.",
       "review_trigger": "No lançamento de V1.1.",
-      "status": "planned"
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/3"
     },
     {
       "id": "v2.0",
@@ -34,7 +37,8 @@
       "timing": "Depois de estabilizar V1.x; selecionar o âmbito antes de iniciar cada tarefa.",
       "gate": "Necessidade confirmada, ADRs de expansão e aceitação dos itens selecionados. Mudanças de âmbito exigem atualização versionada.",
       "review_trigger": "No lançamento de V1.2 e em cada proposta de expansão.",
-      "status": "planned"
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/4"
     }
   ],
   "features": [
@@ -177,7 +181,7 @@
       "title": "Repositório, documentação e tracking GitHub",
       "release": "v1.0",
       "area": "docs",
-      "status": "blocked",
+      "status": "in_progress",
       "owner": "Fernando + Codex",
       "depends_on": [],
       "features": [],
@@ -190,9 +194,8 @@
         "Validação documental passa e documentos derivados estão atualizados; PR real registado, sem draft, CI relevante verde no último commit e sem conflitos.",
         "Proteções documentadas da main configuradas e verificadas onde permitido, com nomes reais de checks e sem aprovação independente obrigatória para mantenedor único."
       ],
-      "issue_url": null,
-      "pr_urls": [],
-      "reason": "Publicação bloqueada por autenticação: Git local sem credencial e criação de issue pela ligação GitHub rejeitada com HTTP 403 Resource not accessible by integration. Push do bootstrap/branch, 24 issues, labels/milestones, PR, CI remota e proteções ainda pendentes."
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/1",
+      "pr_urls": []
     },
     {
       "id": "HO-001",
@@ -215,7 +218,7 @@
         "Leitura delta, datas all-day e revogação/reconexão verificadas ou limitações explicitamente registadas.",
         "ADR-002 atualizado com evidência; não confundir testes simulados com Graph real."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/2",
       "pr_urls": []
     },
     {
@@ -236,7 +239,7 @@
         "CI de cada stack executa checks reais; não aceita código existente com jobs silenciosamente ignorados.",
         "Comandos de setup/build/test estão documentados nas áreas correspondentes."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/3",
       "pr_urls": []
     },
     {
@@ -261,7 +264,7 @@
         "Bootstrap de admin não permite atribuição livre de papéis pelo utilizador.",
         "Login válido e sessão expirada demonstrados nas duas interfaces base."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/4",
       "pr_urls": []
     },
     {
@@ -287,7 +290,7 @@
         "Concorrência por colaborador e idempotência verificadas com PostgreSQL.",
         "Auditoria e outbox gravadas na mesma transação; comentários têm contexto e autor."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/5",
       "pr_urls": []
     },
     {
@@ -313,7 +316,7 @@
         "Marcação manual de indisponibilidade não sobrescreve datas aprovadas.",
         "Fluxo principal funciona por teclado e em largura reduzida."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/6",
       "pr_urls": []
     },
     {
@@ -337,7 +340,7 @@
         "Tarefas têm responsável, prazo, estado e RequiresOnsite sem impor presença automaticamente.",
         "API e Web expõem fluxo completo; contrato permite a implementação mobile."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/7",
       "pr_urls": []
     },
     {
@@ -360,7 +363,7 @@
         "Push contém resumo mínimo e deep link; não executa aprovações.",
         "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/8",
       "pr_urls": []
     },
     {
@@ -385,7 +388,7 @@
         "Retry/timeout, ordenação de versões e data all-day não duplicam nem deslocam eventos.",
         "API expõe estado de ligação/publicação, sem expor tokens."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/9",
       "pr_urls": []
     },
     {
@@ -410,7 +413,7 @@
         "Edição/apagamento externo gera divergência resolúvel, sem mudar aprovação.",
         "Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/10",
       "pr_urls": []
     },
     {
@@ -436,7 +439,7 @@
         "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
         "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/11",
       "pr_urls": []
     },
     {
@@ -467,7 +470,7 @@
         "Autorização negativa, concorrência, DST, retries e divergências têm evidência.",
         "Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/12",
       "pr_urls": []
     },
     {
@@ -488,7 +491,7 @@
         "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
         "Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
       "pr_urls": []
     },
     {
@@ -510,7 +513,7 @@
         "Email respeita destinatário, idioma/zona e preferências.",
         "Entregas têm deduplicação e não expõem conteúdo privado Outlook."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/14",
       "pr_urls": []
     },
     {
@@ -531,7 +534,7 @@
         "Totais seguem as mesmas regras do calendário e distinguem padrão base de confirmação.",
         "Acesso ao relatório segue a relação de gestão; não inclui detalhes privados de calendário."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/15",
       "pr_urls": []
     },
     {
@@ -552,7 +555,7 @@
         "Textos PT-PT, EN e DE cobrem fluxos essenciais sem strings misturadas.",
         "Formato de datas/zona é consistente nas duas interfaces e notificações."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/16",
       "pr_urls": []
     },
     {
@@ -575,7 +578,7 @@
         "Exceções e conflitos são visíveis antes de submeter.",
         "Alterar uma ocorrência não muda retroativamente todas as aprovações da série."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/17",
       "pr_urls": []
     },
     {
@@ -598,7 +601,7 @@
         "Aprovação e conflitos aplicam-se ao intervalo correto.",
         "Contratos e projeção Outlook evoluem com migração e testes de zonas/horário de verão."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/18",
       "pr_urls": []
     },
     {
@@ -622,7 +625,7 @@
         "Plano provisório de vários meses é claramente distinto de pedido/aprovação.",
         "Datas fixas/flexíveis e alternativas são apresentadas ao chefe antes de propor mudanças."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/19",
       "pr_urls": []
     },
     {
@@ -645,7 +648,7 @@
         "Substituto tem vigência definida e poderes limitados, com auditoria.",
         "Pedidos em curso têm encaminhamento explícito quando o aprovador está indisponível."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/20",
       "pr_urls": []
     },
     {
@@ -668,7 +671,7 @@
         "Seleção por calendário identifica leitura/escrita e propriedade dos eventos.",
         "Cursores, notificações e regras de conflito não reutilizam indevidamente o fluxo do calendário principal."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/21",
       "pr_urls": []
     },
     {
@@ -691,7 +694,7 @@
         "Consentimento, retries, recuperação e calendários de teste têm validação própria.",
         "O utilizador distingue claramente provedores e não cria loops entre calendários."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/22",
       "pr_urls": []
     },
     {
@@ -714,7 +717,7 @@
         "Ficheiros têm limites, autorização e ciclo de vida próprios.",
         "Relatórios/tarefas adicionais não alteram automaticamente presença ou aprovações."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/23",
       "pr_urls": []
     },
     {
@@ -737,7 +740,7 @@
         "Escritas pendentes têm fila e estado explícitos; só o servidor confirma decisões.",
         "Reconexão resolve versões/conflitos sem last-write-wins sobre aprovações."
       ],
-      "issue_url": null,
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/24",
       "pr_urls": []
     }
   ],

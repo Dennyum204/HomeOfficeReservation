@@ -8,7 +8,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 
 | ID | Tarefa | Release | Área | Estado | Depende de |
 |---|---|---|---|---|---|
-| HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Bloqueado | — |
+| HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Em curso | — |
 | HO-001 | Estudo de identidade Microsoft e Outlook | v1.0 | integration | Planeado | HO-000 |
 | HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Planeado | HO-000 |
 | HO-003 | Autenticação, membros e autorização | v1.0 | backend | Planeado | HO-001, HO-002 |
@@ -35,7 +35,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
-Release: v1.0 · Área: docs · Estado: Bloqueado
+Release: v1.0 · Área: docs · Estado: Em curso
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -53,11 +53,9 @@ Critérios de aceitação:
 - Validação documental passa e documentos derivados estão atualizados; PR real registado, sem draft, CI relevante verde no último commit e sem conflitos.
 - Proteções documentadas da main configuradas e verificadas onde permitido, com nomes reais de checks e sem aprovação independente obrigatória para mantenedor único.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/1
 
 PR: ainda não criado.
-
-Motivo: Publicação bloqueada por autenticação: Git local sem credencial e criação de issue pela ligação GitHub rejeitada com HTTP 403 Resource not accessible by integration. Push do bootstrap/branch, 24 issues, labels/milestones, PR, CI remota e proteções ainda pendentes.
 
 ## HO-001 — Estudo de identidade Microsoft e Outlook
 
@@ -77,7 +75,7 @@ Critérios de aceitação:
 - Leitura delta, datas all-day e revogação/reconexão verificadas ou limitações explicitamente registadas.
 - ADR-002 atualizado com evidência; não confundir testes simulados com Graph real.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/2
 
 PR: ainda não criado.
 
@@ -99,7 +97,7 @@ Critérios de aceitação:
 - CI de cada stack executa checks reais; não aceita código existente com jobs silenciosamente ignorados.
 - Comandos de setup/build/test estão documentados nas áreas correspondentes.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/3
 
 PR: ainda não criado.
 
@@ -121,7 +119,7 @@ Critérios de aceitação:
 - Bootstrap de admin não permite atribuição livre de papéis pelo utilizador.
 - Login válido e sessão expirada demonstrados nas duas interfaces base.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/4
 
 PR: ainda não criado.
 
@@ -143,7 +141,7 @@ Critérios de aceitação:
 - Concorrência por colaborador e idempotência verificadas com PostgreSQL.
 - Auditoria e outbox gravadas na mesma transação; comentários têm contexto e autor.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/5
 
 PR: ainda não criado.
 
@@ -165,7 +163,7 @@ Critérios de aceitação:
 - Marcação manual de indisponibilidade não sobrescreve datas aprovadas.
 - Fluxo principal funciona por teclado e em largura reduzida.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/6
 
 PR: ainda não criado.
 
@@ -187,7 +185,7 @@ Critérios de aceitação:
 - Tarefas têm responsável, prazo, estado e RequiresOnsite sem impor presença automaticamente.
 - API e Web expõem fluxo completo; contrato permite a implementação mobile.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/7
 
 PR: ainda não criado.
 
@@ -209,7 +207,7 @@ Critérios de aceitação:
 - Push contém resumo mínimo e deep link; não executa aprovações.
 - Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/8
 
 PR: ainda não criado.
 
@@ -231,7 +229,7 @@ Critérios de aceitação:
 - Retry/timeout, ordenação de versões e data all-day não duplicam nem deslocam eventos.
 - API expõe estado de ligação/publicação, sem expor tokens.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/9
 
 PR: ainda não criado.
 
@@ -254,7 +252,7 @@ Critérios de aceitação:
 - Edição/apagamento externo gera divergência resolúvel, sem mudar aprovação.
 - Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/10
 
 PR: ainda não criado.
 
@@ -276,7 +274,7 @@ Critérios de aceitação:
 - Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.
 - UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/11
 
 PR: ainda não criado.
 
@@ -298,7 +296,7 @@ Critérios de aceitação:
 - Autorização negativa, concorrência, DST, retries e divergências têm evidência.
 - Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/12
 
 PR: ainda não criado.
 
@@ -320,7 +318,7 @@ Critérios de aceitação:
 - Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.
 - Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
 
 PR: ainda não criado.
 
@@ -341,7 +339,7 @@ Critérios de aceitação:
 - Email respeita destinatário, idioma/zona e preferências.
 - Entregas têm deduplicação e não expõem conteúdo privado Outlook.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/14
 
 PR: ainda não criado.
 
@@ -361,7 +359,7 @@ Critérios de aceitação:
 - Totais seguem as mesmas regras do calendário e distinguem padrão base de confirmação.
 - Acesso ao relatório segue a relação de gestão; não inclui detalhes privados de calendário.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/15
 
 PR: ainda não criado.
 
@@ -381,7 +379,7 @@ Critérios de aceitação:
 - Textos PT-PT, EN e DE cobrem fluxos essenciais sem strings misturadas.
 - Formato de datas/zona é consistente nas duas interfaces e notificações.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/16
 
 PR: ainda não criado.
 
@@ -401,7 +399,7 @@ Critérios de aceitação:
 - Exceções e conflitos são visíveis antes de submeter.
 - Alterar uma ocorrência não muda retroativamente todas as aprovações da série.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/17
 
 PR: ainda não criado.
 
@@ -421,7 +419,7 @@ Critérios de aceitação:
 - Aprovação e conflitos aplicam-se ao intervalo correto.
 - Contratos e projeção Outlook evoluem com migração e testes de zonas/horário de verão.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/18
 
 PR: ainda não criado.
 
@@ -441,7 +439,7 @@ Critérios de aceitação:
 - Plano provisório de vários meses é claramente distinto de pedido/aprovação.
 - Datas fixas/flexíveis e alternativas são apresentadas ao chefe antes de propor mudanças.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/19
 
 PR: ainda não criado.
 
@@ -461,7 +459,7 @@ Critérios de aceitação:
 - Substituto tem vigência definida e poderes limitados, com auditoria.
 - Pedidos em curso têm encaminhamento explícito quando o aprovador está indisponível.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/20
 
 PR: ainda não criado.
 
@@ -481,7 +479,7 @@ Critérios de aceitação:
 - Seleção por calendário identifica leitura/escrita e propriedade dos eventos.
 - Cursores, notificações e regras de conflito não reutilizam indevidamente o fluxo do calendário principal.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/21
 
 PR: ainda não criado.
 
@@ -501,7 +499,7 @@ Critérios de aceitação:
 - Consentimento, retries, recuperação e calendários de teste têm validação própria.
 - O utilizador distingue claramente provedores e não cria loops entre calendários.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/22
 
 PR: ainda não criado.
 
@@ -521,7 +519,7 @@ Critérios de aceitação:
 - Ficheiros têm limites, autorização e ciclo de vida próprios.
 - Relatórios/tarefas adicionais não alteram automaticamente presença ou aprovações.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/23
 
 PR: ainda não criado.
 
@@ -541,6 +539,6 @@ Critérios de aceitação:
 - Escritas pendentes têm fila e estado explícitos; só o servidor confirma decisões.
 - Reconexão resolve versões/conflitos sem last-write-wins sobre aprovações.
 
-Issue: Ainda não criada.
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/24
 
 PR: ainda não criado.
