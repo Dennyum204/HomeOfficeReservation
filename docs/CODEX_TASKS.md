@@ -2,7 +2,7 @@
 
 Ler AGENTS.md e a fonte canónica docs/backlog.json. Os prompts antigos que exigiam Outlook em V1 foram substituídos pela direção registada em [ADR-004](adr/ADR-004-independent-core.md). [CODEX_PROMPTS.md](CODEX_PROMPTS.md) e notas de HO-000 são histórico, não requisitos atuais.
 
-## Próxima tarefa — HO-002
+## Tarefa atual — HO-002
 
 ```text
 Implementa apenas HO-002 em Dennyum204/HomeOfficeReservation.
@@ -23,6 +23,8 @@ Fernando revê e faz merge; não faças merge nem atives auto-merge.
 ```
 
 ## Continuidade geral
+
+HO-002 está no [PR #28](https://github.com/Dennyum204/HomeOfficeReservation/pull/28). Depois de merge humano e CI de integração verificados, selecionar **HO-003** para autenticação Identity, membros/relações/autorizações conforme ADR-004 e os seus critérios canónicos. Fazer fetch, reconciliar HO-002 para done e criar branch própria antes de implementar. O prompt de HO-002 acima preserva o âmbito da entrega atual; não repetir o scaffold nem retomar Microsoft.
 
 Trabalhar só no item pedido. Cada início verifica merge/CI e reconcilia estados antes de avaliar dependências. Preservar alterações existentes; cada mudança usa branch delimitada. Critérios, contratos e testes acompanham o comportamento implementado. Uma simulação não valida serviço externo.
 

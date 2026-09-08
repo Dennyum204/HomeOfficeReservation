@@ -3,10 +3,14 @@
 import json
 from pathlib import Path
 import secrets
+import sys
 
 root = Path(__file__).resolve().parents[1]
 env = root / "infra/.env"
 settings = root / "apps/api/src/HomeOffice.Api/appsettings.Local.json"
+if env.exists() and settings.exists():
+    print("Existing local configuration preserved; no files changed.")
+    sys.exit(0)
 if env.exists() or settings.exists():
     raise SystemExit("Existing local configuration preserved. See infra/README.md to align both files manually.")
 password = secrets.token_hex(24)
