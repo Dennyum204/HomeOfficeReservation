@@ -4,30 +4,30 @@
 
 Stack confirmada em HO-000 para [HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation): ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter Android/iOS. Monorepo com um backend modular; o backend aloja API, autenticação Web e processamento assíncrono durável. Separar o processo worker apenas se houver necessidade operacional.
 
-Esta stack foi confirmada pelo responsável no pedido HO-000. Aproveita a experiência existente em C#, React e Flutter e limita a operação inicial a um serviço e uma base de dados. Os pressupostos de identidade Microsoft e alojamento continuam por validar; a confirmação da stack não os resolve.
+Esta stack foi confirmada pelo responsável no pedido HO-000. Aproveita a experiência existente em C#, React e Flutter e limita a operação inicial a um serviço e uma base de dados. A direção revista em HO-001 escolhe autenticação própria e calendário interno autoritativo; Outlook fica opcional. O alojamento continua por escolher.
 
 ## Componentes e comunicações
 
 | Componente | Comunica com | Responsabilidade |
 |---|---|---|
 | React Web | Mesmo domínio da API/BFF, por HTTPS | Calendário, pedidos, decisões, tarefas e notificações |
-| Flutter | API HTTPS e fornecedor OIDC pelo browser do sistema | Fluxos equivalentes, agenda e push |
+| Flutter | API HTTPS com ASP.NET Core Identity | Fluxos equivalentes, agenda e push |
 | API/BFF | Application, identidade e PostgreSQL | Autenticação, autorização, validação e contratos HTTP |
 | Application / Domain | Abstrações de persistência e integrações | Regras de negócio e transações |
-| Infrastructure | PostgreSQL, Microsoft Graph, serviço push | Implementa adaptadores externos |
-| Worker durável | Outbox PostgreSQL, Graph e serviço push | Retries, notificações, reconciliação e renovação de subscrições |
-| Microsoft Graph | Endpoint público de webhooks | Sinaliza alterações; o worker lê os dados necessários |
+| Infrastructure | PostgreSQL, serviço push; Graph só no conector opcional | Implementa adaptadores externos |
+| Worker durável | Outbox PostgreSQL e serviço push | Retries/notificações core; publicação Graph apenas no marco opcional |
+| Microsoft Graph (posterior) | Conector opcional | HO-008 publica dias; apenas HO-009 acrescenta webhooks/importação |
 
 ## Módulos do backend
 
 | Módulo | Possui |
 |---|---|
-| IdentityAndAccess | Membros, relações de gestão, papéis e consentimentos |
+| IdentityAndAccess | Contas locais Identity, membros, relações de gestão, papéis e sessões |
 | Planning | Padrão base, pedidos, decisões por dia, revisões e disponibilidade |
 | Onsite | Compromissos, reconhecimento e resolução de conflitos |
 | Tasks | Tarefas simples e ligação aos compromissos |
 | Notifications | Caixa interna, preferências e entregas |
-| CalendarSync | Ligações, eventos mapeados, cursores, divergências e subscrições |
+| CalendarSync (opcional, posterior) | HO-008: ligação/mapeamento/publicação; HO-009: cursores/divergências/subscrições |
 | Audit | Registo mínimo de ações de negócio |
 
 Não separar estes módulos em bases de dados ou serviços de rede na V1. Planning e Onsite partilham transações quando precisam de preservar invariantes. A auditoria e a outbox são escritas na mesma transação das alterações de negócio.
@@ -38,8 +38,8 @@ Não separar estes módulos em bases de dados ou serviços de rede na V1. Planni
 |---|---|
 | `apps/api/src/HomeOffice.Domain/` | Entidades, valores e regras puras, organizadas por módulo |
 | `apps/api/src/HomeOffice.Application/` | Casos de uso, políticas e interfaces de adaptadores |
-| `apps/api/src/HomeOffice.Infrastructure/` | EF Core, Graph, tokens, push, relógio e worker |
-| `apps/api/src/HomeOffice.Api/` | Endpoints, autenticação/BFF, DI, webhook e configuração |
+| `apps/api/src/HomeOffice.Infrastructure/` | EF Core, Identity, push/email, relógio e worker; Graph opcional posterior |
+| `apps/api/src/HomeOffice.Api/` | Endpoints, autenticação, DI e configuração; callbacks/webhooks só nos marcos opcionais |
 | `apps/api/tests/` | Testes de domínio, integração e autorização |
 | `apps/web/src/features/` | Planning, approvals, onsite, tasks, notifications, settings |
 | `apps/mobile/lib/features/` | Mesmas áreas, com views/viewmodels, repositories e services |
@@ -48,18 +48,15 @@ Não separar estes módulos em bases de dados ou serviços de rede na V1. Planni
 
 Não estão criados projetos vazios que aparentem uma aplicação funcional. HO-002 cria os projetos compiláveis, versões fixadas e pipelines correspondentes.
 
-## Identidade
+## Identidade e calendário independentes
 
-Alvo confirmado por Fernando em HO-001: Outlook.com pessoal (MSA), substituindo a hipótese empresarial. O [estudo](HO-001-MICROSOFT-OUTLOOK-STUDY.md) detalha três registos propostos (API/BFF, Flutter público e conector confidencial), audiência pessoal/authority consumers, consentimento e recuperação. O probe e os testes simulados estão preparados; registo, consentimento e Graph real continuam por validar, conforme [ADR-002](adr/ADR-002-outlook.md). Admissão de membros e papéis são controlados pela aplicação; o tenant consumer comum a todos os MSA não concede acesso. A conta do gestor permanece por confirmar.
+[ADR-004](adr/ADR-004-independent-core.md) escolhe ASP.NET Core Identity com stores EF Core/PostgreSQL e email/password. React usa cookie Secure/HttpOnly e anti-CSRF; Flutter usa os bearer/refresh tokens opacos do próprio framework por HTTPS, com armazenamento seguro. Estes tokens não são JWT/OAuth nem são construídos pela aplicação. Não se instala um servidor de identidade externo. A API resolve IdentityUserId para membro local ativo e verifica organização/relação/papéis em cada operação.
 
-- Web: login OIDC pelo backend; cookie Secure/HttpOnly, proteção CSRF e origem única para UI/API. Tokens Microsoft não ficam em localStorage.
-- Mobile: OIDC authorization code + PKCE no browser do sistema, proposto com Flutter AppAuth. Token de acesso destinado à nossa API, guardado pelo mecanismo seguro da plataforma. Não enviar ID token nem token Graph como se fosse token da API. Políticas broker/Intune exigem avaliar integração nativa MSAL; ainda não foram identificadas nem testadas.
-- API: valida assinatura, emissor, audiência, expiração, scopes e tenant permitido; mapeia identidade para membro ativo. A autorização ao objeto/relação é verificada em cada caso de uso.
-- Ligação Outlook: consentimento delegado separado, iniciado pelo backend e associado à sessão/utilizador através de estado verificável. O mobile abre esse fluxo autenticado no browser e recebe apenas um resultado/link, nunca um segredo no URL.
-- O worker usa uma cache MSAL persistida e cifrada no servidor, com chaves fora do banco. Revogação de consentimento suspende sincronização e solicita reconexão.
-- Bootstrap do administrador por configuração de implantação; não existe auto-registo com escolha livre de papel.
+Admissão de membros controlada pelo administrador; recuperação/ativação por mecanismos Identity, sem escolha livre de papéis. Sem Microsoft, email empresarial ou diretório Entra obrigatórios. Microsoft sign-in é apenas uma possível opção futura, distinta de consentimento de calendário. As limitações de sessão/revogação e os gates HO-003 estão no ADR.
 
-Microsoft recomenda o fluxo de código com PKCE/OIDC e bibliotecas de autenticação estabelecidas. [Documentação oficial](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow).
+Planning/PostgreSQL possui o calendário e conflitos. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-002 cria somente o scaffold, HO-003 implementa autenticação; este PR não cria aplicação.
+
+Quando HO-008 for selecionado, a ação explícita em Definições associa uma conta Microsoft ao MemberId já autenticado, sem exigir igualdade de email ou de IDs entre fornecedores. Estado/nonce/PKCE e callback validado por biblioteca impedem associação a outro membro; confirmar a conta escolhida antes de guardar. Tokens Graph ficam numa cache cifrada no backend. Revogação/desligar afetam apenas publicação. O [estudo anterior](HO-001-MICROSOFT-OUTLOOK-STUDY.md) é referência histórica, não o contrato de login atual.
 
 ## Contratos e persistência
 
@@ -79,9 +76,9 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 
 ## Operação
 
-- Desenvolvimento: containers locais, PostgreSQL e adaptadores de teste para Graph/push.
+- Desenvolvimento core: containers locais, PostgreSQL e adaptadores de teste para push/email; sem configuração Microsoft. Conector opcional desativado por defeito.
 - Staging e produção com bases, credenciais e contas de teste separadas.
-- Hospedagem Linux que mantenha o worker ativo e aceite webhooks HTTPS públicos. Não usar scale-to-zero para este desenho sem separar/agendar o worker.
+- Hospedagem Linux para API/Web HTTPS e worker de notificações ativo. Callbacks Microsoft só em HO-008; webhooks públicos só em HO-009. Não usar scale-to-zero para este desenho sem separar/agendar o worker.
 - Registos estruturados com correlation ID, health/readiness e métricas de atraso/erro de sync.
 - Backups automáticos e ensaio de restauro antes do piloto com dados reais.
 - Provedor, região, custos, domínio e distribuição mobile são escolhidos em HO-012; nada foi contratado ou publicado.

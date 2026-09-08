@@ -10,7 +10,8 @@
 | Decisão por dia | Pending, Approved, Rejected, Superseded, Cancelled |
 | Obrigação presencial | Active, NeedsResolution, Cancelled |
 | Leitura | PendingAcknowledgement, Acknowledged |
-| Sincronização | Pending, Synced, Diverged, Error, ReconnectRequired |
+| Publicação opcional (HO-008) | Disabled, Pending, Published, Error, ReconnectRequired |
+| Reconciliação posterior (HO-009) | Diverged e estados de importação; ausentes do core |
 
 `PartiallyApproved` é um resumo do conjunto de decisões por dia, não uma forma de perder as datas individuais. A UI pode mostrar uma aprovação parcial enquanto ainda existem outros dias pendentes.
 
@@ -19,7 +20,7 @@
 | Entidade | Campos/relações essenciais |
 |---|---|
 | Organization | Id, nome, zona de planeamento e configuração |
-| Member | Id, OrganizationId, identidade externa, papéis, idioma, zona preferida, Active |
+| Member | Id, OrganizationId, IdentityUserId local, papéis, idioma, zona preferida, Active |
 | ReportingLine | EmployeeId, ManagerId, vigência; uma chefia decisora ativa por colaborador na V1 |
 | PlanningProfile | Padrão semanal, vigência e CalendarVersion para concorrência por colaborador |
 | RemoteWorkRequest | EmployeeId, Revision, ParentRevisionId, comentário, SubmittedAt, estado |
@@ -39,6 +40,8 @@
 | GraphSubscription | ConnectionId, SubscriptionId, expiração e clientState protegido |
 | OutboxMessage | Id, tipo, agregado/versão, payload mínimo, lease, tentativa e entrega |
 | AuditEntry | ActorId, ação, entidade/revisão, instante e mudança mínima |
+
+OutlookConnection e ExternalEventMap pertencem apenas a HO-008. ExternalBusyInterval, SyncCursor e GraphSubscription pertencem apenas a HO-009; não são tabelas obrigatórias do core nem do scaffold. A conta da aplicação é IdentityUser; ligação Microsoft posterior é opcional, vinculada ao MemberId local, sem comparar emails como prova.
 
 Os IDs de negócio são gerados pelo servidor. Unicidade de `PlanDay(EmployeeId, LocalDate)` impede duas localizações efetivas no mesmo dia. Constraints de associação incluem a organização; filtros globais são apoio, não substituem a autorização explícita.
 
@@ -83,5 +86,5 @@ Ordem de locks determinística se uma operação futura envolver vários colabor
 - Selecionar 12–14 significa três datas; um evento all-day correspondente termina às 00:00 do dia 15 na mesma zona.
 - A organização tem zona de planeamento configurada, proposta Europe/Zurich. O utilizador pode ver horas em Europe/Lisbon.
 - Eventos com horas guardam instantes UTC e zona original; dias inteiros nunca são deslocados através de uma conversão UTC.
-- Usar mapeamento de zonas suportadas pelo Graph; não assumir que qualquer string IANA é aceite por todos os endpoints. Verificar em HO-001 e manter testes de horário de verão.
-- Na V1, um evento Outlook ocupado não transforma o dia inteiro em indisponibilidade. É um intervalo e um aviso, sobretudo se puder ser uma reunião remota.
+- Usar mapeamento de zonas suportadas pelo Graph; não assumir que qualquer string IANA é aceite por todos os endpoints. Verificar no marco opcional HO-008; o core testa DateOnly/DST sem Graph.
+- Em HO-009, uma disponibilidade Outlook importada será apenas um intervalo/aviso. O core usa indisponibilidade manual e plano interno, sem leituras de calendários externos.

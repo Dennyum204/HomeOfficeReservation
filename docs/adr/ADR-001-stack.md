@@ -23,4 +23,4 @@ Mantemos dois conjuntos de componentes UI; partilhamos o contrato, as regras no 
 
 ## A validar
 
-Flutter para Android e iOS está confirmado. Permanecem em aberto os meios de assinatura/distribuição do piloto, a identidade Microsoft (HO-001) e o fornecedor/região de alojamento (HO-012). A confirmação está no [pedido HO-000](../CODEX_PROMPTS.md); não significa que existam projetos compiláveis ou integrações testadas.
+Flutter para Android e iOS está confirmado. Permanecem em aberto os meios de assinatura/distribuição do piloto, as integrações Microsoft opcionais (HO-008/HO-009); identidade própria escolhida em ADR-004 e o fornecedor/região de alojamento (HO-012). A confirmação está no [pedido HO-000](../CODEX_PROMPTS.md); não significa que existam projetos compiláveis ou integrações testadas.

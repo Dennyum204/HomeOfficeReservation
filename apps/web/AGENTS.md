@@ -4,7 +4,7 @@ Read root AGENTS.md and docs/UX.md.
 
 - React with strict TypeScript. Organize code by product feature.
 - Consume generated OpenAPI clients; do not hand-copy DTOs or business approval rules.
-- Backend session cookie for Web; CSRF on mutations. Never persist Microsoft tokens in browser storage.
+- ASP.NET Core Identity session cookie for Web; CSRF on mutations including login/logout. No Microsoft account required. Never persist auth or Graph tokens in browser storage.
 - Render confirmed location, pending proposals and conflicts as distinct information.
 - Calendar controls support keyboard access and do not rely only on color.
 - Implement loading, empty, error, stale-version and offline states for every critical flow.

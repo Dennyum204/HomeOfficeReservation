@@ -1,6 +1,6 @@
 # ADR-002 — Identidade e sincronização Outlook
 
-Estado atual: proposta detalhada, bloqueada em validação real de HO-001 (2026-09-08). Proposta original: 2026-09-07, preservada abaixo.
+Estado atual: **substituída por [ADR-004](ADR-004-independent-core.md)** por decisão do responsável em 2026-09-08. Validação Graph real **adiada, não aprovada**. O texto abaixo preserva as propostas de 2026-09-07/08 e o estudo anterior; não define o âmbito atual nem autoriza retomar onboarding.
 
 ## Contexto
 

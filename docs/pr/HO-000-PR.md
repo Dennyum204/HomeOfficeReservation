@@ -1,5 +1,7 @@
 ## Problema e resultado
 
+> Notas históricas do PR #25 integrado. O âmbito Outlook obrigatório foi posteriormente substituído em HO-001/[ADR-004](../adr/ADR-004-independent-core.md); estas notas preservam a entrega original.
+
 HomeOfficeReservation precisa de uma base versionada e tracking verificável para desenvolvimento incremental. HO-000 integra os ficheiros do starter na raiz do repositório real e confirma ASP.NET Core/.NET 10, PostgreSQL/EF Core, React/TypeScript e Flutter Android/iOS. Outlook permanece obrigatório na V1; conta Microsoft e alojamento continuam por validar.
 
 Closes #1 — [HO-000](https://github.com/Dennyum204/HomeOfficeReservation/issues/1).

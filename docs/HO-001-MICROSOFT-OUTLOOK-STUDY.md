@@ -1,5 +1,8 @@
 # HO-001 — Identidade Microsoft e estudo Outlook
 
+> **Referência histórica opcional — âmbito substituído em HO-001.** A decisão atual está em [ADR-004](adr/ADR-004-independent-core.md) e [OUTLOOK.md](OUTLOOK.md). Login Microsoft e integração obrigatória não pertencem ao core. Onboarding/registo/probe real suspensos por instrução do responsável. O utilizador confirmou uma mailbox dedicada vazia, mas o portal apresentou erro de acesso ao diretório; nenhum consentimento/Graph/evento real foi validado. Os requisitos antigos de completar login Web/Flutter ou Graph para fechar HO-001 deixam de se aplicar. CRUD/publicação real passou para HO-008; importação/delta/webhooks/reconciliação para HO-009. O restante texto é o estudo anterior, preservado como evidência de pesquisa, não instruções de execução atual.
+
+
 Data da pesquisa e dos testes locais: **2026-09-08**. Trabalho: [issue #2](https://github.com/Dennyum204/HomeOfficeReservation/issues/2). Estado: preparação concluída para **Outlook.com pessoal**, confirmado por Fernando; **validação real bloqueada por registo/configuração/consentimento ainda não preparados**. Este documento não certifica a integração.
 
 ## Base e configuração encontrada

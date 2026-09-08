@@ -2,16 +2,34 @@
   "schema_version": 1,
   "project": "HomeOfficeReservation",
   "updated_at": "2026-09-08",
-  "planning_note": "Sequência proposta; datas de entrega dependem de acessos, capacidade e aceitação. Nenhuma release foi lançada.",
+  "planning_note": "Core V1 autónomo, com calendário e autenticação próprios. Outlook opcional em marcos independentes posteriores; acesso Microsoft não bloqueia desenvolvimento nem lançamento do core.",
   "releases": [
     {
       "id": "v1.0",
-      "title": "Primeira versão utilizável",
-      "timing": "Após o estudo Microsoft, implementação e gates de aceitação; piloto inicial de duas semanas.",
-      "gate": "HO-000 a HO-012 integrados, duas contas reais autorizadas e critérios de QUALITY.md cumpridos.",
-      "review_trigger": "No fecho do estudo Outlook e semanalmente durante a construção.",
+      "title": "Core V1 autónomo",
+      "timing": "Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.",
+      "gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates.",
+      "review_trigger": "Em cada entrega do core e na retrospetiva do piloto.",
       "status": "planned",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1"
+    },
+    {
+      "id": "outlook-publish",
+      "title": "Outlook opcional: publicação unidirecional",
+      "timing": "Após core V1; iniciar separadamente quando houver autorização e acesso Microsoft.",
+      "gate": "HO-008 integrado; consentimento e CRUD de eventos próprios/all-day validados no Graph. Não condiciona releases do core.",
+      "review_trigger": "Depois do piloto core e quando houver acesso para o ensaio opcional.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/5"
+    },
+    {
+      "id": "outlook-sync",
+      "title": "Outlook opcional: disponibilidade e sincronização avançada",
+      "timing": "Após publicação opcional; priorização e infraestrutura próprias, sem compromisso de data.",
+      "gate": "HO-009 integrado; delta/paginação/recorrência, webhooks, lifecycle e reconciliação externa validados. Não condiciona o core.",
+      "review_trigger": "Após validar HO-008 e confirmar necessidade de importar disponibilidade.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/6"
     },
     {
       "id": "v1.1",
@@ -44,13 +62,13 @@
   "features": [
     {
       "id": "FEAT-001",
-      "title": "Identidade, papéis e relação colaborador/chefe",
+      "title": "Contas próprias, papéis e relação colaborador/chefe",
       "release": "v1.0",
       "status": "planned"
     },
     {
       "id": "FEAT-002",
-      "title": "Dashboard, calendário e padrão base explícito",
+      "title": "Calendário próprio autoritativo, dashboard e padrão base explícito",
       "release": "v1.0",
       "status": "planned"
     },
@@ -86,8 +104,8 @@
     },
     {
       "id": "FEAT-008",
-      "title": "Sincronização Outlook completa no âmbito V1",
-      "release": "v1.0",
+      "title": "Importação Outlook, delta, webhooks e reconciliação externa opcionais",
+      "release": "outlook-sync",
       "status": "planned"
     },
     {
@@ -173,6 +191,12 @@
       "title": "Consulta e edição offline com resolução de conflitos",
       "release": "v2.0",
       "status": "planned"
+    },
+    {
+      "id": "FEAT-023",
+      "title": "Publicação Outlook opcional de dias confirmados",
+      "release": "outlook-publish",
+      "status": "planned"
     }
   ],
   "work_items": [
@@ -188,7 +212,7 @@
       "acceptance": [
         "Starter integrado na raiz a partir da história real; commit bootstrap vazio apenas se o GitHub não tiver commits; branch docs/ho-000-project-foundation.",
         "README e .gitignore descrevem o setup real e protegem outputs, configuração local, segredos e chaves sem excluir lockfiles, migrações ou exemplos seguros.",
-        "Documentos confirmam ASP.NET Core/.NET 10, PostgreSQL/EF Core, React/TypeScript e Flutter Android/iOS; Outlook obrigatório na V1; conta Microsoft e alojamento permanecem por validar.",
+        "Stack .NET 10/PostgreSQL/EF Core/React/Flutter confirmada. Histórico HO-000 exigia Outlook V1; requisito substituído pela decisão de core autónomo em HO-001/ADR-004, sem alterar a evidência do merge original.",
         "Os 24 trabalhos, incluindo releases futuras, têm issues reais sem duplicados, critérios de aceitação, dependências, labels de release/área e milestones onde suportados; URLs no JSON.",
         "AGENTS.md atribui branches, commits, issues e preparação de PRs ao Codex; exige evidência de merge e reconciliação de estados antes de verificar dependências; Fernando revê e faz merge, sem auto-merge.",
         "Validação documental passa e documentos derivados estão atualizados; PR real registado, sem draft, CI relevante verde no último commit e sem conflitos.",
@@ -209,33 +233,55 @@
     },
     {
       "id": "HO-001",
-      "title": "Estudo de identidade Microsoft e Outlook",
+      "title": "Core autónomo, autenticação própria e Outlook opcional",
       "release": "v1.0",
-      "area": "integration",
-      "status": "blocked",
+      "area": "docs",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-000"
       ],
       "features": [
-        "FEAT-008",
         "FEAT-001"
       ],
       "acceptance": [
-        "Tipo de conta/mailbox e políticas de consentimento identificados sem guardar segredos.",
-        "Login e fluxo de tokens API/Graph definidos, incluindo viabilidade Flutter.",
-        "Evento de teste próprio criado, alterado e removido com as permissões previstas.",
-        "Leitura delta, datas all-day e revogação/reconexão verificadas ou limitações explicitamente registadas.",
-        "ADR-002 atualizado com evidência; não confundir testes simulados com Graph real."
+        "Produto define calendário próprio autoritativo e todos os fluxos core Web/Mobile sem conta Microsoft ou ligação Outlook.",
+        "Autenticação própria ASP.NET Core Identity definida para React/Flutter, com sessões, recuperação, autorização e limitações; sem protocolos criptográficos próprios.",
+        "Outlook opcional em Definições publica apenas dias explícitos confirmados, showAs=free, eventos próprios e sem convites; importação/delta/webhooks/reconciliação em marco posterior.",
+        "Estudo/probe preservados como referência opcional; onboarding suspenso e validação Graph real adiada, nunca apresentada como aprovada. Sem credenciais/Graph nos checks normais.",
+        "ADRs com histórico, README/STATUS/produto/arquitetura e backlog/issues/milestones alinhados; dependências core sem gates Microsoft.",
+        "Documentos derivados regenerados, checks relevantes verdes no último commit e PR #27 sem conflitos, pronto para revisão do âmbito documental revisto."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/2",
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/27"
       ],
-      "reason": "Outlook.com pessoal confirmado; registo/client ID e configuração ausentes, mailbox dedicada e consentimento de teste por confirmar. Estudo e probe preparados, sem chamadas Graph reais; CRUD/delta/datas/recorrência e reconexão pendentes. PR draft, issue aberta.",
       "study_path": "docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md",
       "account_type": "personal_microsoft_account",
-      "live_graph_verified": false
+      "live_graph_verified": false,
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Estudo de identidade Microsoft e Outlook",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-000"
+          ],
+          "previous_features": [
+            "FEAT-008",
+            "FEAT-001"
+          ],
+          "previous_acceptance": [
+            "Tipo de conta/mailbox e políticas de consentimento identificados sem guardar segredos.",
+            "Login e fluxo de tokens API/Graph definidos, incluindo viabilidade Flutter.",
+            "Evento de teste próprio criado, alterado e removido com as permissões previstas.",
+            "Leitura delta, datas all-day e revogação/reconexão verificadas ou limitações explicitamente registadas.",
+            "ADR-002 atualizado com evidência; não confundir testes simulados com Graph real."
+          ]
+        }
+      ],
+      "live_graph_disposition": "deferred_by_product_direction"
     },
     {
       "id": "HO-002",
@@ -245,7 +291,8 @@
       "status": "planned",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-000"
+        "HO-000",
+        "HO-001"
       ],
       "features": [],
       "acceptance": [
@@ -253,10 +300,30 @@
         "Ambiente PostgreSQL local e configuração de exemplo sem segredos disponíveis.",
         "OpenAPI e geração TypeScript/Dart reproduzíveis com verificação de diff.",
         "CI de cada stack executa checks reais; não aceita código existente com jobs silenciosamente ignorados.",
-        "Comandos de setup/build/test estão documentados nas áreas correspondentes."
+        "Comandos de setup/build/test estão documentados nas áreas correspondentes.",
+        "Setup e CI do core funcionam sem conta Microsoft, tenant, tokens Graph ou probe; decisões de ADR-004 orientam scaffold, autenticação funcional fica em HO-003."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/3",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Monorepo compilável, contratos e CI",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-000"
+          ],
+          "previous_features": [],
+          "previous_acceptance": [
+            "Projetos .NET, React e Flutter compilam com versões/lockfiles fixados.",
+            "Ambiente PostgreSQL local e configuração de exemplo sem segredos disponíveis.",
+            "OpenAPI e geração TypeScript/Dart reproduzíveis com verificação de diff.",
+            "CI de cada stack executa checks reais; não aceita código existente com jobs silenciosamente ignorados.",
+            "Comandos de setup/build/test estão documentados nas áreas correspondentes."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-003",
@@ -266,7 +333,6 @@
       "status": "planned",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-001",
         "HO-002"
       ],
       "features": [
@@ -274,14 +340,39 @@
         "FEAT-009"
       ],
       "acceptance": [
-        "Web usa sessão BFF com proteção CSRF; mobile obtém token destinado à API.",
+        "ASP.NET Core Identity/EF Core/PostgreSQL com email/password: Web usa cookie Secure/HttpOnly e CSRF; Flutter usa bearer/refresh opacos do framework, conforme ADR-004.",
         "Colaborador/chefe pertencem a uma relação configurada; autoaprovação é negada.",
         "Reads/writes por ID verificam organização, papel e relação, incluindo casos de negação.",
         "Bootstrap de admin não permite atribuição livre de papéis pelo utilizador.",
-        "Login válido e sessão expirada demonstrados nas duas interfaces base."
+        "Login válido e sessão expirada demonstrados nas duas interfaces base.",
+        "Ativação/recuperação usam mecanismos Identity, rate limits e lockout; não há autoatribuição de papéis nem exigência de email Microsoft.",
+        "Sessão/refresh expirados, logout, conta desativada, security stamp e armazenamento seguro mobile têm testes; nenhuma dependência de Entra/Graph."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/4",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Autenticação, membros e autorização",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-001",
+            "HO-002"
+          ],
+          "previous_features": [
+            "FEAT-001",
+            "FEAT-009"
+          ],
+          "previous_acceptance": [
+            "Web usa sessão BFF com proteção CSRF; mobile obtém token destinado à API.",
+            "Colaborador/chefe pertencem a uma relação configurada; autoaprovação é negada.",
+            "Reads/writes por ID verificam organização, papel e relação, incluindo casos de negação.",
+            "Bootstrap de admin não permite atribuição livre de papéis pelo utilizador.",
+            "Login válido e sessão expirada demonstrados nas duas interfaces base."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-004",
@@ -384,33 +475,57 @@
     },
     {
       "id": "HO-008",
-      "title": "Publicação de datas confirmadas no Outlook",
-      "release": "v1.0",
+      "title": "Outlook opcional: publicar dias confirmados",
+      "release": "outlook-publish",
       "area": "integration",
       "status": "planned",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-001",
-        "HO-004",
-        "HO-007"
+        "HO-012"
       ],
       "features": [
-        "FEAT-008"
+        "FEAT-023"
       ],
       "acceptance": [
-        "Ligação delegada ao calendário principal guarda tokens apenas no backend.",
-        "Aprovação cria eventos só para as datas explícitas confirmadas; dias pendentes não são publicados.",
-        "Revisão/cancelamento altera ou remove apenas eventos com mapeamento válido.",
-        "Retry/timeout, ordenação de versões e data all-day não duplicam nem deslocam eventos.",
-        "API expõe estado de ligação/publicação, sem expor tokens."
+        "Ligação opcional em Definições, desligada por defeito, com consentimento delegado associado ao MemberId local; login e calendário core funcionam sem Microsoft.",
+        "Tokens Graph só no backend; um registo conector não substitui autenticação da aplicação. Conta Outlook inicial pessoal; outros tipos exigem estudo próprio.",
+        "Publicação unidirecional só de dias explícitos confirmados, all-day local, showAs=free por defeito, sem attendees/convites; pendentes/padrão base não geram eventos.",
+        "CRUD real autorizado e limpeza de eventos próprios, DST Lisboa/Zurique, idempotência/timeout e precondições de escrita verificados; limitações e evidência sanitizada registadas.",
+        "Atualização/remoção exige mapeamento/propriedade na conta ligada; erro ou edição concorrente não altera plano nem causa escrita cega. Sem importação de disponibilidade, delta, webhook ou reconciliação de alterações externas.",
+        "Outbox/worker publica versões atuais; desligar/revogar para apenas a publicação e preserva core. Estado de publicação e erros apresentados sem tokens; eventos existentes ficam por defeito.",
+        "Web e mobile permitem ligar/desligar e consultar publicação sem transferir tokens Graph aos clientes; ligação explícita impede troca de conta/cross-member."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/9",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Publicação de datas confirmadas no Outlook",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-001",
+            "HO-004",
+            "HO-007"
+          ],
+          "previous_features": [
+            "FEAT-008"
+          ],
+          "previous_acceptance": [
+            "Ligação delegada ao calendário principal guarda tokens apenas no backend.",
+            "Aprovação cria eventos só para as datas explícitas confirmadas; dias pendentes não são publicados.",
+            "Revisão/cancelamento altera ou remove apenas eventos com mapeamento válido.",
+            "Retry/timeout, ordenação de versões e data all-day não duplicam nem deslocam eventos.",
+            "API expõe estado de ligação/publicação, sem expor tokens."
+          ]
+        }
+      ],
+      "reason": "Adiado por decisão de produto para marco opcional após core. Estudo HO-001 não validou Graph real."
     },
     {
       "id": "HO-009",
       "title": "Importação Outlook, webhooks e divergências",
-      "release": "v1.0",
+      "release": "outlook-sync",
       "area": "integration",
       "status": "planned",
       "owner": "Fernando + Codex",
@@ -418,8 +533,7 @@
         "HO-008"
       ],
       "features": [
-        "FEAT-008",
-        "FEAT-009"
+        "FEAT-008"
       ],
       "acceptance": [
         "Delta percorre páginas e guarda cursor por janela fixa; cursor inválido recupera.",
@@ -427,10 +541,35 @@
         "Reconciliação periódica recupera notificações perdidas e respeita throttling.",
         "Eventos privados são reduzidos a disponibilidade; próprios eventos não geram falsos conflitos.",
         "Edição/apagamento externo gera divergência resolúvel, sem mudar aprovação.",
-        "Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política."
+        "Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política.",
+        "Retomar ensaio real de delta/all-day/recorrência/paginação/revogação, provisionar HTTPS/fila/subscrições e rever estudo histórico; não tornar o conector requisito do core."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/10",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Importação Outlook, webhooks e divergências",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-008"
+          ],
+          "previous_features": [
+            "FEAT-008",
+            "FEAT-009"
+          ],
+          "previous_acceptance": [
+            "Delta percorre páginas e guarda cursor por janela fixa; cursor inválido recupera.",
+            "Webhooks são validados, enfileirados e reconciliados; subscrições renovam antes de expirar.",
+            "Reconciliação periódica recupera notificações perdidas e respeita throttling.",
+            "Eventos privados são reduzidos a disponibilidade; próprios eventos não geram falsos conflitos.",
+            "Edição/apagamento externo gera divergência resolúvel, sem mudar aprovação.",
+            "Revogação e desligar suspendem sync e limpam credenciais/intervalos conforme a política."
+          ]
+        }
+      ],
+      "reason": "Adiado para marco posterior à publicação opcional. Critérios de delta/webhooks/edição externa preservados; nenhum resultado real alegado."
     },
     {
       "id": "HO-010",
@@ -469,25 +608,52 @@
         "HO-005",
         "HO-006",
         "HO-007",
-        "HO-009",
         "HO-010"
       ],
       "features": [
         "FEAT-005",
         "FEAT-006",
         "FEAT-007",
-        "FEAT-008",
         "FEAT-009"
       ],
       "acceptance": [
-        "Web e mobile completam presença, conflito, tarefa, notificações e gestão Outlook.",
-        "Push real abre o detalhe autenticado; permissão recusada mantém caixa interna.",
-        "Cenário cruzado: pedido Web, decisão mobile e evento Outlook correto.",
-        "Autorização negativa, concorrência, DST, retries e divergências têm evidência.",
-        "Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks."
+        "Web e mobile completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.",
+        "Push real abre detalhe autenticado; permissão recusada mantém caixa interna.",
+        "Cenário cruzado: pedido Web, decisão mobile e mesmos dias confirmados no calendário interno, sem conector configurado.",
+        "Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.",
+        "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/12",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Integração das interfaces e testes de aceitação",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-005",
+            "HO-006",
+            "HO-007",
+            "HO-009",
+            "HO-010"
+          ],
+          "previous_features": [
+            "FEAT-005",
+            "FEAT-006",
+            "FEAT-007",
+            "FEAT-008",
+            "FEAT-009"
+          ],
+          "previous_acceptance": [
+            "Web e mobile completam presença, conflito, tarefa, notificações e gestão Outlook.",
+            "Push real abre o detalhe autenticado; permissão recusada mantém caixa interna.",
+            "Cenário cruzado: pedido Web, decisão mobile e evento Outlook correto.",
+            "Autorização negativa, concorrência, DST, retries e divergências têm evidência.",
+            "Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-012",
@@ -503,12 +669,31 @@
       "acceptance": [
         "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
         "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
-        "Worker sempre ativo, webhooks públicos e falhas de sync observáveis.",
+        "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
         "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
-        "Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação."
+        "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Staging, distribuição privada e piloto V1",
+          "previous_release": "v1.0",
+          "previous_depends_on": [
+            "HO-011"
+          ],
+          "previous_features": [],
+          "previous_acceptance": [
+            "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+            "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+            "Worker sempre ativo, webhooks públicos e falhas de sync observáveis.",
+            "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+            "Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-101",
@@ -615,10 +800,31 @@
       "acceptance": [
         "Modelo de intervalos suporta meios dias e deslocações sem sobrepor disponibilidade incompatível.",
         "Aprovação e conflitos aplicam-se ao intervalo correto.",
-        "Contratos e projeção Outlook evoluem com migração e testes de zonas/horário de verão."
+        "Contratos e calendário próprio evoluem com migração e testes de zonas/horário de verão. Se o conector opcional estiver instalado, atualizar a projeção sem torná-lo dependência deste item."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/18",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Meios dias, horários e deslocações",
+          "previous_release": "v1.2",
+          "previous_depends_on": [
+            "HO-101",
+            "HO-102",
+            "HO-103"
+          ],
+          "previous_features": [
+            "FEAT-015"
+          ],
+          "previous_acceptance": [
+            "Modelo de intervalos suporta meios dias e deslocações sem sobrepor disponibilidade incompatível.",
+            "Aprovação e conflitos aplicam-se ao intervalo correto.",
+            "Contratos e projeção Outlook evoluem com migração e testes de zonas/horário de verão."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-203",
@@ -677,7 +883,8 @@
       "depends_on": [
         "HO-201",
         "HO-202",
-        "HO-203"
+        "HO-203",
+        "HO-009"
       ],
       "features": [
         "FEAT-019"
@@ -688,7 +895,28 @@
         "Cursores, notificações e regras de conflito não reutilizam indevidamente o fluxo do calendário principal."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/21",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-08",
+          "reason": "Direção do responsável: core independente de Microsoft; Outlook opcional em fases.",
+          "previous_title": "Calendários Outlook adicionais e partilhados",
+          "previous_release": "v2.0",
+          "previous_depends_on": [
+            "HO-201",
+            "HO-202",
+            "HO-203"
+          ],
+          "previous_features": [
+            "FEAT-019"
+          ],
+          "previous_acceptance": [
+            "Estudo específico valida permissões/endpoints para calendários secundários e partilhados.",
+            "Seleção por calendário identifica leitura/escrita e propriedade dos eventos.",
+            "Cursores, notificações e regras de conflito não reutilizam indevidamente o fluxo do calendário principal."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-303",

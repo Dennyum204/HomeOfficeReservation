@@ -1,4 +1,6 @@
-# Probe local HO-001
+# Probe local HO-001 — referência opcional
+
+> **Execução real e onboarding suspensos por decisão de produto.** O core não precisa deste probe, dependências Python extra, conta Microsoft ou consentimento. [ADR-004](../../docs/adr/ADR-004-independent-core.md) substitui o âmbito anterior. O ensaio real foi adiado, não passou. Este probe legado inclui leituras delta além da primeira publicação opcional; não o executar integralmente em HO-008 sem adaptar/reautorizar esse acesso. HO-009 preserva os ensaios avançados. Os passos abaixo são referência para uma futura tarefa explicitamente selecionada.
 
 Ferramenta de ensaio isolada; não cria a aplicação .NET/React/Flutter. **Não foi executada contra Graph nesta entrega.** O [estudo](../../docs/HO-001-MICROSOFT-OUTLOOK-STUDY.md) distingue desenho, simulação e evidência em falta.
 
@@ -27,11 +29,11 @@ python3 -m venv "$HOME/.cache/ho001-venv"
 "$HOME/.cache/ho001-venv/bin/python" scripts/outlook_probe/probe.py plan
 ```
 
-Os comandos do workflow são executados em Linux pela CI; a preparação local foi executada em Windows com o Python do ambiente Codex e venv externo. `plan` apresenta seis fixtures e durações UTC `[23,25,23,25]`; zero chamadas de rede. A CI instala dependências PyPI, mas os testes/plan não contactam Microsoft.
+Os comandos do workflow são executados em Linux pela CI; a preparação local foi executada em Windows com o Python do ambiente Codex e venv externo. `plan` apresenta seis fixtures e durações UTC `[23,25,23,25]`; zero chamadas de rede. Só a execução manual opcional da CI instala dependências PyPI; os testes/plan não contactam Microsoft. A CI normal executa o validador documental sem este ambiente.
 
 ## Gate de execução real
 
-1. Alvo confirmado por Fernando: **Outlook.com pessoal**; registo/consentimento ainda não preparados. Selecionar explicitamente mailbox de teste dedicada, sem dados privados de produção, e obter autorização do titular. A conta indicada privadamente ainda não foi confirmada como dedicada. Não usar a conta sugerida pelo browser sem confirmar. Graph delta pode devolver conteúdo alheio mesmo sem o persistirmos; uma mailbox vazia de teste reduz esse acesso.
+1. Alvo confirmado por Fernando: **Outlook.com pessoal**; registo/consentimento ainda não preparados. Selecionar explicitamente mailbox de teste dedicada, sem dados privados de produção, e obter autorização do titular. Posteriormente foi confirmada uma conta dedicada com calendário vazio; não há consentimento concedido, e o onboarding foi suspenso por decisão de produto. Não usar a conta sugerida pelo browser sem confirmar. Graph delta pode devolver conteúdo alheio mesmo sem o persistirmos; uma mailbox vazia de teste reduz esse acesso.
 2. Obter acesso ao portal Entra e a um diretório com direito de registar aplicações; isto é necessário mesmo para um cliente de contas pessoais. Criar registo separado de teste com **Personal Microsoft accounts only**, tipo público desktop, redirect `http://localhost`, para code + PKCE via browser (porta local 8400 livre). Não criar client secret nem usar password/device-code como atalho. O diretório do registo não substitui o tenant consumer na configuração de autenticação. [Registo Microsoft](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app), [Configuração MSAL Python](https://learn.microsoft.com/en-us/entra/msal/python/getting-started/acquiring-tokens).
 3. Configurar apenas Graph **delegado** `Calendars.ReadWrite` e obter consentimento segundo a política real. MSAL acrescenta os scopes OIDC/offline necessários; não passar estes scopes reservados manualmente à biblioteca. Não pedir permissões application, Mail, User.Read ou MailboxSettings.Read. Não iniciar consentimento empresarial sem autorização.
 4. Copiar `config.example.json` para pasta privada fora do Git, por exemplo `$env:USERPROFILE\.ho001-probe\config.json`. Substituir `client_id` pelo ID do registo e marcar os dois flags apenas após confirmar conta dedicada e consentimento. Manter `mailbox_type=personal` e o UUID consumer público do exemplo; não usar o ID do diretório onde criou a aplicação. Não enviar palavra-passe, token ou ficheiro real para chat/GitHub.
@@ -75,4 +77,4 @@ O probe força refresh, elimina cache local e inicia seleção/consentimento nov
 
 ## Evidência desta entrega
 
-19 testes locais passaram com fixtures sintéticas. Cobrem vinculação explícita MSA, propriedade, recusa de attendees/conta errada, journal fora do Git, recuperação de POST ambíguo, paginação/URLs não confiáveis, descarte de dados privados simulados, DST, ciclo CRUD/delta simulado e falhas redigidas. **Não há evidência Graph real, login Web/Flutter real ou webhook real.** Para concluir HO-001 é preciso obter o gate acima, executar e registar separadamente os resultados em falta no estudo/ADR/issue.
+19 testes locais passaram com fixtures sintéticas. Cobrem vinculação explícita MSA, propriedade, recusa de attendees/conta errada, journal fora do Git, recuperação de POST ambíguo, paginação/URLs não confiáveis, descarte de dados privados simulados, DST, ciclo CRUD/delta simulado e falhas redigidas. **Não há evidência Graph real, login Web/Flutter real ou webhook real.** HO-001 fecha apenas a mudança documental de âmbito. Critérios reais adiados pertencem a HO-008/HO-009; este probe não valida futuros clientes Web/Flutter.

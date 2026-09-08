@@ -4,32 +4,55 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-08.
 
-Sequência proposta; datas de entrega dependem de acessos, capacidade e aceitação. Nenhuma release foi lançada.
+Core V1 autónomo, com calendário e autenticação próprios. Outlook opcional em marcos independentes posteriores; acesso Microsoft não bloqueia desenvolvimento nem lançamento do core.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
 A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.md).
 
-## v1.0 — Primeira versão utilizável
+## v1.0 — Core V1 autónomo
 
-**Quando:** Após o estudo Microsoft, implementação e gates de aceitação; piloto inicial de duas semanas.
+**Quando:** Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.
 
-**Gate:** HO-000 a HO-012 integrados, duas contas reais autorizadas e critérios de QUALITY.md cumpridos.
+**Gate:** HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates.
 
-**Reavaliar:** No fecho do estudo Outlook e semanalmente durante a construção.
+**Reavaliar:** Em cada entrega do core e na retrospetiva do piloto.
 
 | ID | Funcionalidade | Tarefas |
 |---|---|---|
-| FEAT-001 | Identidade, papéis e relação colaborador/chefe | HO-001, HO-003 |
-| FEAT-002 | Dashboard, calendário e padrão base explícito | HO-005, HO-010 |
+| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003 |
+| FEAT-002 | Calendário próprio autoritativo, dashboard e padrão base explícito | HO-005, HO-010 |
 | FEAT-003 | Pedidos por datas, rascunhos e comentários | HO-004, HO-005, HO-010 |
 | FEAT-004 | Aprovação parcial, contrapropostas e revisões | HO-004, HO-005, HO-010 |
 | FEAT-005 | Compromissos presenciais, leitura e conflitos | HO-006, HO-011 |
 | FEAT-006 | Tarefas simples associadas a projetos/presenças | HO-006, HO-011 |
 | FEAT-007 | Notificações internas e push mobile | HO-007, HO-011 |
-| FEAT-008 | Sincronização Outlook completa no âmbito V1 | HO-001, HO-008, HO-009, HO-011 |
-| FEAT-009 | Histórico, privacidade e recuperação | HO-003, HO-004, HO-009, HO-011 |
+| FEAT-009 | Histórico, privacidade e recuperação | HO-003, HO-004, HO-011 |
 | FEAT-010 | Férias/indisponibilidade manual para planeamento | HO-004, HO-005, HO-010 |
+
+## outlook-publish — Outlook opcional: publicação unidirecional
+
+**Quando:** Após core V1; iniciar separadamente quando houver autorização e acesso Microsoft.
+
+**Gate:** HO-008 integrado; consentimento e CRUD de eventos próprios/all-day validados no Graph. Não condiciona releases do core.
+
+**Reavaliar:** Depois do piloto core e quando houver acesso para o ensaio opcional.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-023 | Publicação Outlook opcional de dias confirmados | HO-008 |
+
+## outlook-sync — Outlook opcional: disponibilidade e sincronização avançada
+
+**Quando:** Após publicação opcional; priorização e infraestrutura próprias, sem compromisso de data.
+
+**Gate:** HO-009 integrado; delta/paginação/recorrência, webhooks, lifecycle e reconciliação externa validados. Não condiciona o core.
+
+**Reavaliar:** Após validar HO-008 e confirmar necessidade de importar disponibilidade.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-008 | Importação Outlook, delta, webhooks e reconciliação externa opcionais | HO-009 |
 
 ## v1.1 — Rotina e acompanhamento
 

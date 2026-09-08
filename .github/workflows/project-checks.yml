@@ -5,6 +5,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      run_outlook_reference:
+        description: Run optional synthetic Outlook reference tests (no Microsoft access)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -26,6 +31,8 @@ jobs:
         run: python3 scripts/check_project.py
 
   outlook-probe-tests:
+    # Archived research only; not part of normal core development/CI.
+    if: github.event_name == 'workflow_dispatch' && inputs.run_outlook_reference
     name: outlook-probe-tests
     runs-on: ubuntu-24.04
     timeout-minutes: 5
