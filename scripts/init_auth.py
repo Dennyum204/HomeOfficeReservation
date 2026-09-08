@@ -5,8 +5,10 @@ import json
 import os
 from pathlib import Path
 import secrets
+import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -15,6 +17,30 @@ def private_write(path, data):
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     if os.name != "nt":
         path.chmod(0o600)
+
+
+def development_certificate(path, password):
+    """Standard X.509/PFX tools; macOS CI must not wait for an interactive developer Keychain."""
+    try:
+        if sys.platform == "darwin":
+            openssl = shutil.which("openssl")
+            if not openssl:
+                raise SystemExit("OpenSSL is required for noninteractive macOS development certificate setup.")
+            # This temporary PEM stays in the private 0700 parent and is removed after PFX export.
+            with tempfile.TemporaryDirectory(prefix="certificate-", dir=path.parent) as folder:
+                key = str(Path(folder) / "key.pem")
+                public = str(Path(folder) / "certificate.pem")
+                subprocess.run([openssl, "req", "-x509", "-newkey", "rsa:2048", "-sha256", "-days", "365",
+                    "-nodes", "-subj", "/CN=HomeOfficeDevelopmentProtection", "-keyout", key, "-out", public],
+                    check=True, capture_output=True, timeout=60)
+                subprocess.run([openssl, "pkcs12", "-export", "-inkey", key, "-in", public,
+                    "-out", str(path), "-passout", "env:HO_DEV_CERT_PASSWORD"],
+                    env={**os.environ, "HO_DEV_CERT_PASSWORD": password}, check=True, capture_output=True, timeout=60)
+        else:
+            subprocess.run(["dotnet", "dev-certs", "https", "--export-path", str(path), "--password", password],
+                check=True, capture_output=True, timeout=60)
+    except (subprocess.SubprocessError, OSError):
+        raise SystemExit("Could not prepare the private development certificate within 60 seconds. Check the local SDK/OpenSSL setup.") from None
 
 
 def main():
@@ -53,10 +79,7 @@ def main():
     if not protection.get("CertificatePath"):
         password = secrets.token_urlsafe(32)
         certificate = folder / "development-protection.pfx"
-        result = subprocess.run(["dotnet", "dev-certs", "https", "--export-path", str(certificate), "--password", password],
-            capture_output=True)
-        if result.returncode:
-            raise SystemExit("Could not create the private development certificate; check the pinned .NET SDK.")
+        development_certificate(certificate, password)
         if os.name != "nt":
             certificate.chmod(0o600)
         protection.update(CertificatePath=str(certificate), CertificatePassword=password)
