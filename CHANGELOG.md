@@ -3,7 +3,7 @@
 ## Unreleased
 
 - HO-000: integração do starter em Dennyum204/HomeOfficeReservation, stack confirmada e workflow GitHub com revisão/merge humano.
-- Tracking de todos os 24 trabalhos por issues, labels e milestones; URLs reais no backlog.
+- Preparação do tracking de todos os 24 trabalhos por issues, labels e milestones; criação remota pendente de autenticação GitHub.
 - Preparação de arquitetura, âmbito V1 com Outlook e roadmap.
 - Backlog com dependências e critérios de aceitação.
 - Regras Codex, modelos de issue/PR e validação documental.

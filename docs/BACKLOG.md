@@ -8,7 +8,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 
 | ID | Tarefa | Release | Área | Estado | Depende de |
 |---|---|---|---|---|---|
-| HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Em curso | — |
+| HO-000 | Repositório, documentação e tracking GitHub | v1.0 | docs | Bloqueado | — |
 | HO-001 | Estudo de identidade Microsoft e Outlook | v1.0 | integration | Planeado | HO-000 |
 | HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Planeado | HO-000 |
 | HO-003 | Autenticação, membros e autorização | v1.0 | backend | Planeado | HO-001, HO-002 |
@@ -35,7 +35,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
-Release: v1.0 · Área: docs · Estado: Em curso
+Release: v1.0 · Área: docs · Estado: Bloqueado
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -56,6 +56,8 @@ Critérios de aceitação:
 Issue: Ainda não criada.
 
 PR: ainda não criado.
+
+Motivo: Publicação bloqueada por autenticação: Git local sem credencial e criação de issue pela ligação GitHub rejeitada com HTTP 403 Resource not accessible by integration. Push do bootstrap/branch, 24 issues, labels/milestones, PR, CI remota e proteções ainda pendentes.
 
 ## HO-001 — Estudo de identidade Microsoft e Outlook
 

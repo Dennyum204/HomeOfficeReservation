@@ -177,7 +177,7 @@
       "title": "Repositório, documentação e tracking GitHub",
       "release": "v1.0",
       "area": "docs",
-      "status": "in_progress",
+      "status": "blocked",
       "owner": "Fernando + Codex",
       "depends_on": [],
       "features": [],
@@ -191,7 +191,8 @@
         "Proteções documentadas da main configuradas e verificadas onde permitido, com nomes reais de checks e sem aprovação independente obrigatória para mantenedor único."
       ],
       "issue_url": null,
-      "pr_urls": []
+      "pr_urls": [],
+      "reason": "Publicação bloqueada por autenticação: Git local sem credencial e criação de issue pela ligação GitHub rejeitada com HTTP 403 Resource not accessible by integration. Push do bootstrap/branch, 24 issues, labels/milestones, PR, CI remota e proteções ainda pendentes."
     },
     {
       "id": "HO-001",
