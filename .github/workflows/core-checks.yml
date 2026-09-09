@@ -38,6 +38,8 @@ jobs:
       - run: dotnet build apps/api/HomeOffice.slnx -c Release --no-restore
       - name: Native source encoding and debug-only transport configuration
         run: python3 scripts/check_native_config.py
+      - name: Native diagnostic logs exclude credentials
+        run: python3 -m unittest discover -s scripts -p test_ios_integration.py
       - name: Contract regeneration must match committed OpenAPI and both clients
         run: python3 scripts/generate_contracts.py --check
       - name: Start the documented PostgreSQL environment
@@ -165,21 +167,21 @@ jobs:
       - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
       - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
       - uses: ./.github/actions/setup-identity
-      - name: Start API and boot an available iPhone simulator
+      - name: Start API and boot iPhone 17 on iOS 26.2
         env:
           Auth__AccessTokenSeconds: '3'
           Auth__RefreshTokenSeconds: '8'
           Auth__RequestsPerMinute: '300'
         run: |
           ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080 > "$RUNNER_TEMP/ios-api.log" 2>&1 &
-          device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for xs in d["devices"].values() for x in xs if "iPhone" in x["name"]))')
+          device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for x in d["devices"].get("com.apple.CoreSimulator.SimRuntime.iOS-26-2", []) if x["name"] == "iPhone 17"))')
+          echo "Using iPhone 17 / iOS 26.2 with Xcode 26.3"
           xcrun simctl boot "$device"
           xcrun simctl bootstatus "$device" -b
           echo "IOS_SIMULATOR=$device" >> "$GITHUB_ENV"
       - name: iOS Simulator connects through the generated Dart client
         timeout-minutes: 12
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d "$IOS_SIMULATOR" --dart-define=API_BASE_URL=http://localhost:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
-        working-directory: apps/mobile
+        run: python3 scripts/run_ios_integration.py --device "$IOS_SIMULATOR" --defines-file "$RUNNER_TEMP/identity/client-test.json"
       - name: Install the regular shell and capture it (integration test app is removed after tests)
         run: |
           flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080

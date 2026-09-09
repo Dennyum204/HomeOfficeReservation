@@ -8,13 +8,13 @@ Na raiz do repositório, PowerShell:
 
 ```powershell
 . .git/ho002-env.ps1
-./scripts/start_local_postgres.ps1
 python scripts/init_auth.py
+$private = Split-Path (Get-Content apps/api/src/HomeOffice.Api/appsettings.Local.json -Raw | ConvertFrom-Json).DataProtection.KeyDirectory -Parent
+./scripts/start_local_postgres.ps1 -DataDirectory (Join-Path (Split-Path $private -Parent) 'postgres-18')
 dotnet restore apps/api/HomeOffice.slnx --locked-mode
 dotnet build apps/api/HomeOffice.slnx -c Release --no-restore
 $env:ASPNETCORE_ENVIRONMENT = 'Development'
 dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --migrate
-$private = Split-Path (Get-Content apps/api/src/HomeOffice.Api/appsettings.Local.json -Raw | ConvertFrom-Json).DataProtection.KeyDirectory -Parent
 dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --provision-dev "$private/accounts.json"
 dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080
 ```
@@ -147,3 +147,5 @@ flutter.bat drive --driver=test_driver/integration_test.dart --target=integratio
 O ficheiro `client-test.json` contém credenciais sintéticas privadas, **só para o entrypoint de testes**. Não o passar a builds normais/release, não publicar APK/test bundle/logs de diagnóstico. O teste usa API/PG e secure storage reais, restaura a sessão, espera nove segundos e exige sessão expirada, troca de conta e limpeza. Reiniciar a API normal sem essas variáveis após o ensaio. As durações curtas são ignoradas fora de Development/Testing.
 
 CI mantém os cinco gates existentes. Linux usa Compose; macOS usa PostgreSQL Homebrew com versão 18.6 verificada, builds Simulator/device sem assinatura e ensaio no Simulator. API TestServer + PostgreSQL usa relógio controlado para tickets de sessão, mais teste de expiração real de código Identity; não equivale a browser/dispositivo. Testes unitários/widget com respostas simuladas são identificados como tal. Resultados efetivos, SHA e eventuais limitações ficam em STATUS e no PR.
+
+CI iOS seleciona explicitamente **iPhone 17 / iOS 26.2**, em vez do primeiro simulador disponível. O alvo e o SDK do Xcode 26.3 constam da [imagem oficial macOS 15 ARM64](https://github.com/actions/runner-images/blob/macos-15-arm64/20260829.0321/images/macos/macos-15-arm64-Readme.md), consultada em 2026-09-09. `scripts/run_ios_integration.py` usa o mesmo `flutter drive`, sem voltar a resolver packages já restaurados com lockfile, e filtra o output verbose antes de o enviar ao log: remove credenciais, Dart defines codificados, campos de tokens e URLs privadas do debugger. Não guarda o log original. Três testes verificam a filtragem e a preservação de erros/etapas de instalação; isto é diagnóstico do runner, **não simulação de um teste iOS aprovado**.
