@@ -61,7 +61,7 @@ async function freeWeek(page: Page, employeeId: string) {
   const occupied = new Set(
     windows.flatMap((c) => [
       ...c.effectiveDays
-        .filter((d) => d.origin === "ApprovedRequest")
+        .filter((d) => d.origin !== "WeeklyPattern")
         .map((d) => d.localDate),
       ...c.pendingDays.map((d) => d.day.localDate),
     ]),

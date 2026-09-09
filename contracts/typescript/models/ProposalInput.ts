@@ -54,6 +54,14 @@ export interface ProposalInput {
      *
      */
     reason: string;
+    /**
+     *
+     */
+    requirementId?: string | null;
+    /**
+     *
+     */
+    requirementRevision?: number | null;
 }
 
 /**
@@ -83,6 +91,8 @@ export function ProposalInputFromJSONTyped(json: any, ignoreDiscriminator: boole
         'expectedCalendarVersion': json['expectedCalendarVersion'],
         'expectedRequestVersion': json['expectedRequestVersion'],
         'reason': json['reason'],
+        'requirementId': json['requirementId'] === undefined ? undefined : json['requirementId'] === null ? null : json['requirementId'],
+        'requirementRevision': json['requirementRevision'] === undefined ? undefined : json['requirementRevision'] === null ? null : json['requirementRevision'],
     };
 }
 
@@ -102,5 +112,7 @@ export function ProposalInputToJSONTyped(value?: ProposalInput | null, ignoreDis
         'expectedCalendarVersion': value['expectedCalendarVersion'],
         'expectedRequestVersion': value['expectedRequestVersion'],
         'reason': value['reason'],
+        'requirementId': value['requirementId'],
+        'requirementRevision': value['requirementRevision'],
     };
 }

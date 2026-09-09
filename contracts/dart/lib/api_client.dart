@@ -187,6 +187,8 @@ class ApiClient {
           return AcceptProposalInput.fromJson(value);
         case 'AccessTokenResponse':
           return AccessTokenResponse.fromJson(value);
+        case 'AssignedTaskState':
+          return AssignedTaskStateTypeTransformer().decode(value);
         case 'Availability':
           return AvailabilityTypeTransformer().decode(value);
         case 'CalendarView':
@@ -223,6 +225,20 @@ class ApiClient {
           return MemberProfile.fromJson(value);
         case 'MutationReceipt':
           return MutationReceipt.fromJson(value);
+        case 'OnsiteAcknowledgeInput':
+          return OnsiteAcknowledgeInput.fromJson(value);
+        case 'OnsiteConflict':
+          return OnsiteConflict.fromJson(value);
+        case 'OnsiteInput':
+          return OnsiteInput.fromJson(value);
+        case 'OnsitePage':
+          return OnsitePage.fromJson(value);
+        case 'OnsitePreview':
+          return OnsitePreview.fromJson(value);
+        case 'OnsiteState':
+          return OnsiteStateTypeTransformer().decode(value);
+        case 'OnsiteView':
+          return OnsiteView.fromJson(value);
         case 'PatternInput':
           return PatternInput.fromJson(value);
         case 'PatternPage':
@@ -261,12 +277,30 @@ class ApiClient {
           return SetManagerRequest.fromJson(value);
         case 'SubmitInput':
           return SubmitInput.fromJson(value);
+        case 'TaskInput':
+          return TaskInput.fromJson(value);
+        case 'TaskPage':
+          return TaskPage.fromJson(value);
+        case 'TaskProgressInput':
+          return TaskProgressInput.fromJson(value);
+        case 'TaskView':
+          return TaskView.fromJson(value);
         case 'UpdateMemberRequest':
           return UpdateMemberRequest.fromJson(value);
         case 'WithdrawInput':
           return WithdrawInput.fromJson(value);
+        case 'WorkCommentInput':
+          return WorkCommentInput.fromJson(value);
+        case 'WorkContext':
+          return WorkContextTypeTransformer().decode(value);
+        case 'WorkEntryPage':
+          return WorkEntryPage.fromJson(value);
+        case 'WorkEntryView':
+          return WorkEntryView.fromJson(value);
         case 'WorkLocation':
           return WorkLocationTypeTransformer().decode(value);
+        case 'WorkVersionInput':
+          return WorkVersionInput.fromJson(value);
         case 'WorkspaceInfo':
           return WorkspaceInfo.fromJson(value);
         default:

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { p } from "./i18n/planning.pt-PT";
+import { w } from "./i18n/work.pt-PT";
 import { ConnectionCard } from "./features/workspace/ConnectionCard";
 import { AuthGate } from "./features/auth/AuthGate";
 import { useMember } from "./features/auth/session";
@@ -9,6 +10,7 @@ import {
   type PlanningSection,
 } from "./features/planning/PlanningWorkspace";
 import "./features/planning/planning.css";
+import "./features/planning/work.css";
 
 export function App() {
   return (
@@ -20,6 +22,8 @@ export function App() {
 const icons: Record<PlanningSection, string> = {
   calendar: "▦",
   requests: "↗",
+  onsite: "▣",
+  tasks: "☑",
   settings: "⚙",
 };
 export function WorkspaceShell() {
@@ -51,7 +55,7 @@ export function WorkspaceShell() {
               <span className="nav-icon" aria-hidden="true">
                 {icons[key]}
               </span>
-              {p[key]}
+              {key === "onsite" || key === "tasks" ? w[key] : p[key]}
               <span className="nav-arrow" aria-hidden="true">
                 ›
               </span>
@@ -69,7 +73,13 @@ export function WorkspaceShell() {
         <header className="topbar">
           <span>
             {s.workspace}
-            <span className="breadcrumb"> / {p[section]}</span>
+            <span className="breadcrumb">
+              {" "}
+              /{" "}
+              {section === "onsite" || section === "tasks"
+                ? w[section]
+                : p[section]}
+            </span>
           </span>
           <span className="stage">{s.locations}</span>
         </header>
@@ -81,9 +91,19 @@ export function WorkspaceShell() {
                 ? p.title
                 : section === "requests"
                   ? p.requests
-                  : p.settingsTitle}
+                  : section === "onsite" || section === "tasks"
+                    ? w[section]
+                    : p.settingsTitle}
             </h1>
-            <p>{member?.isManager ? p.teamIntro : p.intro}</p>
+            <p>
+              {section === "onsite"
+                ? w.onsiteIntro
+                : section === "tasks"
+                  ? w.taskIntro
+                  : member?.isManager
+                    ? p.teamIntro
+                    : p.intro}
+            </p>
           </div>
           <PlanningWorkspace section={section} onSection={setSection} />
           {section === "settings" && (

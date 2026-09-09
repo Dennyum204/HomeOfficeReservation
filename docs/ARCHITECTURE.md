@@ -90,3 +90,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Concretização Web HO-005
 
 [ADR-007](adr/ADR-007-web-planning-and-active-platforms.md): calendário mês/semana, versões congeladas na confirmação, recuperação explícita de comandos wire/idempotency em sessionStorage sem tokens e leituras canceláveis por ator/colaborador. Extensões de leitura limitadas a sourceRequestId e filtro state antes da paginação; sem migração. Web/Android ativos; iOS adiado HO-306.
+
+## Presenças e tarefas HO-006
+
+[ADR-008](adr/ADR-008-onsite-and-tasks.md) reutiliza o mesmo PlanningProfile/CalendarVersion e transação para OnsiteRequirement, AssignedTask, leitura por revisão e histórico/comentários. Active projeta presença sobre o padrão; NeedsResolution conserva o plano explícito. Aprovações e resoluções revalidam presenças sob o lock. Não existem cópias de PlanDay para restaurar em cancelamentos. Migração aditiva, clientes gerados e Web no [guia HO-006](HO-006-ONSITE-TASKS.md); contratos Android disponíveis, interface Android posterior.

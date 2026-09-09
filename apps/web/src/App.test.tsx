@@ -37,9 +37,8 @@ describe("workspace shell", () => {
     const requests = screen.getByRole("button", { name: "Pedidos" });
     requests.focus();
     await userEvent.keyboard("{Enter}");
-    expect(
-      screen.queryByRole("button", { name: "Tarefas" }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tarefas" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Presenças" })).toBeVisible();
     expect(requests).toHaveAttribute("aria-current", "page");
     expect(
       screen.queryByRole("button", { name: /Aprovar|Submeter/ }),

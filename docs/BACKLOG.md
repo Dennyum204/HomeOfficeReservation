@@ -13,8 +13,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Concluído | HO-000, HO-001 |
 | HO-003 | Autenticação, membros e autorização | v1.0 | backend | Concluído | HO-002 |
 | HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Concluído | HO-003 |
-| HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Em revisão | HO-004 |
-| HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Planeado | HO-004 |
+| HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Concluído | HO-004 |
+| HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Em revisão | HO-004, HO-005 |
 | HO-007 | Notificações duráveis e infraestrutura push | v1.0 | backend | Planeado | HO-004 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
@@ -155,7 +155,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/30
 
 ## HO-005 — Calendário Web e fluxos de pedido/decisão
 
-Release: v1.0 · Área: web · Estado: Em revisão
+Release: v1.0 · Área: web · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -179,11 +179,11 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/32
 
 ## HO-006 — Presenças, resolução de conflitos e tarefas
 
-Release: v1.0 · Área: fullstack · Estado: Planeado
+Release: v1.0 · Área: fullstack · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-004
+Dependências: HO-004, HO-005
 
 Funcionalidades: FEAT-005, FEAT-006
 
@@ -194,10 +194,15 @@ Critérios de aceitação:
 - Resolução explícita atualiza presenças/plano atomicamente; corrida concorrente tem teste.
 - Tarefas têm responsável, prazo, estado e RequiresOnsite sem impor presença automaticamente.
 - API e Web expõem fluxo completo; contrato permite a implementação mobile.
+- Presenças editáveis/canceláveis com histórico e leitura por revisão; revalidar disponibilidade manual, pedidos pendentes e outras presenças sem sobrescrita silenciosa.
+- PlanningProfile/CalendarVersion, idempotência e auditoria/outbox transacionais partilhados; proteção também nos endpoints de revisão/decisão existentes.
+- Tarefas com campos protegidos, progresso limitado ao colaborador, ligação autorizada e histórico preservado após edição/cancelamento da presença.
+- Web com listas/filtros/formulários/detalhes, preview do servidor, criação pelo calendário, leitura distinta de acordo, resolução explícita e recuperação de erros/versões/resultados incertos.
+- Migração aditiva, contratos TypeScript/Dart regenerados, PostgreSQL concorrência/rollback e E2E Web/API reais desktop/estreito com capturas; Android autenticação preservada, iOS/Outlook/entregas excluídos.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/7
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/33
 
 ## HO-007 — Notificações duráveis e infraestrutura push
 

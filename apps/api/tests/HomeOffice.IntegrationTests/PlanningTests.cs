@@ -13,7 +13,7 @@ using Xunit;
 
 namespace HomeOffice.IntegrationTests;
 
-public sealed class PlanningTests
+public sealed partial class PlanningTests
 {
     private sealed class Scenario : IAsyncDisposable
     {

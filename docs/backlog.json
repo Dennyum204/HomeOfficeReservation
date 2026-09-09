@@ -469,7 +469,7 @@
       "title": "Calendário Web e fluxos de pedido/decisão",
       "release": "v1.0",
       "area": "web",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004"
@@ -496,17 +496,34 @@
       "review_evidence": [
         "Implementação Web e critérios locais verificados em 2026-09-09; 4 API + 20 PostgreSQL, 13 Vitest, 4 E2E Identity + 12 E2E Web, 6 Flutter; build APK Release e contratos coincidentes (110 ficheiros).",
         "CI aplicável do último head e conflitos devem ser verificados no PR #32 antes de retirar draft. Integração/encerramento apenas após merge humano; Graph e iOS não foram validados neste item."
-      ]
+      ],
+      "merge_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/32",
+        "merged_at": "2026-09-09T18:29:20Z",
+        "merge_commit": "aeb4f38ab258b8bb8845e4887737f3697795cf81",
+        "verified_in": "origin/main",
+        "integration_runs": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34389305274",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34389305405"
+        ],
+        "checks": [
+          "project-docs",
+          "backend-contracts",
+          "web",
+          "flutter-android"
+        ]
+      }
     },
     {
       "id": "HO-006",
       "title": "Presenças, resolução de conflitos e tarefas",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "planned",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-004"
+        "HO-004",
+        "HO-005"
       ],
       "features": [
         "FEAT-005",
@@ -517,10 +534,22 @@
         "Sobreposição com remoto aprovado gera NeedsResolution e preserva aprovação.",
         "Resolução explícita atualiza presenças/plano atomicamente; corrida concorrente tem teste.",
         "Tarefas têm responsável, prazo, estado e RequiresOnsite sem impor presença automaticamente.",
-        "API e Web expõem fluxo completo; contrato permite a implementação mobile."
+        "API e Web expõem fluxo completo; contrato permite a implementação mobile.",
+        "Presenças editáveis/canceláveis com histórico e leitura por revisão; revalidar disponibilidade manual, pedidos pendentes e outras presenças sem sobrescrita silenciosa.",
+        "PlanningProfile/CalendarVersion, idempotência e auditoria/outbox transacionais partilhados; proteção também nos endpoints de revisão/decisão existentes.",
+        "Tarefas com campos protegidos, progresso limitado ao colaborador, ligação autorizada e histórico preservado após edição/cancelamento da presença.",
+        "Web com listas/filtros/formulários/detalhes, preview do servidor, criação pelo calendário, leitura distinta de acordo, resolução explícita e recuperação de erros/versões/resultados incertos.",
+        "Migração aditiva, contratos TypeScript/Dart regenerados, PostgreSQL concorrência/rollback e E2E Web/API reais desktop/estreito com capturas; Android autenticação preservada, iOS/Outlook/entregas excluídos."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/7",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/33"
+      ],
+      "review_evidence": [
+        "Implementação API/Web local: migração aditiva, leitura por revisão, conflitos preservados e resolução transacional, tarefas e histórico; Android apenas contrato, sem notificações entregues.",
+        "Verificação local em 2026-09-09: 4 API + 32 PostgreSQL, sem skips; 13 Vitest simulados; 4 E2E Identity + 16 E2E Web reais (inclui 4 HO-006 desktop/estreito), capturas sintéticas. Dart/Flutter analyze, 6 testes Flutter e APK Release compilado; contratos coincidentes (144 ficheiros).",
+        "PR #33: https://github.com/Dennyum204/HomeOfficeReservation/pull/33. O separador Checks regista o último head e os resultados remotos project-docs, backend-contracts, web e flutter-android; só retirar draft após os quatro verdes e sem conflitos. Review até integração humana verificada; sem merge/auto-merge por Codex."
+      ]
     },
     {
       "id": "HO-007",

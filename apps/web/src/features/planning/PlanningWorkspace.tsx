@@ -3,6 +3,7 @@ import type {
   DayInput,
   MemberProfile,
   MutationReceipt,
+  OnsiteView,
   ProposalView,
   RequestedDayView,
   RequestState,
@@ -23,8 +24,11 @@ import { readError } from "./errors";
 import { useCommand } from "./useCommand";
 import { CommandNotice } from "./CommandNotice";
 import { useRead } from "./useRead";
+import { WorkPanel, type WorkFocus } from "./WorkPanel";
+import { clearWorkDraft } from "./workDraft";
 
-export type PlanningSection = "calendar" | "requests" | "settings";
+export type PlanningSection =
+  "calendar" | "requests" | "settings" | "onsite" | "tasks";
 export function PlanningWorkspace({
   section,
   onSection,
@@ -138,6 +142,7 @@ function EmployeePlanning({
   const [nonce, setNonce] = useState(0);
   const [successVersion, setSuccessVersion] = useState(0);
   const [message, setMessage] = useState("");
+  const [workFocus, setWorkFocus] = useState<WorkFocus>();
   const [preparing, setPreparing] = useState(false);
   const [prepareError, setPrepareError] = useState("");
   const [effectiveFrom, setEffectiveFrom] = useState(todayInZone());
@@ -224,6 +229,33 @@ function EmployeePlanning({
       );
       setSuccessVersion((n) => n + 1);
       setNonce((n) => n + 1);
+      if (
+        [
+          "createOnsiteRequirement",
+          "editOnsiteRequirement",
+          "cancelOnsiteRequirement",
+          "acknowledgeOnsiteRequirement",
+          "createAssignedTask",
+          "editAssignedTask",
+          "updateTaskProgress",
+          "addWorkComment",
+        ].includes(journal.operation)
+      ) {
+        const operation = journal.operation;
+        if (operation.includes("OnsiteRequirement"))
+          clearWorkDraft(
+            journal.employeeId,
+            `onsite:${operation === "createOnsiteRequirement" ? "new" : receipt.contextId}`,
+          );
+        if (operation.includes("AssignedTask"))
+          clearWorkDraft(
+            journal.employeeId,
+            `task:${operation === "createAssignedTask" ? "new" : receipt.contextId}`,
+          );
+        if (operation === "updateTaskProgress")
+          clearWorkDraft(journal.employeeId, `progress:${receipt.contextId}`);
+        return;
+      }
       setEditor(undefined);
       sessionStorage.removeItem(EDITOR_KEY);
       if (journal.operation !== "setWeeklyPattern") {
@@ -288,6 +320,7 @@ function EmployeePlanning({
     chosenDays: RequestedDayView[],
     cancellation = false,
     proposal?: ProposalView,
+    requirement?: OnsiteView,
   ) {
     setPreparing(true);
     setPrepareError("");
@@ -332,10 +365,23 @@ function EmployeePlanning({
         mode,
         requestId: source.id,
         proposalId: proposal?.id,
+        requirementId: requirement?.id ?? proposal?.requirementId,
+        requirementRevision:
+          requirement?.revision ?? proposal?.requirementRevision,
         parentRevisionId: source.parentRevisionId,
         affectedIds: chosenDays.map((d) => d.id),
-        days,
-        note: proposal?.reason ?? (mode === "edit" ? source.note : ""),
+        days: requirement
+          ? days.map((d) => ({
+              ...d,
+              location: "OfficeSwitzerland",
+              availability: "Working",
+              cancel: false,
+            }))
+          : days,
+        note:
+          requirement?.reason ??
+          proposal?.reason ??
+          (mode === "edit" ? source.note : ""),
       });
     } catch (error) {
       sessionFailure(error);
@@ -374,6 +420,8 @@ function EmployeePlanning({
     const calendarVersion = calendar.data!.calendarVersion;
     if (editor.mode === "proposal") {
       const proposalInput = {
+        requirementId: editor.requirementId,
+        requirementRevision: editor.requirementRevision,
         expectedCalendarVersion: calendarVersion,
         expectedRequestVersion: request.data!.version,
         reason: note,
@@ -489,6 +537,19 @@ function EmployeePlanning({
           selecting={selecting}
           selected={selected}
           canRequest={own}
+          canManage={!own}
+          onNewOnsite={() => {
+            setWorkFocus({
+              kind: "Requirement",
+              creating: true,
+              seed: selected.length ? selected : [active],
+            });
+            onSection("onsite");
+          }}
+          onRequirement={(id) => {
+            setWorkFocus({ kind: "Requirement", id });
+            onSection("onsite");
+          }}
           disabled={disabled}
           onAnchor={setAnchor}
           onView={(next) => {
@@ -508,6 +569,50 @@ function EmployeePlanning({
           onRequest={openRequest}
           onChange={(id, day, cancel) => {
             void fromCalendar(id, day, cancel);
+          }}
+        />
+      )}
+      {(section === "onsite" || section === "tasks") && calendar.data && (
+        <WorkPanel
+          key={section}
+          employeeId={employeeId}
+          own={own}
+          section={section}
+          focus={workFocus}
+          nonce={nonce}
+          version={calendar.data.calendarVersion}
+          disabled={disabled}
+          run={command.run}
+          onFocus={(focus) => {
+            setWorkFocus(focus);
+            if (focus)
+              onSection(focus.kind === "Requirement" ? "onsite" : "tasks");
+          }}
+          onRequest={openRequest}
+          onResolve={(requirement, id) => {
+            setPreparing(true);
+            void planningApi
+              .getPlanningRequest({ employeeId, requestId: id })
+              .then((source) =>
+                openEditor(
+                  "proposal",
+                  source,
+                  source.days.filter(
+                    (d) =>
+                      d.decision === "Approved" &&
+                      dateKey(d.localDate) >= dateKey(requirement.from) &&
+                      dateKey(d.localDate) <= dateKey(requirement.to),
+                  ),
+                  false,
+                  undefined,
+                  requirement,
+                ),
+              )
+              .catch((error) => {
+                sessionFailure(error);
+                setPrepareError(readError(error));
+              })
+              .finally(() => setPreparing(false));
           }}
         />
       )}

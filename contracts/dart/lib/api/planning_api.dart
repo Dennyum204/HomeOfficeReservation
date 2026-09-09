@@ -80,6 +80,70 @@ class PlanningApi {
     return null;
   }
 
+  /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/requirements/{requirementId}/acknowledge' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [OnsiteAcknowledgeInput] onsiteAcknowledgeInput (required):
+  Future<Response> acknowledgeOnsiteRequirementWithHttpInfo(String employeeId, String requirementId, String idempotencyKey, OnsiteAcknowledgeInput onsiteAcknowledgeInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/requirements/{requirementId}/acknowledge'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{requirementId}', requirementId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = onsiteAcknowledgeInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [OnsiteAcknowledgeInput] onsiteAcknowledgeInput (required):
+  Future<MutationReceipt?> acknowledgeOnsiteRequirement(String employeeId, String requirementId, String idempotencyKey, OnsiteAcknowledgeInput onsiteAcknowledgeInput, { Future<void>? abortTrigger, }) async {
+    final response = await acknowledgeOnsiteRequirementWithHttpInfo(employeeId, requirementId, idempotencyKey, onsiteAcknowledgeInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/requests/{requestId}/comments' operation and returns the [Response].
   /// Parameters:
   ///
@@ -144,6 +208,198 @@ class PlanningApi {
     return null;
   }
 
+  /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/work/{kind}/{contextId}/comments' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [WorkContext] kind (required):
+  ///
+  /// * [String] contextId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [WorkCommentInput] workCommentInput (required):
+  Future<Response> addWorkCommentWithHttpInfo(String employeeId, WorkContext kind, String contextId, String idempotencyKey, WorkCommentInput workCommentInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/work/{kind}/{contextId}/comments'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{kind}', kind.toString())
+      .replaceAll('{contextId}', contextId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = workCommentInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [WorkContext] kind (required):
+  ///
+  /// * [String] contextId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [WorkCommentInput] workCommentInput (required):
+  Future<MutationReceipt?> addWorkComment(String employeeId, WorkContext kind, String contextId, String idempotencyKey, WorkCommentInput workCommentInput, { Future<void>? abortTrigger, }) async {
+    final response = await addWorkCommentWithHttpInfo(employeeId, kind, contextId, idempotencyKey, workCommentInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/requirements/{requirementId}/cancel' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [WorkVersionInput] workVersionInput (required):
+  Future<Response> cancelOnsiteRequirementWithHttpInfo(String employeeId, String requirementId, String idempotencyKey, WorkVersionInput workVersionInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/requirements/{requirementId}/cancel'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{requirementId}', requirementId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = workVersionInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [WorkVersionInput] workVersionInput (required):
+  Future<MutationReceipt?> cancelOnsiteRequirement(String employeeId, String requirementId, String idempotencyKey, WorkVersionInput workVersionInput, { Future<void>? abortTrigger, }) async {
+    final response = await cancelOnsiteRequirementWithHttpInfo(employeeId, requirementId, idempotencyKey, workVersionInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/tasks' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [TaskInput] taskInput (required):
+  Future<Response> createAssignedTaskWithHttpInfo(String employeeId, String idempotencyKey, TaskInput taskInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/tasks'
+      .replaceAll('{employeeId}', employeeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = taskInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [TaskInput] taskInput (required):
+  Future<MutationReceipt?> createAssignedTask(String employeeId, String idempotencyKey, TaskInput taskInput, { Future<void>? abortTrigger, }) async {
+    final response = await createAssignedTaskWithHttpInfo(employeeId, idempotencyKey, taskInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/requests/{requestId}/proposals' operation and returns the [Response].
   /// Parameters:
   ///
@@ -195,6 +451,65 @@ class PlanningApi {
   /// * [ProposalInput] proposalInput (required):
   Future<MutationReceipt?> createCounterproposal(String employeeId, String requestId, String idempotencyKey, ProposalInput proposalInput, { Future<void>? abortTrigger, }) async {
     final response = await createCounterproposalWithHttpInfo(employeeId, requestId, idempotencyKey, proposalInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/requirements' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [OnsiteInput] onsiteInput (required):
+  Future<Response> createOnsiteRequirementWithHttpInfo(String employeeId, String idempotencyKey, OnsiteInput onsiteInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/requirements'
+      .replaceAll('{employeeId}', employeeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = onsiteInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [OnsiteInput] onsiteInput (required):
+  Future<MutationReceipt?> createOnsiteRequirement(String employeeId, String idempotencyKey, OnsiteInput onsiteInput, { Future<void>? abortTrigger, }) async {
+    final response = await createOnsiteRequirementWithHttpInfo(employeeId, idempotencyKey, onsiteInput, abortTrigger: abortTrigger,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -331,6 +646,134 @@ class PlanningApi {
     return null;
   }
 
+  /// Performs an HTTP 'PUT /api/v1/planning/{employeeId}/tasks/{taskId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] taskId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [TaskInput] taskInput (required):
+  Future<Response> editAssignedTaskWithHttpInfo(String employeeId, String taskId, String idempotencyKey, TaskInput taskInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/tasks/{taskId}'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{taskId}', taskId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = taskInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] taskId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [TaskInput] taskInput (required):
+  Future<MutationReceipt?> editAssignedTask(String employeeId, String taskId, String idempotencyKey, TaskInput taskInput, { Future<void>? abortTrigger, }) async {
+    final response = await editAssignedTaskWithHttpInfo(employeeId, taskId, idempotencyKey, taskInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'PUT /api/v1/planning/{employeeId}/requirements/{requirementId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [OnsiteInput] onsiteInput (required):
+  Future<Response> editOnsiteRequirementWithHttpInfo(String employeeId, String requirementId, String idempotencyKey, OnsiteInput onsiteInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/requirements/{requirementId}'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{requirementId}', requirementId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = onsiteInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [OnsiteInput] onsiteInput (required):
+  Future<MutationReceipt?> editOnsiteRequirement(String employeeId, String requirementId, String idempotencyKey, OnsiteInput onsiteInput, { Future<void>? abortTrigger, }) async {
+    final response = await editOnsiteRequirementWithHttpInfo(employeeId, requirementId, idempotencyKey, onsiteInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'PUT /api/v1/planning/{employeeId}/requests/{requestId}/draft' operation and returns the [Response].
   /// Parameters:
   ///
@@ -390,6 +833,60 @@ class PlanningApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/tasks/{taskId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] taskId (required):
+  Future<Response> getAssignedTaskWithHttpInfo(String employeeId, String taskId, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/tasks/{taskId}'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{taskId}', taskId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] taskId (required):
+  Future<TaskView?> getAssignedTask(String employeeId, String taskId, { Future<void>? abortTrigger, }) async {
+    final response = await getAssignedTaskWithHttpInfo(employeeId, taskId, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'TaskView',) as TaskView;
 
     }
     return null;
@@ -455,6 +952,60 @@ class PlanningApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/requirements/{requirementId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  Future<Response> getOnsiteRequirementWithHttpInfo(String employeeId, String requirementId, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/requirements/{requirementId}'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{requirementId}', requirementId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] requirementId (required):
+  Future<OnsiteView?> getOnsiteRequirement(String employeeId, String requirementId, { Future<void>? abortTrigger, }) async {
+    final response = await getOnsiteRequirementWithHttpInfo(employeeId, requirementId, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'OnsiteView',) as OnsiteView;
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/requests/{requestId}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -504,6 +1055,77 @@ class PlanningApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RequestView',) as RequestView;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/tasks' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
+  ///
+  /// * [AssignedTaskState] state:
+  Future<Response> listAssignedTasksWithHttpInfo(String employeeId, { int? offset, int? limit, AssignedTaskState? state, Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/tasks'
+      .replaceAll('{employeeId}', employeeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (offset != null) {
+      queryParams.addAll(_queryParams('', 'offset', offset));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+    if (state != null) {
+      queryParams.addAll(_queryParams('', 'state', state));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
+  ///
+  /// * [AssignedTaskState] state:
+  Future<TaskPage?> listAssignedTasks(String employeeId, { int? offset, int? limit, AssignedTaskState? state, Future<void>? abortTrigger, }) async {
+    final response = await listAssignedTasksWithHttpInfo(employeeId, offset: offset, limit: limit, state: state, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'TaskPage',) as TaskPage;
 
     }
     return null;
@@ -573,6 +1195,77 @@ class PlanningApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ProposalPage',) as ProposalPage;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/requirements' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
+  ///
+  /// * [OnsiteState] state:
+  Future<Response> listOnsiteRequirementsWithHttpInfo(String employeeId, { int? offset, int? limit, OnsiteState? state, Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/requirements'
+      .replaceAll('{employeeId}', employeeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (offset != null) {
+      queryParams.addAll(_queryParams('', 'offset', offset));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+    if (state != null) {
+      queryParams.addAll(_queryParams('', 'state', state));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
+  ///
+  /// * [OnsiteState] state:
+  Future<OnsitePage?> listOnsiteRequirements(String employeeId, { int? offset, int? limit, OnsiteState? state, Future<void>? abortTrigger, }) async {
+    final response = await listOnsiteRequirementsWithHttpInfo(employeeId, offset: offset, limit: limit, state: state, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'OnsitePage',) as OnsitePage;
 
     }
     return null;
@@ -777,6 +1470,152 @@ class PlanningApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'PatternPage',) as PatternPage;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/work/{kind}/{contextId}/entries' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [WorkContext] kind (required):
+  ///
+  /// * [String] contextId (required):
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
+  Future<Response> listWorkEntriesWithHttpInfo(String employeeId, WorkContext kind, String contextId, { int? offset, int? limit, Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/work/{kind}/{contextId}/entries'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{kind}', kind.toString())
+      .replaceAll('{contextId}', contextId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (offset != null) {
+      queryParams.addAll(_queryParams('', 'offset', offset));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [WorkContext] kind (required):
+  ///
+  /// * [String] contextId (required):
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
+  Future<WorkEntryPage?> listWorkEntries(String employeeId, WorkContext kind, String contextId, { int? offset, int? limit, Future<void>? abortTrigger, }) async {
+    final response = await listWorkEntriesWithHttpInfo(employeeId, kind, contextId, offset: offset, limit: limit, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'WorkEntryPage',) as WorkEntryPage;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/v1/planning/{employeeId}/onsite-preview' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [DateTime] from (required):
+  ///
+  /// * [DateTime] to (required):
+  ///
+  /// * [String] location (required):
+  ///
+  /// * [String] excludes:
+  Future<Response> previewOnsiteRequirementWithHttpInfo(String employeeId, DateTime from, DateTime to, String location, { String? excludes, Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/onsite-preview'
+      .replaceAll('{employeeId}', employeeId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'from', _dateFormatter.format(from)));
+      queryParams.addAll(_queryParams('', 'to', _dateFormatter.format(to)));
+      queryParams.addAll(_queryParams('', 'location', location));
+    if (excludes != null) {
+      queryParams.addAll(_queryParams('', 'excludes', excludes));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [DateTime] from (required):
+  ///
+  /// * [DateTime] to (required):
+  ///
+  /// * [String] location (required):
+  ///
+  /// * [String] excludes:
+  Future<OnsitePreview?> previewOnsiteRequirement(String employeeId, DateTime from, DateTime to, String location, { String? excludes, Future<void>? abortTrigger, }) async {
+    final response = await previewOnsiteRequirementWithHttpInfo(employeeId, from, to, location, excludes: excludes, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'OnsitePreview',) as OnsitePreview;
 
     }
     return null;
@@ -1023,6 +1862,70 @@ class PlanningApi {
   /// * [SubmitInput] submitInput (required):
   Future<MutationReceipt?> submitPlanningRequest(String employeeId, String requestId, String idempotencyKey, SubmitInput submitInput, { Future<void>? abortTrigger, }) async {
     final response = await submitPlanningRequestWithHttpInfo(employeeId, requestId, idempotencyKey, submitInput, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'MutationReceipt',) as MutationReceipt;
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'POST /api/v1/planning/{employeeId}/tasks/{taskId}/progress' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] taskId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [TaskProgressInput] taskProgressInput (required):
+  Future<Response> updateTaskProgressWithHttpInfo(String employeeId, String taskId, String idempotencyKey, TaskProgressInput taskProgressInput, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/planning/{employeeId}/tasks/{taskId}/progress'
+      .replaceAll('{employeeId}', employeeId)
+      .replaceAll('{taskId}', taskId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = taskProgressInput;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'Idempotency-Key'] = parameterToString(idempotencyKey);
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] employeeId (required):
+  ///
+  /// * [String] taskId (required):
+  ///
+  /// * [String] idempotencyKey (required):
+  ///
+  /// * [TaskProgressInput] taskProgressInput (required):
+  Future<MutationReceipt?> updateTaskProgress(String employeeId, String taskId, String idempotencyKey, TaskProgressInput taskProgressInput, { Future<void>? abortTrigger, }) async {
+    final response = await updateTaskProgressWithHttpInfo(employeeId, taskId, idempotencyKey, taskProgressInput, abortTrigger: abortTrigger,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

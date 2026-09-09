@@ -71,6 +71,13 @@ public sealed partial class PlanningService(HomeOfficeDbContext db, TimeProvider
         Version(expected, profile.CalendarVersion);
         profile.CalendarVersion++;
         var changed = await change(profile);
+        if (operation is "planning.decided" or "onsite.created" or "onsite.edited" or "onsite.cancelled")
+        {
+            await SaveIntermediate(ct);
+            await ReconcileRequirements(profile, actor, ct);
+            if (operation.StartsWith("onsite.", StringComparison.Ordinal))
+                changed = (changed.Id, (await LoadRequirement(employee, changed.Id, ct)).Version);
+        }
         var eventId = Guid.NewGuid();
         var now = clock.GetUtcNow();
         var receipt = new MutationReceipt(changed.Id, changed.Version, profile.CalendarVersion, eventId);

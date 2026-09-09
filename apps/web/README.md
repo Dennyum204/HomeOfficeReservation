@@ -1,6 +1,6 @@
 # Web React/TypeScript
 
-Calendário próprio mês/semana e Pedidos em PT-PT, com rascunhos, revisão de datas, aprovação/rejeição parcial, retirada, revisões/cancelamentos e contrapropostas. Plano confirmado e alterações pendentes são camadas distintas. Tarefas, notificações e Outlook mantêm-se nas suas etapas futuras. [Percurso de teste HO-005](../../docs/HO-005-WEB.md). Login, ativação, recuperação, logout e sessão autenticada funcionam com cookies Identity. Sem aprovações fictícias ou dependência Microsoft. [Preparar contas e obter credenciais privadas](../../docs/HO-003-AUTHENTICATION.md).
+Calendário próprio mês/semana e Pedidos em PT-PT, com rascunhos, revisão de datas, aprovação/rejeição parcial, retirada, revisões/cancelamentos e contrapropostas. Plano confirmado e alterações pendentes são camadas distintas. HO-006 acrescenta Presenças/Tarefas com preview, leitura por revisão, resolução explícita e progresso autorizado. [Percurso HO-006](../../docs/HO-006-ONSITE-TASKS.md). Notificações e Outlook mantêm-se nas suas etapas futuras. [Percurso de teste HO-005](../../docs/HO-005-WEB.md). Login, ativação, recuperação, logout e sessão autenticada funcionam com cookies Identity. Sem aprovações fictícias ou dependência Microsoft. [Preparar contas e obter credenciais privadas](../../docs/HO-003-AUTHENTICATION.md).
 
 Node **24.20.0**, npm **11.19.0**, React **19.2.8**, TypeScript **6.0.3**, Vite **8.2.2**. Versões exatas em package.json/package-lock.json; TypeScript 6 foi escolhido pela compatibilidade declarada com typescript-eslint.
 
@@ -15,7 +15,7 @@ npm --prefix apps/web run dev
 
 Abrir **http://127.0.0.1:5173**. O proxy Vite encaminha `/api` para `http://localhost:5080`; definir `API_PROXY_TARGET` no ambiente do processo Vite para outro backend de desenvolvimento. O browser usa sempre a mesma origem, sem CORS permissivo. Em alojamento futuro, servir `/api` pela mesma origem HTTPS. Não introduzir tokens em localStorage.
 
-`src/features/workspace/api.ts` usa o cliente TypeScript gerado em `contracts/typescript`. O timestamp e as zonas vêm da API real; erro/timeout têm recuperação explícita. Strings em `src/i18n/pt-PT.ts` e `src/i18n/planning.pt-PT.ts`; planeamento em `src/features/planning/`. Ícones/ilustração CSS decorativos, navegação por teclado e estado anunciado por leitor de ecrã.
+`src/features/workspace/api.ts` usa o cliente TypeScript gerado em `contracts/typescript`. O timestamp e as zonas vêm da API real; erro/timeout têm recuperação explícita. Strings em `src/i18n/pt-PT.ts`  , `src/i18n/planning.pt-PT.ts` e `src/i18n/work.pt-PT.ts`; planeamento em `src/features/planning/`. Ícones/ilustração CSS decorativos, navegação por teclado e estado anunciado por leitor de ecrã.
 
 ## Checks reais
 

@@ -76,6 +76,8 @@ public sealed class PlanDay
 
 public sealed class ChangeProposal
 {
+    public Guid? RequirementId { get; set; }
+    public int? RequirementRevision { get; set; }
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid GroupId { get; set; }
     public int Revision { get; set; } = 1;

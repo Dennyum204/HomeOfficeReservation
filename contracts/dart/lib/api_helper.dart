@@ -55,17 +55,26 @@ String parameterToString(dynamic value) {
   if (value is DateTime) {
     return value.toUtc().toIso8601String();
   }
+  if (value is AssignedTaskState) {
+    return AssignedTaskStateTypeTransformer().encode(value).toString();
+  }
   if (value is Availability) {
     return AvailabilityTypeTransformer().encode(value).toString();
   }
   if (value is DayDecision) {
     return DayDecisionTypeTransformer().encode(value).toString();
   }
+  if (value is OnsiteState) {
+    return OnsiteStateTypeTransformer().encode(value).toString();
+  }
   if (value is ProposalState) {
     return ProposalStateTypeTransformer().encode(value).toString();
   }
   if (value is RequestState) {
     return RequestStateTypeTransformer().encode(value).toString();
+  }
+  if (value is WorkContext) {
+    return WorkContextTypeTransformer().encode(value).toString();
   }
   if (value is WorkLocation) {
     return WorkLocationTypeTransformer().encode(value).toString();

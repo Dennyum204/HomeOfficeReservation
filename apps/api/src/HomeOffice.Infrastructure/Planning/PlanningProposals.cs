@@ -13,6 +13,12 @@ public sealed partial class PlanningService
         {
             var r = await LoadRequest(employee, request, ct); Visible(r, actor); Version(input.ExpectedRequestVersion, r.Version);
             Text(input.Reason, 1000, true); await ValidateInput(input.Days, p, request, ct);
+            await ValidateRequirementRevision(employee, input.RequirementId, input.RequirementRevision, ct);
+            if (input.RequirementId is { } requirementId)
+            {
+                var requirement = await LoadRequirement(employee, requirementId, ct);
+                Require(input.Days.All(d => d.LocalDate >= requirement.From && d.LocalDate <= requirement.To && !d.Cancel && d.Location == WorkLocation.OfficeSwitzerland && d.Availability == Availability.Working), "invalid_onsite_resolution", 400);
+            }
             ChangeProposal? previous = null;
             if (replaces is { } priorId)
             {
@@ -43,6 +49,8 @@ public sealed partial class PlanningService
                 Require(affected.Any(a => a.Id == d.BaseDayId && a.Decision == DayDecision.Approved), "invalid_proposal_base");
             var proposal = new ChangeProposal
             {
+                RequirementId = input.RequirementId,
+                RequirementRevision = input.RequirementRevision,
                 EmployeeId = employee,
                 OrganizationId = p.OrganizationId,
                 RequestId = request,
@@ -65,6 +73,7 @@ public sealed partial class PlanningService
             var proposal = await db.Set<ChangeProposal>().SingleOrDefaultAsync(x => x.EmployeeId == employee && x.Id == proposalId, ct);
             Require(proposal is not null, "proposal_not_found", 404);
             Version(input.ExpectedProposalRevision, proposal!.Revision);
+            await ValidateRequirementRevision(employee, proposal.RequirementId, proposal.RequirementRevision, ct);
             Require(proposal.State == ProposalState.Open, "proposal_not_open");
             var parent = await LoadRequest(employee, proposal.RequestId, ct);
             for (var i = 0; i < proposal.AffectedDayIds.Length; i++)

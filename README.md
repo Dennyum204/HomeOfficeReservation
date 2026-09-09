@@ -4,7 +4,9 @@ Calendário próprio para planear trabalho remoto em Portugal e presencial na Su
 
 Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter Android. iOS adiado pelo responsável em HO-005, com código/histórico preservados; reativação futura em HO-306, sem data. Autenticação própria com ASP.NET Core Identity: cookie na Web e tokens opacos do framework no mobile. Web/mobile partilham backend e calendário autoritativo. [ADR-004](docs/adr/ADR-004-independent-core.md) regista a decisão.
 
-**HO-005 disponibiliza calendário mês/semana e workflows reais na Web:** rascunhos, seleção de datas, decisões parciais, retirada, revisões/cancelamentos, contrapropostas e disponibilidade manual. [Guia e percurso local](docs/HO-005-WEB.md). O calendário separa plano confirmado de alterações pendentes. A API transacional permanece autoritativa; Android mantém autenticação/conectividade, com calendário em HO-010. Presenças obrigatórias, tarefas e notificações continuam nos seus itens futuros. [Guia de autenticação e teste local](docs/HO-003-AUTHENTICATION.md). [STATUS.md](STATUS.md) contém evidência de integração e continuidade.
+**HO-005 disponibiliza calendário mês/semana e workflows reais na Web:** rascunhos, seleção de datas, decisões parciais, retirada, revisões/cancelamentos, contrapropostas e disponibilidade manual. [Guia e percurso local](docs/HO-005-WEB.md). O calendário separa plano confirmado de alterações pendentes. A API transacional permanece autoritativa; Android mantém autenticação/conectividade, com calendário em HO-010. HO-006 acrescenta presenças e tarefas na API/Web; entrega de notificações continua em HO-007. [Guia de autenticação e teste local](docs/HO-003-AUTHENTICATION.md). [STATUS.md](STATUS.md) contém evidência de integração e continuidade.
+
+**HO-006 acrescenta API e Web para presenças e tarefas:** intervalos obrigatórios, leitura por revisão, preview de conflitos, resolução explícita sem apagar aprovações, tarefas ligadas e progresso autorizado. [Setup, migração e percurso de teste](docs/HO-006-ONSITE-TASKS.md). A outbox é persistida; notificações só serão entregues no HO-007.
 
 ## Outlook opcional
 
