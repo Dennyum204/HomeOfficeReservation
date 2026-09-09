@@ -9,7 +9,7 @@ public sealed partial class PlanningService
 {
     private async Task ValidateInput(DayInput[]? days, PlanningProfile profile, Guid? parent, CancellationToken ct)
     {
-        Require(days is not null, "days_required", 400);
+        Require(days is not null && days.All(x => x is not null), "days_required", 400);
         Dates(days!.Select(x => x.LocalDate).ToArray(), await Today(profile.OrganizationId, ct));
         foreach (var d in days)
         {

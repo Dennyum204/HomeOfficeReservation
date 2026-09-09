@@ -207,8 +207,27 @@ public sealed class PlanningTests
         IdentityFixture.Bearer(admin, await f.Identity.TokenLogin(admin, "admin")); IdentityFixture.Bearer(stranger, await f.Identity.TokenLogin(stranger, "stranger"));
         foreach (var client in new[] { admin, stranger }) Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync(root)).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await manager.GetAsync(root)).StatusCode);
+        manager.DefaultRequestHeaders.Add("Idempotency-Key", Key());
+        var beforeMalformed = await f.Counts();
+        Assert.Equal(HttpStatusCode.BadRequest, (await manager.PostAsJsonAsync(root + "/decide", new
+        {
+            expectedCalendarVersion = beforeMalformed.Version,
+            expectedRequestVersion = r.Version,
+            days = new object?[] { null },
+            approve = true
+        })).StatusCode);
+        Assert.Equal(beforeMalformed, await f.Counts());
         var decision = new DecisionInput((await f.Calendar()).CalendarVersion, r.Version, Select(r.Days), true, null);
         employee.DefaultRequestHeaders.Add("Idempotency-Key", Key());
+        Assert.Equal(HttpStatusCode.BadRequest, (await employee.PostAsJsonAsync($"/api/v1/planning/{f.Employee}/requests", new
+        {
+            expectedCalendarVersion = beforeMalformed.Version,
+            expectedRequestVersion = (long?)null,
+            parentRevisionId = (Guid?)null,
+            note = "Malformed synthetic draft",
+            days = new object?[] { null }
+        })).StatusCode);
+        Assert.Equal(beforeMalformed, await f.Counts());
         Assert.Equal(HttpStatusCode.Forbidden, (await employee.PostAsJsonAsync(root + "/decide", decision)).StatusCode);
         using var browser = f.Identity.Client(); await f.Identity.WebLogin(browser);
         Assert.Equal(HttpStatusCode.BadRequest, (await browser.PostAsJsonAsync(root + "/comments", new { expectedCalendarVersion = 2, text = "Safe comment" })).StatusCode);

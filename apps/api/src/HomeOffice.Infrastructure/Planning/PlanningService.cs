@@ -133,7 +133,7 @@ public sealed partial class PlanningService(HomeOfficeDbContext db, TimeProvider
     private static void Visible(PlanningRequest r, Guid actor) => Require(r.State != RequestState.Draft || r.EmployeeId == actor, "private_draft", 403);
     private static SelectedDay[] Selection(SelectedDay[]? selected)
     {
-        Require(selected is { Length: > 0 and <= 366 }, "invalid_selection", 400);
+        Require(selected is { Length: > 0 and <= 366 } && selected.All(x => x is not null), "invalid_selection", 400);
         Require(selected!.Select(x => x.DayId).Distinct().Count() == selected.Length, "duplicate_selection", 400);
         return selected;
     }
