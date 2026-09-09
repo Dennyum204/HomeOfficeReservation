@@ -13,4 +13,4 @@ Foi corrigido o overflow causado por cinco separadores na navegação estreita; 
 
 O percurso também verifica 412 real com texto conservado, interrupção real da sessão por logout da API e nova autenticação, e perda de resposta injetada depois de um commit PostgreSQL real. Apenas a perda de transporte é simulada; o replay usa a mesma chave/payload e confirma uma única presença persistida.
 
-Resultados e limites: [guia HO-006](../../HO-006-ONSITE-TASKS.md) e [STATUS](../../../STATUS.md). Notificações só foram escritas na outbox, não entregues. Nenhum acesso Microsoft/Graph foi usado.
+Resultados e limites: [guia HO-006](../../HO-006-ONSITE-TASKS.md) e [STATUS](../../../STATUS.md). Eventos persistidos na outbox; nenhuma notificação entregue. Nenhum acesso Microsoft/Graph foi usado.

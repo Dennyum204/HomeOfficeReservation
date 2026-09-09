@@ -1,6 +1,6 @@
 # HO-006 — Presenças e tarefas na API/Web
 
-Âmbito e regras: [ADR-008](adr/ADR-008-onsite-and-tasks.md). [Issue #7](https://github.com/Dennyum204/HomeOfficeReservation/issues/7). Web e Android são os alvos atuais; esta entrega implementa a interface Web e o contrato API para Android posterior. Sem notificações entregues, anexos, Outlook ou iOS.
+Âmbito e regras: [ADR-008](adr/ADR-008-onsite-and-tasks.md). [Issue #7](https://github.com/Dennyum204/HomeOfficeReservation/issues/7) · [PR #33](https://github.com/Dennyum204/HomeOfficeReservation/pull/33). Web e Android são os alvos atuais; esta entrega implementa a interface Web e o contrato API para Android posterior. Sem notificações entregues, anexos, Outlook ou iOS.
 
 ## Atualizar um ambiente existente
 

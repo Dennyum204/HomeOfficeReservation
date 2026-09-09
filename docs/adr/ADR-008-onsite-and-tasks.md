@@ -1,6 +1,6 @@
 # ADR-008 — Presenças, resolução explícita e tarefas
 
-Data: 2026-09-09. Tarefa: [HO-006 / issue #7](https://github.com/Dennyum204/HomeOfficeReservation/issues/7). Implementação em revisão. Concretiza ADR-006/007, sem alterar Identity nem reativar iOS/Outlook.
+Data: 2026-09-09. Tarefa: [HO-006 / issue #7](https://github.com/Dennyum204/HomeOfficeReservation/issues/7). Implementação em revisão no [PR #33](https://github.com/Dennyum204/HomeOfficeReservation/pull/33). Concretiza ADR-006/007, sem alterar Identity nem reativar iOS/Outlook.
 
 ## Decisão
 

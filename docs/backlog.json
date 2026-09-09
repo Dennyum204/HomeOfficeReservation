@@ -542,11 +542,13 @@
         "Migração aditiva, contratos TypeScript/Dart regenerados, PostgreSQL concorrência/rollback e E2E Web/API reais desktop/estreito com capturas; Android autenticação preservada, iOS/Outlook/entregas excluídos."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/7",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/33"
+      ],
       "review_evidence": [
         "Implementação API/Web local: migração aditiva, leitura por revisão, conflitos preservados e resolução transacional, tarefas e histórico; Android apenas contrato, sem notificações entregues.",
         "Verificação local em 2026-09-09: 4 API + 32 PostgreSQL, sem skips; 13 Vitest simulados; 4 E2E Identity + 16 E2E Web reais (inclui 4 HO-006 desktop/estreito), capturas sintéticas. Dart/Flutter analyze, 6 testes Flutter e APK Release compilado; contratos coincidentes (144 ficheiros).",
-        "PR/último head e CI remota serão ligados após criação; manter draft até quatro checks verdes e sem conflitos."
+        "PR #33: https://github.com/Dennyum204/HomeOfficeReservation/pull/33. O separador Checks regista o último head e os resultados remotos project-docs, backend-contracts, web e flutter-android; só retirar draft após os quatro verdes e sem conflitos. Review até integração humana verificada; sem merge/auto-merge por Codex."
       ]
     },
     {

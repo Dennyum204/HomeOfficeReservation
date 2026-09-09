@@ -202,7 +202,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/7
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/33
 
 ## HO-007 — Notificações duráveis e infraestrutura push
 
