@@ -6,7 +6,7 @@ Shell PT-PT equivalente à Web: navegação, estados em preparação e ligação
 
 - Flutter **3.47.2**, revisão `d3b14c876900e553bc736ca19295fc09e3853e8e`, Dart **3.13.2** incluído. `.flutter-version` e pubspec registam a versão; instalação oficial ou clone da tag. Não atualizar automaticamente durante o setup.
 - Android: JDK Temurin **21.0.12+8**, compile SDK **37** (requisito flutter_secure_storage 11.0.0), target **36**, min **24**, NDK **28.2.13676358**, AGP **9.1.0**, Kotlin **2.4.0**, Gradle **9.3.1** com SHA-256. Target/min/NDK vêm dos defaults do Flutter fixado; compile SDK foi elevado para o plugin de secure storage. Android Studio/SDK e emulador são necessários para execução local.
-- iOS: macOS e Xcode; CI usa **macos-15/Xcode 26.3**, Simulator **iPhone 17 / iOS 26.2**, deployment target **iOS 15.0**. Assinatura/conta Apple só para dispositivos físicos/distribuição, não para compilar Simulator ou release sem assinatura. Não é possível compilar iOS em Windows/Linux.
+- iOS: macOS e Xcode; CI usa **macos-15-intel/Xcode 26.3**, Simulator **iPhone 16 / iOS 18.6**, deployment target **iOS 15.0**. O build device continua ARM64. Assinatura/conta Apple só para dispositivos físicos/distribuição, não para compilar Simulator ou release sem assinatura. Não é possível compilar iOS em Windows/Linux.
 - `pubspec.lock` da app e do cliente gerado são versionados. Nenhuma chave de assinatura no Git. Os identificadores `dev.homeoffice.*` são de desenvolvimento; confirmar distribuição em HO-012.
 
 ## Arranque
