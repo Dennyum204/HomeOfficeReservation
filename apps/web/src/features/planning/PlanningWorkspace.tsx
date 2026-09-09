@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import type {
   DayInput,
   MemberProfile,
+  NotificationDestination,
   MutationReceipt,
   OnsiteView,
   ProposalView,
@@ -32,12 +33,16 @@ export type PlanningSection =
 export function PlanningWorkspace({
   section,
   onSection,
+  initialDestination,
 }: {
   section: PlanningSection;
   onSection: (section: PlanningSection) => void;
+  initialDestination?: NotificationDestination;
 }) {
   const member = useMember();
-  const [chosen, setChosen] = useState<string>();
+  const [chosen, setChosen] = useState<string | undefined>(
+    initialDestination?.employeeId,
+  );
   const [directoryVersion, setDirectoryVersion] = useState(0);
   const readMembers = useCallback(
     async (signal: AbortSignal) => {
@@ -103,6 +108,11 @@ export function PlanningWorkspace({
       onSection={onSection}
       onTarget={setChosen}
       onDirectoryRefresh={refreshDirectory}
+      initialDestination={
+        initialDestination?.employeeId === target.memberId
+          ? initialDestination
+          : undefined
+      }
     />
   );
 }
@@ -115,6 +125,7 @@ function EmployeePlanning({
   onSection,
   onTarget,
   onDirectoryRefresh,
+  initialDestination,
 }: {
   member: MemberProfile;
   target: MemberProfile;
@@ -123,6 +134,7 @@ function EmployeePlanning({
   onSection: (section: PlanningSection) => void;
   onTarget: (id: string) => void;
   onDirectoryRefresh: () => void;
+  initialDestination?: NotificationDestination;
 }) {
   const own = member.memberId === target.memberId;
   const employeeId = target.memberId;
@@ -134,15 +146,22 @@ function EmployeePlanning({
   const [editor, setEditor] = useState(() =>
     restoreEditor(member.memberId, employeeId),
   );
-  const [requestId, setRequestId] = useState<string | undefined>(
-    () => restoreEditor(member.memberId, employeeId)?.requestId,
+  const [requestId, setRequestId] = useState<string | undefined>(() =>
+    initialDestination?.kind === "Request"
+      ? initialDestination.resourceId
+      : restoreEditor(member.memberId, employeeId)?.requestId,
   );
   const [filter, setFilter] = useState<RequestState | "">("");
   const [offset, setOffset] = useState(0);
   const [nonce, setNonce] = useState(0);
   const [successVersion, setSuccessVersion] = useState(0);
   const [message, setMessage] = useState("");
-  const [workFocus, setWorkFocus] = useState<WorkFocus>();
+  const [workFocus, setWorkFocus] = useState<WorkFocus | undefined>(() =>
+    initialDestination?.kind === "Requirement" ||
+    initialDestination?.kind === "Task"
+      ? { kind: initialDestination.kind, id: initialDestination.resourceId }
+      : undefined,
+  );
   const [preparing, setPreparing] = useState(false);
   const [prepareError, setPrepareError] = useState("");
   const [effectiveFrom, setEffectiveFrom] = useState(todayInZone());

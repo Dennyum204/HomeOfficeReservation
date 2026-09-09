@@ -14,6 +14,8 @@ Cada ADR distingue decisões confirmadas de pressupostos. HO-000 confirma a stac
 
 | [ADR-007](ADR-007-web-planning-and-active-platforms.md) | Planeamento Web, recuperação idempotente e alvos Web/Android | HO-005 integrado; quatro checks de integração verificados em HO-006 |
 
-| [ADR-008](ADR-008-onsite-and-tasks.md) | Presenças, leitura, resolução transacional e tarefas | HO-006; revisão humana pendente |
+| [ADR-008](ADR-008-onsite-and-tasks.md) | Presenças, leitura, resolução transacional e tarefas | HO-006 integrado pelo PR #33; quatro checks de integração verificados em HO-007 |
 
 Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência e ID da tarefa/PR. Não apagar decisões antigas; marcar como superseded e ligar a substituição.
+
+| [ADR-009](ADR-009-durable-notifications.md) | Worker durável, caixa Web/Android e infraestrutura FCM | HO-007 em revisão; push real pendente |

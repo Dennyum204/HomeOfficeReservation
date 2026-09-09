@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:homeoffice_api/api.dart';
 
@@ -6,6 +8,10 @@ import '../../l10n/generated/app_localizations.dart';
 import '../workspace/workspace_repository.dart';
 import '../workspace/workspace_screen.dart';
 import 'auth_controller.dart';
+import '../notifications/inbox_controller.dart';
+import '../notifications/notification_repository.dart';
+import '../notifications/push_coordinator.dart';
+import '../notifications/push_gateway.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key, required this.controller});
@@ -99,6 +105,7 @@ class _AuthScreenState extends State<AuthScreen> with WidgetsBindingObserver {
         AuthMessage.sent: s.authSent,
         AuthMessage.completed: s.authCompleted,
         AuthMessage.storage: s.authStorage,
+        AuthMessage.pushCleanup: s.authPushCleanup,
       };
       if (c.member case final member?) {
         return _AccountWorkspace(key: ValueKey(member.memberId), controller: c);
@@ -250,7 +257,54 @@ class _AccountWorkspace extends StatefulWidget {
   State<_AccountWorkspace> createState() => _AccountWorkspaceState();
 }
 
-class _AccountWorkspaceState extends State<_AccountWorkspace> {
+class _AccountWorkspaceState extends State<_AccountWorkspace>
+    with WidgetsBindingObserver {
+  final workspaceKey = GlobalKey<WorkspaceScreenState>();
+  late final inbox = InboxController(NotificationRepository(widget.controller));
+  late final push = PushCoordinator(
+    widget.controller,
+    FirebasePushGateway(),
+    SecurePushBindingStore(ApiSettings.baseUrl),
+    onOpen: (id) {
+      if (mounted) workspaceKey.currentState?.openNotification(id);
+    },
+    onForeground: (id) {
+      if (!mounted) return;
+      unawaited(inbox.refresh());
+      final s = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(s.notificationNew),
+          action: SnackBarAction(
+            label: s.notificationOpen,
+            onPressed: () => workspaceKey.currentState?.openNotification(id),
+          ),
+        ),
+      );
+    },
+  );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    unawaited(inbox.refresh());
+    unawaited(push.initialize());
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    inbox.activity(state == AppLifecycleState.resumed);
+    push.activity(state == AppLifecycleState.resumed);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    inbox.dispose();
+    push.dispose();
+    super.dispose();
+  }
+
   late final repository = WorkspaceRepository(
     WorkspaceApi(ApiClient(basePath: ApiSettings.baseUrl)),
   );
@@ -295,7 +349,14 @@ class _AccountWorkspaceState extends State<_AccountWorkspace> {
             ),
           ),
         ),
-        Expanded(child: WorkspaceScreen(repository: repository)),
+        Expanded(
+          child: WorkspaceScreen(
+            key: workspaceKey,
+            repository: repository,
+            inbox: inbox,
+            push: push,
+          ),
+        ),
       ],
     );
   }

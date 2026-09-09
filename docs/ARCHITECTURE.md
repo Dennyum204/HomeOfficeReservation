@@ -54,7 +54,7 @@ HO-002 criou os projetos compiláveis. HO-003 acrescenta modelos Organization/Me
 
 Admissão de membros controlada pelo administrador; recuperação/ativação por mecanismos Identity, sem escolha livre de papéis. Sem Microsoft, email empresarial ou diretório Entra obrigatórios. Microsoft sign-in é apenas uma possível opção futura, distinta de consentimento de calendário. As limitações de sessão/revogação e os gates HO-003 estão no ADR.
 
-HO-004 implementa o calendário autoritativo e transações Planning/PostgreSQL; [ADR-006](adr/ADR-006-transactional-planning.md) concretiza as decisões. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-003 implementa autenticação; HO-004 implementa pedidos, decisões, revisões, contrapropostas e leitura de calendário na API. Interfaces, presenças e entregas continuam posteriores.
+HO-004 implementa o calendário autoritativo e transações Planning/PostgreSQL; [ADR-006](adr/ADR-006-transactional-planning.md) concretiza as decisões. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-003 implementa autenticação; HO-004 implementa pedidos, decisões, revisões, contrapropostas e leitura de calendário na API. HO-005/006 implementam interfaces Web e presenças/tarefas; HO-007 acrescenta entregas internas.
 
 Quando HO-008 for selecionado, a ação explícita em Definições associa uma conta Microsoft ao MemberId já autenticado, sem exigir igualdade de email ou de IDs entre fornecedores. Estado/nonce/PKCE e callback validado por biblioteca impedem associação a outro membro; confirmar a conta escolhida antes de guardar. Tokens Graph ficam numa cache cifrada no backend. Revogação/desligar afetam apenas publicação. O [estudo anterior](HO-001-MICROSOFT-OUTLOOK-STUDY.md) é referência histórica, não o contrato de login atual.
 
@@ -94,3 +94,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Presenças e tarefas HO-006
 
 [ADR-008](adr/ADR-008-onsite-and-tasks.md) reutiliza o mesmo PlanningProfile/CalendarVersion e transação para OnsiteRequirement, AssignedTask, leitura por revisão e histórico/comentários. Active projeta presença sobre o padrão; NeedsResolution conserva o plano explícito. Aprovações e resoluções revalidam presenças sob o lock. Não existem cópias de PlanDay para restaurar em cancelamentos. Migração aditiva, clientes gerados e Web no [guia HO-006](HO-006-ONSITE-TASKS.md); contratos Android disponíveis, interface Android posterior.
+
+## Notificações implementadas em HO-007
+
+[ADR-009](adr/ADR-009-durable-notifications.md) concretiza worker no mesmo host, leases PostgreSQL, commit conjunto inbox/intenção/outbox, histórico sem alertas e autorização atual. Web/Android usam polling limitado e contratos gerados; FCM usa ADC no backend e recursos nativos privados no Android. Provider Disabled mantém core/CI independentes. Processamento interno, simulação, aceitação FCM e recibo do cliente são estados distintos; entrega real continua por validar. [Operação e configuração](HO-007-NOTIFICATIONS.md).

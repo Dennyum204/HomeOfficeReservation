@@ -18,6 +18,7 @@ public sealed class HomeOfficeDbContext(DbContextOptions<HomeOfficeDbContext> op
         base.OnModelCreating(builder);
         Planning.PlanningModel.Configure(builder);
         Planning.OnsiteModel.Configure(builder);
+        Notifications.NotificationModel.Configure(builder);
         builder.Entity<Organization>().Property(x => x.Name).HasMaxLength(120);
         builder.Entity<Organization>().HasIndex(x => x.Name).IsUnique();
         builder.Entity<Member>(entity =>

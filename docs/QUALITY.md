@@ -64,3 +64,7 @@ Não impor cobertura de 100% como substituto dos cenários. Não escrever testes
 HO-008 valida consentimento, CRUD de eventos próprios e limpeza, all-day/DST, retries, reconexão e UI de publicação; sem disponibilidade importada. HO-009 valida delta/páginas/recorrência, webhooks/lifecycle e reconciliação externa. Requisitos Graph da matriz acima pertencem exclusivamente a esses marcos. Não bloquear o core por um ensaio Microsoft adiado ou por referências de probe; nunca chamar uma simulação de evidência real.
 
 O objetivo do piloto é observar duas semanas de utilização antes de priorizar a primeira iteração V1.1. Se houver defeitos críticos, a correção tem prioridade sobre novas funcionalidades.
+
+## Evidência HO-007
+
+Gates existentes mantidos: project-docs, backend-contracts, web, flutter-android. Acrescentados ensaios PostgreSQL de worker/leases/crashes/retry/deduplicação/autorização/migração, Web E2E de notificações e inbox Android contra API real. `scripts/check_fcm_build.py` compila configuração nativa inventada e externa sem instalar; não envia mensagens. Permissão/rotação/logout simulados não satisfazem o gate de push real acima. FCM com projeto/credencial/dispositivo autorizados continua pendente; PR deve permanecer draft até registar essa evidência. Nenhum gate iOS/Outlook acrescentado.

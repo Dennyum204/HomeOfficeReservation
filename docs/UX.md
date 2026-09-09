@@ -58,3 +58,7 @@ Partilhar nomes semânticos para cores/estado, tipografia, espaçamento e lingua
 Web inclui separadores Presenças e Tarefas, filtros por estado, formulários e detalhes com comentários/histórico. Gestor cria presença por seleção no calendário ou formulário inclusivo; preview mostra impedimentos e avisos, sendo repetido pelo servidor na escrita. No calendário, remoto aprovado e obrigação Por resolver aparecem juntos. A confirmação de leitura tem explicação própria; propor resolução abre o fluxo de contraproposta/aceitação/decisão existente. Detalhes de tarefas mostram se a presença ligada foi cancelada e explicam que o progresso da tarefa é independente.
 
 Navegação estreita distribui cinco separadores em linhas; diálogo modal contém o seu scroll. Campos locais são conservados no mesmo separador/conta e os comandos incertos usam replay exato. [Percurso e limitações](HO-006-ONSITE-TASKS.md). Interface Android equivalente continua HO-011; não há notificações entregues nesta etapa.
+
+## Concretização HO-007
+
+Notificações é um separador real Web/Android: badge, filtros, páginas, leitura explícita e estados de rede/sessão. Web abre contexto atual; Android conserva referência e explica o tratamento pela Web enquanto os ecrãs HO-010/011 faltam. Push Android é ativado por ação explícita em Definições; recusa e configuração ausente mantêm a caixa funcional. Ler nunca aprova nem confirma presença. Polling pausa em background e o estado é descartado ao sair. [Percurso e limitações](HO-007-NOTIFICATIONS.md).

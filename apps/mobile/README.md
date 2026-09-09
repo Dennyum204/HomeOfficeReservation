@@ -69,3 +69,17 @@ O smoke executa os mesmos testes `integration_test` através do adaptador oficia
 Na raiz, `python scripts/check_native_config.py` verifica XML/plists/UTF-8 e exceções de transporte só em debug. É um check prévio, não substitui compilação nativa. O bundle XCTest do template não contém exemplos vazios que aparentem testes passados; os asserts reais são Dart/Flutter.
 
 HO-003 acrescenta `flutter_secure_storage` 11.0.0: refresh por origem API em armazenamento seguro, access em memória, passwords não persistidas. Android desativa backup; iOS declara Keychain entitlements, acessibilidade unlocked_this_device. Testes simulados cobrem refresh limitado, logout em corrida e membro desativado; integração nativa verifica armazenamento/restauro/expiração/logout contra API/PG. O plugin usa Swift Package Manager no template atual. Não foram validados assinatura, dispositivo físico ou loja.
+
+## Caixa e push Android HO-007
+
+Caixa real: páginas de 20, badge, filtros, leitura/não lida e detalhe autorizado. O detalhe informa que o calendário/pedidos/tarefas completos Android ainda pertencem a HO-010/011 e preserva a referência. Polling de 15 s pausa em background; só leituras idempotentes repetem uma vez após refresh Identity. O teste de expiração Android passa agora por background para não confundir atividade da caixa com sessão inativa; a lógica iOS anterior não foi alterada nem executada.
+
+FCM está desativado por defeito; [configuração privada, limites e ensaio externo](../../docs/HO-007-NOTIFICATIONS.md). FirebaseAdmin/FlutterFire com versões fixadas; sem Firebase Auth, sem configuração real em Git. Só pedir permissão na ação de Definições. Recusa mantém a caixa. Registo expira após 24 h sem renovação; abrir diariamente. Logout offline mostra quando não foi possível confirmar remoção; IDs pendentes em armazenamento seguro, sem conservar credenciais da conta anterior. Não se afirma entrega real sem observação no dispositivo.
+
+Teste nativo adicional (Android apenas, mesma API/PG/ficheiro privado do teste de autenticação):
+
+```sh
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/notifications_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file=<private-dir>/client-test.json
+```
+
+Prova submissão gerada por colaborador, consumo real pelo worker, inbox da chefia, leitura sem decisão e detalhe/contexto; não usa Firebase. Os testes em `test/notifications_test.dart` simulam fornecedor/HTTP para recusa, rotação, logout e respostas atrasadas. iOS permanece adiado. O SDK Android atual emite avisos de migração Kotlin em plugins Firebase mantidos; não foram modificadas dependências para ocultar avisos.

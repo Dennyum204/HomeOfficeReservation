@@ -73,6 +73,8 @@ public sealed class IdentityFixture : IAsyncDisposable
             builder.ConfigureAppConfiguration((_, c) => c.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Database"] = connection,
+                ["Notifications:WorkerEnabled"] = "false", // Tests drive real leased processing explicitly.
+                ["Notifications:PushProvider"] = production ? "Disabled" : "Local",
                 ["DataProtection:KeyDirectory"] = Path.Combine(DirectoryPath, "keys"),
                 ["DataProtection:CertificatePath"] = certificatePath,
                 ["DataProtection:CertificatePassword"] = Password,

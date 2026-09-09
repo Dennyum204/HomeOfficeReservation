@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using HomeOffice.Application.Planning;
 using HomeOffice.Infrastructure.Planning;
 using HomeOffice.Api.Planning;
+using HomeOffice.Api.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 var generatingContract = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider";
@@ -20,6 +21,7 @@ builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Ad
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
 builder.Services.AddScoped<IPlanningService, PlanningService>();
 builder.Services.AddHomeOfficeIdentity(builder.Configuration, builder.Environment, generatingContract);
+builder.Services.AddNotifications(builder.Configuration, builder.Environment, generatingContract);
 builder.Services.AddScoped<GetWorkspaceInfo>();
 builder.Services.AddDbContext<HomeOfficeDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
@@ -55,6 +57,7 @@ app.UseAuthorization();
 app.UseRateLimiter();
 app.MapAccess();
 app.MapPlanning();
+app.MapNotifications();
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {

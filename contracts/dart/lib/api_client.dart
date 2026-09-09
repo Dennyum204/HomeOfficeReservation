@@ -213,6 +213,12 @@ class ApiClient {
           return DayInput.fromJson(value);
         case 'DecisionInput':
           return DecisionInput.fromJson(value);
+        case 'DeviceReceiptInput':
+          return DeviceReceiptInput.fromJson(value);
+        case 'DeviceRegistrationInput':
+          return DeviceRegistrationInput.fromJson(value);
+        case 'DeviceRegistrationView':
+          return DeviceRegistrationView.fromJson(value);
         case 'DraftInput':
           return DraftInput.fromJson(value);
         case 'EffectiveDay':
@@ -225,6 +231,22 @@ class ApiClient {
           return MemberProfile.fromJson(value);
         case 'MutationReceipt':
           return MutationReceipt.fromJson(value);
+        case 'NotificationCapabilities':
+          return NotificationCapabilities.fromJson(value);
+        case 'NotificationContext':
+          return NotificationContextTypeTransformer().decode(value);
+        case 'NotificationCount':
+          return NotificationCount.fromJson(value);
+        case 'NotificationDestination':
+          return NotificationDestination.fromJson(value);
+        case 'NotificationOperations':
+          return NotificationOperations.fromJson(value);
+        case 'NotificationPage':
+          return NotificationPage.fromJson(value);
+        case 'NotificationReadInput':
+          return NotificationReadInput.fromJson(value);
+        case 'NotificationView':
+          return NotificationView.fromJson(value);
         case 'OnsiteAcknowledgeInput':
           return OnsiteAcknowledgeInput.fromJson(value);
         case 'OnsiteConflict':
@@ -261,6 +283,8 @@ class ApiClient {
           return ProposalView.fromJson(value);
         case 'ProvisionMemberRequest':
           return ProvisionMemberRequest.fromJson(value);
+        case 'PushProvider':
+          return PushProviderTypeTransformer().decode(value);
         case 'RefreshRequest':
           return RefreshRequest.fromJson(value);
         case 'RequestPage':
@@ -271,6 +295,8 @@ class ApiClient {
           return RequestView.fromJson(value);
         case 'RequestedDayView':
           return RequestedDayView.fromJson(value);
+        case 'RetryNotificationInput':
+          return RetryNotificationInput.fromJson(value);
         case 'SelectedDay':
           return SelectedDay.fromJson(value);
         case 'SetManagerRequest':

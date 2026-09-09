@@ -102,3 +102,7 @@ PlanningProfile, WeeklyPattern, PlanningRequest/RequestedDay, PlanDay, ChangePro
 OnsiteRequirement/OnsiteAcknowledgement/AssignedTask/WorkEntry concretizam presenças, leitura e tarefas. [ADR-008](adr/ADR-008-onsite-and-tasks.md) define conflitos com remoto, indisponibilidade, pendentes e locais diferentes, prioridade das obrigações ativas e o lifecycle das tarefas. Acknowledgement é exclusivamente leitura; a aceitação de ChangeProposal exige outro comando e uma decisão posterior. RequirementRevision vincula a proposta à versão de conteúdo apropriada.
 
 Presenças são projetadas sem sobrescrever PlanDays; edição/cancelamento usa decisões e padrão atuais. RequiresOnsite não muda o calendário. Colaborador/organização de uma tarefa são imutáveis; transferência é cancelamento e nova atribuição autorizada, mantendo histórico. Leitura, comentário, edição e progresso têm recibo idempotente, auditoria e outbox transacional, sem entregas.
+
+## Implementação HO-007
+
+InboxNotification é única por EventId/RecipientId. PushDevice pertence ao membro/organização, tem endereço cifrado, versão, expiração e revogação permanente por instalação. PushDelivery tem lease, tentativas e estados separados de aceitação/recibo. A outbox captura destinatário pelo servidor e mantém histórico; Notificação.ReadAt não altera OnsiteAcknowledgement nem decisões. [Mapa de eventos e recuperação](HO-007-NOTIFICATIONS.md), [ADR-009](adr/ADR-009-durable-notifications.md).

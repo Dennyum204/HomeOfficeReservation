@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using HomeOffice.Application.Planning;
 using HomeOffice.Domain.Access;
 using HomeOffice.Domain.Planning;
+using HomeOffice.Domain.Notifications;
 using HomeOffice.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -80,6 +81,11 @@ public sealed partial class PlanningService(HomeOfficeDbContext db, TimeProvider
         }
         var eventId = Guid.NewGuid();
         var now = clock.GetUtcNow();
+        var notification = NotificationEvents.Map(operation);
+        Guid? recipientId = notification is null ? null : notification.Value.ToManager
+            ? await db.ReportingLines.AsNoTracking().Where(l => l.EmployeeId == employee && l.OrganizationId == profile.OrganizationId).Select(l => (Guid?)l.ManagerId).SingleOrDefaultAsync(ct)
+            : employee;
+        if (recipientId == actor) recipientId = null;
         var receipt = new MutationReceipt(changed.Id, changed.Version, profile.CalendarVersion, eventId);
         CaptureDayChanges();
         db.Set<PlanningAudit>().Add(new()
@@ -102,7 +108,8 @@ public sealed partial class PlanningService(HomeOfficeDbContext db, TimeProvider
             Type = operation,
             CalendarVersion = profile.CalendarVersion,
             CreatedAt = now,
-            Payload = JsonSerializer.Serialize(new { schemaVersion = 1, eventId, employeeId = employee, contextId = changed.Id, actorId = actor, calendarVersion = profile.CalendarVersion }, Json)
+            NextAttemptAt = now,
+            Payload = JsonSerializer.Serialize(new { schemaVersion = 2, eventId, employeeId = employee, contextId = changed.Id, actorId = actor, recipientId, calendarVersion = profile.CalendarVersion }, Json)
         });
         db.Set<PlanningReceipt>().Add(new()
         {

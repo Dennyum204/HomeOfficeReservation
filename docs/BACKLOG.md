@@ -14,8 +14,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-003 | Autenticação, membros e autorização | v1.0 | backend | Concluído | HO-002 |
 | HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Concluído | HO-003 |
 | HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Concluído | HO-004 |
-| HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Em revisão | HO-004, HO-005 |
-| HO-007 | Notificações duráveis e infraestrutura push | v1.0 | backend | Planeado | HO-004 |
+| HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Concluído | HO-004, HO-005 |
+| HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Em curso | HO-004, HO-005, HO-006 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Planeado | HO-004 |
@@ -179,7 +179,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/32
 
 ## HO-006 — Presenças, resolução de conflitos e tarefas
 
-Release: v1.0 · Área: fullstack · Estado: Em revisão
+Release: v1.0 · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -206,22 +206,25 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/33
 
 ## HO-007 — Notificações duráveis e infraestrutura push
 
-Release: v1.0 · Área: backend · Estado: Planeado
+Release: v1.0 · Área: fullstack · Estado: Em curso
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-004
+Dependências: HO-004, HO-005, HO-006
 
 Funcionalidades: FEAT-007
 
 Critérios de aceitação:
 
-- Submissão, decisão, mudança, presença e atribuição geram notificação para o destinatário correto.
-- Outbox e notificações internas deduplicam por evento/destinatário.
-- Registo/rotação/remoção de dispositivos e estado lido são autorizados.
-- Push contém resumo mínimo e deep link; não executa aprovações.
-- Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado.
-- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
+- Submissão/revisão, decisões, retirada, contrapropostas, presenças criadas/alteradas/canceladas e tarefas atribuídas/alteradas notificam destinatários resolvidos pelo servidor, sem alertar o ator.
+- Worker PostgreSQL com claims/leases, recuperação após crash, concorrência, lotes/tentativas limitados e falhas permanentes observáveis; inbox e intenções push deduplicadas e atomicamente persistidas com a outbox.
+- Migração aditiva preserva dados/outbox; histórico é arquivado sem push em massa, e contextos removidos ou acesso revogado são tratados explicitamente.
+- API paginada, contagem de não lidas, leitura e dispositivos autorizados por conta/organização/relação atual; ler não aprova, aceita ou reconhece negócios.
+- Web dispõe de caixa, filtros, badge, leitura e links atuais para pedidos/presenças/tarefas; polling limitado, pausa ao ocultar, sessão/erro/loading, PT-PT e ecrã estreito.
+- Android usa o mesmo contrato e sessão para caixa real; permissão explícita, registo/rotação/remoção/logout/troca de conta seguros, links validados e fallback honesto até HO-010/011.
+- FCM real implementado com bibliotecas mantidas, configuração privada separada, texto mínimo e abertura foreground/background/cold start; validar entrega num dispositivo autorizado e registar evidência sanitizada, distinta de aceitação do fornecedor e simulação.
+- Core/CI sem credenciais push; adaptador local explicitamente simulado; falha externa não perde notificações internas.
+- Testes PostgreSQL/worker, Web/API/PostgreSQL E2E e caixa Android/API reais; quatro checks verdes, sem gates iOS; operações e recuperação documentadas.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/8
 
