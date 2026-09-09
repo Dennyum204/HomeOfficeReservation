@@ -412,7 +412,7 @@
       "title": "Planeamento e aprovação transacional na API",
       "release": "v1.0",
       "area": "backend",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003"
@@ -434,7 +434,9 @@
         "Demonstração local repetível com contas sintéticas privadas; sem UI de calendário, entrega de notificações, presenças ou Outlook."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/5",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/30"
+      ]
     },
     {
       "id": "HO-005",

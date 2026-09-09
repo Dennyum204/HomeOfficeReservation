@@ -12,7 +12,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-001 | Core autónomo, autenticação própria e Outlook opcional | v1.0 | docs | Concluído | HO-000 |
 | HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Concluído | HO-000, HO-001 |
 | HO-003 | Autenticação, membros e autorização | v1.0 | backend | Concluído | HO-002 |
-| HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Em curso | HO-003 |
+| HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Em revisão | HO-003 |
 | HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Planeado | HO-004 |
 | HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Planeado | HO-004 |
 | HO-007 | Notificações duráveis e infraestrutura push | v1.0 | backend | Planeado | HO-004 |
@@ -129,7 +129,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/29
 
 ## HO-004 — Planeamento e aprovação transacional na API
 
-Release: v1.0 · Área: backend · Estado: Em curso
+Release: v1.0 · Área: backend · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -150,7 +150,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/5
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/30
 
 ## HO-005 — Calendário Web e fluxos de pedido/decisão
 
