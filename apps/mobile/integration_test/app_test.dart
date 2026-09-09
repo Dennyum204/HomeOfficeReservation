@@ -1,3 +1,6 @@
+import 'dart:developer' show Service;
+import 'dart:io' show Platform, stdout;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:homeoffice_mobile/main.dart' as app;
@@ -8,7 +11,26 @@ import 'package:homeoffice_mobile/features/auth/auth_screen.dart';
 import 'package:homeoffice_mobile/features/workspace/workspace_repository.dart';
 import 'package:homeoffice_api/api.dart';
 
-void main() {
+Future<void> main() async {
+  // Only the private iOS CI wrapper enables this test-only diagnostic. Write to
+  // the attached stdout descriptor, bypassing Flutter's platform log discovery.
+  // The wrapper keeps the debugger capability private and never publishes it.
+  if (Platform.isIOS && const bool.fromEnvironment('TEST_IOS_CONSOLE')) {
+    stdout.writeln('iOS Dart test entrypoint reached.');
+    Uri? address;
+    for (var attempt = 0; attempt < 20 && address == null; attempt++) {
+      address = (await Service.getInfo().timeout(const Duration(seconds: 2)))
+          .serverUri;
+      if (address == null) {
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+      }
+    }
+    if (address == null ||
+        !{'localhost', '127.0.0.1', '::1'}.contains(address.host)) {
+      throw StateError('No loopback debug service available to the iOS test.');
+    }
+    stdout.writeln('Dart VM service is listening on $address');
+  }
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('native login, secure restoration, expiry, logout and real API', (
     tester,

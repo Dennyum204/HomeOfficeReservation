@@ -81,6 +81,7 @@ def main():
     # Both consume substantial resources on hosted runners; errors still pass the redactor.
     streamed(["flutter", "build", "ios", "--simulator", "--debug", "--no-pub",
         "--target=integration_test/app_test.dart", "--dart-define=API_BASE_URL=http://localhost:5080",
+        "--dart-define=TEST_IOS_CONSOLE=true",
         "--dart-define-from-file=" + str(defines_path)], folder, redactor, 600)
     bundle = folder / "build/ios/iphonesimulator/Runner.app"
     with (bundle / "Info.plist").open("rb") as source:
@@ -96,10 +97,12 @@ def main():
     streamed(["xcrun", "simctl", "install", args.device, str(bundle)], folder, redactor, 90)
     # Read the app's attached console instead of relying on macOS unified-log discovery.
     # Keep the debugger auth code and disabled mDNS publication used by flutter drive.
-    print("Launch paused and read the authenticated debugger URI from its private console.", flush=True)
+    # The self-driving integration test can start immediately; integrationDriver
+    # retrieves its retained results even if the test completes before attachment.
+    print("Launch the test and read its explicit Dart diagnostic from the private console.", flush=True)
     with subprocess.Popen(["xcrun", "simctl", "launch", "--console", "--terminate-running-process",
         args.device, bundle_id, "--enable-dart-profiling", "--disable-vm-service-publication",
-        "--start-paused", "--enable-checked-mode", "--verify-entry-points"],
+        "--enable-checked-mode", "--verify-entry-points"],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace", bufsize=1) as console:
         addresses = queue.Queue()
         def read_console():
