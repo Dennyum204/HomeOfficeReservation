@@ -77,12 +77,21 @@ def main():
     redactor = LogRedactor(json.loads(defines_path.read_text(encoding="utf-8")))
     folder = Path(__file__).resolve().parents[1] / "apps/mobile"
     print("Build the real native test entrypoint.", flush=True)
-    streamed(["flutter", "build", "ios", "--simulator", "--debug", "--no-pub", "--verbose",
+    # Build before booting the simulator and avoid thousands of verbose Xcode settings.
+    # Both consume substantial resources on hosted runners; errors still pass the redactor.
+    streamed(["flutter", "build", "ios", "--simulator", "--debug", "--no-pub",
         "--target=integration_test/app_test.dart", "--dart-define=API_BASE_URL=http://localhost:5080",
-        "--dart-define-from-file=" + str(defines_path)], folder, redactor, 420)
+        "--dart-define-from-file=" + str(defines_path)], folder, redactor, 600)
     bundle = folder / "build/ios/iphonesimulator/Runner.app"
     with (bundle / "Info.plist").open("rb") as source:
         bundle_id = plistlib.load(source)["CFBundleIdentifier"]
+    print("Boot only the selected simulator after compilation.", flush=True)
+    devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"],
+        text=True, timeout=30))["devices"]
+    selected = next(device for group in devices.values() for device in group if device["udid"] == args.device)
+    if selected["state"] != "Booted":
+        streamed(["xcrun", "simctl", "boot", args.device], folder, redactor, 60)
+    streamed(["xcrun", "simctl", "bootstatus", args.device, "-b"], folder, redactor, 300)
     print("Install the test bundle in the selected simulator.", flush=True)
     streamed(["xcrun", "simctl", "install", args.device, str(bundle)], folder, redactor, 90)
     # Read the app's attached console instead of relying on macOS unified-log discovery.
