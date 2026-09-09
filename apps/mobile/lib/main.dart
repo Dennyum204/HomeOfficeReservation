@@ -2,25 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:homeoffice_api/api.dart';
 
 import 'config/api_settings.dart';
+import 'features/auth/auth_controller.dart';
+import 'features/auth/auth_screen.dart';
+import 'features/auth/token_store.dart';
 import 'features/workspace/workspace_repository.dart';
 import 'features/workspace/workspace_screen.dart';
 import 'l10n/generated/app_localizations.dart';
 
 void main() {
-  WorkspaceRepository? repository;
+  WidgetsFlutterBinding.ensureInitialized();
+  AuthController? auth;
   try {
-    repository = WorkspaceRepository(
-      WorkspaceApi(ApiClient(basePath: ApiSettings.baseUrl)),
+    auth = AuthController(
+      ApiClient(basePath: ApiSettings.baseUrl),
+      SecureTokenStore(ApiSettings.baseUrl),
     );
   } on ArgumentError {
     // Invalid release configuration gets a visible localized state, never a false connection.
   }
-  runApp(HomeOfficeApp(repository: repository));
+  runApp(HomeOfficeApp(repository: null, auth: auth));
 }
 
 class HomeOfficeApp extends StatelessWidget {
-  const HomeOfficeApp({super.key, required this.repository});
+  const HomeOfficeApp({super.key, required this.repository, this.auth});
   final WorkspaceRepository? repository;
+  final AuthController? auth;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -47,6 +53,8 @@ class HomeOfficeApp extends StatelessWidget {
         ),
       ),
     ),
-    home: WorkspaceScreen(repository: repository),
+    home: auth == null
+        ? WorkspaceScreen(repository: repository)
+        : AuthScreen(controller: auth!),
   );
 }

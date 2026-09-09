@@ -28,8 +28,22 @@ part 'auth/oauth.dart';
 part 'auth/http_basic_auth.dart';
 part 'auth/http_bearer_auth.dart';
 
+part 'api/access_api.dart';
+part 'api/auth_api.dart';
 part 'api/workspace_api.dart';
 
+part 'model/access_token_response.dart';
+part 'model/complete_account_request.dart';
+part 'model/credentials.dart';
+part 'model/csrf_token.dart';
+part 'model/email_request.dart';
+part 'model/member_list.dart';
+part 'model/member_profile.dart';
+part 'model/problem_details.dart';
+part 'model/provision_member_request.dart';
+part 'model/refresh_request.dart';
+part 'model/set_manager_request.dart';
+part 'model/update_member_request.dart';
 part 'model/workspace_info.dart';
 
 

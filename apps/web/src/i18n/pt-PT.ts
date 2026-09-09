@@ -1,4 +1,52 @@
 export const strings = {
+  auth: {
+    titles: {
+      login: "Entre no seu espaço",
+      activation: "Ativar a conta",
+      recovery: "Recuperar acesso",
+      activate: "Definir palavra-passe",
+      reset: "Nova palavra-passe",
+    },
+    submit: {
+      login: "Entrar",
+      activation: "Pedir código de ativação",
+      recovery: "Pedir código de recuperação",
+      activate: "Ativar conta",
+      reset: "Guardar palavra-passe",
+    },
+    intro: "A sua conta HomeOffice. Sem Microsoft ou Outlook obrigatórios.",
+    email: "Email",
+    password: "Palavra-passe",
+    code: "Código recebido",
+    wait: "Aguarde…",
+    passwordHelp:
+      "Use pelo menos 12 caracteres, com maiúscula, minúscula, número e símbolo.",
+    controlled: "As contas são criadas pelo administrador da organização.",
+    invalid:
+      "Não foi possível entrar. Verifique os dados e a ativação da conta, ou tente mais tarde.",
+    invalidCode:
+      "Não foi possível concluir. Verifique o código, a sua validade e os requisitos da palavra-passe.",
+    sent: "Se a conta for elegível, receberá um código. Consulte a mensagem de ativação ou recuperação.",
+    completed: "Palavra-passe definida. Pode iniciar sessão.",
+    expired: "A sessão expirou. Inicie sessão novamente.",
+    forbidden:
+      "Acesso não autorizado. Contacte o administrador da organização.",
+    network:
+      "Não foi possível verificar a sessão. Confirme a ligação e tente novamente.",
+    logoutFailed:
+      "Não foi possível terminar a sessão no servidor. Volte a tentar quando tiver ligação.",
+    limited: "Demasiadas tentativas. Aguarde um minuto e tente novamente.",
+    loading: "A verificar a sessão…",
+    account: "Conta",
+    employee: "Colaborador",
+    manager: "Gestor",
+    admin: "Administrador de contas",
+    check: "Verificar sessão",
+    logout: "Terminar sessão",
+    back: "Voltar ao início de sessão",
+    activateLink: "Ainda não ativei a conta",
+    recoverLink: "Esqueci-me da palavra-passe",
+  },
   brand: "HomeOffice",
   brandCaption: "PORTUGAL / SUÍÇA",
   navigation: "Navegação principal",
@@ -56,9 +104,9 @@ export const strings = {
       eyebrow: "À SUA MEDIDA",
       title: "O seu espaço, as suas preferências.",
       description:
-        "A conta da aplicação funcionará sem Microsoft. A ligação ao Outlook será uma opção futura.",
+        "A sua conta funciona sem Microsoft. A ligação ao Outlook será uma opção futura.",
       detail:
-        "A gestão de conta e as preferências ainda não estão disponíveis.",
+        "A sessão já está disponível. As preferências e o Outlook serão adicionados posteriormente.",
       step: "Definições em preparação",
     },
   },

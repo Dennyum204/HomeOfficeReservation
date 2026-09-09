@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "dev.homeoffice.homeoffice_mobile"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 37 // flutter_secure_storage 11.0.0 requires API 37; target/min remain Flutter defaults.
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

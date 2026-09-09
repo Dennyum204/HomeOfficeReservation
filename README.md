@@ -4,7 +4,7 @@ Calendário próprio para planear trabalho remoto em Portugal e presencial na Su
 
 Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter Android/iOS. Autenticação própria com ASP.NET Core Identity: cookie na Web e tokens opacos do framework no mobile. Web/mobile partilham backend e calendário autoritativo. [ADR-004](docs/adr/ADR-004-independent-core.md) regista a decisão.
 
-**Estado: fundações executáveis de HO-002.** API, shell Web e Flutter ligados por clientes gerados; calendário, autenticação, pedidos e tarefas ainda em preparação. HO-000/HO-001 integrados pelos [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) e [PR #27](https://github.com/Dennyum204/HomeOfficeReservation/pull/27), com merge/CI verificados. [STATUS.md](STATUS.md) contém evidência e continuidade.
+**Estado: HO-003 acrescenta autenticação funcional.** API, Web e Flutter permitem login, ativação, recuperação e sessão própria. Calendário, pedidos e tarefas continuam em preparação. [Guia de autenticação e teste local](docs/HO-003-AUTHENTICATION.md). HO-000/HO-001 integrados pelos [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) e [PR #27](https://github.com/Dennyum204/HomeOfficeReservation/pull/27), com merge/CI verificados. [STATUS.md](STATUS.md) contém evidência e continuidade.
 
 ## Outlook opcional
 
@@ -16,16 +16,15 @@ Estudo/probe Microsoft preservados como referência histórica opcional. Onboard
 
 Pré-requisitos: .NET SDK **10.0.400**, Node **24.20.0**/npm **11.19.0**, Flutter **3.47.2** (Dart 3.13.2), Python 3.10+ e Docker/Compose v2. Java **21.0.12+8** para contratos/Android; Android SDK e emulador para Android; macOS/Xcode para iOS. [Versões/fontes](docs/HO-002-FOUNDATION.md). Sem contas/serviços Microsoft.
 
-Na raiz, configuração inicial e backend:
+O [guia HO-003](docs/HO-003-AUTHENTICATION.md) contém o setup completo: iniciar PostgreSQL, `python scripts/init_auth.py`, restore/build, `--migrate` explícito e `--provision-dev` com o caminho privado impresso pelo script. No Windows já preparado, pode reutilizar PostgreSQL portátil e os SDKs locais; Docker não é necessário nessa alternativa.
+
+Depois de aplicar migrações e provisionar as contas, iniciar a API na porta **5080**:
 
 ```sh
-python scripts/init_local.py
-docker compose -f infra/compose.yaml up -d --wait
-dotnet restore apps/api/HomeOffice.slnx --locked-mode
 dotnet run --project apps/api/src/HomeOffice.Api
 ```
 
-API: **http://localhost:5080**. O script cria configuração ignorada e uma password apenas local, sem imprimir nem sobrescrever ficheiros existentes. Pode usar `python3` em Unix.
+Não publicar as passwords sintéticas, códigos de email ou ficheiros privados. Pode entrar como colaborador, gestor ou administrador de contas; estas capacidades são verificadas no servidor.
 
 Noutro terminal, Web:
 
@@ -78,7 +77,7 @@ O workflow documental permite `outlook-probe-tests` apenas manualmente com `run_
 
 ## Estrutura e tracking
 
-`apps/api/`, `apps/web/` e `apps/mobile/` contêm os projetos compiláveis; `contracts/` contém OpenAPI/clientes gerados e ferramentas; `infra/` fornece PostgreSQL local. HO-002 não implementa workflows, autenticação funcional ou migrações de negócio e não faz deployment.
+`apps/api/`, `apps/web/` e `apps/mobile/` contêm os projetos compiláveis; `contracts/` contém OpenAPI/clientes gerados e ferramentas; `infra/` fornece PostgreSQL local. HO-003 inclui a migração inicial Identity/membros e clientes autenticados; workflows de negócio entram em HO-004 e seguintes. Sem deployment.
 
 [24 issues com IDs estáveis](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [milestones core/opcionais](https://github.com/Dennyum204/HomeOfficeReservation/milestones). URLs reais e histórico de mudanças de âmbito no backlog canónico. Repositório público; segredos, configuração privada e dados de calendário ficam fora do Git. Lockfiles, migrações e exemplos seguros devem ser versionados quando existirem.
 

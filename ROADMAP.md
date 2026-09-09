@@ -2,7 +2,7 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-08.
+Atualizado: 2026-09-09.
 
 Core V1 autónomo, com calendário e autenticação próprios. Outlook opcional em marcos independentes posteriores; acesso Microsoft não bloqueia desenvolvimento nem lançamento do core.
 

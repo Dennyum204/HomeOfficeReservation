@@ -3,12 +3,17 @@ using HomeOffice.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using HomeOffice.Api.Access;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: false)
-    .AddEnvironmentVariables();
+var generatingContract = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider";
+if (!generatingContract)
+    builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: false).AddEnvironmentVariables();
 builder.Services.AddProblemDetails();
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow);
+builder.Services.AddHomeOfficeIdentity(builder.Configuration, builder.Environment, generatingContract);
 builder.Services.AddScoped<GetWorkspaceInfo>();
 builder.Services.AddDbContext<HomeOfficeDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
@@ -26,8 +31,23 @@ builder.Services.AddOpenApi("v1", options =>
 });
 
 var app = builder.Build();
+if (!generatingContract && await MaintenanceCommands.ExecuteAsync(args, app)) return;
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Testing"))
+{
+    app.UseHsts();
+    app.Use(async (context, next) =>
+    {
+        if (!context.Request.IsHttps && context.Request.Path.StartsWithSegments("/api"))
+        { context.Response.StatusCode = 400; return; }
+        await next(context);
+    });
+}
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseRateLimiter();
+app.MapAccess();
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {

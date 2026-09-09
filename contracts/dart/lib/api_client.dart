@@ -183,6 +183,30 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AccessTokenResponse':
+          return AccessTokenResponse.fromJson(value);
+        case 'CompleteAccountRequest':
+          return CompleteAccountRequest.fromJson(value);
+        case 'Credentials':
+          return Credentials.fromJson(value);
+        case 'CsrfToken':
+          return CsrfToken.fromJson(value);
+        case 'EmailRequest':
+          return EmailRequest.fromJson(value);
+        case 'MemberList':
+          return MemberList.fromJson(value);
+        case 'MemberProfile':
+          return MemberProfile.fromJson(value);
+        case 'ProblemDetails':
+          return ProblemDetails.fromJson(value);
+        case 'ProvisionMemberRequest':
+          return ProvisionMemberRequest.fromJson(value);
+        case 'RefreshRequest':
+          return RefreshRequest.fromJson(value);
+        case 'SetManagerRequest':
+          return SetManagerRequest.fromJson(value);
+        case 'UpdateMemberRequest':
+          return UpdateMemberRequest.fromJson(value);
         case 'WorkspaceInfo':
           return WorkspaceInfo.fromJson(value);
         default:

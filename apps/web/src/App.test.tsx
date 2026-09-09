@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { App } from "./App";
+import { WorkspaceShell } from "./App";
 import { workspaceApi } from "./features/workspace/api";
 
 const metadata = {
@@ -17,7 +17,7 @@ describe("workspace shell", () => {
       .spyOn(workspaceApi, "getWorkspaceInfo")
       .mockRejectedValueOnce(new Error("offline"))
       .mockResolvedValue(metadata);
-    render(<App />);
+    render(<WorkspaceShell />);
     expect(
       await screen.findByText("Não foi possível ligar ao serviço."),
     ).toBeVisible();
@@ -31,7 +31,7 @@ describe("workspace shell", () => {
 
   it("labels planned areas honestly and navigates by keyboard", async () => {
     vi.spyOn(workspaceApi, "getWorkspaceInfo").mockResolvedValue(metadata);
-    render(<App />);
+    render(<WorkspaceShell />);
     const requests = screen.getByRole("button", { name: "Pedidos" });
     requests.focus();
     await userEvent.keyboard("{Enter}");

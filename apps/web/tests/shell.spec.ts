@@ -1,9 +1,10 @@
+import { signIn } from "./support";
 import { test, expect } from "@playwright/test";
 
 test("generated client reaches ASP.NET, navigation works, and the shell fits", async ({
   page,
 }) => {
-  await page.goto("/");
+  await signIn(page);
   await expect(page.getByText("Serviço ligado", { exact: true })).toBeVisible();
   const timestamp = await page.locator("time").getAttribute("datetime");
   expect(Math.abs(Date.now() - Date.parse(timestamp!))).toBeLessThan(30000);
@@ -20,7 +21,7 @@ test("generated client reaches ASP.NET, navigation works, and the shell fits", a
   await page.getByRole("button", { name: "Definições", exact: true }).click();
   await expect(
     page.getByText(
-      "A gestão de conta e as preferências ainda não estão disponíveis.",
+      "A sessão já está disponível. As preferências e o Outlook serão adicionados posteriormente.",
     ),
   ).toBeVisible();
   await page.getByRole("button", { name: "Atualizar ligação" }).click();
@@ -31,7 +32,7 @@ test("offline state does not imply an action was saved", async ({
   page,
   context,
 }) => {
-  await page.goto("/");
+  await signIn(page);
   await expect(page.getByText("Serviço ligado", { exact: true })).toBeVisible();
   await context.setOffline(true);
   await page.getByRole("button", { name: "Atualizar ligação" }).click();

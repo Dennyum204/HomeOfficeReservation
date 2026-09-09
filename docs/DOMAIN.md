@@ -88,3 +88,7 @@ Ordem de locks determinística se uma operação futura envolver vários colabor
 - Eventos com horas guardam instantes UTC e zona original; dias inteiros nunca são deslocados através de uma conversão UTC.
 - Usar mapeamento de zonas suportadas pelo Graph; não assumir que qualquer string IANA é aceite por todos os endpoints. Verificar no marco opcional HO-008; o core testa DateOnly/DST sem Graph.
 - Em HO-009, uma disponibilidade Outlook importada será apenas um intervalo/aviso. O core usa indisponibilidade manual e plano interno, sem leituras de calendários externos.
+
+## Identidade implementada em HO-003
+
+Organization, Member e ReportingLine persistidos em PostgreSQL. Employee/Manager e administrador de contas distintos; um membro por IdentityUser. Guard exige organização, ambos ativos, papel de gestor, colaborador atribuído e IDs diferentes. API consulta estado atual por operação; não usa papéis enviados pelo cliente como autoridade. Nenhuma entidade de pedido/decisão foi implementada aqui. [Detalhes e limites](HO-003-AUTHENTICATION.md).

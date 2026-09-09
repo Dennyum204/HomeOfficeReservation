@@ -1,28 +1,25 @@
 # Backend .NET
 
-HO-002: API ASP.NET Core/.NET 10 compilável, EF Core/Npgsql/PostgreSQL e metadados públicos. Sem autenticação funcional, calendário ou migrações de negócio; HO-003 implementará Identity, contas e sessões conforme ADR-004.
+HO-003: ASP.NET Core Identity, EF Core/PostgreSQL, migração inicial, sessões Web/mobile e autorização por organização/membro/relação. [Setup completo, credenciais privadas, administração e recuperação](../../docs/HO-003-AUTHENTICATION.md). Sem calendário/aprovações ou Microsoft.
 
 ## Versões e estrutura
 
 .NET SDK **10.0.400** em `global.json`, runtime ASP.NET Core 10.0.11; pacotes Microsoft 10.0.11, Npgsql EF 10.0.3. Restore fechado por `packages.lock.json` em cada projeto.
 
-- Domain: identificadores IANA de planeamento, sem dependências externas.
-- Application: consulta de metadados com TimeProvider, sem HTTP/EF.
-- Infrastructure: DbContext derivado de IdentityDbContext e health check PostgreSQL. Modelo Identity preparado; não se expõe `/register` nem se cria utilizador.
+- Domain: zonas IANA, organizações/membros/relações e guard de gestão sem dependências externas.
+- Application: contratos de membros/contas e consulta de metadados, sem HTTP/EF.
+- Infrastructure: stores Identity/DbContext, migração, diretório de membros, provisionamento e email local/SMTP.
 - Api: composição/DI, endpoints e OpenAPI. Sem framework de repositories, mediator ou microserviços.
 
 ## Arranque a partir da raiz do repositório
 
-Instalar o SDK fixado e Docker com Compose v2. Preparar configuração local uma única vez:
+Instalar o SDK fixado e preparar PostgreSQL e contas conforme o [guia HO-003](../../docs/HO-003-AUTHENTICATION.md). A sequência é configuração privada → restore/build → migração explícita → provisionamento Development → arranque:
 
 ```sh
-python scripts/init_local.py
-docker compose -f infra/compose.yaml up -d --wait
-dotnet restore apps/api/HomeOffice.slnx --locked-mode
 dotnet run --project apps/api/src/HomeOffice.Api
 ```
 
-API em **http://localhost:5080**. No Unix pode usar `python3`. `init_local.py` gera uma password aleatória, sem a imprimir, nos dois ficheiros ignorados. Preserva ficheiros existentes. Detalhes de PostgreSQL em [infra](../../infra/README.md).
+API em **http://localhost:5080**. Windows preparado admite PostgreSQL portátil; clones novos podem usar Compose. Sem SMTP externo em Development.
 
 | Endpoint real | Significado |
 |---|---|
@@ -31,9 +28,9 @@ API em **http://localhost:5080**. No Unix pode usar `python3`. `init_local.py` g
 | `GET /api/v1/workspace` | Nome/versão, timestamp UTC atual e zonas Lisbon/Zurich; sem dados pessoais |
 | `GET /openapi/v1.json` | Contrato público apenas em Development |
 
-Readiness verifica conectividade, **não a existência de tabelas Identity ou migrações**. Não há migrações nesta entrega: o esquema nasce com os modelos funcionais em HO-003/HO-004. Não se executa `EnsureCreated`/`Migrate` no arranque. A API inicia sem configuração PostgreSQL, mas readiness fica 503; “Serviço ligado” nos clientes confirma API, não prontidão da base.
+Readiness verifica conectividade, **não existência de tabelas**. Aplicar `--migrate` antes de login. Não se executa `EnsureCreated`/`Migrate` no arranque. Endpoints Identity e administrativos reais constam de OpenAPI e [ADR-005](../../docs/adr/ADR-005-identity-implementation.md); registo público inexistente. Metadados públicos continuam disponíveis mesmo sem PostgreSQL; login e dados privados exigem DB.
 
-Configuração: `appsettings.Local.example.json` é seguro; copiar para `appsettings.Local.json` e ajustar quando não usar o script. `ConnectionStrings__Database` tem precedência. O exemplo não contém credenciais reais. Produção ainda não está preparada: HO-003 acrescenta HTTPS/cookies/anti-CSRF, autorização e Data Protection persistente; não usar este scaffold público para dados reais.
+`appsettings.Local.json` é ignorado, preparado por `scripts/init_auth.py`; variáveis de ambiente têm precedência. Produção exige chaves persistentes cifradas e SMTP/HTTPS conforme o guia. Não existe deployment nesta tarefa.
 
 Para dispositivos na rede local, apenas em desenvolvimento:
 
@@ -67,4 +64,6 @@ dotnet test apps/api/HomeOffice.slnx -c Release --no-build
 python3 scripts/smoke_api.py --database
 ```
 
-O teste PostgreSQL faz `SELECT 1` por EF e verifica readiness/modelo Identity; não cria/apaga dados. `smoke_api.py` inicia/termina um Kestrel real na porta 5082. Os testes de falha usam uma porta sem servidor PostgreSQL e confirmam live=200/ready=503. Geração em [contracts](../../contracts/README.md).
+A suite Identity cria bases descartáveis `ho003_test_*`, aplica a migração duas vezes e verifica sessões, CSRF, ativação/recuperação, isolamento, papéis e chaves persistentes. `HO_TEST_DATABASE` deve permitir criação de bases de teste; não apontar para produção. O teste readiness existente faz `SELECT 1`. `smoke_api.py` inicia/termina Kestrel próprio em 5082 e confirma live=200/ready=503 quando falta DB, ou ready=200 com `--database`. Preparar configuração privada antes de testar, inclusive em Linux.
+
+Contratos e drift: [contracts](../../contracts/README.md). CLI EF Core 10.0.11 fixada em `dotnet-tools.json`; `dotnet tool restore` antes de gerar SQL/migrations. MailKit 4.17.0 fixado em packages.lock.json.

@@ -33,7 +33,7 @@ public sealed class AvailabilityTests
     }
 
     [Fact]
-    public async Task FunctionalAuthenticationIsNotExposedByTheScaffold()
+    public async Task PublicRegistrationAndAmbiguousLoginRoutesAreNotExposed()
     {
         await using var factory = new WebApplicationFactory<Program>();
         using var client = factory.CreateClient();
