@@ -710,6 +710,11 @@ textarea:focus-visible {
   line-height: 1.7;
 }
 .planning-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   width: min(760px, calc(100% - 32px));
   max-height: calc(100dvh - 48px);
   border: 1px solid #a7b69e;
@@ -900,13 +905,15 @@ textarea:focus-visible {
     padding: 18px 16px 10px;
   }
   .sidebar nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 16px;
   }
   .sidebar nav button {
     flex: 1;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
+    min-width: 0;
     font-size: 12px;
   }
   .sidebar .nav-caption,

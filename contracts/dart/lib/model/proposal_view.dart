@@ -23,6 +23,8 @@ class ProposalView {
     required this.id,
     required this.reason,
     required this.requestId,
+    this.requirementId,
+    this.requirementRevision,
     required this.revision,
     required this.state,
   });
@@ -47,6 +49,10 @@ class ProposalView {
 
   final String requestId;
 
+  final String? requirementId;
+
+  final int? requirementRevision;
+
   final int revision;
 
   final ProposalState state;
@@ -63,6 +69,8 @@ class ProposalView {
     other.id == id &&
     other.reason == reason &&
     other.requestId == requestId &&
+    other.requirementId == requirementId &&
+    other.requirementRevision == requirementRevision &&
     other.revision == revision &&
     other.state == state;
 
@@ -79,11 +87,13 @@ class ProposalView {
     (id.hashCode) +
     (reason.hashCode) +
     (requestId.hashCode) +
+    (requirementId == null ? 0 : requirementId!.hashCode) +
+    (requirementRevision == null ? 0 : requirementRevision!.hashCode) +
     (revision.hashCode) +
     (state.hashCode);
 
   @override
-  String toString() => 'ProposalView[acceptedRequestId=$acceptedRequestId, acknowledgedAt=$acknowledgedAt, affectedDayIds=$affectedDayIds, authorId=$authorId, createdAt=$createdAt, days=$days, groupId=$groupId, id=$id, reason=$reason, requestId=$requestId, revision=$revision, state=$state]';
+  String toString() => 'ProposalView[acceptedRequestId=$acceptedRequestId, acknowledgedAt=$acknowledgedAt, affectedDayIds=$affectedDayIds, authorId=$authorId, createdAt=$createdAt, days=$days, groupId=$groupId, id=$id, reason=$reason, requestId=$requestId, requirementId=$requirementId, requirementRevision=$requirementRevision, revision=$revision, state=$state]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -105,6 +115,16 @@ class ProposalView {
       json[r'id'] = this.id;
       json[r'reason'] = this.reason;
       json[r'requestId'] = this.requestId;
+    if (this.requirementId != null) {
+      json[r'requirementId'] = this.requirementId;
+    } else {
+      json[r'requirementId'] = null;
+    }
+    if (this.requirementRevision != null) {
+      json[r'requirementRevision'] = this.requirementRevision;
+    } else {
+      json[r'requirementRevision'] = null;
+    }
       json[r'revision'] = this.revision;
       json[r'state'] = this.state;
     return json;
@@ -125,6 +145,10 @@ class ProposalView {
     String? id,
     String? reason,
     String? requestId,
+    String? requirementId,
+    bool requirementIdSetToNull = false,
+    int? requirementRevision,
+    bool requirementRevisionSetToNull = false,
     int? revision,
     ProposalState? state,
   }) => ProposalView(
@@ -138,6 +162,8 @@ class ProposalView {
     id: id ?? this.id,
     reason: reason ?? this.reason,
     requestId: requestId ?? this.requestId,
+    requirementId: requirementIdSetToNull ? null : requirementId ?? this.requirementId,
+    requirementRevision: requirementRevisionSetToNull ? null : requirementRevision ?? this.requirementRevision,
     revision: revision ?? this.revision,
     state: state ?? this.state,
   );
@@ -191,6 +217,8 @@ class ProposalView {
         id: mapValueOfType<String>(json, r'id')!,
         reason: mapValueOfType<String>(json, r'reason')!,
         requestId: mapValueOfType<String>(json, r'requestId')!,
+        requirementId: mapValueOfType<String>(json, r'requirementId'),
+        requirementRevision: mapValueOfType<int>(json, r'requirementRevision'),
         revision: mapValueOfType<int>(json, r'revision')!,
         state: ProposalState.fromJson(json[r'state'])!,
       );

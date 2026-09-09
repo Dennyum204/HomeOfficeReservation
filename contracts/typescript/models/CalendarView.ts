@@ -20,6 +20,13 @@ import {
     EffectiveDayToJSON,
     EffectiveDayToJSONTyped,
 } from './EffectiveDay';
+import type { OnsiteView } from './OnsiteView';
+import {
+    OnsiteViewFromJSON,
+    OnsiteViewFromJSONTyped,
+    OnsiteViewToJSON,
+    OnsiteViewToJSONTyped,
+} from './OnsiteView';
 import type { PendingDay } from './PendingDay';
 import {
     PendingDayFromJSON,
@@ -61,6 +68,10 @@ export interface CalendarView {
     /**
      *
      */
+    requirements: Array<OnsiteView>;
+    /**
+     *
+     */
     to: Date;
 }
 
@@ -74,6 +85,7 @@ export function instanceOfCalendarView(value: object): value is CalendarView {
     if (!('from' in value) || value['from'] === undefined) return false;
     if (!('pendingDays' in value) || value['pendingDays'] === undefined) return false;
     if (!('planningTimeZone' in value) || value['planningTimeZone'] === undefined) return false;
+    if (!('requirements' in value) || value['requirements'] === undefined) return false;
     if (!('to' in value) || value['to'] === undefined) return false;
     return true;
 }
@@ -94,6 +106,7 @@ export function CalendarViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'from': (json['from'] == null ? json['from'] : parseDate(json['from'])),
         'pendingDays': ((json['pendingDays'] as Array<any>).map(PendingDayFromJSON)),
         'planningTimeZone': json['planningTimeZone'],
+        'requirements': ((json['requirements'] as Array<any>).map(OnsiteViewFromJSON)),
         'to': (json['to'] == null ? json['to'] : parseDate(json['to'])),
     };
 }
@@ -115,6 +128,7 @@ export function CalendarViewToJSONTyped(value?: CalendarView | null, ignoreDiscr
         'from': value['from'] == null ? value['from'] : serializeDate(value['from']),
         'pendingDays': ((value['pendingDays'] as Array<any>).map(PendingDayToJSON)),
         'planningTimeZone': value['planningTimeZone'],
+        'requirements': ((value['requirements'] as Array<any>).map(OnsiteViewToJSON)),
         'to': value['to'] == null ? value['to'] : serializeDate(value['to']),
     };
 }

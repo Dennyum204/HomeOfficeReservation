@@ -77,6 +77,14 @@ export interface ProposalView {
     /**
      *
      */
+    requirementId?: string | null;
+    /**
+     *
+     */
+    requirementRevision?: number | null;
+    /**
+     *
+     */
     revision: number;
     /**
      *
@@ -125,6 +133,8 @@ export function ProposalViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'],
         'reason': json['reason'],
         'requestId': json['requestId'],
+        'requirementId': json['requirementId'] === undefined ? undefined : json['requirementId'] === null ? null : json['requirementId'],
+        'requirementRevision': json['requirementRevision'] === undefined ? undefined : json['requirementRevision'] === null ? null : json['requirementRevision'],
         'revision': json['revision'],
         'state': ProposalStateFromJSON(json['state']),
     };
@@ -151,6 +161,8 @@ export function ProposalViewToJSONTyped(value?: ProposalView | null, ignoreDiscr
         'id': value['id'],
         'reason': value['reason'],
         'requestId': value['requestId'],
+        'requirementId': value['requirementId'],
+        'requirementRevision': value['requirementRevision'],
         'revision': value['revision'],
         'state': ProposalStateToJSON(value['state']),
     };

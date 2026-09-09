@@ -9,6 +9,14 @@ import { accessApi, csrf, statusOf } from "../auth/api";
 import { JOURNAL_KEY, SESSION_EVENT } from "../auth/session";
 
 export type WriteOperation =
+  | "createOnsiteRequirement"
+  | "editOnsiteRequirement"
+  | "cancelOnsiteRequirement"
+  | "acknowledgeOnsiteRequirement"
+  | "createAssignedTask"
+  | "editAssignedTask"
+  | "updateTaskProgress"
+  | "addWorkComment"
   | "createPlanningDraft"
   | "editPlanningDraft"
   | "submitPlanningRequest"

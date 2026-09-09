@@ -96,3 +96,9 @@ Organization, Member e ReportingLine persistidos em PostgreSQL. Employee/Manager
 ## Implementação HO-004
 
 PlanningProfile, WeeklyPattern, PlanningRequest/RequestedDay, PlanDay, ChangeProposal/ProposalAcknowledgement, PlanningComment, PlanningAudit/PlanningOutbox e PlanningReceipt concretizam este desenho. Contratos, transições e limites em [ADR-006](adr/ADR-006-transactional-planning.md) e [guia API](HO-004-PLANNING.md). Withdrawal acrescenta o estado por dia Withdrawn; Cancelled identifica cancelamento explícito aprovado. Rascunhos não reservam datas. O padrão é projetado por vigência, sem PlanDays inferidos. Presenças e respetivos testes concorrentes ficam para HO-006; outbox só é entregue em HO-007.
+
+## Implementação HO-006
+
+OnsiteRequirement/OnsiteAcknowledgement/AssignedTask/WorkEntry concretizam presenças, leitura e tarefas. [ADR-008](adr/ADR-008-onsite-and-tasks.md) define conflitos com remoto, indisponibilidade, pendentes e locais diferentes, prioridade das obrigações ativas e o lifecycle das tarefas. Acknowledgement é exclusivamente leitura; a aceitação de ChangeProposal exige outro comando e uma decisão posterior. RequirementRevision vincula a proposta à versão de conteúdo apropriada.
+
+Presenças são projetadas sem sobrescrever PlanDays; edição/cancelamento usa decisões e padrão atuais. RequiresOnsite não muda o calendário. Colaborador/organização de uma tarefa são imutáveis; transferência é cancelamento e nova atribuição autorizada, mantendo histórico. Leitura, comentário, edição e progresso têm recibo idempotente, auditoria e outbox transacional, sem entregas.

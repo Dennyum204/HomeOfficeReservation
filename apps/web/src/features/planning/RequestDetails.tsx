@@ -12,6 +12,7 @@ import type {
   SelectedDay,
 } from "../../../../../contracts/typescript";
 import { p } from "../../i18n/planning.pt-PT";
+import { w } from "../../i18n/work.pt-PT";
 import { planningApi } from "./api";
 import { dateKey, dayLabel, instantLabel } from "./dates";
 import { DayChip, Dialog } from "./shared";
@@ -367,6 +368,12 @@ export function RequestDetails(props: Props) {
         )}
         {proposals.data?.items.map((proposal) => (
           <article className="proposal-card" key={proposal.id}>
+            {proposal.requirementId && (
+              <p className="notice">
+                {w.linkedResolution} {proposal.requirementRevision}.{" "}
+                {w.readHint}
+              </p>
+            )}
             <span className="status-badge">
               {p.proposalState[proposal.state]}
             </span>

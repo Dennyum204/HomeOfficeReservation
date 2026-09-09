@@ -4,6 +4,8 @@ HO-003: ASP.NET Core Identity, EF Core/PostgreSQL, migração inicial, sessões 
 
 ## Versões e estrutura
 
+HO-006: [presenças e tarefas](../../docs/HO-006-ONSITE-TASKS.md), com migração aditiva, autorização, leitura por revisão e resolução de conflitos sob o mesmo lock do planeamento. DeliveredAt continua nulo; HO-007 implementará entregas.
+
 HO-004: [guia HTTP e demonstração repetível](../../docs/HO-004-PLANNING.md), com migração aditiva explícita, calendário por intervalo, rascunhos/submissão, decisões/retirada por dias, revisões, contrapropostas e comentários. Os comandos usam CalendarVersion, versões específicas e Idempotency-Key; sem UI de calendário, presenças ou worker de entregas. [ADR-006](../../docs/adr/ADR-006-transactional-planning.md).
 
 .NET SDK **10.0.400** em `global.json`, runtime ASP.NET Core 10.0.11; pacotes Microsoft 10.0.11, Npgsql EF 10.0.3. Restore fechado por `packages.lock.json` em cada projeto.

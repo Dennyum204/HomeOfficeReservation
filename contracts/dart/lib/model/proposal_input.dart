@@ -18,6 +18,8 @@ class ProposalInput {
     required this.expectedCalendarVersion,
     required this.expectedRequestVersion,
     required this.reason,
+    this.requirementId,
+    this.requirementRevision,
   });
 
   final List<SelectedDay> affectedDays;
@@ -30,13 +32,19 @@ class ProposalInput {
 
   final String reason;
 
+  final String? requirementId;
+
+  final int? requirementRevision;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is ProposalInput &&
     _deepEquality.equals(other.affectedDays, affectedDays) &&
     _deepEquality.equals(other.days, days) &&
     other.expectedCalendarVersion == expectedCalendarVersion &&
     other.expectedRequestVersion == expectedRequestVersion &&
-    other.reason == reason;
+    other.reason == reason &&
+    other.requirementId == requirementId &&
+    other.requirementRevision == requirementRevision;
 
   @override
   int get hashCode =>
@@ -45,10 +53,12 @@ class ProposalInput {
     (days.hashCode) +
     (expectedCalendarVersion == null ? 0 : expectedCalendarVersion!.hashCode) +
     (expectedRequestVersion == null ? 0 : expectedRequestVersion!.hashCode) +
-    (reason.hashCode);
+    (reason.hashCode) +
+    (requirementId == null ? 0 : requirementId!.hashCode) +
+    (requirementRevision == null ? 0 : requirementRevision!.hashCode);
 
   @override
-  String toString() => 'ProposalInput[affectedDays=$affectedDays, days=$days, expectedCalendarVersion=$expectedCalendarVersion, expectedRequestVersion=$expectedRequestVersion, reason=$reason]';
+  String toString() => 'ProposalInput[affectedDays=$affectedDays, days=$days, expectedCalendarVersion=$expectedCalendarVersion, expectedRequestVersion=$expectedRequestVersion, reason=$reason, requirementId=$requirementId, requirementRevision=$requirementRevision]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -65,6 +75,16 @@ class ProposalInput {
       json[r'expectedRequestVersion'] = null;
     }
       json[r'reason'] = this.reason;
+    if (this.requirementId != null) {
+      json[r'requirementId'] = this.requirementId;
+    } else {
+      json[r'requirementId'] = null;
+    }
+    if (this.requirementRevision != null) {
+      json[r'requirementRevision'] = this.requirementRevision;
+    } else {
+      json[r'requirementRevision'] = null;
+    }
     return json;
   }
 
@@ -78,12 +98,18 @@ class ProposalInput {
     int? expectedRequestVersion,
     bool expectedRequestVersionSetToNull = false,
     String? reason,
+    String? requirementId,
+    bool requirementIdSetToNull = false,
+    int? requirementRevision,
+    bool requirementRevisionSetToNull = false,
   }) => ProposalInput(
     affectedDays: affectedDays ?? this.affectedDays,
     days: days ?? this.days,
     expectedCalendarVersion: expectedCalendarVersionSetToNull ? null : expectedCalendarVersion ?? this.expectedCalendarVersion,
     expectedRequestVersion: expectedRequestVersionSetToNull ? null : expectedRequestVersion ?? this.expectedRequestVersion,
     reason: reason ?? this.reason,
+    requirementId: requirementIdSetToNull ? null : requirementId ?? this.requirementId,
+    requirementRevision: requirementRevisionSetToNull ? null : requirementRevision ?? this.requirementRevision,
   );
 
   /// Returns a new [ProposalInput] instance and imports its values from
@@ -114,6 +140,8 @@ class ProposalInput {
         expectedCalendarVersion: mapValueOfType<int>(json, r'expectedCalendarVersion'),
         expectedRequestVersion: mapValueOfType<int>(json, r'expectedRequestVersion'),
         reason: mapValueOfType<String>(json, r'reason')!,
+        requirementId: mapValueOfType<String>(json, r'requirementId'),
+        requirementRevision: mapValueOfType<int>(json, r'requirementRevision'),
       );
     }
     return null;

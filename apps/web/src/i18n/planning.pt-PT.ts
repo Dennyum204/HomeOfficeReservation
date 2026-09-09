@@ -227,7 +227,7 @@ export const p = {
   accountSettings:
     "A gestão de membros é reservada ao administrador de contas. Não está disponível nesta interface de planeamento.",
   plannedFeatures:
-    "Presenças obrigatórias, tarefas, notificações e Outlook serão disponibilizados nas respetivas etapas.",
+    "Notificações e Outlook serão disponibilizados nas respetivas etapas. O calendário e as tarefas Android pertencem às etapas mobile.",
   selectedOnly: "Selecione dias com um estado compatível com esta ação.",
   cancelHint:
     "O cancelamento só retira a aprovação após decisão do gestor. O padrão volta então a ficar visível.",

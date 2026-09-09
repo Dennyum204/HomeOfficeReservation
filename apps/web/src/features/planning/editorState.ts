@@ -8,6 +8,8 @@ export interface EditorSpec {
   mode: "new" | "edit" | "revision" | "proposal";
   requestId?: string;
   proposalId?: string;
+  requirementId?: string | null;
+  requirementRevision?: number | null;
   affectedIds?: string[];
   parentRevisionId?: string | null;
   days: DayInput[];

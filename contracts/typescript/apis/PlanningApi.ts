@@ -19,6 +19,11 @@ import {
     AcceptProposalInputToJSON,
 } from '../models/AcceptProposalInput';
 import {
+    type AssignedTaskState,
+    AssignedTaskStateFromJSON,
+    AssignedTaskStateToJSON,
+} from '../models/AssignedTaskState';
+import {
     type CalendarView,
     CalendarViewFromJSON,
     CalendarViewToJSON,
@@ -53,6 +58,36 @@ import {
     MutationReceiptFromJSON,
     MutationReceiptToJSON,
 } from '../models/MutationReceipt';
+import {
+    type OnsiteAcknowledgeInput,
+    OnsiteAcknowledgeInputFromJSON,
+    OnsiteAcknowledgeInputToJSON,
+} from '../models/OnsiteAcknowledgeInput';
+import {
+    type OnsiteInput,
+    OnsiteInputFromJSON,
+    OnsiteInputToJSON,
+} from '../models/OnsiteInput';
+import {
+    type OnsitePage,
+    OnsitePageFromJSON,
+    OnsitePageToJSON,
+} from '../models/OnsitePage';
+import {
+    type OnsitePreview,
+    OnsitePreviewFromJSON,
+    OnsitePreviewToJSON,
+} from '../models/OnsitePreview';
+import {
+    type OnsiteState,
+    OnsiteStateFromJSON,
+    OnsiteStateToJSON,
+} from '../models/OnsiteState';
+import {
+    type OnsiteView,
+    OnsiteViewFromJSON,
+    OnsiteViewToJSON,
+} from '../models/OnsiteView';
 import {
     type PatternInput,
     PatternInputFromJSON,
@@ -99,10 +134,50 @@ import {
     SubmitInputToJSON,
 } from '../models/SubmitInput';
 import {
+    type TaskInput,
+    TaskInputFromJSON,
+    TaskInputToJSON,
+} from '../models/TaskInput';
+import {
+    type TaskPage,
+    TaskPageFromJSON,
+    TaskPageToJSON,
+} from '../models/TaskPage';
+import {
+    type TaskProgressInput,
+    TaskProgressInputFromJSON,
+    TaskProgressInputToJSON,
+} from '../models/TaskProgressInput';
+import {
+    type TaskView,
+    TaskViewFromJSON,
+    TaskViewToJSON,
+} from '../models/TaskView';
+import {
     type WithdrawInput,
     WithdrawInputFromJSON,
     WithdrawInputToJSON,
 } from '../models/WithdrawInput';
+import {
+    type WorkCommentInput,
+    WorkCommentInputFromJSON,
+    WorkCommentInputToJSON,
+} from '../models/WorkCommentInput';
+import {
+    type WorkContext,
+    WorkContextFromJSON,
+    WorkContextToJSON,
+} from '../models/WorkContext';
+import {
+    type WorkEntryPage,
+    WorkEntryPageFromJSON,
+    WorkEntryPageToJSON,
+} from '../models/WorkEntryPage';
+import {
+    type WorkVersionInput,
+    WorkVersionInputFromJSON,
+    WorkVersionInputToJSON,
+} from '../models/WorkVersionInput';
 
 export interface AcceptCounterproposalRequest {
     /**
@@ -121,6 +196,25 @@ export interface AcceptCounterproposalRequest {
      *
      */
     acceptProposalInput: AcceptProposalInput;
+}
+
+export interface AcknowledgeOnsiteRequirementRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    requirementId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    onsiteAcknowledgeInput: OnsiteAcknowledgeInput;
 }
 
 export interface AddPlanningCommentRequest {
@@ -142,6 +236,63 @@ export interface AddPlanningCommentRequest {
     commentInput: CommentInput;
 }
 
+export interface AddWorkCommentRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    kind: WorkContext;
+    /**
+     *
+     */
+    contextId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    workCommentInput: WorkCommentInput;
+}
+
+export interface CancelOnsiteRequirementRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    requirementId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    workVersionInput: WorkVersionInput;
+}
+
+export interface CreateAssignedTaskRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    taskInput: TaskInput;
+}
+
 export interface CreateCounterproposalRequest {
     /**
      *
@@ -159,6 +310,21 @@ export interface CreateCounterproposalRequest {
      *
      */
     proposalInput: ProposalInput;
+}
+
+export interface CreateOnsiteRequirementRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    onsiteInput: OnsiteInput;
 }
 
 export interface CreatePlanningDraftRequest {
@@ -195,6 +361,44 @@ export interface DecidePlanningDaysRequest {
     decisionInput: DecisionInput;
 }
 
+export interface EditAssignedTaskRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    taskId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    taskInput: TaskInput;
+}
+
+export interface EditOnsiteRequirementRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    requirementId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    onsiteInput: OnsiteInput;
+}
+
 export interface EditPlanningDraftRequest {
     /**
      *
@@ -214,6 +418,17 @@ export interface EditPlanningDraftRequest {
     draftInput: DraftInput;
 }
 
+export interface GetAssignedTaskRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    taskId: string;
+}
+
 export interface GetCalendarRequest {
     /**
      *
@@ -229,6 +444,17 @@ export interface GetCalendarRequest {
     to: Date;
 }
 
+export interface GetOnsiteRequirementRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    requirementId: string;
+}
+
 export interface GetPlanningRequestRequest {
     /**
      *
@@ -238,6 +464,25 @@ export interface GetPlanningRequestRequest {
      *
      */
     requestId: string;
+}
+
+export interface ListAssignedTasksRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    offset?: number;
+    /**
+     *
+     */
+    limit?: number;
+    /**
+     *
+     */
+    state?: AssignedTaskState;
 }
 
 export interface ListCounterproposalsRequest {
@@ -257,6 +502,25 @@ export interface ListCounterproposalsRequest {
      *
      */
     limit?: number;
+}
+
+export interface ListOnsiteRequirementsRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    offset?: number;
+    /**
+     *
+     */
+    limit?: number;
+    /**
+     *
+     */
+    state?: OnsiteState;
 }
 
 export interface ListPlanningCommentsRequest {
@@ -310,6 +574,52 @@ export interface ListWeeklyPatternsRequest {
      *
      */
     limit?: number;
+}
+
+export interface ListWorkEntriesRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    kind: WorkContext;
+    /**
+     *
+     */
+    contextId: string;
+    /**
+     *
+     */
+    offset?: number;
+    /**
+     *
+     */
+    limit?: number;
+}
+
+export interface PreviewOnsiteRequirementRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    from: Date;
+    /**
+     *
+     */
+    to: Date;
+    /**
+     *
+     */
+    location: string;
+    /**
+     *
+     */
+    excludes?: string;
 }
 
 export interface PreviewPlanningDatesRequest {
@@ -382,6 +692,25 @@ export interface SubmitPlanningRequestRequest {
      *
      */
     submitInput: SubmitInput;
+}
+
+export interface UpdateTaskProgressRequest {
+    /**
+     *
+     */
+    employeeId: string;
+    /**
+     *
+     */
+    taskId: string;
+    /**
+     *
+     */
+    idempotencyKey: string;
+    /**
+     *
+     */
+    taskProgressInput: TaskProgressInput;
 }
 
 export interface WithdrawPlanningDaysRequest {
@@ -481,6 +810,78 @@ export class PlanningApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for acknowledgeOnsiteRequirement without sending the request
+     */
+    async acknowledgeOnsiteRequirementRequestOpts(requestParameters: AcknowledgeOnsiteRequirementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling acknowledgeOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['requirementId'] == null) {
+            throw new runtime.RequiredError(
+                'requirementId',
+                'Required parameter "requirementId" was null or undefined when calling acknowledgeOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling acknowledgeOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['onsiteAcknowledgeInput'] == null) {
+            throw new runtime.RequiredError(
+                'onsiteAcknowledgeInput',
+                'Required parameter "onsiteAcknowledgeInput" was null or undefined when calling acknowledgeOnsiteRequirement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/requirements/{requirementId}/acknowledge`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{requirementId}', encodeURIComponent(String(requestParameters['requirementId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OnsiteAcknowledgeInputToJSON(requestParameters['onsiteAcknowledgeInput']),
+        };
+    }
+
+    /**
+     */
+    async acknowledgeOnsiteRequirementRaw(requestParameters: AcknowledgeOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.acknowledgeOnsiteRequirementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async acknowledgeOnsiteRequirement(requestParameters: AcknowledgeOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.acknowledgeOnsiteRequirementRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for addPlanningComment without sending the request
      */
     async addPlanningCommentRequestOpts(requestParameters: AddPlanningCommentRequest): Promise<runtime.RequestOpts> {
@@ -553,6 +954,222 @@ export class PlanningApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for addWorkComment without sending the request
+     */
+    async addWorkCommentRequestOpts(requestParameters: AddWorkCommentRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling addWorkComment().'
+            );
+        }
+
+        if (requestParameters['kind'] == null) {
+            throw new runtime.RequiredError(
+                'kind',
+                'Required parameter "kind" was null or undefined when calling addWorkComment().'
+            );
+        }
+
+        if (requestParameters['contextId'] == null) {
+            throw new runtime.RequiredError(
+                'contextId',
+                'Required parameter "contextId" was null or undefined when calling addWorkComment().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling addWorkComment().'
+            );
+        }
+
+        if (requestParameters['workCommentInput'] == null) {
+            throw new runtime.RequiredError(
+                'workCommentInput',
+                'Required parameter "workCommentInput" was null or undefined when calling addWorkComment().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/work/{kind}/{contextId}/comments`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{kind}', encodeURIComponent(String(requestParameters['kind'])));
+        urlPath = urlPath.replace('{contextId}', encodeURIComponent(String(requestParameters['contextId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: WorkCommentInputToJSON(requestParameters['workCommentInput']),
+        };
+    }
+
+    /**
+     */
+    async addWorkCommentRaw(requestParameters: AddWorkCommentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.addWorkCommentRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async addWorkComment(requestParameters: AddWorkCommentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.addWorkCommentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for cancelOnsiteRequirement without sending the request
+     */
+    async cancelOnsiteRequirementRequestOpts(requestParameters: CancelOnsiteRequirementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling cancelOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['requirementId'] == null) {
+            throw new runtime.RequiredError(
+                'requirementId',
+                'Required parameter "requirementId" was null or undefined when calling cancelOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling cancelOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['workVersionInput'] == null) {
+            throw new runtime.RequiredError(
+                'workVersionInput',
+                'Required parameter "workVersionInput" was null or undefined when calling cancelOnsiteRequirement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/requirements/{requirementId}/cancel`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{requirementId}', encodeURIComponent(String(requestParameters['requirementId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: WorkVersionInputToJSON(requestParameters['workVersionInput']),
+        };
+    }
+
+    /**
+     */
+    async cancelOnsiteRequirementRaw(requestParameters: CancelOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.cancelOnsiteRequirementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async cancelOnsiteRequirement(requestParameters: CancelOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.cancelOnsiteRequirementRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for createAssignedTask without sending the request
+     */
+    async createAssignedTaskRequestOpts(requestParameters: CreateAssignedTaskRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling createAssignedTask().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling createAssignedTask().'
+            );
+        }
+
+        if (requestParameters['taskInput'] == null) {
+            throw new runtime.RequiredError(
+                'taskInput',
+                'Required parameter "taskInput" was null or undefined when calling createAssignedTask().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/tasks`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TaskInputToJSON(requestParameters['taskInput']),
+        };
+    }
+
+    /**
+     */
+    async createAssignedTaskRaw(requestParameters: CreateAssignedTaskRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.createAssignedTaskRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async createAssignedTask(requestParameters: CreateAssignedTaskRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.createAssignedTaskRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for createCounterproposal without sending the request
      */
     async createCounterproposalRequestOpts(requestParameters: CreateCounterproposalRequest): Promise<runtime.RequestOpts> {
@@ -621,6 +1238,70 @@ export class PlanningApi extends runtime.BaseAPI {
      */
     async createCounterproposal(requestParameters: CreateCounterproposalRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
         const response = await this.createCounterproposalRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for createOnsiteRequirement without sending the request
+     */
+    async createOnsiteRequirementRequestOpts(requestParameters: CreateOnsiteRequirementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling createOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling createOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['onsiteInput'] == null) {
+            throw new runtime.RequiredError(
+                'onsiteInput',
+                'Required parameter "onsiteInput" was null or undefined when calling createOnsiteRequirement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/requirements`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OnsiteInputToJSON(requestParameters['onsiteInput']),
+        };
+    }
+
+    /**
+     */
+    async createOnsiteRequirementRaw(requestParameters: CreateOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.createOnsiteRequirementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async createOnsiteRequirement(requestParameters: CreateOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.createOnsiteRequirementRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -761,6 +1442,150 @@ export class PlanningApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for editAssignedTask without sending the request
+     */
+    async editAssignedTaskRequestOpts(requestParameters: EditAssignedTaskRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling editAssignedTask().'
+            );
+        }
+
+        if (requestParameters['taskId'] == null) {
+            throw new runtime.RequiredError(
+                'taskId',
+                'Required parameter "taskId" was null or undefined when calling editAssignedTask().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling editAssignedTask().'
+            );
+        }
+
+        if (requestParameters['taskInput'] == null) {
+            throw new runtime.RequiredError(
+                'taskInput',
+                'Required parameter "taskInput" was null or undefined when calling editAssignedTask().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/tasks/{taskId}`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{taskId}', encodeURIComponent(String(requestParameters['taskId'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TaskInputToJSON(requestParameters['taskInput']),
+        };
+    }
+
+    /**
+     */
+    async editAssignedTaskRaw(requestParameters: EditAssignedTaskRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.editAssignedTaskRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async editAssignedTask(requestParameters: EditAssignedTaskRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.editAssignedTaskRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for editOnsiteRequirement without sending the request
+     */
+    async editOnsiteRequirementRequestOpts(requestParameters: EditOnsiteRequirementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling editOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['requirementId'] == null) {
+            throw new runtime.RequiredError(
+                'requirementId',
+                'Required parameter "requirementId" was null or undefined when calling editOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling editOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['onsiteInput'] == null) {
+            throw new runtime.RequiredError(
+                'onsiteInput',
+                'Required parameter "onsiteInput" was null or undefined when calling editOnsiteRequirement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/requirements/{requirementId}`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{requirementId}', encodeURIComponent(String(requestParameters['requirementId'])));
+
+        return {
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OnsiteInputToJSON(requestParameters['onsiteInput']),
+        };
+    }
+
+    /**
+     */
+    async editOnsiteRequirementRaw(requestParameters: EditOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.editOnsiteRequirementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async editOnsiteRequirement(requestParameters: EditOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.editOnsiteRequirementRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for editPlanningDraft without sending the request
      */
     async editPlanningDraftRequestOpts(requestParameters: EditPlanningDraftRequest): Promise<runtime.RequestOpts> {
@@ -833,6 +1658,57 @@ export class PlanningApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for getAssignedTask without sending the request
+     */
+    async getAssignedTaskRequestOpts(requestParameters: GetAssignedTaskRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling getAssignedTask().'
+            );
+        }
+
+        if (requestParameters['taskId'] == null) {
+            throw new runtime.RequiredError(
+                'taskId',
+                'Required parameter "taskId" was null or undefined when calling getAssignedTask().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/tasks/{taskId}`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{taskId}', encodeURIComponent(String(requestParameters['taskId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async getAssignedTaskRaw(requestParameters: GetAssignedTaskRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TaskView>> {
+        const requestOptions = await this.getAssignedTaskRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TaskViewFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getAssignedTask(requestParameters: GetAssignedTaskRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TaskView> {
+        const response = await this.getAssignedTaskRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getCalendar without sending the request
      */
     async getCalendarRequestOpts(requestParameters: GetCalendarRequest): Promise<runtime.RequestOpts> {
@@ -898,6 +1774,57 @@ export class PlanningApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for getOnsiteRequirement without sending the request
+     */
+    async getOnsiteRequirementRequestOpts(requestParameters: GetOnsiteRequirementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling getOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['requirementId'] == null) {
+            throw new runtime.RequiredError(
+                'requirementId',
+                'Required parameter "requirementId" was null or undefined when calling getOnsiteRequirement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/requirements/{requirementId}`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{requirementId}', encodeURIComponent(String(requestParameters['requirementId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async getOnsiteRequirementRaw(requestParameters: GetOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OnsiteView>> {
+        const requestOptions = await this.getOnsiteRequirementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OnsiteViewFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getOnsiteRequirement(requestParameters: GetOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OnsiteView> {
+        const response = await this.getOnsiteRequirementRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for getPlanningRequest without sending the request
      */
     async getPlanningRequestRequestOpts(requestParameters: GetPlanningRequestRequest): Promise<runtime.RequestOpts> {
@@ -945,6 +1872,61 @@ export class PlanningApi extends runtime.BaseAPI {
      */
     async getPlanningRequest(requestParameters: GetPlanningRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RequestView> {
         const response = await this.getPlanningRequestRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listAssignedTasks without sending the request
+     */
+    async listAssignedTasksRequestOpts(requestParameters: ListAssignedTasksRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling listAssignedTasks().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['state'] != null) {
+            queryParameters['state'] = requestParameters['state'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/tasks`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async listAssignedTasksRaw(requestParameters: ListAssignedTasksRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TaskPage>> {
+        const requestOptions = await this.listAssignedTasksRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TaskPageFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async listAssignedTasks(requestParameters: ListAssignedTasksRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TaskPage> {
+        const response = await this.listAssignedTasksRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1004,6 +1986,61 @@ export class PlanningApi extends runtime.BaseAPI {
      */
     async listCounterproposals(requestParameters: ListCounterproposalsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProposalPage> {
         const response = await this.listCounterproposalsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listOnsiteRequirements without sending the request
+     */
+    async listOnsiteRequirementsRequestOpts(requestParameters: ListOnsiteRequirementsRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling listOnsiteRequirements().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['state'] != null) {
+            queryParameters['state'] = requestParameters['state'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/requirements`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async listOnsiteRequirementsRaw(requestParameters: ListOnsiteRequirementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OnsitePage>> {
+        const requestOptions = await this.listOnsiteRequirementsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OnsitePageFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async listOnsiteRequirements(requestParameters: ListOnsiteRequirementsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OnsitePage> {
+        const response = await this.listOnsiteRequirementsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1169,6 +2206,153 @@ export class PlanningApi extends runtime.BaseAPI {
      */
     async listWeeklyPatterns(requestParameters: ListWeeklyPatternsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PatternPage> {
         const response = await this.listWeeklyPatternsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for listWorkEntries without sending the request
+     */
+    async listWorkEntriesRequestOpts(requestParameters: ListWorkEntriesRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling listWorkEntries().'
+            );
+        }
+
+        if (requestParameters['kind'] == null) {
+            throw new runtime.RequiredError(
+                'kind',
+                'Required parameter "kind" was null or undefined when calling listWorkEntries().'
+            );
+        }
+
+        if (requestParameters['contextId'] == null) {
+            throw new runtime.RequiredError(
+                'contextId',
+                'Required parameter "contextId" was null or undefined when calling listWorkEntries().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/work/{kind}/{contextId}/entries`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{kind}', encodeURIComponent(String(requestParameters['kind'])));
+        urlPath = urlPath.replace('{contextId}', encodeURIComponent(String(requestParameters['contextId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async listWorkEntriesRaw(requestParameters: ListWorkEntriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WorkEntryPage>> {
+        const requestOptions = await this.listWorkEntriesRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => WorkEntryPageFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async listWorkEntries(requestParameters: ListWorkEntriesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WorkEntryPage> {
+        const response = await this.listWorkEntriesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for previewOnsiteRequirement without sending the request
+     */
+    async previewOnsiteRequirementRequestOpts(requestParameters: PreviewOnsiteRequirementRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling previewOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['from'] == null) {
+            throw new runtime.RequiredError(
+                'from',
+                'Required parameter "from" was null or undefined when calling previewOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['to'] == null) {
+            throw new runtime.RequiredError(
+                'to',
+                'Required parameter "to" was null or undefined when calling previewOnsiteRequirement().'
+            );
+        }
+
+        if (requestParameters['location'] == null) {
+            throw new runtime.RequiredError(
+                'location',
+                'Required parameter "location" was null or undefined when calling previewOnsiteRequirement().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['from'] != null) {
+            queryParameters['from'] = runtime.serializeDate(requestParameters['from'] as any);
+        }
+
+        if (requestParameters['to'] != null) {
+            queryParameters['to'] = runtime.serializeDate(requestParameters['to'] as any);
+        }
+
+        if (requestParameters['location'] != null) {
+            queryParameters['location'] = requestParameters['location'];
+        }
+
+        if (requestParameters['excludes'] != null) {
+            queryParameters['excludes'] = requestParameters['excludes'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/onsite-preview`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async previewOnsiteRequirementRaw(requestParameters: PreviewOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OnsitePreview>> {
+        const requestOptions = await this.previewOnsiteRequirementRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OnsitePreviewFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async previewOnsiteRequirement(requestParameters: PreviewOnsiteRequirementRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OnsitePreview> {
+        const response = await this.previewOnsiteRequirementRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1446,6 +2630,78 @@ export class PlanningApi extends runtime.BaseAPI {
      */
     async submitPlanningRequest(requestParameters: SubmitPlanningRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
         const response = await this.submitPlanningRequestRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for updateTaskProgress without sending the request
+     */
+    async updateTaskProgressRequestOpts(requestParameters: UpdateTaskProgressRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['employeeId'] == null) {
+            throw new runtime.RequiredError(
+                'employeeId',
+                'Required parameter "employeeId" was null or undefined when calling updateTaskProgress().'
+            );
+        }
+
+        if (requestParameters['taskId'] == null) {
+            throw new runtime.RequiredError(
+                'taskId',
+                'Required parameter "taskId" was null or undefined when calling updateTaskProgress().'
+            );
+        }
+
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling updateTaskProgress().'
+            );
+        }
+
+        if (requestParameters['taskProgressInput'] == null) {
+            throw new runtime.RequiredError(
+                'taskProgressInput',
+                'Required parameter "taskProgressInput" was null or undefined when calling updateTaskProgress().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+
+        let urlPath = `/api/v1/planning/{employeeId}/tasks/{taskId}/progress`;
+        urlPath = urlPath.replace('{employeeId}', encodeURIComponent(String(requestParameters['employeeId'])));
+        urlPath = urlPath.replace('{taskId}', encodeURIComponent(String(requestParameters['taskId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TaskProgressInputToJSON(requestParameters['taskProgressInput']),
+        };
+    }
+
+    /**
+     */
+    async updateTaskProgressRaw(requestParameters: UpdateTaskProgressRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MutationReceipt>> {
+        const requestOptions = await this.updateTaskProgressRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MutationReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async updateTaskProgress(requestParameters: UpdateTaskProgressRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MutationReceipt> {
+        const response = await this.updateTaskProgressRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

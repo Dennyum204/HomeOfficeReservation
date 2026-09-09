@@ -1,6 +1,6 @@
 # ADR-007 — Planeamento Web fiável e plataformas ativas
 
-Data: 2026-09-09. Tarefa: [HO-005 / issue #6](https://github.com/Dennyum204/HomeOfficeReservation/issues/6). Proposta implementada, sujeita a revisão humana. Mantém ADR-004/005/006; altera apenas a prioridade de plataformas e concretiza o cliente Web.
+Data: 2026-09-09. Tarefa: [HO-005 / issue #6](https://github.com/Dennyum204/HomeOfficeReservation/issues/6). Integrado em main pelo PR #32 em 2026-09-09T18:29:20Z; commit aeb4f38ab258b8bb8845e4887737f3697795cf81 e quatro checks de integração verificados em HO-006. O texto de decisão original abaixo é preservado. Mantém ADR-004/005/006; altera apenas a prioridade de plataformas e concretiza o cliente Web.
 
 ## Contexto e decisão de produto
 

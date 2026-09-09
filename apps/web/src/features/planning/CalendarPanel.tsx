@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { CalendarView } from "../../../../../contracts/typescript";
 import { p } from "../../i18n/planning.pt-PT";
+import { w } from "../../i18n/work.pt-PT";
 import {
   addDays,
   addMonths,
@@ -22,6 +23,9 @@ interface Props {
   selecting: boolean;
   selected: string[];
   canRequest: boolean;
+  canManage?: boolean;
+  onNewOnsite?: () => void;
+  onRequirement?: (id: string) => void;
   disabled: boolean;
   onAnchor: (date: string) => void;
   onView: (view: "month" | "week") => void;
@@ -72,7 +76,8 @@ export function CalendarPanel(props: Props) {
       p.officeTotal,
       included.filter(
         (d) =>
-          d.origin === "ApprovedRequest" &&
+          (d.origin === "ApprovedRequest" ||
+            d.origin === "OnsiteRequirement") &&
           d.location === "OfficeSwitzerland" &&
           d.availability === "Working",
       ).length,
@@ -197,7 +202,7 @@ export function CalendarPanel(props: Props) {
               </button>
             </div>
           </div>
-          {props.canRequest && (
+          {(props.canRequest || props.canManage) && (
             <div className="calendar-selection">
               <button
                 disabled={disabled}
@@ -214,9 +219,9 @@ export function CalendarPanel(props: Props) {
               <button
                 className="primary"
                 disabled={disabled}
-                onClick={props.onNew}
+                onClick={props.canManage ? props.onNewOnsite : props.onNew}
               >
-                + {p.newRequest}
+                + {props.canManage ? w.newOnsite : p.newRequest}
               </button>
             </div>
           )}
@@ -244,13 +249,16 @@ export function CalendarPanel(props: Props) {
                   const proposals = pending.filter(
                     (d) => dateKey(d.day.localDate) === date,
                   );
+                  const obligations = (calendar.requirements ?? []).filter(
+                    (r) => dateKey(r.from) <= date && dateKey(r.to) >= date,
+                  );
                   const label = `${longDayLabel(date)}. ${plan ? `${locationLabel(plan.location, plan.availability)}, ${plan.origin === "WeeklyPattern" ? p.pattern : p.confirmed}` : p.neutral}${proposals.length ? `. ${p.pending}` : ""}`;
                   return (
                     <div role="gridcell" key={date}>
                       <button
                         data-date={date}
                         className={`calendar-day ${date < range.from || date > range.to ? "outside" : ""} ${date === active ? "active" : ""}`}
-                        aria-label={label}
+                        aria-label={`${label}${obligations.length ? `. ${obligations.map((r) => `${w.mandatory}: ${w.state[r.state]}`).join(". ")}` : ""}`}
                         aria-pressed={
                           selecting ? selected.includes(date) : date === active
                         }
@@ -297,6 +305,18 @@ export function CalendarPanel(props: Props) {
                             cancel={d.day.cancel}
                           />
                         ))}
+                        {obligations.length > 0 && (
+                          <span
+                            className={`onsite-chip ${obligations.some((r) => r.state === "NeedsResolution") ? "conflict" : ""}`}
+                          >
+                            ▣{" "}
+                            {obligations.some(
+                              (r) => r.state === "NeedsResolution",
+                            )
+                              ? w.state.NeedsResolution
+                              : w.onsite}
+                          </span>
+                        )}
                       </button>
                     </div>
                   );
@@ -312,6 +332,7 @@ export function CalendarPanel(props: Props) {
             <span>☀ {p.availability.Leave}</span>
             <span>− {p.availability.Unavailable}</span>
             <span className="legend-pattern">· {p.pattern}</span>
+            <span>▣ {w.mandatory}</span>
           </div>
         </section>
         <aside className="day-detail" aria-label={p.dayDetails}>
@@ -328,7 +349,9 @@ export function CalendarPanel(props: Props) {
               <p className="muted">
                 {detail.origin === "WeeklyPattern"
                   ? p.patternHint
-                  : p.confirmed}
+                  : detail.origin === "OnsiteRequirement"
+                    ? w.mandatory
+                    : p.confirmed}
               </p>
             </>
           ) : (
@@ -389,6 +412,23 @@ export function CalendarPanel(props: Props) {
             <p className="muted">{p.noPending}</p>
           )}
           <p className="detail-note">{p.pendingHint}</p>
+          {(calendar.requirements ?? [])
+            .filter((r) => dateKey(r.from) <= active && dateKey(r.to) >= active)
+            .map((r) => (
+              <div className="onsite-day-detail" key={r.id}>
+                <h3>{w.mandatory}</h3>
+                <strong>{r.reason}</strong>
+                <p>
+                  {w.state[r.state]} · {r.location}
+                </p>
+                {r.state === "NeedsResolution" && (
+                  <p className="notice conflict">{w.conflict}</p>
+                )}
+                <button onClick={() => props.onRequirement?.(r.id)}>
+                  {w.onsite} · {w.revision} {r.revision}
+                </button>
+              </div>
+            ))}
         </aside>
       </div>
     </>

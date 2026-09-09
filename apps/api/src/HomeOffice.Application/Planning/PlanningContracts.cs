@@ -12,7 +12,7 @@ public sealed record DecisionInput(long? ExpectedCalendarVersion, long? Expected
     SelectedDay[] Days, bool Approve, string? Reason);
 public sealed record WithdrawInput(long? ExpectedCalendarVersion, long? ExpectedRequestVersion, SelectedDay[] Days);
 public sealed record ProposalInput(long? ExpectedCalendarVersion, long? ExpectedRequestVersion,
-    SelectedDay[] AffectedDays, DayInput[] Days, string Reason);
+    SelectedDay[] AffectedDays, DayInput[] Days, string Reason, Guid? RequirementId = null, int? RequirementRevision = null);
 public sealed record AcceptProposalInput(long? ExpectedCalendarVersion, int ExpectedProposalRevision);
 public sealed record PatternInput(long? ExpectedCalendarVersion, DateOnly EffectiveFrom, WorkLocation[] Locations);
 public sealed record CommentInput(long? ExpectedCalendarVersion, string Text, Guid? ProposalId = null);
@@ -29,9 +29,9 @@ public sealed record EffectiveDay(DateOnly LocalDate, WorkLocation Location, Ava
 public sealed record PendingDay(Guid RequestId, long RequestVersion, RequestedDayView Day);
 public sealed record ProposalView(Guid Id, Guid GroupId, int Revision, Guid RequestId, Guid AuthorId,
     string Reason, Guid[] AffectedDayIds, DayInput[] Days, ProposalState State, DateTimeOffset CreatedAt,
-    Guid? AcceptedRequestId, DateTimeOffset? AcknowledgedAt);
+    Guid? AcceptedRequestId, DateTimeOffset? AcknowledgedAt, Guid? RequirementId = null, int? RequirementRevision = null);
 public sealed record CalendarView(Guid EmployeeId, long CalendarVersion, string PlanningTimeZone,
-    DateOnly From, DateOnly To, EffectiveDay[] EffectiveDays, PendingDay[] PendingDays);
+    DateOnly From, DateOnly To, EffectiveDay[] EffectiveDays, PendingDay[] PendingDays, OnsiteView[] Requirements);
 public sealed record CommentView(Guid Id, Guid RequestId, Guid? ProposalId, Guid AuthorId, string Text, DateTimeOffset CreatedAt);
 public sealed record CommentPage(CommentView[] Items, int? NextOffset);
 public sealed record ProposalPage(ProposalView[] Items, int? NextOffset);
@@ -40,7 +40,7 @@ public sealed record PatternPage(long CalendarVersion, PatternView[] Items, int?
 public sealed record PreviewDay(DateOnly LocalDate, bool IsWeekend);
 public sealed record DatePreview(PreviewDay[] Days);
 
-public interface IPlanningService
+public partial interface IPlanningService
 {
     Task<CalendarView> Calendar(Guid actor, Guid employee, DateOnly from, DateOnly to, CancellationToken ct);
     Task<RequestPage> Requests(Guid actor, Guid employee, int offset, int limit, CancellationToken ct, RequestState? state = null);

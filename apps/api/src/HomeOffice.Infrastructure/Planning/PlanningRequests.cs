@@ -131,9 +131,14 @@ public sealed partial class PlanningService
             if (r.AcceptedProposalId is { } proposalId)
             {
                 var proposal = await db.Set<ChangeProposal>().SingleAsync(x => x.Id == proposalId, ct);
+                await ValidateRequirementRevision(employee, proposal.RequirementId, proposal.RequirementRevision, ct);
                 Require(proposal.State == ProposalState.Accepted && await db.Set<ProposalAcknowledgement>().AnyAsync(x => x.ProposalId == proposalId && x.EmployeeId == employee && x.Revision == proposal.Revision, ct), "proposal_acknowledgement_required");
             }
-            if (input.Approve) await ValidateEffective(days, ct); // Validate the complete selection before mutating anything.
+            if (input.Approve)
+            {
+                await ValidateEffective(days, ct);
+                await ValidateOnsiteDecision(employee, days, ct);
+            } // Validate the complete selection before mutating anything.
             var changedSources = new HashSet<Guid>();
             foreach (var d in days)
             {

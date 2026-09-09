@@ -52,3 +52,9 @@ Após o core, HO-008 acrescenta Ligar Outlook em Definições e estado da public
 ## Consistência visual
 
 Partilhar nomes semânticos para cores/estado, tipografia, espaçamento e linguagem. Web e Flutter podem ter componentes próprios; não tentar reutilizar widgets Flutter dentro de React. A implementação deve incluir capturas das vistas principais e teste de calendário em ecrã pequeno.
+
+## Concretização HO-006
+
+Web inclui separadores Presenças e Tarefas, filtros por estado, formulários e detalhes com comentários/histórico. Gestor cria presença por seleção no calendário ou formulário inclusivo; preview mostra impedimentos e avisos, sendo repetido pelo servidor na escrita. No calendário, remoto aprovado e obrigação Por resolver aparecem juntos. A confirmação de leitura tem explicação própria; propor resolução abre o fluxo de contraproposta/aceitação/decisão existente. Detalhes de tarefas mostram se a presença ligada foi cancelada e explicam que o progresso da tarefa é independente.
+
+Navegação estreita distribui cinco separadores em linhas; diálogo modal contém o seu scroll. Campos locais são conservados no mesmo separador/conta e os comandos incertos usam replay exato. [Percurso e limitações](HO-006-ONSITE-TASKS.md). Interface Android equivalente continua HO-011; não há notificações entregues nesta etapa.

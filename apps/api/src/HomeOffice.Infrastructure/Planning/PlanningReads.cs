@@ -24,6 +24,9 @@ public sealed partial class PlanningService
         var today = PlanningRules.Today(clock.GetUtcNow(), zone);
         Require(from >= today.AddDays(-365) && to <= today.AddDays(730), "calendar_window_exceeded", 400);
         var version = await CalendarVersion(employee, ct);
+        var requirements = await db.Set<OnsiteRequirement>().Where(x => x.EmployeeId == employee && x.State != OnsiteState.Cancelled && x.From <= to && x.To >= from)
+            .OrderBy(x => x.CreatedAt).ThenBy(x => x.Id).ToArrayAsync(ct);
+        var requirementViews = new List<OnsiteView>(); foreach (var requirement in requirements) requirementViews.Add(await OnsiteViewOf(requirement, ct));
         var plans = await db.Set<PlanDay>().Where(x => x.EmployeeId == employee && x.LocalDate >= from && x.LocalDate <= to).ToDictionaryAsync(x => x.LocalDate, ct);
         var sourceIds = plans.Values.Select(p => p.SourceDayId).ToArray();
         var sources = await db.Set<RequestedDay>().Where(d => d.EmployeeId == employee && sourceIds.Contains(d.Id)).ToDictionaryAsync(d => d.Id, d => d.RequestId, ct);
@@ -38,11 +41,13 @@ public sealed partial class PlanningService
         var effective = Expand(from, to, true).Select(date =>
         {
             if (plans.TryGetValue(date, out var p)) return new EffectiveDay(date, p.Location, p.Availability, "ApprovedRequest", p.Version, p.SourceDayId, p.DecidedBy, sources[p.SourceDayId]);
+            var onsite = requirements.FirstOrDefault(r => r.State == OnsiteState.Active && r.From <= date && r.To >= date);
+            if (onsite is not null) return new EffectiveDay(date, WorkLocation.OfficeSwitzerland, Availability.Working, "OnsiteRequirement", onsite.Version, null, onsite.CreatedBy, null);
             var pattern = patterns.Where(x => x.EffectiveFrom <= date).OrderByDescending(x => x.EffectiveFrom).FirstOrDefault();
             var location = pattern is null ? DefaultLocation(date) : pattern.Locations[((int)date.DayOfWeek + 6) % 7];
             return new EffectiveDay(date, location, location == WorkLocation.Unplanned ? null : Availability.Working, "WeeklyPattern", pattern?.Version ?? 0, null, null, null);
         }).ToArray();
-        return new CalendarView(employee, version, zone, from, to, effective, pending.Select(p => new PendingDay(p.Request.Id, p.Request.Version, DayView(p.Day))).ToArray());
+        return new CalendarView(employee, version, zone, from, to, effective, pending.Select(p => new PendingDay(p.Request.Id, p.Request.Version, DayView(p.Day))).ToArray(), requirementViews.ToArray());
     }, ct);
     public Task<RequestPage> Requests(Guid actor, Guid employee, int offset, int limit, CancellationToken ct, RequestState? state = null) => Read(actor, employee, async () =>
     {
@@ -62,7 +67,7 @@ public sealed partial class PlanningService
         var acks = await db.Set<ProposalAcknowledgement>().Where(x => ids.Contains(x.ProposalId)).ToDictionaryAsync(x => x.ProposalId, ct);
         return new ProposalPage(rows.Take(limit).Select(p => new ProposalView(p.Id, p.GroupId, p.Revision, p.RequestId, p.AuthorId, p.Reason,
             p.AffectedDayIds, JsonSerializer.Deserialize<DayInput[]>(p.DaysJson, Json)!, p.State, p.CreatedAt, p.AcceptedRequestId,
-            acks.GetValueOrDefault(p.Id)?.AcknowledgedAt)).ToArray(), rows.Length > limit ? offset + limit : null);
+            acks.GetValueOrDefault(p.Id)?.AcknowledgedAt, p.RequirementId, p.RequirementRevision)).ToArray(), rows.Length > limit ? offset + limit : null);
     }, ct);
     public Task<CommentPage> Comments(Guid actor, Guid employee, Guid request, int offset, int limit, CancellationToken ct) => Read(actor, employee, async () =>
     {

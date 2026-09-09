@@ -19,6 +19,7 @@ class CalendarView {
     required this.from,
     this.pendingDays = const [],
     required this.planningTimeZone,
+    this.requirements = const [],
     required this.to,
   });
 
@@ -34,6 +35,8 @@ class CalendarView {
 
   final String planningTimeZone;
 
+  final List<OnsiteView> requirements;
+
   final DateTime to;
 
   @override
@@ -44,6 +47,7 @@ class CalendarView {
     other.from == from &&
     _deepEquality.equals(other.pendingDays, pendingDays) &&
     other.planningTimeZone == planningTimeZone &&
+    _deepEquality.equals(other.requirements, requirements) &&
     other.to == to;
 
   @override
@@ -55,10 +59,11 @@ class CalendarView {
     (from.hashCode) +
     (pendingDays.hashCode) +
     (planningTimeZone.hashCode) +
+    (requirements.hashCode) +
     (to.hashCode);
 
   @override
-  String toString() => 'CalendarView[calendarVersion=$calendarVersion, effectiveDays=$effectiveDays, employeeId=$employeeId, from=$from, pendingDays=$pendingDays, planningTimeZone=$planningTimeZone, to=$to]';
+  String toString() => 'CalendarView[calendarVersion=$calendarVersion, effectiveDays=$effectiveDays, employeeId=$employeeId, from=$from, pendingDays=$pendingDays, planningTimeZone=$planningTimeZone, requirements=$requirements, to=$to]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -68,6 +73,7 @@ class CalendarView {
       json[r'from'] = _dateFormatter.format(this.from);
       json[r'pendingDays'] = this.pendingDays;
       json[r'planningTimeZone'] = this.planningTimeZone;
+      json[r'requirements'] = this.requirements;
       json[r'to'] = _dateFormatter.format(this.to);
     return json;
   }
@@ -81,6 +87,7 @@ class CalendarView {
     DateTime? from,
     List<PendingDay>? pendingDays,
     String? planningTimeZone,
+    List<OnsiteView>? requirements,
     DateTime? to,
   }) => CalendarView(
     calendarVersion: calendarVersion ?? this.calendarVersion,
@@ -89,6 +96,7 @@ class CalendarView {
     from: from ?? this.from,
     pendingDays: pendingDays ?? this.pendingDays,
     planningTimeZone: planningTimeZone ?? this.planningTimeZone,
+    requirements: requirements ?? this.requirements,
     to: to ?? this.to,
   );
 
@@ -115,6 +123,8 @@ class CalendarView {
         assert(json[r'pendingDays'] != null, 'Required key "CalendarView[pendingDays]" has a null value in JSON.');
         assert(json.containsKey(r'planningTimeZone'), 'Required key "CalendarView[planningTimeZone]" is missing from JSON.');
         assert(json[r'planningTimeZone'] != null, 'Required key "CalendarView[planningTimeZone]" has a null value in JSON.');
+        assert(json.containsKey(r'requirements'), 'Required key "CalendarView[requirements]" is missing from JSON.');
+        assert(json[r'requirements'] != null, 'Required key "CalendarView[requirements]" has a null value in JSON.');
         assert(json.containsKey(r'to'), 'Required key "CalendarView[to]" is missing from JSON.');
         assert(json[r'to'] != null, 'Required key "CalendarView[to]" has a null value in JSON.');
         return true;
@@ -127,6 +137,7 @@ class CalendarView {
         from: mapDateTime(json, r'from', r'')!,
         pendingDays: PendingDay.listFromJson(json[r'pendingDays']),
         planningTimeZone: mapValueOfType<String>(json, r'planningTimeZone')!,
+        requirements: OnsiteView.listFromJson(json[r'requirements']),
         to: mapDateTime(json, r'to', r'')!,
       );
     }
@@ -181,6 +192,7 @@ class CalendarView {
     'from',
     'pendingDays',
     'planningTimeZone',
+    'requirements',
     'to',
   };
 }

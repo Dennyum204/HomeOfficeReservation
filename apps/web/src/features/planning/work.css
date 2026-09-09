@@ -1,0 +1,136 @@
+.work-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.65fr);
+  gap: 24px;
+  align-items: start;
+}
+.work-layout > * {
+  min-width: 0;
+}
+.work-detail {
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #dce4e8;
+  border-radius: 18px;
+}
+.work-detail h2,
+.work-detail p,
+.work-history li {
+  overflow-wrap: anywhere;
+}
+.work-form {
+  display: grid;
+  gap: 14px;
+  margin-block: 24px;
+  padding: 20px;
+  background: #f5f8fa;
+  border: 1px solid #dce4e8;
+  border-radius: 12px;
+}
+.work-form label,
+.work-history label {
+  display: grid;
+  gap: 7px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.work-form .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.work-form input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.conflict-preview {
+  max-height: 320px;
+  overflow: auto;
+  padding: 16px;
+  border-left: 3px solid #8666ae;
+  background: #f4effa;
+}
+.conflict-preview ul {
+  padding-left: 18px;
+}
+.conflict-preview li {
+  margin-bottom: 12px;
+}
+.conflict-preview button {
+  padding: 5px 8px;
+}
+.status-badge.needsresolution,
+.onsite-chip.conflict,
+.notice.conflict {
+  background: #fff0dc;
+  color: #784205;
+}
+.status-badge.active,
+.onsite-chip {
+  background: #eee7f7;
+  color: #583a7a;
+}
+.onsite-chip {
+  display: block;
+  padding: 4px 6px;
+  font-size: 0.72rem;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+.status-badge.inprogress {
+  background: #e0edf7;
+  color: #225c82;
+}
+.status-badge.done {
+  background: #e1f2e8;
+  color: #22593a;
+}
+.status-badge.todo {
+  background: #f0f2f4;
+  color: #536172;
+}
+.onsite-day-detail {
+  border-top: 1px solid #dce4e8;
+  padding-top: 12px;
+  margin-top: 18px;
+}
+.work-history {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #dce4e8;
+}
+.work-history ol {
+  padding-left: 22px;
+}
+.work-history li {
+  margin-block: 18px;
+}
+.work-history time {
+  font-size: 0.8rem;
+  color: #536172;
+}
+.work-history form {
+  display: grid;
+  gap: 12px;
+}
+@media (max-width: 1000px) {
+  .work-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 540px) {
+  .work-detail,
+  .work-form {
+    padding: 14px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .work-detail .section-heading {
+    flex-wrap: wrap;
+  }
+}

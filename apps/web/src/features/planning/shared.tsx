@@ -22,10 +22,13 @@ export function Dialog({
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     const element = dialog.current!;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     element.showModal();
     element.querySelector<HTMLElement>("h2")?.focus();
     return () => {
       element.close();
+      document.body.style.overflow = previousOverflow;
       if (previous?.isConnected) previous.focus();
     };
   }, []);
