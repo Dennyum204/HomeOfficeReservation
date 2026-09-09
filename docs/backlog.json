@@ -565,7 +565,7 @@
       "title": "Notificações duráveis e infraestrutura push",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004",
@@ -587,7 +587,9 @@
         "Testes PostgreSQL/worker, Web/API/PostgreSQL E2E e caixa Android/API reais; quatro checks verdes, sem gates iOS; operações e recuperação documentadas."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/8",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/34"
+      ],
       "scope_history": [
         {
           "date": "2026-09-09",
@@ -613,7 +615,7 @@
           ]
         }
       ],
-      "note": "Implementação interna e infraestrutura FCM em preparação para revisão. Falta configuração/projeto/credencial FCM autorizados e evidência real foreground/background/cold start, rotação e logout; simulações não satisfazem entrega real. Manter draft e issue aberta."
+      "note": "PR #34 draft: caixa Web/Android, worker e infraestrutura FCM implementados/testados. Entrega FCM real NÃO verificada; falta projeto/configuração/ADC autorizados e ensaio foreground/background/cold start, rotação/reconexão/logout. Issue aberta até gate e integração verificados."
     },
     {
       "id": "HO-008",

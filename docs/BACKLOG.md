@@ -15,7 +15,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Concluído | HO-003 |
 | HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Concluído | HO-004 |
 | HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Concluído | HO-004, HO-005 |
-| HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Em curso | HO-004, HO-005, HO-006 |
+| HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Em revisão | HO-004, HO-005, HO-006 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Planeado | HO-004 |
@@ -206,7 +206,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/33
 
 ## HO-007 — Notificações duráveis e infraestrutura push
 
-Release: v1.0 · Área: fullstack · Estado: Em curso
+Release: v1.0 · Área: fullstack · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -228,7 +228,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/8
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/34
 
 ## HO-008 — Outlook opcional: publicar dias confirmados
 
