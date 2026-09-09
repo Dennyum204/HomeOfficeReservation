@@ -92,3 +92,7 @@ Ordem de locks determinística se uma operação futura envolver vários colabor
 ## Identidade implementada em HO-003
 
 Organization, Member e ReportingLine persistidos em PostgreSQL. Employee/Manager e administrador de contas distintos; um membro por IdentityUser. Guard exige organização, ambos ativos, papel de gestor, colaborador atribuído e IDs diferentes. API consulta estado atual por operação; não usa papéis enviados pelo cliente como autoridade. Nenhuma entidade de pedido/decisão foi implementada aqui. [Detalhes e limites](HO-003-AUTHENTICATION.md).
+
+## Implementação HO-004
+
+PlanningProfile, WeeklyPattern, PlanningRequest/RequestedDay, PlanDay, ChangeProposal/ProposalAcknowledgement, PlanningComment, PlanningAudit/PlanningOutbox e PlanningReceipt concretizam este desenho. Contratos, transições e limites em [ADR-006](adr/ADR-006-transactional-planning.md) e [guia API](HO-004-PLANNING.md). Withdrawal acrescenta o estado por dia Withdrawn; Cancelled identifica cancelamento explícito aprovado. Rascunhos não reservam datas. O padrão é projetado por vigência, sem PlanDays inferidos. Presenças e respetivos testes concorrentes ficam para HO-006; outbox só é entregue em HO-007.

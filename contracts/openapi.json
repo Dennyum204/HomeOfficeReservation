@@ -1,6 +1,25 @@
 {
   "components": {
     "schemas": {
+      "AcceptProposalInput": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "expectedProposalRevision": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "expectedProposalRevision"
+        ],
+        "type": "object"
+      },
       "AccessTokenResponse": {
         "additionalProperties": false,
         "properties": {
@@ -9,7 +28,7 @@
           },
           "expiresIn": {
             "format": "int64",
-            "pattern": "^-?(?:0|[1-9]\\d*)$"
+            "type": "integer"
           },
           "refreshToken": {
             "type": "string"
@@ -23,6 +42,142 @@
           "accessToken",
           "expiresIn",
           "refreshToken"
+        ],
+        "type": "object"
+      },
+      "Availability": {
+        "enum": [
+          "Working",
+          "Leave",
+          "Unavailable",
+          null
+        ]
+      },
+      "CalendarView": {
+        "additionalProperties": false,
+        "properties": {
+          "calendarVersion": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "effectiveDays": {
+            "items": {
+              "$ref": "#/components/schemas/EffectiveDay"
+            },
+            "type": "array"
+          },
+          "employeeId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "from": {
+            "format": "date",
+            "type": "string"
+          },
+          "pendingDays": {
+            "items": {
+              "$ref": "#/components/schemas/PendingDay"
+            },
+            "type": "array"
+          },
+          "planningTimeZone": {
+            "type": "string"
+          },
+          "to": {
+            "format": "date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "employeeId",
+          "calendarVersion",
+          "planningTimeZone",
+          "from",
+          "to",
+          "effectiveDays",
+          "pendingDays"
+        ],
+        "type": "object"
+      },
+      "CommentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "proposalId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "text"
+        ],
+        "type": "object"
+      },
+      "CommentPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CommentView"
+            },
+            "type": "array"
+          },
+          "nextOffset": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "nextOffset"
+        ],
+        "type": "object"
+      },
+      "CommentView": {
+        "additionalProperties": false,
+        "properties": {
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "proposalId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "requestId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "requestId",
+          "proposalId",
+          "authorId",
+          "text",
+          "createdAt"
         ],
         "type": "object"
       },
@@ -71,6 +226,186 @@
         },
         "required": [
           "requestToken"
+        ],
+        "type": "object"
+      },
+      "DatePreview": {
+        "additionalProperties": false,
+        "properties": {
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/PreviewDay"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "days"
+        ],
+        "type": "object"
+      },
+      "DayDecision": {
+        "enum": [
+          "Pending",
+          "Approved",
+          "Rejected",
+          "Withdrawn",
+          "Superseded",
+          "Cancelled"
+        ]
+      },
+      "DayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "baseDayId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "basePlanVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "cancel": {
+            "default": false,
+            "type": "boolean"
+          },
+          "localDate": {
+            "format": "date",
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/WorkLocation"
+          }
+        },
+        "required": [
+          "localDate",
+          "location",
+          "availability"
+        ],
+        "type": "object"
+      },
+      "DecisionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "approve": {
+            "type": "boolean"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/SelectedDay"
+            },
+            "type": "array"
+          },
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "expectedRequestVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "reason": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "expectedRequestVersion",
+          "days",
+          "approve",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "DraftInput": {
+        "additionalProperties": false,
+        "properties": {
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/DayInput"
+            },
+            "type": "array"
+          },
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "expectedRequestVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "note": {
+            "type": "string"
+          },
+          "parentRevisionId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "expectedRequestVersion",
+          "parentRevisionId",
+          "note",
+          "days"
+        ],
+        "type": "object"
+      },
+      "EffectiveDay": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Availability"
+              }
+            ]
+          },
+          "decidedBy": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "localDate": {
+            "format": "date",
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/WorkLocation"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "sourceDayId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "localDate",
+          "location",
+          "availability",
+          "origin",
+          "version",
+          "sourceDayId",
+          "decidedBy"
         ],
         "type": "object"
       },
@@ -147,6 +482,150 @@
         ],
         "type": "object"
       },
+      "MutationReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "calendarVersion": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "contextId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "eventId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "contextId",
+          "version",
+          "calendarVersion",
+          "eventId"
+        ],
+        "type": "object"
+      },
+      "PatternInput": {
+        "additionalProperties": false,
+        "properties": {
+          "effectiveFrom": {
+            "format": "date",
+            "type": "string"
+          },
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "locations": {
+            "items": {
+              "$ref": "#/components/schemas/WorkLocation"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "effectiveFrom",
+          "locations"
+        ],
+        "type": "object"
+      },
+      "PatternPage": {
+        "additionalProperties": false,
+        "properties": {
+          "calendarVersion": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PatternView"
+            },
+            "type": "array"
+          },
+          "nextOffset": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "calendarVersion",
+          "items",
+          "nextOffset"
+        ],
+        "type": "object"
+      },
+      "PatternView": {
+        "additionalProperties": false,
+        "properties": {
+          "effectiveFrom": {
+            "format": "date",
+            "type": "string"
+          },
+          "locations": {
+            "items": {
+              "$ref": "#/components/schemas/WorkLocation"
+            },
+            "type": "array"
+          },
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "effectiveFrom",
+          "locations",
+          "version"
+        ],
+        "type": "object"
+      },
+      "PendingDay": {
+        "additionalProperties": false,
+        "properties": {
+          "day": {
+            "$ref": "#/components/schemas/RequestedDayView"
+          },
+          "requestId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "requestVersion": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "requestId",
+          "requestVersion",
+          "day"
+        ],
+        "type": "object"
+      },
+      "PreviewDay": {
+        "additionalProperties": false,
+        "properties": {
+          "isWeekend": {
+            "type": "boolean"
+          },
+          "localDate": {
+            "format": "date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "localDate",
+          "isWeekend"
+        ],
+        "type": "object"
+      },
       "ProblemDetails": {
         "additionalProperties": false,
         "properties": {
@@ -161,7 +640,7 @@
           "status": {
             "format": "int32",
             "nullable": true,
-            "pattern": "^-?(?:0|[1-9]\\d*)$"
+            "type": "integer"
           },
           "title": {
             "nullable": true,
@@ -172,6 +651,145 @@
             "type": "string"
           }
         },
+        "type": "object"
+      },
+      "ProposalInput": {
+        "additionalProperties": false,
+        "properties": {
+          "affectedDays": {
+            "items": {
+              "$ref": "#/components/schemas/SelectedDay"
+            },
+            "type": "array"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/DayInput"
+            },
+            "type": "array"
+          },
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "expectedRequestVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "expectedRequestVersion",
+          "affectedDays",
+          "days",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "ProposalPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProposalView"
+            },
+            "type": "array"
+          },
+          "nextOffset": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "nextOffset"
+        ],
+        "type": "object"
+      },
+      "ProposalState": {
+        "enum": [
+          "Open",
+          "Accepted",
+          "Superseded"
+        ]
+      },
+      "ProposalView": {
+        "additionalProperties": false,
+        "properties": {
+          "acceptedRequestId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "acknowledgedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "affectedDayIds": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/DayInput"
+            },
+            "type": "array"
+          },
+          "groupId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "requestId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "revision": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "state": {
+            "$ref": "#/components/schemas/ProposalState"
+          }
+        },
+        "required": [
+          "id",
+          "groupId",
+          "revision",
+          "requestId",
+          "authorId",
+          "reason",
+          "affectedDayIds",
+          "days",
+          "state",
+          "createdAt",
+          "acceptedRequestId",
+          "acknowledgedAt"
+        ],
         "type": "object"
       },
       "ProvisionMemberRequest": {
@@ -214,6 +832,198 @@
         ],
         "type": "object"
       },
+      "RequestPage": {
+        "additionalProperties": false,
+        "properties": {
+          "calendarVersion": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RequestView"
+            },
+            "type": "array"
+          },
+          "nextOffset": {
+            "format": "int32",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "nextOffset",
+          "calendarVersion"
+        ],
+        "type": "object"
+      },
+      "RequestState": {
+        "enum": [
+          "Draft",
+          "Submitted",
+          "Closed",
+          "Withdrawn"
+        ]
+      },
+      "RequestView": {
+        "additionalProperties": false,
+        "properties": {
+          "acceptedProposalId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/RequestedDayView"
+            },
+            "type": "array"
+          },
+          "employeeId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "parentRevisionId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "revision": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "rootId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RequestState"
+          },
+          "submittedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "employeeId",
+          "rootId",
+          "parentRevisionId",
+          "revision",
+          "version",
+          "state",
+          "note",
+          "createdAt",
+          "submittedAt",
+          "acceptedProposalId",
+          "days"
+        ],
+        "type": "object"
+      },
+      "RequestedDayView": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "baseDayId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "basePlanVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "cancel": {
+            "type": "boolean"
+          },
+          "decidedAt": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "decidedBy": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/DayDecision"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "localDate": {
+            "format": "date",
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/WorkLocation"
+          },
+          "reason": {
+            "nullable": true,
+            "type": "string"
+          },
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "localDate",
+          "location",
+          "availability",
+          "cancel",
+          "baseDayId",
+          "basePlanVersion",
+          "decision",
+          "version",
+          "reason",
+          "decidedBy",
+          "decidedAt"
+        ],
+        "type": "object"
+      },
+      "SelectedDay": {
+        "additionalProperties": false,
+        "properties": {
+          "dayId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "expectedVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "dayId",
+          "expectedVersion"
+        ],
+        "type": "object"
+      },
       "SetManagerRequest": {
         "additionalProperties": false,
         "properties": {
@@ -224,6 +1034,26 @@
         },
         "required": [
           "managerId"
+        ],
+        "type": "object"
+      },
+      "SubmitInput": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "expectedRequestVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "expectedRequestVersion"
         ],
         "type": "object"
       },
@@ -250,6 +1080,40 @@
           "isAccountAdministrator"
         ],
         "type": "object"
+      },
+      "WithdrawInput": {
+        "additionalProperties": false,
+        "properties": {
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/SelectedDay"
+            },
+            "type": "array"
+          },
+          "expectedCalendarVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          },
+          "expectedRequestVersion": {
+            "format": "int64",
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expectedCalendarVersion",
+          "expectedRequestVersion",
+          "days"
+        ],
+        "type": "object"
+      },
+      "WorkLocation": {
+        "enum": [
+          "Unplanned",
+          "OfficeSwitzerland",
+          "RemotePortugal"
+        ]
       },
       "WorkspaceInfo": {
         "additionalProperties": false,
@@ -819,6 +1683,1880 @@
         ]
       }
     },
+    "/api/v1/planning/date-preview": {
+      "get": {
+        "operationId": "PreviewPlanningDates",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeWeekends",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatePreview"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/calendar": {
+      "get": {
+        "operationId": "GetCalendar",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/patterns": {
+      "get": {
+        "operationId": "ListWeeklyPatterns",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 25,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatternPage"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      },
+      "post": {
+        "operationId": "SetWeeklyPattern",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatternInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/proposals/{proposalId}/accept": {
+      "post": {
+        "operationId": "AcceptCounterproposal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "proposalId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptProposalInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests": {
+      "get": {
+        "operationId": "ListPlanningRequests",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 25,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestPage"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      },
+      "post": {
+        "operationId": "CreatePlanningDraft",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}": {
+      "get": {
+        "operationId": "GetPlanningRequest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/comments": {
+      "get": {
+        "operationId": "ListPlanningComments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 25,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentPage"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      },
+      "post": {
+        "operationId": "AddPlanningComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/decide": {
+      "post": {
+        "operationId": "DecidePlanningDays",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/draft": {
+      "put": {
+        "operationId": "EditPlanningDraft",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/proposals": {
+      "get": {
+        "operationId": "ListCounterproposals",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 25,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalPage"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      },
+      "post": {
+        "operationId": "CreateCounterproposal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProposalInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/proposals/{proposalId}": {
+      "put": {
+        "operationId": "ReviseCounterproposal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "proposalId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProposalInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/submit": {
+      "post": {
+        "operationId": "SubmitPlanningRequest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
+    "/api/v1/planning/{employeeId}/requests/{requestId}/withdraw": {
+      "post": {
+        "operationId": "WithdrawPlanningDays",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationReceipt"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "428": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Precondition Required"
+          }
+        },
+        "tags": [
+          "Planning"
+        ]
+      }
+    },
     "/api/v1/workspace": {
       "get": {
         "operationId": "GetWorkspaceInfo",
@@ -847,6 +3585,9 @@
     },
     {
       "name": "Access"
+    },
+    {
+      "name": "Planning"
     },
     {
       "name": "Workspace"

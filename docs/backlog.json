@@ -351,7 +351,7 @@
       "title": "Autenticação, membros e autorização",
       "release": "v1.0",
       "area": "backend",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-002"
@@ -395,14 +395,24 @@
             "Login válido e sessão expirada demonstrados nas duas interfaces base."
           ]
         }
-      ]
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/29",
+        "merged_at": "2026-09-09T14:50:29Z",
+        "merge_commit": "95027c7b8795b5b4f55e817633fe9521c32fd9ab",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34366275543",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34366275654"
+        ],
+        "note": "Fetched origin/main; merge ancestry verified. All five required integration checks successful. Graph remains deferred, not validated."
+      }
     },
     {
       "id": "HO-004",
       "title": "Planeamento e aprovação transacional na API",
       "release": "v1.0",
       "area": "backend",
-      "status": "planned",
+      "status": "in_progress",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003"
@@ -418,7 +428,10 @@
         "Revisões/contrapropostas preservam datas já aprovadas até decisão final.",
         "PlanDay distingue localização, disponibilidade, origem e versão.",
         "Concorrência por colaborador e idempotência verificadas com PostgreSQL.",
-        "Auditoria e outbox gravadas na mesma transação; comentários têm contexto e autor."
+        "Auditoria e outbox gravadas na mesma transação; comentários têm contexto e autor.",
+        "Padrão semanal por vigência, DateOnly/date, calendário limitado e propostas separadas; sem materializar dias inferidos.",
+        "Versões esperadas e idempotência durável por ator/operação, com rollback integral e testes por ligações PostgreSQL distintas.",
+        "Demonstração local repetível com contas sintéticas privadas; sem UI de calendário, entrega de notificações, presenças ou Outlook."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/5",
       "pr_urls": []

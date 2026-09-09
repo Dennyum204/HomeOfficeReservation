@@ -106,6 +106,9 @@ jobs:
           global-json-file: global.json
       - run: dart pub get --enforce-lockfile && dart analyze
         working-directory: contracts/dart
+      - name: Generated Dart date-only contract in Lisbon and Zurich (simulated HTTP)
+        run: TZ=Europe/Lisbon dart run tool/date_contract.dart && TZ=Europe/Zurich dart run tool/date_contract.dart
+        working-directory: contracts/dart
       - run: flutter pub get --enforce-lockfile
         working-directory: apps/mobile
       - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver

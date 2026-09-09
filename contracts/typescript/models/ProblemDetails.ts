@@ -30,7 +30,7 @@ export interface ProblemDetails {
     /**
      *
      */
-    status?: any | null;
+    status?: number | null;
     /**
      *
      */

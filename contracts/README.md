@@ -22,6 +22,8 @@ Fontes oficiais consultadas em 2026-09-08: [OpenAPI ASP.NET Core](https://learn.
 
 ## Convenções propostas
 
+HO-004 implementa PlanningApi em `/api/v1/planning/{employeeId}` e preview em `/api/v1/planning/date-preview`. As rotas propostas abaixo são históricas; o [guia HO-004](../docs/HO-004-PLANNING.md) documenta as efetivas. Idempotency-Key é header explícito no contrato; versões são números JSON estritos. Testes dos clientes gerados distinguem `date` de `date-time`, com transporte simulado. Nenhum DTO/cliente gerado é editado manualmente.
+
 | Grupo | Operações esperadas |
 |---|---|
 | `/api/v1/me` | Identidade, papéis e relações visíveis |

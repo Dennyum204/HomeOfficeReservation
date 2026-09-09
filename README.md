@@ -4,7 +4,7 @@ Calendário próprio para planear trabalho remoto em Portugal e presencial na Su
 
 Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter Android/iOS. Autenticação própria com ASP.NET Core Identity: cookie na Web e tokens opacos do framework no mobile. Web/mobile partilham backend e calendário autoritativo. [ADR-004](docs/adr/ADR-004-independent-core.md) regista a decisão.
 
-**Estado: HO-003 acrescenta autenticação funcional.** API, Web e Flutter permitem login, ativação, recuperação e sessão própria. Calendário, pedidos e tarefas continuam em preparação. [Guia de autenticação e teste local](docs/HO-003-AUTHENTICATION.md). HO-000/HO-001 integrados pelos [PR #25](https://github.com/Dennyum204/HomeOfficeReservation/pull/25) e [PR #27](https://github.com/Dennyum204/HomeOfficeReservation/pull/27), com merge/CI verificados. [STATUS.md](STATUS.md) contém evidência e continuidade.
+**Estado: HO-004 acrescenta planeamento transacional na API.** [Demonstração HTTP local](docs/HO-004-PLANNING.md): pedidos, decisões parciais, revisões, contrapropostas e calendário efetivo. API, Web e Flutter permitem login, ativação, recuperação e sessão própria de HO-003. Interfaces de calendário/pedidos e tarefas continuam em preparação. [Guia de autenticação e teste local](docs/HO-003-AUTHENTICATION.md). [STATUS.md](STATUS.md) contém evidência de integração e continuidade.
 
 ## Outlook opcional
 

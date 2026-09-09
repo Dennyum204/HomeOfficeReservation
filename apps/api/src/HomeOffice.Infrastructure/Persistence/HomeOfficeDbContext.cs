@@ -5,7 +5,7 @@ using HomeOffice.Domain.Access;
 
 namespace HomeOffice.Infrastructure.Persistence;
 
-// Identity's store model is ready for HO-003. No users, login endpoints or schema are provisioned here.
+// Schema is applied only by the explicit maintenance command, never during normal startup.
 public sealed class HomeOfficeDbContext(DbContextOptions<HomeOfficeDbContext> options)
     : IdentityDbContext<IdentityUser>(options)
 {
@@ -16,6 +16,7 @@ public sealed class HomeOfficeDbContext(DbContextOptions<HomeOfficeDbContext> op
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        Planning.PlanningModel.Configure(builder);
         builder.Entity<Organization>().Property(x => x.Name).HasMaxLength(120);
         builder.Entity<Organization>().HasIndex(x => x.Name).IsUnique();
         builder.Entity<Member>(entity =>
