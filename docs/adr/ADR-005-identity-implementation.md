@@ -1,6 +1,6 @@
 # ADR-005 — Implementação e limites das sessões Identity
 
-Estado: implementado em HO-003, 2026-09-09; aguarda revisão/merge humano. Concretiza [ADR-004](ADR-004-independent-core.md), sem substituir a direção de produto. Issue [#4](https://github.com/Dennyum204/HomeOfficeReservation/issues/4).
+Estado: implementado em HO-003, 2026-09-09; integrado pelo PR #29 às 14:50:29Z, commit 95027c7b8795b5b4f55e817633fe9521c32fd9ab, CI de integração 34366275543/34366275654 verde e verificada em HO-004. Concretiza [ADR-004](ADR-004-independent-core.md), sem substituir a direção de produto. Issue [#4](https://github.com/Dennyum204/HomeOfficeReservation/issues/4).
 
 ## Contexto
 

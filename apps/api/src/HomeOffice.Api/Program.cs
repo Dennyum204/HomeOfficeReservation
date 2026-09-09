@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using HomeOffice.Api.Access;
 using System.Text.Json.Serialization;
+using HomeOffice.Application.Planning;
+using HomeOffice.Infrastructure.Planning;
+using HomeOffice.Api.Planning;
 
 var builder = WebApplication.CreateBuilder(args);
 var generatingContract = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider";
@@ -13,6 +16,9 @@ if (!generatingContract)
 builder.Services.AddProblemDetails();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow);
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
+builder.Services.AddScoped<IPlanningService, PlanningService>();
 builder.Services.AddHomeOfficeIdentity(builder.Configuration, builder.Environment, generatingContract);
 builder.Services.AddScoped<GetWorkspaceInfo>();
 builder.Services.AddDbContext<HomeOfficeDbContext>(options =>
@@ -48,6 +54,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
 app.MapAccess();
+app.MapPlanning();
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {

@@ -26,7 +26,7 @@ export interface AccessTokenResponse {
     /**
      *
      */
-    expiresIn: any | null;
+    expiresIn: number;
     /**
      *
      */

@@ -71,6 +71,11 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("character varying(120)");
 
+                    b.Property<string>("PlanningTimeZone")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -99,6 +104,465 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                     b.ToTable("ReportingLines", null, t =>
                         {
                             t.HasCheckConstraint("CK_ReportingLine_NoSelf", "\"EmployeeId\" <> \"ManagerId\"");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.ChangeProposal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AcceptedRequestId")
+                        .HasColumnType("uuid");
+
+                    b.PrimitiveCollection<Guid[]>("AffectedDayIds")
+                        .IsRequired()
+                        .HasColumnType("uuid[]");
+
+                    b.PrimitiveCollection<long[]>("AffectedDayVersions")
+                        .IsRequired()
+                        .HasColumnType("bigint[]");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DaysJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Revision")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId", "Revision")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "RequestId");
+
+                    b.ToTable("ChangeProposals", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Proposal", "\"Revision\" > 0 AND \"State\" BETWEEN 0 AND 2");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanDay", b =>
+                {
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("LocalDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Availability")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("DecidedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Location")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SourceDayId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("EmployeeId", "LocalDate");
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "SourceDayId");
+
+                    b.ToTable("PlanDays", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_PlanDay", "\"Version\" > 0 AND ((\"Availability\" = 0 AND \"Location\" IN (1,2)) OR (\"Availability\" IN (1,2) AND \"Location\" = 0))");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningAudit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<Guid>("ActorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("CalendarVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ChangedDaysJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<Guid>("ContextId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "CalendarVersion")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "EmployeeId");
+
+                    b.ToTable("PlanningAudit");
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ProposalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "ProposalId");
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "RequestId");
+
+                    b.HasIndex("RequestId", "CreatedAt", "Id");
+
+                    b.ToTable("PlanningComment");
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningOutbox", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("CalendarVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeliveredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "CalendarVersion")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "EmployeeId");
+
+                    b.ToTable("PlanningOutbox");
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningProfile", b =>
+                {
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("CalendarVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("EmployeeId");
+
+                    b.ToTable("PlanningProfiles", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ProfileVersion", "\"CalendarVersion\" >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningReceipt", b =>
+                {
+                    b.Property<Guid>("ActorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Operation")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("Key")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PayloadHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ResponseJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.HasKey("ActorId", "Operation", "Key");
+
+                    b.ToTable("PlanningReceipt");
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AcceptedProposalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ParentRevisionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Revision")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("RootId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RootId", "Revision")
+                        .IsUnique();
+
+                    b.HasIndex("EmployeeId", "CreatedAt", "Id");
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "ParentRevisionId");
+
+                    b.ToTable("PlanningRequests", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Request", "\"Version\" > 0 AND \"Revision\" > 0 AND \"State\" BETWEEN 0 AND 3");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.ProposalAcknowledgement", b =>
+                {
+                    b.Property<Guid>("ProposalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("AcknowledgedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Revision")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProposalId");
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "ProposalId");
+
+                    b.ToTable("ProposalAcknowledgement");
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.RequestedDay", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Availability")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("BaseDayId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long?>("BasePlanVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Cancel")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("DecidedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DecidedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Decision")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("LocalDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Location")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("ReservesDate")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "LocalDate")
+                        .IsUnique()
+                        .HasFilter("\"ReservesDate\"");
+
+                    b.HasIndex("RequestId", "LocalDate")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "BaseDayId");
+
+                    b.HasIndex("OrganizationId", "EmployeeId", "RequestId");
+
+                    b.ToTable("RequestedDays", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Day", "\"Version\" > 0 AND \"Location\" BETWEEN 0 AND 2 AND \"Availability\" BETWEEN 0 AND 2 AND \"Decision\" BETWEEN 0 AND 5 AND (NOT \"ReservesDate\" OR \"Decision\" = 0)");
+
+                            t.HasCheckConstraint("CK_DayBase", "(\"BaseDayId\" IS NULL) = (\"BasePlanVersion\" IS NULL) AND (NOT \"Cancel\" OR \"BaseDayId\" IS NOT NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.WeeklyPattern", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("EffectiveFrom")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.PrimitiveCollection<int[]>("Locations")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "EffectiveFrom")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "EmployeeId");
+
+                    b.ToTable("WeeklyPatterns", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Pattern", "cardinality(\"Locations\") = 7 AND \"Locations\" <@ ARRAY[0,1,2] AND \"Version\" > 0");
                         });
                 });
 
@@ -330,6 +794,168 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HomeOffice.Domain.Planning.ChangeProposal", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningRequest", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "RequestId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanDay", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Planning.RequestedDay", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "SourceDayId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningAudit", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningComment", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Planning.ChangeProposal", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "ProposalId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningRequest", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "RequestId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningOutbox", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningProfile", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningReceipt", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningRequest", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningRequest", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "ParentRevisionId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.ProposalAcknowledgement", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Planning.ChangeProposal", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "ProposalId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.RequestedDay", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Planning.RequestedDay", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId", "BaseDayId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningRequest", null)
+                        .WithMany("Days")
+                        .HasForeignKey("OrganizationId", "EmployeeId", "RequestId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.WeeklyPattern", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -379,6 +1005,11 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningRequest", b =>
+                {
+                    b.Navigation("Days");
                 });
 #pragma warning restore 612, 618
         }

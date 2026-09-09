@@ -183,30 +183,90 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AcceptProposalInput':
+          return AcceptProposalInput.fromJson(value);
         case 'AccessTokenResponse':
           return AccessTokenResponse.fromJson(value);
+        case 'Availability':
+          return AvailabilityTypeTransformer().decode(value);
+        case 'CalendarView':
+          return CalendarView.fromJson(value);
+        case 'CommentInput':
+          return CommentInput.fromJson(value);
+        case 'CommentPage':
+          return CommentPage.fromJson(value);
+        case 'CommentView':
+          return CommentView.fromJson(value);
         case 'CompleteAccountRequest':
           return CompleteAccountRequest.fromJson(value);
         case 'Credentials':
           return Credentials.fromJson(value);
         case 'CsrfToken':
           return CsrfToken.fromJson(value);
+        case 'DatePreview':
+          return DatePreview.fromJson(value);
+        case 'DayDecision':
+          return DayDecisionTypeTransformer().decode(value);
+        case 'DayInput':
+          return DayInput.fromJson(value);
+        case 'DecisionInput':
+          return DecisionInput.fromJson(value);
+        case 'DraftInput':
+          return DraftInput.fromJson(value);
+        case 'EffectiveDay':
+          return EffectiveDay.fromJson(value);
         case 'EmailRequest':
           return EmailRequest.fromJson(value);
         case 'MemberList':
           return MemberList.fromJson(value);
         case 'MemberProfile':
           return MemberProfile.fromJson(value);
+        case 'MutationReceipt':
+          return MutationReceipt.fromJson(value);
+        case 'PatternInput':
+          return PatternInput.fromJson(value);
+        case 'PatternPage':
+          return PatternPage.fromJson(value);
+        case 'PatternView':
+          return PatternView.fromJson(value);
+        case 'PendingDay':
+          return PendingDay.fromJson(value);
+        case 'PreviewDay':
+          return PreviewDay.fromJson(value);
         case 'ProblemDetails':
           return ProblemDetails.fromJson(value);
+        case 'ProposalInput':
+          return ProposalInput.fromJson(value);
+        case 'ProposalPage':
+          return ProposalPage.fromJson(value);
+        case 'ProposalState':
+          return ProposalStateTypeTransformer().decode(value);
+        case 'ProposalView':
+          return ProposalView.fromJson(value);
         case 'ProvisionMemberRequest':
           return ProvisionMemberRequest.fromJson(value);
         case 'RefreshRequest':
           return RefreshRequest.fromJson(value);
+        case 'RequestPage':
+          return RequestPage.fromJson(value);
+        case 'RequestState':
+          return RequestStateTypeTransformer().decode(value);
+        case 'RequestView':
+          return RequestView.fromJson(value);
+        case 'RequestedDayView':
+          return RequestedDayView.fromJson(value);
+        case 'SelectedDay':
+          return SelectedDay.fromJson(value);
         case 'SetManagerRequest':
           return SetManagerRequest.fromJson(value);
+        case 'SubmitInput':
+          return SubmitInput.fromJson(value);
         case 'UpdateMemberRequest':
           return UpdateMemberRequest.fromJson(value);
+        case 'WithdrawInput':
+          return WithdrawInput.fromJson(value);
+        case 'WorkLocation':
+          return WorkLocationTypeTransformer().decode(value);
         case 'WorkspaceInfo':
           return WorkspaceInfo.fromJson(value);
         default:

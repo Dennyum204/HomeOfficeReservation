@@ -4,6 +4,7 @@ public sealed class Organization
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = "";
+    public string PlanningTimeZone { get; set; } = "Europe/Zurich";
 }
 
 public sealed class Member
@@ -27,7 +28,7 @@ public sealed class ReportingLine
 
 public static class AccessRules
 {
-    // Reuse this guard in the future approval use case; no approval workflow exists yet.
+    // Shared by member reads and the transactional planning decision use case.
     public static bool CanManage(Member actor, Member employee, ReportingLine? line) =>
         actor.Active && employee.Active && actor.IsManager && employee.IsEmployee &&
         actor.Id != employee.Id && actor.OrganizationId == employee.OrganizationId &&

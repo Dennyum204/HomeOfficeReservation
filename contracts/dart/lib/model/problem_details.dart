@@ -24,7 +24,7 @@ class ProblemDetails {
 
   final String? instance;
 
-  final Object? status;
+  final int? status;
 
   final String? title;
 
@@ -87,7 +87,7 @@ class ProblemDetails {
     bool detailSetToNull = false,
     String? instance,
     bool instanceSetToNull = false,
-    Object? status,
+    int? status,
     bool statusSetToNull = false,
     String? title,
     bool titleSetToNull = false,
@@ -118,7 +118,7 @@ class ProblemDetails {
       return ProblemDetails(
         detail: mapValueOfType<String>(json, r'detail'),
         instance: mapValueOfType<String>(json, r'instance'),
-        status: mapValueOfType<Object>(json, r'status'),
+        status: mapValueOfType<int>(json, r'status'),
         title: mapValueOfType<String>(json, r'title'),
         type: mapValueOfType<String>(json, r'type'),
       );

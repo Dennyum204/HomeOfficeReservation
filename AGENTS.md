@@ -2,7 +2,7 @@
 
 ## Purpose and current phase
 
-Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). HO-002 provides runnable API/Web/Flutter foundations; HO-003 implements Identity authentication and authorization. Business flows are later tasks. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
+Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). HO-002 provides runnable API/Web/Flutter foundations; HO-003 implements Identity authentication and authorization. HO-004 adds transactional planning/approvals in the API; calendar interfaces, onsite requirements and notification delivery remain later tasks. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
 
 User instructions and applicable higher-priority instructions take precedence. These project conventions do not create new approval requirements for already-authorized work.
 

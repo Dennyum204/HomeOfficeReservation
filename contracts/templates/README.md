@@ -5,6 +5,7 @@ OpenAPI Generator 7.25.0, JAR verificado pelo SHA-256 de `contracts/generator.js
 - `dart/pubspec.mustache`: dependências compatíveis fixadas; substitui o intervalo antigo de `test` da ferramenta. O pacote gerado não contém testes vazios. Os consumidores e o pacote têm lockfiles.
 - `dart/api_client.mustache`: template `dart2/api_client.mustache` do mesmo JAR, com apenas três `return Response.fromStream(response)` alterados para `return await Response.fromStream(response)`. Mantém erros assíncronos dentro do `try` e satisfaz o diagnóstico `unawaited_return_in_try_block` de Dart 3.13. Não altera modelos ou implementa autenticação.
 - TypeScript usa os templates originais. O diretório correspondente fica vazio intencionalmente.
+- HO-004: `dart/api.mustache` vem de `dart2/api.mustache` do JAR 7.25.0. Na construção de query params, apenas `isDate` usa `_dateFormatter.format`, preservando YYYY-MM-DD; o helper genérico converteria DateTime para UTC. Date-time mantém o comportamento original. `contracts/dart/tool/date_contract.dart` cobre body/query/response e corre em CI com TZ Europe/Lisbon e Europe/Zurich. Fonte oficial abaixo consultada em 2026-09-09.
 - O script uniformiza LF e whitespace final. Não editar DTOs/clientes gerados. Rever/remover os ajustes ao atualizar a ferramenta.
 
 Fonte: [OpenAPI Generator, tag v7.25.0](https://github.com/OpenAPITools/openapi-generator/tree/v7.25.0/modules/openapi-generator/src/main/resources/dart2), consultada em 2026-09-08. Templates mantêm a licença Apache-2.0 do projeto de origem.

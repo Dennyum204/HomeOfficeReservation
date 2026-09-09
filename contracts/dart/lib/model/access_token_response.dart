@@ -21,7 +21,7 @@ class AccessTokenResponse {
 
   final String accessToken;
 
-  final Object? expiresIn;
+  final int expiresIn;
 
   final String refreshToken;
 
@@ -38,7 +38,7 @@ class AccessTokenResponse {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (accessToken.hashCode) +
-    (expiresIn == null ? 0 : expiresIn!.hashCode) +
+    (expiresIn.hashCode) +
     (refreshToken.hashCode) +
     (tokenType == null ? 0 : tokenType!.hashCode);
 
@@ -48,11 +48,7 @@ class AccessTokenResponse {
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'accessToken'] = this.accessToken;
-    if (this.expiresIn != null) {
       json[r'expiresIn'] = this.expiresIn;
-    } else {
-      json[r'expiresIn'] = null;
-    }
       json[r'refreshToken'] = this.refreshToken;
     if (this.tokenType != null) {
       json[r'tokenType'] = this.tokenType;
@@ -66,14 +62,13 @@ class AccessTokenResponse {
   /// properties have changed.
   AccessTokenResponse copyWith({
     String? accessToken,
-    Object? expiresIn,
-    bool expiresInSetToNull = false,
+    int? expiresIn,
     String? refreshToken,
     String? tokenType,
     bool tokenTypeSetToNull = false,
   }) => AccessTokenResponse(
     accessToken: accessToken ?? this.accessToken,
-    expiresIn: expiresInSetToNull ? null : expiresIn ?? this.expiresIn,
+    expiresIn: expiresIn ?? this.expiresIn,
     refreshToken: refreshToken ?? this.refreshToken,
     tokenType: tokenTypeSetToNull ? null : tokenType ?? this.tokenType,
   );
@@ -92,6 +87,7 @@ class AccessTokenResponse {
         assert(json.containsKey(r'accessToken'), 'Required key "AccessTokenResponse[accessToken]" is missing from JSON.');
         assert(json[r'accessToken'] != null, 'Required key "AccessTokenResponse[accessToken]" has a null value in JSON.');
         assert(json.containsKey(r'expiresIn'), 'Required key "AccessTokenResponse[expiresIn]" is missing from JSON.');
+        assert(json[r'expiresIn'] != null, 'Required key "AccessTokenResponse[expiresIn]" has a null value in JSON.');
         assert(json.containsKey(r'refreshToken'), 'Required key "AccessTokenResponse[refreshToken]" is missing from JSON.');
         assert(json[r'refreshToken'] != null, 'Required key "AccessTokenResponse[refreshToken]" has a null value in JSON.');
         return true;
@@ -99,7 +95,7 @@ class AccessTokenResponse {
 
       return AccessTokenResponse(
         accessToken: mapValueOfType<String>(json, r'accessToken')!,
-        expiresIn: mapValueOfType<Object>(json, r'expiresIn'),
+        expiresIn: mapValueOfType<int>(json, r'expiresIn')!,
         refreshToken: mapValueOfType<String>(json, r'refreshToken')!,
         tokenType: mapValueOfType<String>(json, r'tokenType'),
       );

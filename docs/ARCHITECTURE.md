@@ -54,7 +54,7 @@ HO-002 criou os projetos compiláveis. HO-003 acrescenta modelos Organization/Me
 
 Admissão de membros controlada pelo administrador; recuperação/ativação por mecanismos Identity, sem escolha livre de papéis. Sem Microsoft, email empresarial ou diretório Entra obrigatórios. Microsoft sign-in é apenas uma possível opção futura, distinta de consentimento de calendário. As limitações de sessão/revogação e os gates HO-003 estão no ADR.
 
-Planning/PostgreSQL possuirá o calendário e conflitos. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-003 implementa autenticação sobre o scaffold; HO-004 e seguintes acrescentarão regras/calendário.
+HO-004 implementa o calendário autoritativo e transações Planning/PostgreSQL; [ADR-006](adr/ADR-006-transactional-planning.md) concretiza as decisões. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-003 implementa autenticação; HO-004 implementa pedidos, decisões, revisões, contrapropostas e leitura de calendário na API. Interfaces, presenças e entregas continuam posteriores.
 
 Quando HO-008 for selecionado, a ação explícita em Definições associa uma conta Microsoft ao MemberId já autenticado, sem exigir igualdade de email ou de IDs entre fornecedores. Estado/nonce/PKCE e callback validado por biblioteca impedem associação a outro membro; confirmar a conta escolhida antes de guardar. Tokens Graph ficam numa cache cifrada no backend. Revogação/desligar afetam apenas publicação. O [estudo anterior](HO-001-MICROSOFT-OUTLOOK-STUDY.md) é referência histórica, não o contrato de login atual.
 
@@ -70,7 +70,7 @@ Quando HO-008 for selecionado, a ação explícita em Definições associa uma c
 
 ## Outbox e execução
 
-Uma decisão escreve dados, auditoria e mensagem de outbox na mesma transação. Um BackgroundService reclama mensagens com lease/lock no PostgreSQL, faz entregas idempotentes e regista resultado. A falha do Graph não bloqueia a transação de aprovação.
+Uma decisão escreve dados, auditoria e mensagem de outbox na mesma transação. HO-004 implementa esta persistência, sem entregas. Em HO-007, um BackgroundService reclamará mensagens com lease/lock no PostgreSQL, fará entregas idempotentes e registará resultado. A falha do Graph não bloqueia a transação de aprovação.
 
 A fila é durável e suporta mais de uma instância sem duplicar efeitos; não basta uma fila em memória. Ordenar/reconciliar mensagens pela versão atual do planeamento para um evento antigo não repor datas ultrapassadas. Erros permanentes ficam visíveis, com diagnóstico mínimo e recuperação controlada.
 
