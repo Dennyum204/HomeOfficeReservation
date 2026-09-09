@@ -2,7 +2,7 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-09.
+Atualizado: 2026-09-10.
 
 Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.
 

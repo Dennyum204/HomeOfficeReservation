@@ -1,6 +1,6 @@
 # HO-007 — Caixa de notificações e infraestrutura push Android
 
-[Issue #8](https://github.com/Dennyum204/HomeOfficeReservation/issues/8) · [ADR-009](adr/ADR-009-durable-notifications.md). Web/Android; iOS, Outlook e lembretes/digests por email excluídos. A implementação interna funciona sem Firebase. **Entrega real FCM ainda não verificada**; ver estado/evidência em [STATUS](../STATUS.md).
+[Issue #8](https://github.com/Dennyum204/HomeOfficeReservation/issues/8) · [ADR-009](adr/ADR-009-durable-notifications.md) · [ADR-010](adr/ADR-010-android-fcm-registration.md). Web/Android; iOS, Outlook e lembretes/digests por email excluídos. A implementação interna funciona sem Firebase. **Entrega FCM real verificada no emulador Android**, com evidência e limites abaixo; [STATUS](../STATUS.md).
 
 ## Arranque e migração
 
@@ -107,12 +107,38 @@ $env:HO_FIREBASE_ANDROID_CONFIG = 'C:\private\homeoffice\google-services.json'
 flutter run -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define=FCM_ENABLED=true
 ```
 
-FirebaseAdmin 3.6.0 usa `Message.Fid`. FlutterFire mantém o token FCM internamente; `firebase_app_installations` fornece o FID. A API cifra o endereço, guarda versão/hash e trata `onTokenRefresh`/`onIdChange` como motivos de atualização. Logout tenta remover o registo e apagar token/installation no SDK. Sem rede pode haver avisos genéricos até revogação/expiração, incluindo avisos já em trânsito; uma conta nova usa nova instalação e nunca lê o contexto anterior.
+FirebaseAdmin 3.6.0 usa `Message.Fid`. O manifesto ativa o modo FID; a ponte Android chama `FirebaseMessaging.register()` antes de devolver o identificador. `onRegistered()` atravessa a thread principal e callbacks iguais não repetem registos. Retoma/renovação também consultam o FID atual. Logout revoga na API e usa `unregister()`/eliminação da instalação no SDK. O plugin Dart Installations 0.4.3 foi retirado após uma falha real de threading. [ADR-010](adr/ADR-010-android-fcm-registration.md) preserva causas, versões e fontes. Sem rede podem chegar avisos genéricos até revogação/expiração, incluindo mensagens em trânsito; uma conta nova usa nova instalação e nunca lê a caixa anterior.
 
-## Evidência externa que falta
+## Ensaio externo e evidência — 2026-09-10
 
 Após configuração **real** e seleção/consentimento do utilizador: gerar apenas novos eventos sintéticos através das contas autorizadas; verificar foreground, background e cold start após sessão restaurada/login; confirmar texto genérico, detalhe autorizado e ausência de comandos de negócio; testar permissão recusada, rotação/reconexão e logout/troca de conta. Conservar só cenário, data UTC, plataforma, versão/commit, resultado e contagens de aceitação/recibo, sem endereços do dispositivo, tokens, payloads ou conteúdo privado. Verificar `ProviderAcceptedAt` e, separadamente, callback/abertura e `DeviceReportedAt`. Uma aceitação FCM sem observação no dispositivo não satisfaz entrega real.
 
 `python scripts/check_fcm_build.py` compila os recursos FCM usando um ficheiro sintético temporário externo, sem instalar ou enviar. O plugin recebe esse caminho após a configuração das variantes Android.
 
-Compilação sem credenciais, compilação com configuração nativa sintética, testes mock de fornecedor e a caixa real API/PostgreSQL são evidências diferentes. Nenhuma delas verifica FCM real. Até concluir o ensaio externo, HO-007 permanece em revisão numa PR **draft**, issue aberta. Fontes oficiais e limitações no [ADR-009](adr/ADR-009-durable-notifications.md).
+Projeto de teste criado pelo responsável, package confirmado, FCM V1 ativo e service account com papel de envio. Os dois ficheiros reais foram validados e guardados fora do repositório; chave de servidor acessível apenas ao utilizador Windows e SYSTEM. O responsável concedeu a permissão Android. Não se publicam projeto, chave, endereços, payloads ou ficheiros de configuração reais.
+
+Emulador Android 17/API 37 com Google Play services; API/worker/PostgreSQL reais; tarefas novas identificadas como ensaios, sem alterar tarefas, pedidos ou planos pré-existentes. Horas abaixo em **UTC de 2026-09-09** (já 2026-09-10 em Zurique):
+
+| Cenário real | Aceitação FCM | Recibo autenticado do dispositivo | Observação |
+|---|---|---|---|
+| Primeira tentativa antes da correção | Não | Não | `UNREGISTERED`, falha preservada; notificação interna mantida e dispositivo revogado |
+| Foreground | 22:21:36.236 | 22:21:36.857 | Aviso na app e abertura de detalhe autorizado |
+| Background | 22:22:26.073 | 22:22:59.790 | Texto genérico observado na barra Android; sem recibo antes de abrir |
+| Cold start | 22:23:50.484 | 22:24:15.849 | Processo ausente antes do envio (`am kill`, sem force-stop); abertura restaura sessão e detalhe |
+| Após reinício/reconexão | 22:49:15.801 | 22:49:15.877 | Entry point normal, registo confirmado e novo aviso foreground observado |
+
+Cada entrega bem-sucedida acima teve uma tentativa; isso não constitui promessa de exatamente uma entrega. Abrir manteve as notificações não lidas e não executou decisões. Apenas resultados sanitizados são versionados.
+
+O reinício normal revelou que ativar auto-init FID podia aguardar Installations na thread principal. A ponte passou a usar a fila background oficial do Flutter; os callbacks continuam na thread principal. A repetição após reinício passou. O teste de ciclo de conta também foi repetido sem inicializar Firebase antecipadamente, para exercitar o mesmo arranque da app. O estado de erro oferece “Tentar novamente”, com diagnóstico debug limitado a etapa, classe de erro e código HTTP.
+
+O teste nativo opcional `integration_test/fcm_live_test.dart` passou contra FCM/API/PostgreSQL: desativar, negar reativação do UUID revogado, reconectar com novo UUID, logout, entrar como chefia, negar leitura da notificação do colaborador, registar/remover a chefia e regressar ao colaborador. Usa permissão **previamente concedida**; não concede consentimento por código. O ensaio foi repetido após ajustar o runner: `flutter drive` sem `--keep-app-running` desinstala a aplicação no fim, mesmo em falha. A instalação/permissão anteriormente autorizada foram restauradas e apenas o registo órfão conhecido foi revogado pela API. As tentativas falhadas do runner não contam como checks passados.
+
+Com permissão concedida, contas sintéticas autorizadas e configuração privada definida:
+
+```powershell
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/fcm_live_test.dart --no-dds --keep-app-running -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define=FCM_ENABLED=true --dart-define-from-file=<private-dir>/client-test.json
+# Repor sempre o entrypoint normal; não distribuir o bundle com contas de teste.
+flutter run -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define=FCM_ENABLED=true
+```
+
+Compilação sintética, simulações de canal/fornecedor e ensaios reais continuam separados. Recusa de permissão, logout offline, crashes/duplicados e registos atrasados são cobertos por simulações/testes PostgreSQL, não por afirmações de entrega externa nesses cenários. Não foram validados dispositivo físico, fabricante/modo de bateria, lojas, assinatura release, iOS, redes de produção nem recuperação após perda das chaves. A lease de 24 h exige abrir a app diariamente. A receção em background só é reportada ao abrir. Force-stop pelo utilizador pode impedir entrega até reabrir. Issue #8 permanece aberta até revisão/merge e verificação de integração; o PR só sai de draft com CI final verde e sem conflitos.

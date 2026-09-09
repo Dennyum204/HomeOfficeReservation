@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-09",
+  "updated_at": "2026-09-10",
   "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.",
   "releases": [
     {
@@ -615,7 +615,7 @@
           ]
         }
       ],
-      "note": "PR #34 draft: caixa Web/Android, worker e infraestrutura FCM implementados/testados. Entrega FCM real NÃO verificada; falta projeto/configuração/ADC autorizados e ensaio foreground/background/cold start, rotação/reconexão/logout. Issue aberta até gate e integração verificados."
+      "note": "PR #34: caixa Web/Android e worker implementados/testados. FCM real observado no emulador autorizado em foreground/background/cold start e após reinício; aceitação e recibo separados no guia HO-007. Reconexão/logout/troca de conta passaram contra serviços reais; correções de registo/threading em ADR-010. 14 testes Flutter e evidência simulada separados dos envios reais. Sem setup externo em falta para este ensaio; dispositivos físicos/lojas não validados. Review até merge humano e integração; só retirar draft com quatro checks verdes no último head e sem conflitos."
     },
     {
       "id": "HO-008",

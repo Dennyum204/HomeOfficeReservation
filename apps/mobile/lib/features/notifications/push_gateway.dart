@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_app_installations/firebase_app_installations.dart';
+
+import 'fcm_registration.dart';
 
 abstract class PushGateway {
   bool get configured;
@@ -34,6 +35,7 @@ class FirebasePushGateway implements PushGateway {
   final _foreground = StreamController<String>.broadcast();
   final _rotated = StreamController<String>.broadcast();
   final List<StreamSubscription<dynamic>> _subscriptions = [];
+  final _registration = FcmRegistration();
   bool _ready = false;
   @override
   bool get configured =>
@@ -64,18 +66,9 @@ class FirebasePushGateway implements PushGateway {
     _subscriptions.add(
       FirebaseMessaging.onMessage.listen((m) => emit(m, _foreground)),
     );
+    _registration.initialize();
     _subscriptions.add(
-      FirebaseMessaging.instance.onTokenRefresh.listen((_) async {
-        try {
-          final id = await FirebaseInstallations.instance.getId();
-          if (!_rotated.isClosed) _rotated.add(id);
-        } catch (_) {
-          /* Next foreground synchronization retries without logging addresses. */
-        }
-      }),
-    );
-    _subscriptions.add(
-      FirebaseInstallations.instance.onIdChange.listen((id) {
+      _registration.changes.listen((id) {
         if (!_rotated.isClosed) _rotated.add(id);
       }),
     );
@@ -95,22 +88,19 @@ class FirebasePushGateway implements PushGateway {
       AuthorizationStatus.authorized;
   @override
   Future<String> address() async {
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
-    await FirebaseMessaging.instance.getToken(); // SDK owns registration-token renewal. Never log or persist it ourselves.
-    return FirebaseInstallations.instance
-        .getId(); // Current FCM Admin API targets the FID.
+    return _registration.register();
   }
 
   @override
   Future<void> reset() async {
     if (!_ready) return;
     await FirebaseMessaging.instance.setAutoInitEnabled(false);
-    await FirebaseMessaging.instance.deleteToken();
-    await FirebaseInstallations.instance.delete();
+    await _registration.reset();
   }
 
   @override
   void dispose() {
+    _registration.dispose();
     for (final subscription in _subscriptions) {
       unawaited(subscription.cancel());
     }

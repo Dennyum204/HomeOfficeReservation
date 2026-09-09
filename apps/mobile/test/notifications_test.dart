@@ -25,6 +25,7 @@ class BindingStore implements PushBindingStore {
 class FakeGateway implements PushGateway {
   bool allowed = false;
   int resets = 0;
+  Object? registrationError;
   String fid = 'cSyntheticAddress12345';
   final opens = StreamController<String>.broadcast();
   final messages = StreamController<String>.broadcast();
@@ -44,7 +45,11 @@ class FakeGateway implements PushGateway {
   @override
   Future<bool> permissionGranted() async => allowed;
   @override
-  Future<String> address() async => fid;
+  Future<String> address() async {
+    if (registrationError case final error?) throw error;
+    return fid;
+  }
+
   @override
   Future<void> reset() async {
     resets++;
@@ -59,6 +64,49 @@ class FakeGateway implements PushGateway {
 }
 
 void main() {
+  test(
+    'simulated registration failure can be retried without disabling consent',
+    () async {
+      var registrations = 0;
+      final auth = fixture.controller(fixture.MemoryStore(), (r) async {
+        if (r.method == 'PUT') {
+          registrations++;
+          final body = jsonDecode(r.body) as Map<String, dynamic>;
+          return fixture.json({
+            'installationId': body['installationId'],
+            'provider': 'Fcm',
+            'version': 1,
+            'expiresAt': '2026-09-10T12:00:00Z',
+          });
+        }
+        return fixture.json({'provider': 'Fcm'});
+      })..member = fixtureMember();
+      final gateway = FakeGateway()
+        ..allowed = true
+        ..registrationError = StateError('synthetic provider failure');
+      final push = PushCoordinator(
+        auth,
+        gateway,
+        BindingStore(),
+        onOpen: (_) {},
+        onForeground: (_) {},
+      );
+      addTearDown(() {
+        push.dispose();
+        auth.dispose();
+      });
+      await push.initialize();
+      await push.enable();
+      expect(push.status, PushStatus.error);
+      expect(push.enabled, isTrue);
+      expect(registrations, 0);
+      gateway.registrationError = null;
+      await push.synchronize();
+      expect(push.status, PushStatus.enabled);
+      expect(registrations, 1);
+      expect(gateway.resets, 0);
+    },
+  );
   test('simulated delayed device registration and old push callback cannot restore a logged-out account', () async {
     final pending = Completer<http.Response>();
     final requested = Completer<Map<String, dynamic>>();
@@ -175,9 +223,29 @@ void main() {
     await push.enable();
     expect(push.status, PushStatus.enabled);
     expect(registrations.single['expectedVersion'], isNull);
+    final rotated = Completer<void>();
+    final resumed = Completer<void>();
+    push.addListener(() {
+      if (push.status != PushStatus.enabled) return;
+      if (registrations.length == 2 && !rotated.isCompleted) rotated.complete();
+      if (registrations.length == 3 && !resumed.isCompleted) resumed.complete();
+    });
     gateway.fid = 'cRotatedAddress1234567';
-    await push.synchronize();
+    gateway.rotations.add(gateway.fid);
+    await rotated.future.timeout(const Duration(seconds: 2));
     expect(registrations.last['expectedVersion'], 1);
+    expect(registrations.last['address'], gateway.fid);
+    expect(
+      registrations.last['installationId'],
+      registrations.first['installationId'],
+    );
+    // A FID change without a native callback is picked up on foreground entry.
+    push.activity(false);
+    gateway.fid = 'cForegroundAddress1234';
+    push.activity(true);
+    await resumed.future.timeout(const Duration(seconds: 2));
+    expect(registrations.last['expectedVersion'], 2);
+    expect(registrations.last['address'], gateway.fid);
     expect(
       registrations.last['installationId'],
       registrations.first['installationId'],

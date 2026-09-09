@@ -63,3 +63,10 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // FlutterFire 16.6.0 has no Dart register/unregister API for FID mode yet.
+    // Match its resolved native SDKs; the small channel calls official SDK APIs.
+    implementation("com.google.firebase:firebase-messaging:25.1.2")
+    implementation("com.google.firebase:firebase-installations:19.1.2")
+}

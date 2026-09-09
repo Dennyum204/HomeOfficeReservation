@@ -8,7 +8,7 @@ Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter 
 
 **HO-006 acrescenta API e Web para presenças e tarefas:** intervalos obrigatórios, leitura por revisão, preview de conflitos, resolução explícita sem apagar aprovações, tarefas ligadas e progresso autorizado. [Setup, migração e percurso de teste](docs/HO-006-ONSITE-TASKS.md). A outbox alimenta o worker de notificações de HO-007.
 
-**HO-007 disponibiliza caixa persistente Web/Android**, com contagem, filtros, estado de leitura e contexto autorizado, worker PostgreSQL durável e adaptador FCM opcional. [Setup, testes com duas contas e recuperação](docs/HO-007-NOTIFICATIONS.md). O core funciona sem credenciais push; entrega FCM real permanece por verificar e não deve ser confundida com simulações. Calendário/tarefas Android completos continuam em HO-010/011.
+**HO-007 disponibiliza caixa persistente Web/Android**, com contagem, filtros, estado de leitura e contexto autorizado, worker PostgreSQL durável e adaptador FCM opcional. [Setup, testes com duas contas e recuperação](docs/HO-007-NOTIFICATIONS.md). O core funciona sem credenciais push. Entrega FCM real foi observada no emulador Android autorizado em foreground, background e cold start; o guia separa essa evidência das simulações e regista as limitações. Calendário/tarefas Android completos continuam em HO-010/011.
 
 ## Outlook opcional
 

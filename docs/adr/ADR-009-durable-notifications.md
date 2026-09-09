@@ -2,6 +2,8 @@
 
 Data: 2026-09-09. Item: HO-007, [issue #8](https://github.com/Dennyum204/HomeOfficeReservation/issues/8). Implementação em revisão; entrega FCM real ainda por validar. Complementa ADR-006/008; não altera as transações de aprovação nem reativa iOS/Outlook.
 
+**Atualização 2026-09-10:** o texto abaixo preserva a decisão inicial. O ensaio real identificou problemas no registo Android; [ADR-010](ADR-010-android-fcm-registration.md) substitui o percurso getToken/Installations pelo registo FID nativo oficial. Evidência de entrega e limitações atuais no [guia HO-007](../HO-007-NOTIFICATIONS.md).
+
 ## Contexto e decisão
 
 A outbox de Planning/Onsite/Tasks já participa na transação de negócio. Acrescentamos um `BackgroundService` no mesmo host, claims PostgreSQL com `FOR UPDATE SKIP LOCKED`, leases com proprietário e expiração, lotes limitados e tentativas limitadas. Não são necessários broker, microserviço, SignalR ou protocolo próprio de autenticação.

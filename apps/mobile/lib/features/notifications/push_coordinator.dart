@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:homeoffice_api/api.dart';
 
@@ -93,6 +94,32 @@ class PushCoordinator extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
+  void _diagnostic(String stage, Object error) {
+    if (kDebugMode) {
+      // Only fixed stages, exception types and HTTP status; never messages,
+      // addresses, response bodies or authentication/configuration values.
+      final status = error is ApiException ? error.code : 0;
+      final native =
+          error is PlatformException &&
+              const {
+                'registration_failed',
+                'removal_failed',
+                'configuration_failed',
+              }.contains(error.code)
+          ? error.code
+          : 'none';
+      final detail =
+          error is PlatformException &&
+              error.details is String &&
+              RegExp(r'^[A-Za-z]+Exception$').hasMatch(error.details as String)
+          ? error.details as String
+          : 'none';
+      debugPrint(
+        'Push $stage failed (${error.runtimeType}; HTTP $status; native $native/$detail).',
+      );
+    }
+  }
+
   String _newId() {
     final random = Random.secure();
     final value = List.generate(
@@ -153,7 +180,8 @@ class PushCoordinator extends ChangeNotifier {
       if (enabled) await synchronize();
       _schedule();
       _notify();
-    } catch (_) {
+    } catch (error) {
+      _diagnostic('initialize', error);
       if (_current(epoch)) {
         enabled = false;
         status = PushStatus.error;
@@ -203,6 +231,9 @@ class PushCoordinator extends ChangeNotifier {
   Future<void> _synchronize() async {
     final epoch = _epoch;
     if (!enabled || !_current(epoch)) return;
+    status = PushStatus.busy;
+    _notify();
+    var stage = 'permission';
     try {
       if (!await gateway.permissionGranted()) {
         await disable();
@@ -210,15 +241,18 @@ class PushCoordinator extends ChangeNotifier {
         _notify();
         return;
       }
+      stage = 'provider-registration';
       final address = await gateway.address().timeout(
         const Duration(seconds: 12),
       );
       if (!_current(epoch) || !enabled) return;
+      stage = 'session';
       // A read refreshes the framework session, but cannot replay registration automatically.
       await auth.readAuthenticated(() => api.getNotificationCapabilities());
       if (!_current(epoch)) return;
       _installation ??= _newId();
       await _save();
+      stage = 'server-registration';
       final response = await api
           .registerPushDevice(
             DeviceRegistrationInput(
@@ -234,7 +268,8 @@ class PushCoordinator extends ChangeNotifier {
       status = PushStatus.enabled;
       await _save();
       _notify();
-    } catch (_) {
+    } catch (error) {
+      _diagnostic(stage, error);
       if (_current(epoch)) {
         status = PushStatus.error;
         _notify();

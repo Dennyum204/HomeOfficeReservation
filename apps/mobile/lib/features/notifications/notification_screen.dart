@@ -216,6 +216,11 @@ class PushSettings extends StatelessWidget {
                   _ => s.pushOff,
                 }),
               ),
+              if (c.status == PushStatus.error && c.enabled)
+                TextButton(
+                  onPressed: () => unawaited(c.synchronize()),
+                  child: Text(s.retry),
+                ),
               if (c.status != PushStatus.unavailable)
                 TextButton(
                   onPressed: c.status == PushStatus.busy
