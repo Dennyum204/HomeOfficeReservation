@@ -2,6 +2,10 @@ import { useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { p } from "./i18n/planning.pt-PT";
 import { w } from "./i18n/work.pt-PT";
+import { n } from "./i18n/notifications.pt-PT";
+import type { NotificationDestination } from "../../../contracts/typescript";
+import { NotificationCentre } from "./features/notifications/NotificationCentre";
+import { useNotificationPolling } from "./features/notifications/useNotificationPolling";
 import { ConnectionCard } from "./features/workspace/ConnectionCard";
 import { AuthGate } from "./features/auth/AuthGate";
 import { useMember } from "./features/auth/session";
@@ -19,16 +23,39 @@ export function App() {
     </AuthGate>
   );
 }
-const icons: Record<PlanningSection, string> = {
+type ShellSection = PlanningSection | "notifications";
+const icons: Record<ShellSection, string> = {
   calendar: "▦",
   requests: "↗",
   onsite: "▣",
   tasks: "☑",
+  notifications: "🔔",
   settings: "⚙",
 };
 export function WorkspaceShell() {
-  const [section, setSection] = useState<PlanningSection>("calendar");
+  const [section, setSection] = useState<ShellSection>("calendar");
+  const [launch, setLaunch] = useState<{
+    key: number;
+    destination: NotificationDestination;
+  }>();
+  const inbox = useNotificationPolling();
   const member = useMember();
+  const label = (key: ShellSection) =>
+    key === "notifications"
+      ? n.title
+      : key === "onsite" || key === "tasks"
+        ? w[key]
+        : p[key];
+  function openNotification(destination: NotificationDestination) {
+    setLaunch((old) => ({ key: (old?.key ?? 0) + 1, destination }));
+    setSection(
+      destination.kind === "Requirement"
+        ? "onsite"
+        : destination.kind === "Task"
+          ? "tasks"
+          : "requests",
+    );
+  }
   return (
     <div className="app-shell">
       <a href="#content" className="skip-link">
@@ -46,7 +73,7 @@ export function WorkspaceShell() {
         </a>
         <p className="nav-caption">{s.workspace}</p>
         <nav aria-label={s.navigation}>
-          {(Object.keys(icons) as PlanningSection[]).map((key) => (
+          {(Object.keys(icons) as ShellSection[]).map((key) => (
             <button
               key={key}
               aria-current={section === key ? "page" : undefined}
@@ -55,7 +82,12 @@ export function WorkspaceShell() {
               <span className="nav-icon" aria-hidden="true">
                 {icons[key]}
               </span>
-              {key === "onsite" || key === "tasks" ? w[key] : p[key]}
+              {label(key)}
+              {key === "notifications" && (
+                <span className="notification-badge" aria-label={n.unread}>
+                  {inbox.count}
+                </span>
+              )}
               <span className="nav-arrow" aria-hidden="true">
                 ›
               </span>
@@ -73,13 +105,7 @@ export function WorkspaceShell() {
         <header className="topbar">
           <span>
             {s.workspace}
-            <span className="breadcrumb">
-              {" "}
-              /{" "}
-              {section === "onsite" || section === "tasks"
-                ? w[section]
-                : p[section]}
-            </span>
+            <span className="breadcrumb"> / {label(section)}</span>
           </span>
           <span className="stage">{s.locations}</span>
         </header>
@@ -87,25 +113,43 @@ export function WorkspaceShell() {
           <div className="intro">
             <p className="eyebrow">{s.brandCaption}</p>
             <h1>
-              {section === "calendar"
-                ? p.title
-                : section === "requests"
-                  ? p.requests
-                  : section === "onsite" || section === "tasks"
-                    ? w[section]
-                    : p.settingsTitle}
+              {section === "notifications"
+                ? n.title
+                : section === "calendar"
+                  ? p.title
+                  : section === "requests"
+                    ? p.requests
+                    : section === "onsite" || section === "tasks"
+                      ? w[section]
+                      : p.settingsTitle}
             </h1>
             <p>
-              {section === "onsite"
-                ? w.onsiteIntro
-                : section === "tasks"
-                  ? w.taskIntro
-                  : member?.isManager
-                    ? p.teamIntro
-                    : p.intro}
+              {section === "notifications"
+                ? n.intro
+                : section === "onsite"
+                  ? w.onsiteIntro
+                  : section === "tasks"
+                    ? w.taskIntro
+                    : member?.isManager
+                      ? p.teamIntro
+                      : p.intro}
             </p>
           </div>
-          <PlanningWorkspace section={section} onSection={setSection} />
+          <div hidden={section === "notifications"}>
+            <PlanningWorkspace
+              key={launch?.key ?? 0}
+              initialDestination={launch?.destination}
+              section={section === "notifications" ? "calendar" : section}
+              onSection={setSection}
+            />
+          </div>
+          {section === "notifications" && (
+            <NotificationCentre
+              tick={inbox.tick}
+              refresh={inbox.refresh}
+              onOpen={openNotification}
+            />
+          )}
           {section === "settings" && (
             <div className="settings-connection">
               <ConnectionCard />

@@ -1,7 +1,24 @@
+import java.io.File
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services") apply false
+}
+
+// Core builds need no Firebase file. The optional provider build reads a private external file.
+val firebaseConfigPath = providers.environmentVariable("HO_FIREBASE_ANDROID_CONFIG").orNull
+if (firebaseConfigPath != null) {
+    val firebaseConfig = File(firebaseConfigPath)
+    require(firebaseConfig.isAbsolute && firebaseConfig.isFile && !firebaseConfig.canonicalFile.toPath().startsWith(rootDir.parentFile.parentFile.parentFile.canonicalFile.toPath())) { "HO_FIREBASE_ANDROID_CONFIG must name an existing absolute file outside the repository." }
+    apply(plugin = "com.google.gms.google-services")
+    // Override the plugin's conventional paths after its Android variant configuration.
+    afterEvaluate {
+        tasks.withType<com.google.gms.googleservices.GoogleServicesTask>().configureEach {
+            googleServicesJsonFiles.set(listOf(firebaseConfig))
+        }
+    }
 }
 
 android {
@@ -45,4 +62,11 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // FlutterFire 16.6.0 has no Dart register/unregister API for FID mode yet.
+    // Match its resolved native SDKs; the small channel calls official SDK APIs.
+    implementation("com.google.firebase:firebase-messaging:25.1.2")
+    implementation("com.google.firebase:firebase-installations:19.1.2")
 }

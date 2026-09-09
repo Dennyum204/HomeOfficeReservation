@@ -1,0 +1,12 @@
+{
+  "Notifications": {
+    "WorkerEnabled": true,
+    "PushProvider": "Disabled",
+    "BatchSize": 20,
+    "PollSeconds": 3,
+    "LeaseSeconds": 120,
+    "MaxAttempts": 5,
+    "DeviceLeaseHours": 24,
+    "FirebaseProjectId": null
+  }
+}

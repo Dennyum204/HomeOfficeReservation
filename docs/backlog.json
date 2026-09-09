@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-09",
+  "updated_at": "2026-09-10",
   "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.",
   "releases": [
     {
@@ -519,7 +519,7 @@
       "title": "Presenças, resolução de conflitos e tarefas",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004",
@@ -549,31 +549,47 @@
         "Implementação API/Web local: migração aditiva, leitura por revisão, conflitos preservados e resolução transacional, tarefas e histórico; Android apenas contrato, sem notificações entregues.",
         "Verificação local em 2026-09-09: 4 API + 32 PostgreSQL, sem skips; 13 Vitest simulados; 4 E2E Identity + 16 E2E Web reais (inclui 4 HO-006 desktop/estreito), capturas sintéticas. Dart/Flutter analyze, 6 testes Flutter e APK Release compilado; contratos coincidentes (144 ficheiros).",
         "PR #33: https://github.com/Dennyum204/HomeOfficeReservation/pull/33. O separador Checks regista o último head e os resultados remotos project-docs, backend-contracts, web e flutter-android; só retirar draft após os quatro verdes e sem conflitos. Review até integração humana verificada; sem merge/auto-merge por Codex."
-      ]
+      ],
+      "merge_evidence": {
+        "merged_at": "2026-09-09T20:10:44Z",
+        "merge_commit": "73dc2f2337eeee30b228d63e8ae6fcd0fc4641d4",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34399468093",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34399468040"
+        ],
+        "note": "Merge em main e ancestralidade verificados; documentação e integração core concluídas com os quatro checks project-docs/backend-contracts/web/flutter-android verdes."
+      }
     },
     {
       "id": "HO-007",
       "title": "Notificações duráveis e infraestrutura push",
       "release": "v1.0",
-      "area": "backend",
-      "status": "planned",
+      "area": "fullstack",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-004"
+        "HO-004",
+        "HO-005",
+        "HO-006"
       ],
       "features": [
         "FEAT-007"
       ],
       "acceptance": [
-        "Submissão, decisão, mudança, presença e atribuição geram notificação para o destinatário correto.",
-        "Outbox e notificações internas deduplicam por evento/destinatário.",
-        "Registo/rotação/remoção de dispositivos e estado lido são autorizados.",
-        "Push contém resumo mínimo e deep link; não executa aprovações.",
-        "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado.",
-        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+        "Submissão/revisão, decisões, retirada, contrapropostas, presenças criadas/alteradas/canceladas e tarefas atribuídas/alteradas notificam destinatários resolvidos pelo servidor, sem alertar o ator.",
+        "Worker PostgreSQL com claims/leases, recuperação após crash, concorrência, lotes/tentativas limitados e falhas permanentes observáveis; inbox e intenções push deduplicadas e atomicamente persistidas com a outbox.",
+        "Migração aditiva preserva dados/outbox; histórico é arquivado sem push em massa, e contextos removidos ou acesso revogado são tratados explicitamente.",
+        "API paginada, contagem de não lidas, leitura e dispositivos autorizados por conta/organização/relação atual; ler não aprova, aceita ou reconhece negócios.",
+        "Web dispõe de caixa, filtros, badge, leitura e links atuais para pedidos/presenças/tarefas; polling limitado, pausa ao ocultar, sessão/erro/loading, PT-PT e ecrã estreito.",
+        "Android usa o mesmo contrato e sessão para caixa real; permissão explícita, registo/rotação/remoção/logout/troca de conta seguros, links validados e fallback honesto até HO-010/011.",
+        "FCM real implementado com bibliotecas mantidas, configuração privada separada, texto mínimo e abertura foreground/background/cold start; validar entrega num dispositivo autorizado e registar evidência sanitizada, distinta de aceitação do fornecedor e simulação.",
+        "Core/CI sem credenciais push; adaptador local explicitamente simulado; falha externa não perde notificações internas.",
+        "Testes PostgreSQL/worker, Web/API/PostgreSQL E2E e caixa Android/API reais; quatro checks verdes, sem gates iOS; operações e recuperação documentadas."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/8",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/34"
+      ],
       "scope_history": [
         {
           "date": "2026-09-09",
@@ -585,8 +601,21 @@
             "Push contém resumo mínimo e deep link; não executa aprovações.",
             "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado."
           ]
+        },
+        {
+          "date": "2026-09-09",
+          "reason": "Pedido HO-007 completo: worker, caixa Web/Android e infraestrutura FCM; evidência de entrega real obrigatoriamente distinta das simulações.",
+          "previous_acceptance": [
+            "Submissão, decisão, mudança, presença e atribuição geram notificação para o destinatário correto.",
+            "Outbox e notificações internas deduplicam por evento/destinatário.",
+            "Registo/rotação/remoção de dispositivos e estado lido são autorizados.",
+            "Push contém resumo mínimo e deep link; não executa aprovações.",
+            "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+          ]
         }
-      ]
+      ],
+      "note": "PR #34: caixa Web/Android e worker implementados/testados. FCM real observado no emulador autorizado em foreground/background/cold start e após reinício; aceitação e recibo separados no guia HO-007. Reconexão/logout/troca de conta passaram contra serviços reais; correções de registo/threading em ADR-010. 14 testes Flutter e evidência simulada separados dos envios reais. Sem setup externo em falta para este ensaio; dispositivos físicos/lojas não validados. Review até merge humano e integração; só retirar draft com quatro checks verdes no último head e sem conflitos."
     },
     {
       "id": "HO-008",

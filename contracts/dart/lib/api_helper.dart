@@ -64,11 +64,17 @@ String parameterToString(dynamic value) {
   if (value is DayDecision) {
     return DayDecisionTypeTransformer().encode(value).toString();
   }
+  if (value is NotificationContext) {
+    return NotificationContextTypeTransformer().encode(value).toString();
+  }
   if (value is OnsiteState) {
     return OnsiteStateTypeTransformer().encode(value).toString();
   }
   if (value is ProposalState) {
     return ProposalStateTypeTransformer().encode(value).toString();
+  }
+  if (value is PushProvider) {
+    return PushProviderTypeTransformer().encode(value).toString();
   }
   if (value is RequestState) {
     return RequestStateTypeTransformer().encode(value).toString();

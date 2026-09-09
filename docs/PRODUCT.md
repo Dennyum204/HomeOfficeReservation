@@ -90,3 +90,7 @@ Registo manual para planeamento. Não substitui autorização de férias de RH. 
 10. O utilizador sabe se as datas vêm do padrão base, de aprovação ou de obrigação presencial.
 
 Os critérios detalhados por entrega estão em [BACKLOG.md](BACKLOG.md).
+
+### Concretização HO-007
+
+A caixa persistente e a leitura sincronizada funcionam em Web/Android independentemente de push. O tratamento completo dos destinos Android fica para HO-010/011; há detalhe explícito com referência e indicação da Web. O adaptador Android é FCM, com configuração opcional para desenvolvimento. Entrega real foi observada no emulador autorizado em foreground, background e cold start; reconexão/logout/troca de conta foram ensaiados contra os serviços reais. Recibo/aceitação do fornecedor não equivalem a leitura nem aprovação. Dispositivos físicos e distribuição não foram validados. [Guia e evidência datada](HO-007-NOTIFICATIONS.md).

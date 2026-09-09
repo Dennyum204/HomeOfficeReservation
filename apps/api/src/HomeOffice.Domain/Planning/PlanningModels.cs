@@ -130,6 +130,14 @@ public sealed class PlanningAudit
 
 public sealed class PlanningOutbox
 {
+    public HomeOffice.Domain.Notifications.ProcessingState State { get; set; }
+    public bool Historical { get; set; }
+    public int Attempts { get; set; }
+    public Guid? LeaseId { get; set; }
+    public DateTimeOffset? LeaseUntil { get; set; }
+    public DateTimeOffset NextAttemptAt { get; set; }
+    public DateTimeOffset? ProcessedAt { get; set; }
+    public string? LastError { get; set; }
     public Guid Id { get; set; }
     public Guid OrganizationId { get; set; }
     public Guid EmployeeId { get; set; }

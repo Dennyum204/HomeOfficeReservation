@@ -1,12 +1,12 @@
 # Backend .NET
 
-HO-003: ASP.NET Core Identity, EF Core/PostgreSQL, migração inicial, sessões Web/mobile e autorização por organização/membro/relação. [Setup completo, credenciais privadas, administração e recuperação](../../docs/HO-003-AUTHENTICATION.md). Sem calendário/aprovações ou Microsoft.
+HO-003: ASP.NET Core Identity, EF Core/PostgreSQL, migração inicial, sessões Web/mobile e autorização por organização/membro/relação. [Setup completo, credenciais privadas, administração e recuperação](../../docs/HO-003-AUTHENTICATION.md). Independente de Microsoft.
 
 ## Versões e estrutura
 
-HO-006: [presenças e tarefas](../../docs/HO-006-ONSITE-TASKS.md), com migração aditiva, autorização, leitura por revisão e resolução de conflitos sob o mesmo lock do planeamento. DeliveredAt continua nulo; HO-007 implementará entregas.
+HO-006: [presenças e tarefas](../../docs/HO-006-ONSITE-TASKS.md), com migração aditiva, autorização, leitura por revisão e resolução de conflitos sob o mesmo lock do planeamento. HO-007 consome a outbox; DeliveredAt legado passa a significar processamento interno, nunca receção Android.
 
-HO-004: [guia HTTP e demonstração repetível](../../docs/HO-004-PLANNING.md), com migração aditiva explícita, calendário por intervalo, rascunhos/submissão, decisões/retirada por dias, revisões, contrapropostas e comentários. Os comandos usam CalendarVersion, versões específicas e Idempotency-Key; sem UI de calendário, presenças ou worker de entregas. [ADR-006](../../docs/adr/ADR-006-transactional-planning.md).
+HO-004: [guia HTTP e demonstração repetível](../../docs/HO-004-PLANNING.md), com migração aditiva explícita, calendário por intervalo, rascunhos/submissão, decisões/retirada por dias, revisões, contrapropostas e comentários. Os comandos usam CalendarVersion, versões específicas e Idempotency-Key; concretizados com UI Web/presenças em HO-005/006 e worker em HO-007. [ADR-006](../../docs/adr/ADR-006-transactional-planning.md).
 
 .NET SDK **10.0.400** em `global.json`, runtime ASP.NET Core 10.0.11; pacotes Microsoft 10.0.11, Npgsql EF 10.0.3. Restore fechado por `packages.lock.json` em cada projeto.
 
@@ -71,3 +71,7 @@ python3 scripts/smoke_api.py --database
 A suite Identity cria bases descartáveis `ho003_test_*`, aplica a migração duas vezes e verifica sessões, CSRF, ativação/recuperação, isolamento, papéis e chaves persistentes. `HO_TEST_DATABASE` deve permitir criação de bases de teste; não apontar para produção. O teste readiness existente faz `SELECT 1`. `smoke_api.py` inicia/termina Kestrel próprio em 5082 e confirma live=200/ready=503 quando falta DB, ou ready=200 com `--database`. Preparar configuração privada antes de testar, inclusive em Linux.
 
 Contratos e drift: [contracts](../../contracts/README.md). CLI EF Core 10.0.11 fixada em `dotnet-tools.json`; `dotnet tool restore` antes de gerar SQL/migrations. MailKit 4.17.0 fixado em packages.lock.json.
+
+## Notificações HO-007
+
+[Guia e recuperação](../../docs/HO-007-NOTIFICATIONS.md), [ADR-009](../../docs/adr/ADR-009-durable-notifications.md) e [configuração segura](notifications.example.json). Migração aditiva `20260909202903_DurableNotifications`; backup antes de aplicar, sem reprovisionar contas. Worker no mesmo host e fornecedor Disabled por defeito: sem credenciais Firebase no core. Falhas permanentes, leases e contadores por organização estão no guia. Logs não devem expor endereços push ou payloads de calendário.

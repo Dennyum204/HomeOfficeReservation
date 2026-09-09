@@ -69,3 +69,21 @@ O smoke executa os mesmos testes `integration_test` através do adaptador oficia
 Na raiz, `python scripts/check_native_config.py` verifica XML/plists/UTF-8 e exceções de transporte só em debug. É um check prévio, não substitui compilação nativa. O bundle XCTest do template não contém exemplos vazios que aparentem testes passados; os asserts reais são Dart/Flutter.
 
 HO-003 acrescenta `flutter_secure_storage` 11.0.0: refresh por origem API em armazenamento seguro, access em memória, passwords não persistidas. Android desativa backup; iOS declara Keychain entitlements, acessibilidade unlocked_this_device. Testes simulados cobrem refresh limitado, logout em corrida e membro desativado; integração nativa verifica armazenamento/restauro/expiração/logout contra API/PG. O plugin usa Swift Package Manager no template atual. Não foram validados assinatura, dispositivo físico ou loja.
+
+## Caixa e push Android HO-007
+
+Caixa real: páginas de 20, badge, filtros, leitura/não lida e detalhe autorizado. O detalhe informa que o calendário/pedidos/tarefas completos Android ainda pertencem a HO-010/011 e preserva a referência. Polling de 15 s pausa em background; só leituras idempotentes repetem uma vez após refresh Identity. O teste de expiração Android passa agora por background para não confundir atividade da caixa com sessão inativa; a lógica iOS anterior não foi alterada nem executada.
+
+FCM está desativado por defeito; [configuração privada, limites e evidência externa](../../docs/HO-007-NOTIFICATIONS.md). FirebaseAdmin/FlutterFire com versões fixadas; sem Firebase Auth, sem configuração real em Git. Só pedir permissão na ação de Definições. Recusa mantém a caixa. Registo expira após 24 h sem renovação; abrir diariamente. Logout offline mostra quando não foi possível confirmar remoção; IDs pendentes em armazenamento seguro, sem conservar credenciais da conta anterior. Entrega/abertura foreground/background/cold start e reconexão/troca de conta foram verificadas no emulador API 37.
+
+[ADR-010](../../docs/adr/ADR-010-android-fcm-registration.md): o registo FID usa `register()`/`unregister()` do SDK Android por um pequeno MethodChannel, porque FlutterFire 16.6.0 expõe apenas o registo legado. Messaging 25.1.2/Installations 19.1.2 são dependências nativas explícitas. O serviço não exportado encaminha `onRegistered()` na thread principal; o receiver FlutterFire conserva mensagens/abertura. Callbacks repetidos são filtrados e a retoma renova o registo. `firebase_app_installations` foi retirado após erro real de threading; não editar a cache de plugins.
+
+O teste `integration_test/fcm_live_test.dart` é **manual e externo ao core CI**. Requer configuração FCM real, contas sintéticas privadas e permissão previamente concedida. Comando e evidência no guia HO-007; usar `--keep-app-running` para impedir a desinstalação no fim pelo runner, e reinstalar depois o entrypoint normal sem credenciais de teste.
+
+Teste nativo adicional (Android apenas, mesma API/PG/ficheiro privado do teste de autenticação):
+
+```sh
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/notifications_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file=<private-dir>/client-test.json
+```
+
+Prova submissão gerada por colaborador, consumo real pelo worker, inbox da chefia, leitura sem decisão e detalhe/contexto; não usa Firebase. Os testes em `test/notifications_test.dart` simulam fornecedor/HTTP para recusa, rotação, logout e respostas atrasadas. iOS permanece adiado. O SDK Android atual emite avisos de migração Kotlin em plugins Firebase mantidos; não foram modificadas dependências para ocultar avisos.

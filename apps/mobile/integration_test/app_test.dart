@@ -117,7 +117,14 @@ Future<void> main() async {
     }
     expect(find.text('Terminar sessão'), findsOneWidget);
     // The server used by this test has Development-only access=5s / refresh=30s.
+    // Android's foreground inbox renews an active session. Pause its lifecycle to exercise real idle expiry.
+    if (Platform.isAndroid) {
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    }
     await Future<void>.delayed(const Duration(seconds: 31));
+    if (Platform.isAndroid) {
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    }
     await tester.tap(find.text('Verificar sessão'));
     await tester.pumpAndSettle();
     for (

@@ -16,6 +16,7 @@ enum AuthMessage {
   sent,
   completed,
   storage,
+  pushCleanup,
 }
 
 class AuthController extends ChangeNotifier {
@@ -34,6 +35,8 @@ class AuthController extends ChangeNotifier {
   bool _disposed = false;
   Future<void>? _refreshing;
   Future<void> _vaultQueue = Future.value();
+  Future<void> Function()? onSigningOut;
+  bool _pushCleanupFailed = false;
   static const _timeout = Duration(seconds: 12);
   void _notify() {
     if (!_disposed) notifyListeners();
@@ -65,6 +68,15 @@ class AuthController extends ChangeNotifier {
 
   Future<void> _clear() async {
     _generation++;
+    _pushCleanupFailed = false;
+    final cleanup = onSigningOut;
+    if (cleanup != null) {
+      try {
+        await cleanup().timeout(const Duration(seconds: 10));
+      } catch (_) {
+        _pushCleanupFailed = true;
+      }
+    }
     member = null;
     _refresh = null;
     client.defaultHeaderMap.remove('Authorization');
@@ -181,11 +193,37 @@ class AuthController extends ChangeNotifier {
     // Built-in bearer signout does not revoke copied tokens. Local removal works offline.
     try {
       await _clear();
-      message = AuthMessage.none;
+      message = _pushCleanupFailed ? AuthMessage.pushCleanup : AuthMessage.none;
     } catch (_) {
       message = AuthMessage.storage;
     }
     _notify();
+  }
+
+  // Notification reads are idempotent. Refresh once and discard results from an older account/session.
+  Future<T> readAuthenticated<T>(Future<T> Function() action) async {
+    final generation = _generation;
+    try {
+      T result;
+      try {
+        result = await action().timeout(_timeout);
+      } on ApiException catch (error) {
+        if (error.code != 401) rethrow;
+        await _renew(generation);
+        if (generation != _generation || _disposed) throw ApiException(401, '');
+        result = await action().timeout(_timeout);
+      }
+      if (generation != _generation || _disposed) throw ApiException(401, '');
+      return result;
+    } catch (error) {
+      if (generation == _generation &&
+          error is ApiException &&
+          (error.code == 401 || error.code == 403)) {
+        await _failure(error);
+        _notify();
+      }
+      rethrow;
+    }
   }
 
   Future<bool> account(

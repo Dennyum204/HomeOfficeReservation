@@ -107,6 +107,176 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HomeOffice.Domain.Notifications.InboxNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Context")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ContextId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<bool>("Historical")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ReadAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId", "RecipientId")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "EmployeeId");
+
+                    b.HasIndex("RecipientId", "Historical", "CreatedAt", "Id");
+
+                    b.ToTable("InboxNotification");
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Notifications.PushDelivery", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeviceReportedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("DeviceVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("InstallationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<Guid?>("LeaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("LeaseUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("NextAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("NotificationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ProviderAcceptedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId", "InstallationId")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "RecipientId", "InstallationId");
+
+                    b.HasIndex("OrganizationId", "RecipientId", "NotificationId");
+
+                    b.HasIndex("State", "NextAttemptAt", "LeaseUntil");
+
+                    b.ToTable("PushDelivery", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_PushDelivery", "\"State\" BETWEEN 0 AND 5 AND \"Attempts\" >= 0 AND \"DeviceVersion\" > 0 AND (\"State\" <> 1 OR (\"LeaseId\" IS NOT NULL AND \"LeaseUntil\" IS NOT NULL))");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Notifications.PushDevice", b =>
+                {
+                    b.Property<Guid>("InstallationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("AddressHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProtectedAddress")
+                        .IsRequired()
+                        .HasMaxLength(8192)
+                        .HasColumnType("character varying(8192)");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("RegisteredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("InstallationId");
+
+                    b.HasIndex("AddressHash")
+                        .IsUnique()
+                        .HasFilter("\"Active\"");
+
+                    b.HasIndex("MemberId", "Active", "ExpiresAt");
+
+                    b.ToTable("PushDevice", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_PushDevice", "\"Version\" > 0 AND \"Provider\" IN (1,2)");
+                        });
+                });
+
             modelBuilder.Entity("HomeOffice.Domain.Planning.AssignedTask", b =>
                 {
                     b.Property<Guid>("Id")
@@ -442,6 +612,9 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer");
+
                     b.Property<long>("CalendarVersion")
                         .HasColumnType("bigint");
 
@@ -454,12 +627,34 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("Historical")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<Guid?>("LeaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("LeaseUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("NextAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Payload")
                         .IsRequired()
                         .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -473,7 +668,12 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("OrganizationId", "EmployeeId");
 
-                    b.ToTable("PlanningOutbox");
+                    b.HasIndex("State", "NextAttemptAt", "LeaseUntil");
+
+                    b.ToTable("PlanningOutbox", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_OutboxProcessing", "\"State\" BETWEEN 0 AND 4 AND \"Attempts\" >= 0 AND (\"State\" <> 1 OR (\"LeaseId\" IS NOT NULL AND \"LeaseUntil\" IS NOT NULL))");
+                        });
                 });
 
             modelBuilder.Entity("HomeOffice.Domain.Planning.PlanningProfile", b =>
@@ -993,6 +1193,63 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                     b.HasOne("HomeOffice.Domain.Access.Member", null)
                         .WithMany()
                         .HasForeignKey("OrganizationId", "ManagerId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Notifications.InboxNotification", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Planning.PlanningOutbox", null)
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "EmployeeId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "RecipientId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Notifications.PushDelivery", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "RecipientId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Notifications.PushDevice", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "RecipientId", "InstallationId")
+                        .HasPrincipalKey("OrganizationId", "MemberId", "InstallationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Notifications.InboxNotification", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "RecipientId", "NotificationId")
+                        .HasPrincipalKey("OrganizationId", "RecipientId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Notifications.PushDevice", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "MemberId")
                         .HasPrincipalKey("OrganizationId", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

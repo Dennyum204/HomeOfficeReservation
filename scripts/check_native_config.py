@@ -22,4 +22,7 @@ development = ET.parse(ROOT / "android/app/src/debug/AndroidManifest.xml").getro
 assert main.find("application").get(android + "usesCleartextTraffic") == "false"
 assert development.find("application").get(android + "usesCleartextTraffic") == "true"
 assert any(p.get(android + "name") == "android.permission.INTERNET" for p in main.findall("uses-permission"))
+metadata = {p.get(android + "name"): p.get(android + "value") for p in main.find("application").findall("meta-data")}
+assert metadata["firebase_messaging_installation_id_enabled"] == "true", "Backend FID targets require native FCM FID registration."
+assert metadata["firebase_messaging_auto_init_enabled"] == "false", "FCM initialization requires app opt-in."
 print("Active native configuration parses correctly; HTTP exceptions are debug-only.")

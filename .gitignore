@@ -9,6 +9,9 @@ appsettings.*.Local.json
 secrets.json
 service-account*.json
 !service-account*.example.json
+google-services.json
+firebase_options.dart
+firebase-adminsdk*.json
 *.pfx
 *.p12
 *.p8
