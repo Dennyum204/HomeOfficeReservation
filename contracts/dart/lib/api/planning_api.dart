@@ -655,7 +655,9 @@ class PlanningApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> listPlanningRequestsWithHttpInfo(String employeeId, { int? offset, int? limit, Future<void>? abortTrigger, }) async {
+  ///
+  /// * [RequestState] state:
+  Future<Response> listPlanningRequestsWithHttpInfo(String employeeId, { int? offset, int? limit, RequestState? state, Future<void>? abortTrigger, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/planning/{employeeId}/requests'
       .replaceAll('{employeeId}', employeeId);
@@ -672,6 +674,9 @@ class PlanningApi {
     }
     if (limit != null) {
       queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+    if (state != null) {
+      queryParams.addAll(_queryParams('', 'state', state));
     }
 
     const contentTypes = <String>[];
@@ -696,8 +701,10 @@ class PlanningApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<RequestPage?> listPlanningRequests(String employeeId, { int? offset, int? limit, Future<void>? abortTrigger, }) async {
-    final response = await listPlanningRequestsWithHttpInfo(employeeId, offset: offset, limit: limit, abortTrigger: abortTrigger,);
+  ///
+  /// * [RequestState] state:
+  Future<RequestPage?> listPlanningRequests(String employeeId, { int? offset, int? limit, RequestState? state, Future<void>? abortTrigger, }) async {
+    final response = await listPlanningRequestsWithHttpInfo(employeeId, offset: offset, limit: limit, state: state, abortTrigger: abortTrigger,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

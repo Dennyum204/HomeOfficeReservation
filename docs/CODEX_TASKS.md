@@ -1,3 +1,9 @@
+# Continuidade Codex
+
+Direção atual: Web e Android; iOS adiado para HO-306, sem data e sem debug no core. Trabalhar apenas no item explicitamente selecionado. HO-005 implementa o calendário Web sobre HO-004; consultar STATUS.md e backlog canónico para evidência atual, dependências e próximo item.
+
+## Referência histórica de preparação HO-002
+
 # Tarefas para Codex
 
 Ler AGENTS.md e a fonte canónica docs/backlog.json. Os prompts antigos que exigiam Outlook em V1 foram substituídos pela direção registada em [ADR-004](adr/ADR-004-independent-core.md). [CODEX_PROMPTS.md](CODEX_PROMPTS.md) e notas de HO-000 são histórico, não requisitos atuais.

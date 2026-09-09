@@ -61,6 +61,10 @@ export interface EffectiveDay {
     /**
      *
      */
+    sourceRequestId: string | null;
+    /**
+     *
+     */
     version: number;
 }
 
@@ -76,6 +80,7 @@ export function instanceOfEffectiveDay(value: object): value is EffectiveDay {
     if (!('location' in value) || value['location'] === undefined) return false;
     if (!('origin' in value) || value['origin'] === undefined) return false;
     if (!('sourceDayId' in value) || value['sourceDayId'] === undefined) return false;
+    if (!('sourceRequestId' in value) || value['sourceRequestId'] === undefined) return false;
     if (!('version' in value) || value['version'] === undefined) return false;
     return true;
 }
@@ -96,6 +101,7 @@ export function EffectiveDayFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'location': WorkLocationFromJSON(json['location']),
         'origin': json['origin'],
         'sourceDayId': json['sourceDayId'],
+        'sourceRequestId': json['sourceRequestId'],
         'version': json['version'],
     };
 }
@@ -117,6 +123,7 @@ export function EffectiveDayToJSONTyped(value?: EffectiveDay | null, ignoreDiscr
         'location': WorkLocationToJSON(value['location']),
         'origin': value['origin'],
         'sourceDayId': value['sourceDayId'],
+        'sourceRequestId': value['sourceRequestId'],
         'version': value['version'],
     };
 }

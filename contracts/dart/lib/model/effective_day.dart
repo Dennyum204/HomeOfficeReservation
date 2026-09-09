@@ -19,6 +19,7 @@ class EffectiveDay {
     required this.location,
     required this.origin,
     required this.sourceDayId,
+    required this.sourceRequestId,
     required this.version,
   });
 
@@ -34,6 +35,8 @@ class EffectiveDay {
 
   final String? sourceDayId;
 
+  final String? sourceRequestId;
+
   final int version;
 
   @override
@@ -44,6 +47,7 @@ class EffectiveDay {
     other.location == location &&
     other.origin == origin &&
     other.sourceDayId == sourceDayId &&
+    other.sourceRequestId == sourceRequestId &&
     other.version == version;
 
   @override
@@ -55,10 +59,11 @@ class EffectiveDay {
     (location.hashCode) +
     (origin.hashCode) +
     (sourceDayId == null ? 0 : sourceDayId!.hashCode) +
+    (sourceRequestId == null ? 0 : sourceRequestId!.hashCode) +
     (version.hashCode);
 
   @override
-  String toString() => 'EffectiveDay[availability=$availability, decidedBy=$decidedBy, localDate=$localDate, location=$location, origin=$origin, sourceDayId=$sourceDayId, version=$version]';
+  String toString() => 'EffectiveDay[availability=$availability, decidedBy=$decidedBy, localDate=$localDate, location=$location, origin=$origin, sourceDayId=$sourceDayId, sourceRequestId=$sourceRequestId, version=$version]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -80,6 +85,11 @@ class EffectiveDay {
     } else {
       json[r'sourceDayId'] = null;
     }
+    if (this.sourceRequestId != null) {
+      json[r'sourceRequestId'] = this.sourceRequestId;
+    } else {
+      json[r'sourceRequestId'] = null;
+    }
       json[r'version'] = this.version;
     return json;
   }
@@ -96,6 +106,8 @@ class EffectiveDay {
     String? origin,
     String? sourceDayId,
     bool sourceDayIdSetToNull = false,
+    String? sourceRequestId,
+    bool sourceRequestIdSetToNull = false,
     int? version,
   }) => EffectiveDay(
     availability: availabilitySetToNull ? null : availability ?? this.availability,
@@ -104,6 +116,7 @@ class EffectiveDay {
     location: location ?? this.location,
     origin: origin ?? this.origin,
     sourceDayId: sourceDayIdSetToNull ? null : sourceDayId ?? this.sourceDayId,
+    sourceRequestId: sourceRequestIdSetToNull ? null : sourceRequestId ?? this.sourceRequestId,
     version: version ?? this.version,
   );
 
@@ -127,6 +140,7 @@ class EffectiveDay {
         assert(json.containsKey(r'origin'), 'Required key "EffectiveDay[origin]" is missing from JSON.');
         assert(json[r'origin'] != null, 'Required key "EffectiveDay[origin]" has a null value in JSON.');
         assert(json.containsKey(r'sourceDayId'), 'Required key "EffectiveDay[sourceDayId]" is missing from JSON.');
+        assert(json.containsKey(r'sourceRequestId'), 'Required key "EffectiveDay[sourceRequestId]" is missing from JSON.');
         assert(json.containsKey(r'version'), 'Required key "EffectiveDay[version]" is missing from JSON.');
         assert(json[r'version'] != null, 'Required key "EffectiveDay[version]" has a null value in JSON.');
         return true;
@@ -139,6 +153,7 @@ class EffectiveDay {
         location: WorkLocation.fromJson(json[r'location'])!,
         origin: mapValueOfType<String>(json, r'origin')!,
         sourceDayId: mapValueOfType<String>(json, r'sourceDayId'),
+        sourceRequestId: mapValueOfType<String>(json, r'sourceRequestId'),
         version: mapValueOfType<int>(json, r'version')!,
       );
     }
@@ -193,6 +208,7 @@ class EffectiveDay {
     'location',
     'origin',
     'sourceDayId',
+    'sourceRequestId',
     'version',
   };
 }

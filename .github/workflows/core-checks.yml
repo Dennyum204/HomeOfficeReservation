@@ -38,8 +38,6 @@ jobs:
       - run: dotnet build apps/api/HomeOffice.slnx -c Release --no-restore
       - name: Native source encoding and debug-only transport configuration
         run: python3 scripts/check_native_config.py
-      - name: Native diagnostic logs exclude credentials
-        run: python3 -m unittest discover -s scripts -p test_ios_integration.py
       - name: Contract regeneration must match committed OpenAPI and both clients
         run: python3 scripts/generate_contracts.py --check
       - name: Start the documented PostgreSQL environment
@@ -78,14 +76,14 @@ jobs:
       - run: npx playwright install --with-deps chromium
         working-directory: apps/web
       - name: Browser tests with real API and generated TypeScript client
-        run: npm run test:e2e
+        run: npm run test:e2e:auth && npm run test:e2e
         working-directory: apps/web
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: web-evidence
           path: |
-            apps/web/test-results/shell-*.png
+            apps/web/test-results/*.png
           retention-days: 14
 
   flutter-android:
@@ -149,64 +147,3 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
-
-  flutter-ios:
-    name: flutter-ios
-    # ARM64 attempts built/installed but never exposed the Dart VM service.
-    # Use the supported Intel image for native auth; retain the ARM64 device build.
-    runs-on: macos-15-intel
-    timeout-minutes: 40
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/setup-flutter
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
-        with:
-          global-json-file: global.json
-      - run: xcodebuild -version
-      - run: flutter pub get --enforce-lockfile
-        working-directory: apps/mobile
-      - name: iOS Simulator build
-        run: flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
-        working-directory: apps/mobile
-      - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
-      - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
-      - uses: ./.github/actions/setup-identity
-      - name: Start API and select iPhone 16 on iOS 18.6
-        env:
-          Auth__AccessTokenSeconds: '5'
-          Auth__RefreshTokenSeconds: '30'
-          Auth__RequestsPerMinute: '300'
-        run: |
-          ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080 > "$RUNNER_TEMP/ios-api.log" 2>&1 &
-          ready=0
-          for attempt in {1..30}; do
-            if curl --fail --silent --max-time 3 http://localhost:5080/health/ready > /dev/null; then ready=1; break; fi
-            sleep 1
-          done
-          test "$ready" = 1
-          device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for x in d["devices"].get("com.apple.CoreSimulator.SimRuntime.iOS-18-6", []) if x["name"] == "iPhone 16"))')
-          echo "Using iPhone 16 / iOS 18.6 with Xcode 26.3 on Intel"
-          echo "IOS_SIMULATOR=$device" >> "$GITHUB_ENV"
-      - name: iOS Simulator connects through the generated Dart client
-        timeout-minutes: 20
-        run: python3 scripts/run_ios_integration.py --device "$IOS_SIMULATOR" --defines-file "$RUNNER_TEMP/identity/client-test.json"
-      - name: Replace the test entrypoint with the regular shell and capture it
-        run: |
-          flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:5080
-          xcrun simctl install "$IOS_SIMULATOR" build/ios/iphonesimulator/Runner.app
-          xcrun simctl launch "$IOS_SIMULATOR" dev.homeoffice.homeofficeMobile
-          sleep 5
-          xcrun simctl io "$IOS_SIMULATOR" screenshot "$RUNNER_TEMP/ios-shell.png"
-        working-directory: apps/mobile
-      - name: iOS device release compilation (unsigned, no deployment)
-        run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api.example.invalid
-        working-directory: apps/mobile
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: ios-evidence
-          path: ${{ runner.temp }}/ios-shell.png
-          retention-days: 14

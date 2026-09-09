@@ -18,6 +18,7 @@ describe("workspace shell", () => {
       .mockRejectedValueOnce(new Error("offline"))
       .mockResolvedValue(metadata);
     render(<WorkspaceShell />);
+    await userEvent.click(screen.getByRole("button", { name: "Definições" }));
     expect(
       await screen.findByText("Não foi possível ligar ao serviço."),
     ).toBeVisible();
@@ -32,18 +33,18 @@ describe("workspace shell", () => {
   it("labels planned areas honestly and navigates by keyboard", async () => {
     vi.spyOn(workspaceApi, "getWorkspaceInfo").mockResolvedValue(metadata);
     render(<WorkspaceShell />);
+    await userEvent.click(screen.getByRole("button", { name: "Definições" }));
     const requests = screen.getByRole("button", { name: "Pedidos" });
     requests.focus();
     await userEvent.keyboard("{Enter}");
     expect(
-      screen.getByText(
-        "A submissão e a aprovação de pedidos ainda não estão disponíveis.",
-      ),
-    ).toBeVisible();
+      screen.queryByRole("button", { name: "Tarefas" }),
+    ).not.toBeInTheDocument();
     expect(requests).toHaveAttribute("aria-current", "page");
     expect(
       screen.queryByRole("button", { name: /Aprovar|Submeter/ }),
     ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Definições" }));
     await waitFor(() =>
       expect(screen.getByText("Serviço ligado")).toBeVisible(),
     );

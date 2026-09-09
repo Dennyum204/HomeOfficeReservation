@@ -1,4 +1,6 @@
-# Flutter Android/iOS
+# Flutter Android — iOS adiado
+
+**Alvo atual: Android.** Em HO-005 o responsável adiou iOS. As configurações/comandos iOS abaixo são referência preservada, sem execução/debug nos trabalhos core. Reativação em HO-306, sem data; não é requisito de setup ou release.
 
 Shell PT-PT equivalente à Web: navegação, estados em preparação e ligação real ao endpoint de metadados. Login, ativação/recuperação, restauro, refresh limitado e logout próprios. Sem dados fictícios de calendário, aprovação, push ou Microsoft. [Setup Identity e credenciais privadas](../../docs/HO-003-AUTHENTICATION.md). Strings ARB em `lib/l10n/app_pt.arb`; `flutter pub get`/`flutter gen-l10n` geram código ignorado. Separação entre vista, repository e cliente Dart gerado, sem regras de negócio duplicadas.
 
@@ -60,7 +62,7 @@ flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api
 flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <simulator-id> --dart-define=API_BASE_URL=http://localhost:5080 --dart-define-from-file=<private-dir>/client-test.json
 ```
 
-CI exige análise/testes, cliente Dart contra Kestrel real, release Android sem assinatura, builds iOS Simulator/device sem assinatura e smoke de plataforma Android Emulator/iOS Simulator. Não substitui ensaio físico, assinatura, lojas ou push, trabalhos posteriores. O APK release é unsigned; usar `flutter run` para instalar debug. Resultados efetivos e limitações em [STATUS](../../STATUS.md) e no PR.
+CI core exige análise/testes partilhados Flutter/Dart, cliente Dart contra Kestrel real, release Android sem assinatura e integração Android Emulator. Builds/testes iOS foram removidos da execução automática em HO-005 e preservados apenas em workflow manual opcional, não executado nesta tarefa. Não substitui ensaio físico, assinatura, lojas ou push, trabalhos posteriores. O APK release é unsigned; usar `flutter run` para instalar debug. Resultados efetivos e limitações em [STATUS](../../STATUS.md) e no PR.
 
 O smoke executa os mesmos testes `integration_test` através do adaptador oficial [`integrationDriver`](https://api.flutter.dev/flutter/package-integration_test_integration_test_driver/integrationDriver.html), com `flutter drive --no-dds` (documentação consultada em 2026-09-08). No SDK fixado, `flutter test` falhou no arranque DDS e, sem DDS, na subscrição do stream de comparação de imagens, apesar de a asserção de ligação Android passar. O adaptador suportado evita esse mecanismo; mantém todas as asserções e devolve erro se qualquer teste falhar. Não modifica o SDK nem ignora falhas. A opção `--no-dds` consta de `flutter drive --help --verbose` e dispensa apenas o serviço auxiliar de debugging/IDE. As tentativas anteriores com erro não contam como checks verdes.
 

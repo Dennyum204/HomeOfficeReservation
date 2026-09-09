@@ -1,6 +1,6 @@
 # ADR-006 — Planeamento transacional por colaborador
 
-Estado: implementação HO-004, 2026-09-09, sujeita a revisão humana. Issue [#5](https://github.com/Dennyum204/HomeOfficeReservation/issues/5). Concretiza DOMAIN.md e preserva ADR-004/ADR-005.
+Estado: implementado em HO-004; PR #30 integrado em main em 2026-09-09T16:50:33Z (22eed41d52bf8d423f76d79fddbb7b6565486ea3). Integração Web/Android/backend/docs verificada em HO-005; iOS de integração cancelado pela nova direção, sem alegar sucesso. Issue [#5](https://github.com/Dennyum204/HomeOfficeReservation/issues/5). Concretiza DOMAIN.md e preserva ADR-004/ADR-005.
 
 ## Decisão
 

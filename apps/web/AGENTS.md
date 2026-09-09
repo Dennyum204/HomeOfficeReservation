@@ -10,4 +10,4 @@ Read root AGENTS.md and docs/UX.md.
 - Implement loading, empty, error, stale-version and offline states for every critical flow.
 - Preserve user drafts on request failure; definitive approvals wait for API success.
 - Use focused interaction/E2E tests. Include screenshots when reviewing UI changes.
-- Follow README.md/package.json for exact npm, lockfile and lint/typecheck/build/test commands. HO-002's shell clearly marks business features as unfinished; connectivity must use the generated client and a real API in browser smoke tests.
+- Follow README.md/package.json for exact npm, lockfile and lint/typecheck/build/test commands. HO-005 uses the real generated planning client. Preserve exact idempotent replay after uncertain outcomes, per-account data isolation and separate confirmed/pending layers. Do not expose future tasks/notifications/Outlook as working features.

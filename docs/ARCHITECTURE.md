@@ -2,7 +2,7 @@
 
 ## Decisão
 
-Stack confirmada em HO-000 para [HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation): ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter Android/iOS. Monorepo com um backend modular; o backend aloja API, autenticação Web e processamento assíncrono durável. Separar o processo worker apenas se houver necessidade operacional.
+Stack confirmada em HO-000 para [HomeOfficeReservation](https://github.com/Dennyum204/HomeOfficeReservation): ASP.NET Core/.NET 10, PostgreSQL com EF Core, React/TypeScript Web e Flutter Android. iOS foi adiado em HO-005; o código e a evidência anteriores mantêm-se, sem gates atuais nem data de reativação (HO-306). Monorepo com um backend modular; o backend aloja API, autenticação Web e processamento assíncrono durável. Separar o processo worker apenas se houver necessidade operacional.
 
 Esta stack foi confirmada pelo responsável no pedido HO-000. Aproveita a experiência existente em C#, React e Flutter e limita a operação inicial a um serviço e uma base de dados. A direção revista em HO-001 escolhe autenticação própria e calendário interno autoritativo; Outlook fica opcional. O alojamento continua por escolher.
 
@@ -86,3 +86,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Versões e dependências
 
 .NET 10 é a base confirmada; consultar o ciclo de suporte na [Microsoft](https://learn.microsoft.com/en-us/dotnet/core/releases-and-support). HO-002 fixa SDK 10.0.400, pacotes Microsoft 10.0.11/Npgsql EF 10.0.3, Node 24.20.0/npm 11.19.0, React 19.2.8, TypeScript 6.0.3, Flutter 3.47.2/Dart 3.13.2 e OpenAPI Generator 7.25.0. Fontes/versionamento em [HO-002](HO-002-FOUNDATION.md); builds/lockfiles nas áreas. Sem tags latest.
+
+## Concretização Web HO-005
+
+[ADR-007](adr/ADR-007-web-planning-and-active-platforms.md): calendário mês/semana, versões congeladas na confirmação, recuperação explícita de comandos wire/idempotency em sessionStorage sem tokens e leituras canceláveis por ator/colaborador. Extensões de leitura limitadas a sourceRequestId e filtro state antes da paginação; sem migração. Web/Android ativos; iOS adiado HO-306.

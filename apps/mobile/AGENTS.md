@@ -2,7 +2,7 @@
 
 Read root AGENTS.md and docs/UX.md.
 
-- Flutter/Dart for Android and iOS. Separate views/viewmodels from repositories/services.
+- Flutter/Dart for Android. iOS source is preserved, but implementation/build/test/distribution requirements are deferred to HO-306, with no delivery date. Do not debug or run iOS during core tasks. Separate views/viewmodels from repositories/services.
 - Consume generated API client; keep authoritative approval/conflict rules in the backend.
 - Both employee and manager can complete V1 flows on mobile, including partial approvals.
 - Core login uses the ASP.NET Core Identity API over HTTPS; handle its opaque bearer/refresh tokens through maintained HTTP and platform secure-storage libraries (ADR-004). No Microsoft login, OAuth server or custom token protocol is required. Optional calendar consent uses a separate browser flow later.

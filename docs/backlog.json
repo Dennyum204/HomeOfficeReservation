@@ -2,13 +2,13 @@
   "schema_version": 1,
   "project": "HomeOfficeReservation",
   "updated_at": "2026-09-09",
-  "planning_note": "Core V1 autónomo, com calendário e autenticação próprios. Outlook opcional em marcos independentes posteriores; acesso Microsoft não bloqueia desenvolvimento nem lançamento do core.",
+  "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.",
   "releases": [
     {
       "id": "v1.0",
       "title": "Core V1 autónomo",
       "timing": "Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.",
-      "gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates.",
+      "gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.",
       "review_trigger": "Em cada entrega do core e na retrospetiva do piloto.",
       "status": "planned",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1"
@@ -57,6 +57,16 @@
       "review_trigger": "No lançamento de V1.2 e em cada proposta de expansão.",
       "status": "planned",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/4"
+    },
+    {
+      "id": "ios-reactivation",
+      "title": "Reativação futura de iOS",
+      "timing": "Sem data; apenas após nova seleção explícita do responsável.",
+      "gate": "HO-306 e critérios iOS novamente acordados/verificados. Nunca gate de releases Web/Android.",
+      "review_trigger": "Quando houver necessidade e capacidade para retomar iOS.",
+      "status": "parked",
+      "reason": "Responsável adiou iOS em HO-005.",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/7"
     }
   ],
   "features": [
@@ -197,6 +207,13 @@
       "title": "Publicação Outlook opcional de dias confirmados",
       "release": "outlook-publish",
       "status": "planned"
+    },
+    {
+      "id": "FEAT-024",
+      "title": "Reativação iOS com validação e distribuição próprias",
+      "release": "ios-reactivation",
+      "status": "parked",
+      "reason": "Direção Web/Android em HO-005; sem data."
     }
   ],
   "work_items": [
@@ -412,7 +429,7 @@
       "title": "Planeamento e aprovação transacional na API",
       "release": "v1.0",
       "area": "backend",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003"
@@ -436,14 +453,23 @@
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/5",
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/30"
-      ]
+      ],
+      "completion_evidence": {
+        "merged_at": "2026-09-09T16:50:33Z",
+        "merge_commit": "22eed41d52bf8d423f76d79fddbb7b6565486ea3",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34379248170",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34379248204"
+        ],
+        "note": "Merge into fetched main and ancestry verified. Required Web/Android/backend/docs integration jobs passed. Remaining iOS job cancelled by explicit owner deferral in HO-005; not counted as passed. PR30 historical iOS passed on its final head."
+      }
     },
     {
       "id": "HO-005",
       "title": "Calendário Web e fluxos de pedido/decisão",
       "release": "v1.0",
       "area": "web",
-      "status": "planned",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004"
@@ -455,14 +481,22 @@
         "FEAT-010"
       ],
       "acceptance": [
-        "Calendário mês/semana e dashboard mostram padrão base, confirmado e pendente de forma distinta.",
-        "Colaborador submete cinco dias e chefe aprova três através da Web.",
-        "Estados loading/erro/versão antiga mantêm rascunhos e recuperam corretamente.",
-        "Marcação manual de indisponibilidade não sobrescreve datas aprovadas.",
-        "Fluxo principal funciona por teclado e em largura reduzida."
+        "Calendário Web mês/semana ligado à API, navegação/Hoje/seleção, detalhe do dia, legenda acessível e resumos reais com período/unidade; plano efetivo separado de pendentes e padrão inferido.",
+        "Colaborador cria/edita/submete rascunhos por datas/intervalo pré-visualizado, filtra/lista pedidos, retira apenas pendentes, propõe revisões/cancelamentos e disponibilidade manual, aceita contrapropostas exatas.",
+        "Gestor seleciona apenas colaboradores autorizados, decide subconjuntos com revisão de motivo/datas, cria/revê contrapropostas e consulta comentários/histórico; sem poderes implícitos de administração.",
+        "Clientes gerados, Identity/CSRF, datas date-only, tratamento de falhas, texto preservado, revisão humana após versão antiga, recuperação persistente do mesmo comando incerto, bloqueio de duplicados e isolamento entre contas/respostas atrasadas.",
+        "E2E browser/API/PostgreSQL: cinco submetidos, três aprovados/dois pendentes nas duas contas, retirada dos dois preserva três, revisão mantém aprovado até decisão; conflitos manuais, stale, duplicado, autorização, teclado e largura estreita.",
+        "Capturas reais sintéticas, documentação/contratos/backend/Web/Flutter-Dart/Android verdes; Android calendário permanece HO-010 e nenhuma funcionalidade futura fictícia.",
+        "Web/Android são alvos atuais; iOS fonte/histórico preservados, sem CI automático ou check obrigatório; apenas check iOS removido e restantes proteções verificadas. Reativação futura HO-306, sem data."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/6",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/32"
+      ],
+      "review_evidence": [
+        "Implementação Web e critérios locais verificados em 2026-09-09; 4 API + 20 PostgreSQL, 13 Vitest, 4 E2E Identity + 12 E2E Web, 6 Flutter; build APK Release e contratos coincidentes (110 ficheiros).",
+        "CI aplicável do último head e conflitos devem ser verificados no PR #32 antes de retirar draft. Integração/encerramento apenas após merge humano; Graph e iOS não foram validados neste item."
+      ]
     },
     {
       "id": "HO-006",
@@ -506,10 +540,24 @@
         "Outbox e notificações internas deduplicam por evento/destinatário.",
         "Registo/rotação/remoção de dispositivos e estado lido são autorizados.",
         "Push contém resumo mínimo e deep link; não executa aprovações.",
-        "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado."
+        "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado.",
+        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/8",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-09",
+          "reason": "Direção Web/Android em HO-005; iOS preservado em HO-306.",
+          "previous_acceptance": [
+            "Submissão, decisão, mudança, presença e atribuição geram notificação para o destinatário correto.",
+            "Outbox e notificações internas deduplicam por evento/destinatário.",
+            "Registo/rotação/remoção de dispositivos e estado lido são autorizados.",
+            "Push contém resumo mínimo e deep link; não executa aprovações.",
+            "Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-008",
@@ -611,7 +659,7 @@
     },
     {
       "id": "HO-010",
-      "title": "Mobile: calendário e pedidos para ambos os papéis",
+      "title": "Android: calendário e pedidos para ambos os papéis",
       "release": "v1.0",
       "area": "mobile",
       "status": "planned",
@@ -626,14 +674,28 @@
         "FEAT-010"
       ],
       "acceptance": [
-        "Android/iOS apresentam mês compacto, agenda e detalhe do pedido.",
-        "Colaborador submete e chefe aprova parte dos dias no mobile.",
+        "Android apresentam mês compacto, agenda e detalhe do pedido.",
+        "Colaborador submete e chefe aprova parte dos dias no Android.",
         "Dados vêm do cliente gerado e convergem com a Web/API.",
         "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
-        "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique."
+        "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique.",
+        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/11",
-      "pr_urls": []
+      "pr_urls": [],
+      "scope_history": [
+        {
+          "date": "2026-09-09",
+          "reason": "Direção Web/Android em HO-005; iOS preservado em HO-306.",
+          "previous_acceptance": [
+            "Android/iOS apresentam mês compacto, agenda e detalhe do pedido.",
+            "Colaborador submete e chefe aprova parte dos dias no mobile.",
+            "Dados vêm do cliente gerado e convergem com a Web/API.",
+            "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
+            "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique."
+          ]
+        }
+      ]
     },
     {
       "id": "HO-011",
@@ -655,11 +717,12 @@
         "FEAT-009"
       ],
       "acceptance": [
-        "Web e mobile completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.",
+        "Web e Android completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.",
         "Push real abre detalhe autenticado; permissão recusada mantém caixa interna.",
-        "Cenário cruzado: pedido Web, decisão mobile e mesmos dias confirmados no calendário interno, sem conector configurado.",
+        "Cenário cruzado: pedido Web, decisão Android e mesmos dias confirmados no calendário interno, sem conector configurado.",
         "Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.",
-        "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação."
+        "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação.",
+        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/12",
       "pr_urls": [],
@@ -690,6 +753,17 @@
             "Autorização negativa, concorrência, DST, retries e divergências têm evidência.",
             "Capturas/execuções de interfaces e builds demonstram o comportamento, não apenas mocks."
           ]
+        },
+        {
+          "date": "2026-09-09",
+          "reason": "Direção Web/Android em HO-005; iOS preservado em HO-306.",
+          "previous_acceptance": [
+            "Web e mobile completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.",
+            "Push real abre detalhe autenticado; permissão recusada mantém caixa interna.",
+            "Cenário cruzado: pedido Web, decisão mobile e mesmos dias confirmados no calendário interno, sem conector configurado.",
+            "Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.",
+            "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação."
+          ]
         }
       ]
     },
@@ -709,7 +783,8 @@
         "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
         "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
         "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
-        "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios."
+        "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
+        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
       "pr_urls": [],
@@ -729,6 +804,17 @@
             "Worker sempre ativo, webhooks públicos e falhas de sync observáveis.",
             "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
             "Duas contas autorizadas concluem os critérios de lançamento; release/tag v1.0 só após aceitação."
+          ]
+        },
+        {
+          "date": "2026-09-09",
+          "reason": "Direção Web/Android em HO-005; iOS preservado em HO-306.",
+          "previous_acceptance": [
+            "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+            "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+            "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
+            "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+            "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios."
           ]
         }
       ]
@@ -1023,6 +1109,29 @@
         "Reconexão resolve versões/conflitos sem last-write-wins sobre aprovações."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/24",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-306",
+      "title": "Reativação futura de iOS",
+      "release": "ios-reactivation",
+      "area": "mobile",
+      "owner": "Fernando + Codex",
+      "status": "parked",
+      "reason": "Adiado por decisão explícita em HO-005; sem data e sem gate core.",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [
+        "FEAT-024"
+      ],
+      "acceptance": [
+        "Reativação selecionada explicitamente pelo responsável; rever SDK/Xcode, dependências e fonte iOS preservada antes de fixar novos alvos.",
+        "Validar os fluxos Flutter para ambos os papéis no iOS com API/PostgreSQL, datas, autorização e armazenamento/sessões nativos; não inferir sucesso de Android.",
+        "Definir e validar assinatura/distribuição/dispositivos quando autorizados; evidência histórica não substitui novos ensaios.",
+        "Só repor CI/gates iOS com critérios acordados, jobs reais verdes e documentação coerente. Sem data de entrega e sem bloquear Web/Android."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/31",
       "pr_urls": []
     }
   ],

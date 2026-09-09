@@ -1,4 +1,6 @@
-# Experiência Web e Mobile
+# Experiência Web e Android
+
+Mobile no âmbito atual significa Android; iOS está adiado para HO-306, sem data. As interfaces futuras abaixo permanecem planos até ao respetivo item estar implementado.
 
 ## Estrutura de navegação
 

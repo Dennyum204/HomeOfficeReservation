@@ -54,7 +54,7 @@ Não impor cobertura de 100% como substituto dos cenários. Não escrever testes
 1. HO-000 a HO-007 e HO-010 a HO-012 integrados; HO-008/HO-009 explicitamente excluídos do gate.
 2. Duas contas locais da aplicação percorrem login/recuperação, pedido, decisão, presença com motivo, conflito e tarefa, sem Microsoft/Outlook configurado.
 3. Calendário próprio autoritativo consistente entre Web/mobile, incluindo Portugal/Suíça, pendentes, alterações e datas/DST; autorização negativa e concorrência validadas.
-4. Web utilizável em desktop e Android/iOS distribuídos nos alvos acordados. Builds sem assinatura não equivalem a distribuição.
+4. Web utilizável em desktop e Android distribuído nos alvos acordados. iOS adiado em HO-005 para HO-306, fora dos gates core e sem data. Builds sem assinatura não equivalem a distribuição.
 5. Push real validado no dispositivo; caixa interna funciona com push recusado e falhas externas não perdem notificações.
 6. Migrações, restauro, keyring persistente/protegido, ativação/recuperação de conta e worker de notificações demonstrados em staging. Email de conta não exige fornecedor Microsoft; desenvolvimento usa entrega local segura.
 7. Nenhum defeito que comprometa autorização, datas, perda de decisões ou calendário; limitações/canais de suporte e aceitação do piloto registados.
