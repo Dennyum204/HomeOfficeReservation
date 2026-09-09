@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-09.
 
-Core V1 autónomo, com calendário e autenticação próprios. Outlook opcional em marcos independentes posteriores; acesso Microsoft não bloqueia desenvolvimento nem lançamento do core.
+Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
@@ -14,7 +14,7 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 
 **Quando:** Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.
 
-**Gate:** HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates.
+**Gate:** HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.
 
 **Reavaliar:** Em cada entrega do core e na retrospetiva do piloto.
 
@@ -98,6 +98,18 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 | FEAT-020 | Integração Google Calendar | HO-303 |
 | FEAT-021 | Anexos e gestão de tarefas mais completa | HO-304 |
 | FEAT-022 | Consulta e edição offline com resolução de conflitos | HO-305 |
+
+## ios-reactivation — Reativação futura de iOS
+
+**Quando:** Sem data; apenas após nova seleção explícita do responsável.
+
+**Gate:** HO-306 e critérios iOS novamente acordados/verificados. Nunca gate de releases Web/Android.
+
+**Reavaliar:** Quando houver necessidade e capacidade para retomar iOS.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-024 | Reativação iOS com validação e distribuição próprias | HO-306 |
 
 ## Regra de acompanhamento
 

@@ -25,6 +25,8 @@ public sealed partial class PlanningService
         Require(from >= today.AddDays(-365) && to <= today.AddDays(730), "calendar_window_exceeded", 400);
         var version = await CalendarVersion(employee, ct);
         var plans = await db.Set<PlanDay>().Where(x => x.EmployeeId == employee && x.LocalDate >= from && x.LocalDate <= to).ToDictionaryAsync(x => x.LocalDate, ct);
+        var sourceIds = plans.Values.Select(p => p.SourceDayId).ToArray();
+        var sources = await db.Set<RequestedDay>().Where(d => d.EmployeeId == employee && sourceIds.Contains(d.Id)).ToDictionaryAsync(d => d.Id, d => d.RequestId, ct);
         var priorPattern = await db.Set<WeeklyPattern>().Where(x => x.EmployeeId == employee && x.EffectiveFrom <= from).OrderByDescending(x => x.EffectiveFrom).FirstOrDefaultAsync(ct);
         var patterns = await db.Set<WeeklyPattern>().Where(x => x.EmployeeId == employee && x.EffectiveFrom > from && x.EffectiveFrom <= to).ToListAsync(ct);
         if (priorPattern is not null) patterns.Add(priorPattern);
@@ -35,17 +37,18 @@ public sealed partial class PlanningService
                              select new { Day = d, Request = r }).ToListAsync(ct);
         var effective = Expand(from, to, true).Select(date =>
         {
-            if (plans.TryGetValue(date, out var p)) return new EffectiveDay(date, p.Location, p.Availability, "ApprovedRequest", p.Version, p.SourceDayId, p.DecidedBy);
+            if (plans.TryGetValue(date, out var p)) return new EffectiveDay(date, p.Location, p.Availability, "ApprovedRequest", p.Version, p.SourceDayId, p.DecidedBy, sources[p.SourceDayId]);
             var pattern = patterns.Where(x => x.EffectiveFrom <= date).OrderByDescending(x => x.EffectiveFrom).FirstOrDefault();
             var location = pattern is null ? DefaultLocation(date) : pattern.Locations[((int)date.DayOfWeek + 6) % 7];
-            return new EffectiveDay(date, location, location == WorkLocation.Unplanned ? null : Availability.Working, "WeeklyPattern", pattern?.Version ?? 0, null, null);
+            return new EffectiveDay(date, location, location == WorkLocation.Unplanned ? null : Availability.Working, "WeeklyPattern", pattern?.Version ?? 0, null, null, null);
         }).ToArray();
         return new CalendarView(employee, version, zone, from, to, effective, pending.Select(p => new PendingDay(p.Request.Id, p.Request.Version, DayView(p.Day))).ToArray());
     }, ct);
-    public Task<RequestPage> Requests(Guid actor, Guid employee, int offset, int limit, CancellationToken ct) => Read(actor, employee, async () =>
+    public Task<RequestPage> Requests(Guid actor, Guid employee, int offset, int limit, CancellationToken ct, RequestState? state = null) => Read(actor, employee, async () =>
     {
         Page(offset, limit);
-        var rows = await db.Set<PlanningRequest>().Include(x => x.Days).Where(x => x.EmployeeId == employee && (actor == employee || x.State != RequestState.Draft))
+        Require(state is null || Enum.IsDefined(state.Value), "invalid_request_state", 400);
+        var rows = await db.Set<PlanningRequest>().Include(x => x.Days).Where(x => x.EmployeeId == employee && (actor == employee || x.State != RequestState.Draft) && (state == null || x.State == state))
             .OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id).Skip(offset).Take(limit + 1).ToListAsync(ct);
         return new RequestPage(rows.Take(limit).Select(View).ToArray(), rows.Count > limit ? offset + limit : null, await CalendarVersion(employee, ct));
     }, ct);

@@ -71,6 +71,31 @@ public sealed class PlanningTests
     { var error = await Assert.ThrowsAsync<PlanningException>(call); Assert.Equal(status, error.Status); Assert.Equal(code, error.Code); }
 
     [Fact]
+    public async Task CalendarLinksCurrentDecisionAndStateFilterPrecedesPaginationWithoutLeakingDrafts()
+    {
+        await using var f = new Scenario(); await f.Init();
+        var first = await f.Draft(); var pending = await f.Submit(first.ContextId);
+        await f.Decide(pending.Id, pending.Days);
+        var privateDraft = await f.Draft([new(f.Date.AddDays(3), WorkLocation.RemotePortugal, Availability.Working)]);
+        var anotherDraft = await f.Draft([new(f.Date.AddDays(4), WorkLocation.RemotePortugal, Availability.Working)]);
+        var calendar = await f.Calendar();
+        Assert.Equal(first.ContextId, calendar.EffectiveDays.Single(d => d.LocalDate == f.Date).SourceRequestId);
+        Assert.All(calendar.EffectiveDays.Where(d => d.Origin == "WeeklyPattern"), d => Assert.Null(d.SourceRequestId));
+        var closed = await f.Run(s => s.Requests(f.Manager, f.Employee, 0, 1, default, RequestState.Closed));
+        Assert.Equal(first.ContextId, Assert.Single(closed.Items).Id); Assert.Null(closed.NextOffset);
+        var drafts = await f.Run(s => s.Requests(f.Employee, f.Employee, 0, 1, default, RequestState.Draft));
+        Assert.Single(drafts.Items); Assert.Equal(1, drafts.NextOffset);
+        Assert.Empty((await f.Run(s => s.Requests(f.Manager, f.Employee, 0, 1, default, RequestState.Draft))).Items);
+        await Error(400, "invalid_request_state", () => f.Run(s => s.Requests(f.Employee, f.Employee, 0, 25, default, (RequestState)99)));
+        var plan = calendar.EffectiveDays.Single(d => d.LocalDate == f.Date);
+        var revision = await f.Draft([new(f.Date, WorkLocation.OfficeSwitzerland, Availability.Working, false, plan.SourceDayId, plan.Version)], first.ContextId);
+        var submitted = await f.Submit(revision.ContextId);
+        Assert.Equal(first.ContextId, (await f.Calendar()).EffectiveDays.Single(d => d.LocalDate == f.Date).SourceRequestId);
+        await f.Decide(submitted.Id, submitted.Days);
+        Assert.Equal(revision.ContextId, (await f.Calendar()).EffectiveDays.Single(d => d.LocalDate == f.Date).SourceRequestId);
+    }
+
+    [Fact]
     public async Task DraftIsPrivateEditableAndSubmissionFreezesRevisionThenPartialDecisionAndWithdrawalPreserveApprovedDays()
     {
         await using var f = new Scenario(); await f.Init();

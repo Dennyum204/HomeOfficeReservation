@@ -12,13 +12,13 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-001 | Core autónomo, autenticação própria e Outlook opcional | v1.0 | docs | Concluído | HO-000 |
 | HO-002 | Monorepo compilável, contratos e CI | v1.0 | foundation | Concluído | HO-000, HO-001 |
 | HO-003 | Autenticação, membros e autorização | v1.0 | backend | Concluído | HO-002 |
-| HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Em revisão | HO-003 |
-| HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Planeado | HO-004 |
+| HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Concluído | HO-003 |
+| HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Em curso | HO-004 |
 | HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Planeado | HO-004 |
 | HO-007 | Notificações duráveis e infraestrutura push | v1.0 | backend | Planeado | HO-004 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
-| HO-010 | Mobile: calendário e pedidos para ambos os papéis | v1.0 | mobile | Planeado | HO-004 |
+| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Planeado | HO-004 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Planeado | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Planeado | HO-011 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
@@ -32,6 +32,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-303 | Google Calendar | v2.0 | integration | Planeado | HO-201, HO-202, HO-203 |
 | HO-304 | Anexos e tarefas avançadas | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
+| HO-306 | Reativação futura de iOS | ios-reactivation | mobile | Em espera | HO-012 |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
@@ -129,7 +130,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/29
 
 ## HO-004 — Planeamento e aprovação transacional na API
 
-Release: v1.0 · Área: backend · Estado: Em revisão
+Release: v1.0 · Área: backend · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -154,7 +155,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/30
 
 ## HO-005 — Calendário Web e fluxos de pedido/decisão
 
-Release: v1.0 · Área: web · Estado: Planeado
+Release: v1.0 · Área: web · Estado: Em curso
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -164,11 +165,13 @@ Funcionalidades: FEAT-002, FEAT-003, FEAT-004, FEAT-010
 
 Critérios de aceitação:
 
-- Calendário mês/semana e dashboard mostram padrão base, confirmado e pendente de forma distinta.
-- Colaborador submete cinco dias e chefe aprova três através da Web.
-- Estados loading/erro/versão antiga mantêm rascunhos e recuperam corretamente.
-- Marcação manual de indisponibilidade não sobrescreve datas aprovadas.
-- Fluxo principal funciona por teclado e em largura reduzida.
+- Calendário Web mês/semana ligado à API, navegação/Hoje/seleção, detalhe do dia, legenda acessível e resumos reais com período/unidade; plano efetivo separado de pendentes e padrão inferido.
+- Colaborador cria/edita/submete rascunhos por datas/intervalo pré-visualizado, filtra/lista pedidos, retira apenas pendentes, propõe revisões/cancelamentos e disponibilidade manual, aceita contrapropostas exatas.
+- Gestor seleciona apenas colaboradores autorizados, decide subconjuntos com revisão de motivo/datas, cria/revê contrapropostas e consulta comentários/histórico; sem poderes implícitos de administração.
+- Clientes gerados, Identity/CSRF, datas date-only, tratamento de falhas, texto preservado, revisão humana após versão antiga, recuperação persistente do mesmo comando incerto, bloqueio de duplicados e isolamento entre contas/respostas atrasadas.
+- E2E browser/API/PostgreSQL: cinco submetidos, três aprovados/dois pendentes nas duas contas, retirada dos dois preserva três, revisão mantém aprovado até decisão; conflitos manuais, stale, duplicado, autorização, teclado e largura estreita.
+- Capturas reais sintéticas, documentação/contratos/backend/Web/Flutter-Dart/Android verdes; Android calendário permanece HO-010 e nenhuma funcionalidade futura fictícia.
+- Web/Android são alvos atuais; iOS fonte/histórico preservados, sem CI automático ou check obrigatório; apenas check iOS removido e restantes proteções verificadas. Reativação futura HO-306, sem data.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/6
 
@@ -213,6 +216,7 @@ Critérios de aceitação:
 - Registo/rotação/remoção de dispositivos e estado lido são autorizados.
 - Push contém resumo mínimo e deep link; não executa aprovações.
 - Falha do fornecedor push não perde notificação interna; adaptador real escolhido e documentado.
+- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/8
 
@@ -270,7 +274,7 @@ PR: ainda não criado.
 
 Motivo: Adiado para marco posterior à publicação opcional. Critérios de delta/webhooks/edição externa preservados; nenhum resultado real alegado.
 
-## HO-010 — Mobile: calendário e pedidos para ambos os papéis
+## HO-010 — Android: calendário e pedidos para ambos os papéis
 
 Release: v1.0 · Área: mobile · Estado: Planeado
 
@@ -282,11 +286,12 @@ Funcionalidades: FEAT-002, FEAT-003, FEAT-004, FEAT-010
 
 Critérios de aceitação:
 
-- Android/iOS apresentam mês compacto, agenda e detalhe do pedido.
-- Colaborador submete e chefe aprova parte dos dias no mobile.
+- Android apresentam mês compacto, agenda e detalhe do pedido.
+- Colaborador submete e chefe aprova parte dos dias no Android.
 - Dados vêm do cliente gerado e convergem com a Web/API.
 - Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.
 - UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique.
+- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/11
 
@@ -304,11 +309,12 @@ Funcionalidades: FEAT-005, FEAT-006, FEAT-007, FEAT-009
 
 Critérios de aceitação:
 
-- Web e mobile completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.
+- Web e Android completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.
 - Push real abre detalhe autenticado; permissão recusada mantém caixa interna.
-- Cenário cruzado: pedido Web, decisão mobile e mesmos dias confirmados no calendário interno, sem conector configurado.
+- Cenário cruzado: pedido Web, decisão Android e mesmos dias confirmados no calendário interno, sem conector configurado.
 - Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.
 - Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação.
+- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/12
 
@@ -331,6 +337,7 @@ Critérios de aceitação:
 - Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.
 - Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.
 - Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.
+- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
 
@@ -556,3 +563,26 @@ Critérios de aceitação:
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/24
 
 PR: ainda não criado.
+
+## HO-306 — Reativação futura de iOS
+
+Release: ios-reactivation · Área: mobile · Estado: Em espera
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-012
+
+Funcionalidades: FEAT-024
+
+Critérios de aceitação:
+
+- Reativação selecionada explicitamente pelo responsável; rever SDK/Xcode, dependências e fonte iOS preservada antes de fixar novos alvos.
+- Validar os fluxos Flutter para ambos os papéis no iOS com API/PostgreSQL, datas, autorização e armazenamento/sessões nativos; não inferir sucesso de Android.
+- Definir e validar assinatura/distribuição/dispositivos quando autorizados; evidência histórica não substitui novos ensaios.
+- Só repor CI/gates iOS com critérios acordados, jobs reais verdes e documentação coerente. Sem data de entrega e sem bloquear Web/Android.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/31
+
+PR: ainda não criado.
+
+Motivo: Adiado por decisão explícita em HO-005; sem data e sem gate core.

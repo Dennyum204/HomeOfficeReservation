@@ -1,5 +1,9 @@
 # Produto e âmbito da V1
 
+## Plataformas atuais
+
+A direção confirmada em HO-005 é **Web e Android**. Todas as referências a mobile no core significam Android. iOS está adiado, não cancelado: preservar código e evidência histórica, sem builds/testes automáticos, distribuição obrigatória ou data de entrega. HO-306 regista a reativação futura.
+
 ## Objetivo e utilizadores
 
 A aplicação tem calendário próprio autoritativo e funciona integralmente sem conta Microsoft ou ligação Outlook. Um colaborador e o seu chefe usam contas locais da aplicação para planear localização e disponibilidade com antecedência. O desenho dos dados suporta mais utilizadores, mas a V1 não inclui administração completa de várias empresas.

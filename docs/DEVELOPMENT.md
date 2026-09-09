@@ -59,7 +59,7 @@ Disponibilidade e enforcement dependem do plano/permissões do repositório. Reg
 
 O scaffold deve acrescentar os jobs de cada stack no mesmo PR que cria o código. Checks obrigatórios usam nomes estáveis; não criar jobs que passam por saltar silenciosamente projetos existentes. Workflows de PR executam sem segredos de produção e sem `pull_request_target` para código não confiável.
 
-HO-002 acrescenta `backend-contracts`, `web`, `flutter-android` e `flutter-ios` sem filtros de paths. [Matriz e fontes](HO-002-FOUNDATION.md), comandos em [API](../apps/api/README.md), [Web](../apps/web/README.md) e [Mobile](../apps/mobile/README.md). PostgreSQL usa o Compose documentado no runner Linux; iOS usa macOS/Xcode 26.3. O código Dart gerado também é analisado. Lockfiles são obrigatórios e os clientes regenerados têm check de diff; os testes normais não precisam de Microsoft. Builds unsigned/Simulator não equivalem a lojas ou dispositivos físicos.
+Historicamente, HO-002 acrescentou `backend-contracts`, `web`, `flutter-android` e `flutter-ios` sem filtros de paths. HO-005 limita os alvos ativos a Web/Android: iOS sai da CI normal e dos checks obrigatórios, preservado no workflow manual `ios-reference.yml` para futura seleção HO-306. [Matriz e fontes](HO-002-FOUNDATION.md), comandos em [API](../apps/api/README.md), [Web](../apps/web/README.md) e [Mobile](../apps/mobile/README.md). PostgreSQL usa o Compose documentado no runner Linux; iOS usa macOS/Xcode 26.3. O código Dart gerado também é analisado. Lockfiles são obrigatórios e os clientes regenerados têm check de diff; os testes normais não precisam de Microsoft. Builds unsigned/Simulator não equivalem a lojas ou dispositivos físicos.
 
 Fixar actions em SHAs verificados e ativar atualização de dependências. O workflow documental usa um commit fixo de checkout; deve ser atualizado normalmente, sem tratar este pacote como uma lista imutável de versões.
 
@@ -109,3 +109,9 @@ Concluir o login no browser enquanto o código está válido. Não publicar pala
 ## O que não deve ficar só no chat
 
 Novas ideias entram no backlog com versão ou estado `parked` e motivo. Mudança de arquitetura entra num ADR. Correção de regra de negócio atualiza produto/domínio e um teste que a verifica. Cada fim de tarefa atualiza STATUS. A memória do chat é apoio; o repositório é a fonte de contexto do desenvolvimento.
+
+## Direção e proteções verificadas em HO-005 — 2026-09-09
+
+Por instrução explícita do responsável, os alvos atuais são Web e Android. A API GitHub foi lida antes/depois: apenas `flutter-ios` removido de required_status_checks. Permanecem `project-docs`, `backend-contracts`, `web` e `flutter-android`, app_id 15368, strict true. PR, conversas resolvidas, enforce_admins, histórico linear, zero aprovações independentes, proibição de force-push/eliminação e restantes valores foram comparados e preservados. Não existem rulesets adicionais. Não se alterou a visibilidade nem se criou um check iOS fictício.
+
+`ios-reference.yml` tem apenas workflow_dispatch, reservado à futura reativação selecionada; não foi executado em HO-005. Fonte nativa, scripts e evidência histórica iOS ficam conservados. Shared Flutter/Dart, Android, backend, contratos, documentação e Web continuam obrigatórios. HO-306 fica parked sem data. A matriz/evidência HO-002 acima é histórica.

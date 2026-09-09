@@ -393,6 +393,11 @@
             "nullable": true,
             "type": "string"
           },
+          "sourceRequestId": {
+            "format": "uuid",
+            "nullable": true,
+            "type": "string"
+          },
           "version": {
             "format": "int64",
             "type": "integer"
@@ -405,7 +410,8 @@
           "origin",
           "version",
           "sourceDayId",
-          "decidedBy"
+          "decidedBy",
+          "sourceRequestId"
         ],
         "type": "object"
       },
@@ -2203,6 +2209,13 @@
               "default": 25,
               "format": "int32",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "$ref": "#/components/schemas/RequestState"
             }
           }
         ],

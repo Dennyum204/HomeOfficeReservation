@@ -15,7 +15,8 @@
     "build": "npm run typecheck && vite build",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "format:check": "prettier --check src tests *.ts *.js *.json index.html"
+    "format:check": "prettier --check src tests *.ts *.js *.json index.html",
+    "test:e2e:auth": "playwright test --config playwright.auth.config.ts"
   },
   "dependencies": {
     "react": "19.2.8",

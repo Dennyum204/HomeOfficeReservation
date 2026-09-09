@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
+import { p } from "./i18n/planning.pt-PT";
 import { ConnectionCard } from "./features/workspace/ConnectionCard";
-
 import { AuthGate } from "./features/auth/AuthGate";
+import { useMember } from "./features/auth/session";
+import {
+  PlanningWorkspace,
+  type PlanningSection,
+} from "./features/planning/PlanningWorkspace";
+import "./features/planning/planning.css";
 
 export function App() {
   return (
@@ -11,19 +17,14 @@ export function App() {
     </AuthGate>
   );
 }
-
-type Section = keyof typeof s.nav;
-const icons: Record<Section, string> = {
+const icons: Record<PlanningSection, string> = {
   calendar: "▦",
   requests: "↗",
-  tasks: "☑",
-  notifications: "◉",
   settings: "⚙",
 };
-
 export function WorkspaceShell() {
-  const [section, setSection] = useState<Section>("calendar");
-  const current = s.sections[section];
+  const [section, setSection] = useState<PlanningSection>("calendar");
+  const member = useMember();
   return (
     <div className="app-shell">
       <a href="#content" className="skip-link">
@@ -41,7 +42,7 @@ export function WorkspaceShell() {
         </a>
         <p className="nav-caption">{s.workspace}</p>
         <nav aria-label={s.navigation}>
-          {(Object.keys(s.nav) as Section[]).map((key) => (
+          {(Object.keys(icons) as PlanningSection[]).map((key) => (
             <button
               key={key}
               aria-current={section === key ? "page" : undefined}
@@ -50,7 +51,7 @@ export function WorkspaceShell() {
               <span className="nav-icon" aria-hidden="true">
                 {icons[key]}
               </span>
-              {s.nav[key]}
+              {p[key]}
               <span className="nav-arrow" aria-hidden="true">
                 ›
               </span>
@@ -68,74 +69,29 @@ export function WorkspaceShell() {
         <header className="topbar">
           <span>
             {s.workspace}
-            <span className="breadcrumb"> / {s.nav[section]}</span>
+            <span className="breadcrumb"> / {p[section]}</span>
           </span>
-          <span className="stage">
-            <span aria-hidden="true" />
-            {s.foundation}
-          </span>
+          <span className="stage">{s.locations}</span>
         </header>
         <main id="content" tabIndex={-1}>
           <div className="intro">
-            <p className="eyebrow">HOME OFFICE RESERVATION</p>
-            <h1>{s.welcome}</h1>
-            <p>{s.introduction}</p>
+            <p className="eyebrow">{s.brandCaption}</p>
+            <h1>
+              {section === "calendar"
+                ? p.title
+                : section === "requests"
+                  ? p.requests
+                  : p.settingsTitle}
+            </h1>
+            <p>{member?.isManager ? p.teamIntro : p.intro}</p>
           </div>
-          <div className="workspace-grid">
-            <section className="feature-card" aria-labelledby="section-title">
-              <p className="eyebrow">{current.eyebrow}</p>
-              <h2 id="section-title">{current.title}</h2>
-              <p className="feature-description">{current.description}</p>
-              <div className="location-illustration" aria-hidden="true">
-                <div className="sun" />
-                <div className="hill hill-back" />
-                <div className="hill hill-front" />
-                <div className="house">
-                  <div className="roof" />
-                  <div className="window" />
-                  <div className="door" />
-                </div>
-                <div className="mountain mountain-back" />
-                <div className="mountain" />
-                <div className="illustration-line" />
-                <span className="place place-pt">PT</span>
-                <span className="place place-ch">CH</span>
-              </div>
-              <div className="unfinished">
-                <span className="unfinished-icon" aria-hidden="true">
-                  ◷
-                </span>
-                <div>
-                  <h3>{current.step}</h3>
-                  <p>{current.detail}</p>
-                </div>
-              </div>
-            </section>
-            <div className="right-column">
+          <PlanningWorkspace section={section} onSection={setSection} />
+          {section === "settings" && (
+            <div className="settings-connection">
               <ConnectionCard />
-              <section className="location-card">
-                <p className="eyebrow">PORTUGAL ↔ SUÍÇA</p>
-                <h2>{s.locations}</h2>
-                <div className="location-label">
-                  <span className="country-symbol" aria-hidden="true">
-                    ⌂
-                  </span>
-                  {s.remote}
-                </div>
-                <div className="location-label">
-                  <span className="country-symbol swiss" aria-hidden="true">
-                    +
-                  </span>
-                  {s.onsite}
-                </div>
-                <p className="muted">{s.locationsDetail}</p>
-              </section>
             </div>
-          </div>
-          <p className="scope-note">
-            <span aria-hidden="true">ⓘ</span>
-            {s.scope}
-          </p>
+          )}
+          <p className="scope-note">{p.plannedFeatures}</p>
         </main>
         <footer>
           {s.footer}

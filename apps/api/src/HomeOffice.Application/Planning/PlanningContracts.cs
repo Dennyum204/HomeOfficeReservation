@@ -25,7 +25,7 @@ public sealed record RequestView(Guid Id, Guid EmployeeId, Guid RootId, Guid? Pa
     Guid? AcceptedProposalId, RequestedDayView[] Days);
 public sealed record RequestPage(RequestView[] Items, int? NextOffset, long CalendarVersion);
 public sealed record EffectiveDay(DateOnly LocalDate, WorkLocation Location, Availability? Availability,
-    string Origin, long Version, Guid? SourceDayId, Guid? DecidedBy);
+    string Origin, long Version, Guid? SourceDayId, Guid? DecidedBy, Guid? SourceRequestId);
 public sealed record PendingDay(Guid RequestId, long RequestVersion, RequestedDayView Day);
 public sealed record ProposalView(Guid Id, Guid GroupId, int Revision, Guid RequestId, Guid AuthorId,
     string Reason, Guid[] AffectedDayIds, DayInput[] Days, ProposalState State, DateTimeOffset CreatedAt,
@@ -43,7 +43,7 @@ public sealed record DatePreview(PreviewDay[] Days);
 public interface IPlanningService
 {
     Task<CalendarView> Calendar(Guid actor, Guid employee, DateOnly from, DateOnly to, CancellationToken ct);
-    Task<RequestPage> Requests(Guid actor, Guid employee, int offset, int limit, CancellationToken ct);
+    Task<RequestPage> Requests(Guid actor, Guid employee, int offset, int limit, CancellationToken ct, RequestState? state = null);
     Task<RequestView> Request(Guid actor, Guid employee, Guid id, CancellationToken ct);
     Task<ProposalPage> Proposals(Guid actor, Guid employee, Guid request, int offset, int limit, CancellationToken ct);
     Task<CommentPage> Comments(Guid actor, Guid employee, Guid request, int offset, int limit, CancellationToken ct);

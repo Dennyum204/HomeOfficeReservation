@@ -2,7 +2,7 @@
 
 ## Purpose and current phase
 
-Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). HO-002 provides runnable API/Web/Flutter foundations; HO-003 implements Identity authentication and authorization. HO-004 adds transactional planning/approvals in the API; calendar interfaces, onsite requirements and notification delivery remain later tasks. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
+Build a shared Switzerland/Portugal work-location planner for an employee and their manager. The core V1 has its own authoritative calendar and ASP.NET Core Identity accounts; it must work and ship without Microsoft. Outlook is optional: one-way publication first (HO-008), imports/delta/webhooks/external-edit reconciliation later (HO-009). HO-002 provides runnable API/Web/Flutter foundations; HO-003 implements Identity authentication and authorization. HO-004 adds transactional planning/approvals in the API; HO-005 implements the Web calendar/workflows. Android calendar (HO-010), onsite requirements/tasks (HO-006) and notification delivery (HO-007) remain later tasks. The requested development model is Codex Astra; select it in the development environment. Do not hard-code a model identifier or make the product depend on an OpenAI API.
 
 User instructions and applicable higher-priority instructions take precedence. These project conventions do not create new approval requirements for already-authorized work.
 
@@ -29,7 +29,8 @@ User instructions and applicable higher-priority instructions take precedence. T
 ## Architecture boundaries
 
 - Backend: .NET 10, ASP.NET Core, EF Core and PostgreSQL. Modular monolith; durable outbox/worker in the same host initially.
-- Web: React/TypeScript. Mobile: Flutter/Dart. Business authorization, approval transitions and conflict rules are authoritative in the API.
+- Active targets: React/TypeScript Web and Flutter/Dart Android only. iOS is deferred by the owner in HO-005: preserve source and historical evidence, do not run/debug iOS in normal core tasks. Reactivate only through the separately selected HO-306; no delivery date. Keep four core checks required (project-docs, backend-contracts, web, flutter-android); no dummy iOS check.
+- Web: React/TypeScript. Mobile: Flutter/Dart for Android in current releases. Business authorization, approval transitions and conflict rules are authoritative in the API.
 - HTTP contract: OpenAPI with reproducibly generated TypeScript/Dart clients. Do not copy server DTOs manually between clients.
 - App authentication uses ASP.NET Core Identity with EF Core/PostgreSQL: browser cookies and framework-issued opaque bearer/refresh tokens for Flutter (ADR-004). No custom cryptography or external identity infrastructure is needed. Optional Microsoft login is a future provider; calendar consent is separate and Graph tokens stay on the backend.
 - Infrastructure dependencies point inward toward application/domain abstractions. Do not introduce services, patterns or dependencies without a concrete need.

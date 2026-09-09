@@ -3,9 +3,11 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
+  workers: 1,
+  testIgnore: "auth.spec.ts",
   retries: process.env.CI ? 1 : 0,
   reporter: [["list"]],
-  use: { baseURL: "http://127.0.0.1:5174", trace: "off" },
+  use: { baseURL: "http://127.0.0.1:5174", trace: "off", actionTimeout: 10000 },
   webServer: [
     {
       command:
@@ -14,7 +16,7 @@ export default defineConfig({
       reuseExistingServer: false,
       env: {
         ASPNETCORE_ENVIRONMENT: "Development",
-        Auth__CookieSeconds: "4",
+        Auth__CookieSeconds: "600",
         Auth__RequestsPerMinute: "300",
       },
     },
@@ -29,7 +31,7 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     {
       name: "small-screen",
-      use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" },
+      use: { ...devices["Pixel 5"], defaultBrowserType: "chromium" },
     },
   ],
 });

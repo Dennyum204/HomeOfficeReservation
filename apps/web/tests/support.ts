@@ -9,7 +9,7 @@ if (!file)
 const accounts = JSON.parse(readFileSync(file, "utf8"));
 export async function signIn(
   page: Page,
-  role: "employee" | "manager" = "employee",
+  role: "employee" | "manager" | "admin" = "employee",
 ) {
   await page.goto("/");
   await page.getByLabel("Email", { exact: true }).fill(accounts[role].email);

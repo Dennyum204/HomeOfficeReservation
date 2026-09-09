@@ -10,7 +10,7 @@ Pedidos/rascunhos, aprovação parcial/rejeição, comentários, revisões, conf
 
 ## Stack
 
-.NET 10/ASP.NET Core, EF Core/PostgreSQL, ASP.NET Core Identity, React/TypeScript e Flutter Android/iOS. OpenAPI com clientes gerados. Monólito modular e outbox/worker durável para notificações; sem serviço de identidade externo ou protocolos de autenticação próprios.
+.NET 10/ASP.NET Core, EF Core/PostgreSQL, ASP.NET Core Identity, React/TypeScript e Flutter Android. iOS adiado para HO-306, sem data; código e validações históricas preservados. OpenAPI com clientes gerados. Monólito modular e outbox/worker durável para notificações; sem serviço de identidade externo ou protocolos de autenticação próprios.
 
 HO-002 prepara projetos/SDKs/lockfiles/CI/contratos e PostgreSQL local. HO-003 implementa login e autorização. Alojamento, assinatura e distribuição são definidos em HO-012; nenhum ambiente foi lançado.
 

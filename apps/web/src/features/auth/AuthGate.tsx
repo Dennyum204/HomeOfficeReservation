@@ -3,6 +3,12 @@ import type { ReactNode } from "react";
 import type { MemberProfile } from "../../../../../contracts/typescript";
 import { strings as s } from "../../i18n/pt-PT";
 import { accessApi, authApi, csrf, statusOf } from "./api";
+import {
+  clearPlanningSession,
+  MemberContext,
+  OWNER_KEY,
+  SESSION_EVENT,
+} from "./session";
 
 type Mode = "login" | "activation" | "recovery" | "activate" | "reset";
 export function AuthGate({ children }: { children: ReactNode }) {
@@ -21,6 +27,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
     try {
       const profile = await accessApi.getCurrentMember();
       if (current === generation.current) {
+        try {
+          const previous = sessionStorage.getItem(OWNER_KEY);
+          if (previous && previous !== profile.memberId) clearPlanningSession();
+          sessionStorage.setItem(OWNER_KEY, profile.memberId);
+        } catch {
+          /* Auth remains usable when browser storage is unavailable. */
+        }
         setMember(profile);
         setMessage("");
       }
@@ -51,9 +64,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
       void check();
     };
     window.addEventListener("focus", focus);
+    window.addEventListener(SESSION_EVENT, focus);
     return () => {
       sessionGeneration.current++;
       window.removeEventListener("focus", focus);
+      window.removeEventListener(SESSION_EVENT, focus);
     };
   }, [check]);
   async function submit(event: React.FormEvent) {
@@ -109,6 +124,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       await authApi.logout(await csrf());
       // Also invalidate reads started while the logout request was in flight.
       generation.current++;
+      clearPlanningSession();
       setMember(undefined);
       setPassword("");
       setCode("");
@@ -166,7 +182,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
           </button>
           {message && <p role="alert">{message}</p>}
         </section>
-        <div key={member.memberId}>{children}</div>
+        <MemberContext.Provider key={member.memberId} value={member}>
+          {children}
+        </MemberContext.Provider>
       </>
     );
   return (

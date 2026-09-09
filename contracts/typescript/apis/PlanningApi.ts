@@ -84,6 +84,11 @@ import {
     RequestPageToJSON,
 } from '../models/RequestPage';
 import {
+    type RequestState,
+    RequestStateFromJSON,
+    RequestStateToJSON,
+} from '../models/RequestState';
+import {
     type RequestView,
     RequestViewFromJSON,
     RequestViewToJSON,
@@ -286,6 +291,10 @@ export interface ListPlanningRequestsRequest {
      *
      */
     limit?: number;
+    /**
+     *
+     */
+    state?: RequestState;
 }
 
 export interface ListWeeklyPatternsRequest {
@@ -1076,6 +1085,10 @@ export class PlanningApi extends runtime.BaseAPI {
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['state'] != null) {
+            queryParameters['state'] = requestParameters['state'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
