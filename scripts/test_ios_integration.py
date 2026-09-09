@@ -1,11 +1,45 @@
 """Protect diagnostic logs from native-test credentials and debugger capabilities."""
 import base64
 import unittest
+from unittest.mock import Mock, patch
 
-from run_ios_integration import LogRedactor, service_uri
+from run_ios_integration import LogRedactor, service_uri, streamed
 
 
 class PrivateDiagnosticsTests(unittest.TestCase):
+    def test_elapsed_log_drain_does_not_reclassify_an_exited_successful_process(self):
+        process = Mock()
+        process.poll.return_value = 0
+        process.wait.return_value = 0
+        process.stdout = []
+        # Deterministically reproduce the timer firing after command exit, while
+        # Python is still draining its output. This is a lifecycle simulation.
+        def timer_after_exit(duration, callback):
+            timer = Mock()
+            timer.start.side_effect = callback
+            return timer
+        with patch("run_ios_integration.subprocess.Popen") as popen, \
+             patch("run_ios_integration.threading.Timer", side_effect=timer_after_exit):
+            popen.return_value.__enter__.return_value = process
+            streamed(["synthetic-command"], ".", LogRedactor({}), 1)
+
+    def test_an_active_command_past_its_deadline_fails_even_if_shutdown_returns_zero(self):
+        process = Mock(pid=1234)
+        process.poll.return_value = None
+        process.wait.return_value = 0
+        process.stdout = []
+        def timer_while_running(duration, callback):
+            timer = Mock()
+            timer.start.side_effect = callback
+            return timer
+        with patch("run_ios_integration.subprocess.Popen") as popen, \
+             patch("run_ios_integration.threading.Timer", side_effect=timer_while_running), \
+             patch("run_ios_integration.os.killpg", create=True) as terminate:
+            popen.return_value.__enter__.return_value = process
+            with self.assertRaises(RuntimeError):
+                streamed(["synthetic-command"], ".", LogRedactor({}), 1)
+            terminate.assert_called_once()
+
     def test_driver_address_requires_a_loopback_vm_service_announcement(self):
         self.assertEqual("http://127.0.0.1:1234/capability=/",
             service_uri("The Dart VM service is listening on http://127.0.0.1:1234/capability=/"))

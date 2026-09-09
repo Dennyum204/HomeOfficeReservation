@@ -50,9 +50,12 @@ def streamed(command, folder, redactor, timeout):
         text=True, errors="replace", bufsize=1, start_new_session=True) as process:
         expired = threading.Event()
         def stop():
-            expired.set()
             if process.poll() is None:
-                os.killpg(process.pid, signal.SIGTERM)
+                expired.set()
+                try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass  # The command exited between poll and signal.
         timer = threading.Timer(timeout, stop)
         timer.daemon = True
         timer.start()
@@ -122,9 +125,9 @@ def main():
             if not uri:
                 raise RuntimeError("The native app did not expose a loopback Dart VM service within 90 seconds.")
             print("Run the unchanged integration driver against the launched native app.", flush=True)
-            streamed(["flutter", "drive", "--verbose", "--no-dds", "--no-pub",
+            streamed(["flutter", "drive", "--no-dds", "--no-pub",
                 "--driver=test_driver/integration_test.dart", "--target=integration_test/app_test.dart",
-                "-d", args.device, "--use-existing-app=" + uri], folder, redactor, 180)
+                "-d", args.device, "--use-existing-app=" + uri], folder, redactor, 300)
         finally:
             try:
                 subprocess.run(["xcrun", "simctl", "terminate", args.device, bundle_id],
