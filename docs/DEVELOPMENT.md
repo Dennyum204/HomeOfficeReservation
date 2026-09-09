@@ -93,7 +93,7 @@ Em 2026-09-08, após observar os nomes reais dos jobs, a API GitHub confirmou co
 
 ## Autenticação GitHub neste ambiente
 
-O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. HO-002 acrescenta os quatro checks obrigatórios do core abaixo, conforme ADR-004.
+O [probe Microsoft](../scripts/outlook_probe/README.md) é referência histórica opcional: onboarding interrompido, Graph real adiado. Normal desenvolvimento/CI exige zero credenciais Microsoft e não instala dependências do probe. Só workflow_dispatch com run_outlook_reference=true executa os testes sintéticos; nenhum workflow executa Graph real. A CI atual conserva quatro checks obrigatórios após o adiamento iOS em HO-005; a matriz HO-002 é histórica.
 
 GitHub CLI e connector têm autenticações separadas. Nesta entrega, o connector recusou escrita com HTTP 403; a autenticação GitHub CLI resolveu o acesso Git e API, verificado com permissão ADMIN. Com `gh` instalado, o procedimento é:
 

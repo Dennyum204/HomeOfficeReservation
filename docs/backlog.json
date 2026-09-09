@@ -469,7 +469,7 @@
       "title": "Calendário Web e fluxos de pedido/decisão",
       "release": "v1.0",
       "area": "web",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004"
@@ -490,7 +490,13 @@
         "Web/Android são alvos atuais; iOS fonte/histórico preservados, sem CI automático ou check obrigatório; apenas check iOS removido e restantes proteções verificadas. Reativação futura HO-306, sem data."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/6",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/32"
+      ],
+      "review_evidence": [
+        "Implementação Web e critérios locais verificados em 2026-09-09; 4 API + 20 PostgreSQL, 13 Vitest, 4 E2E Identity + 12 E2E Web, 6 Flutter; build APK Release e contratos coincidentes (110 ficheiros).",
+        "CI aplicável do último head e conflitos devem ser verificados no PR #32 antes de retirar draft. Integração/encerramento apenas após merge humano; Graph e iOS não foram validados neste item."
+      ]
     },
     {
       "id": "HO-006",
