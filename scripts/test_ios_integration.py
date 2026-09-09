@@ -2,10 +2,16 @@
 import base64
 import unittest
 
-from run_ios_integration import LogRedactor
+from run_ios_integration import LogRedactor, service_uri
 
 
 class PrivateDiagnosticsTests(unittest.TestCase):
+    def test_driver_address_requires_a_loopback_vm_service_announcement(self):
+        self.assertEqual("http://127.0.0.1:1234/capability=/",
+            service_uri("The Dart VM service is listening on http://127.0.0.1:1234/capability=/"))
+        self.assertIsNone(service_uri("API URL http://127.0.0.1:5080/"))
+        self.assertIsNone(service_uri("The Dart VM service is listening on https://example.invalid/"))
+
     def test_credentials_are_removed_in_build_and_error_formats(self):
         value = "Synthetic9!local-only"
         redactor = LogRedactor({"TEST_PASSWORD": value})

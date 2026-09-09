@@ -127,11 +127,17 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Start local API for the Android emulator
         env:
-          Auth__AccessTokenSeconds: '3'
-          Auth__RefreshTokenSeconds: '8'
+          Auth__AccessTokenSeconds: '5'
+          Auth__RefreshTokenSeconds: '30'
           Auth__RequestsPerMinute: '300'
         run: |
           ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://0.0.0.0:5080 > "$RUNNER_TEMP/android-api.log" 2>&1 &
+          ready=0
+          for attempt in {1..30}; do
+            if curl --fail --silent --max-time 3 http://localhost:5080/health/ready > /dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = 1
       - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 35
@@ -169,11 +175,17 @@ jobs:
       - uses: ./.github/actions/setup-identity
       - name: Start API and boot iPhone 17 on iOS 26.2
         env:
-          Auth__AccessTokenSeconds: '3'
-          Auth__RefreshTokenSeconds: '8'
+          Auth__AccessTokenSeconds: '5'
+          Auth__RefreshTokenSeconds: '30'
           Auth__RequestsPerMinute: '300'
         run: |
           ASPNETCORE_ENVIRONMENT=Development dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build --no-launch-profile --urls http://localhost:5080 > "$RUNNER_TEMP/ios-api.log" 2>&1 &
+          ready=0
+          for attempt in {1..30}; do
+            if curl --fail --silent --max-time 3 http://localhost:5080/health/ready > /dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = 1
           device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for x in d["devices"].get("com.apple.CoreSimulator.SimRuntime.iOS-26-2", []) if x["name"] == "iPhone 17"))')
           echo "Using iPhone 17 / iOS 26.2 with Xcode 26.3"
           xcrun simctl boot "$device"

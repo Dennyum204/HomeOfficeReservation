@@ -4,6 +4,9 @@ import 'package:homeoffice_mobile/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:homeoffice_mobile/config/api_settings.dart';
 import 'package:homeoffice_mobile/features/auth/token_store.dart';
+import 'package:homeoffice_mobile/features/auth/auth_screen.dart';
+import 'package:homeoffice_mobile/features/workspace/workspace_repository.dart';
+import 'package:homeoffice_api/api.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -17,15 +20,31 @@ void main() {
       isTrue,
       reason: 'Provide the private client-test.json; never skip native auth.',
     );
+    final connection = WorkspaceRepository(
+      WorkspaceApi(ApiClient(basePath: ApiSettings.baseUrl)),
+    );
+    try {
+      expect((await connection.load()).apiVersion, 'v1');
+    } finally {
+      connection.dispose();
+    }
     await SecureTokenStore(ApiSettings.baseUrl).clear();
     app.main();
     await tester.pumpAndSettle();
-    Future<void> login(String address, String secret) async {
+    Future<void> submitCredentials(String address, String secret) async {
       await tester.enterText(find.byKey(const Key('email')), address);
       await tester.enterText(find.byKey(const Key('password')), secret);
+      // Native IME animations can move the button between text entry and the tap.
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(const Key('submit')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('submit')));
       await tester.pumpAndSettle();
+    }
+
+    Future<void> login(String address, String secret) async {
+      await submitCredentials(address, secret);
       for (
         var i = 0;
         i < 30 && find.text('Terminar sessão').evaluate().isEmpty;
@@ -35,16 +54,7 @@ void main() {
       }
     }
 
-    await tester.enterText(
-      find.byKey(const Key('email')),
-      'absent@test.example',
-    );
-    await tester.enterText(
-      find.byKey(const Key('password')),
-      'Deliberately-wrong9!',
-    );
-    await tester.tap(find.byKey(const Key('submit')));
-    await tester.pumpAndSettle();
+    await submitCredentials('absent@test.example', 'Deliberately-wrong9!');
     for (
       var i = 0;
       i < 30 &&
@@ -53,7 +63,12 @@ void main() {
     ) {
       await tester.pump(const Duration(milliseconds: 500));
     }
-    expect(find.textContaining('Não foi possível entrar.'), findsOneWidget);
+    expect(
+      find.textContaining('Não foi possível entrar.'),
+      findsOneWidget,
+      reason:
+          'Auth status: ${tester.widget<AuthScreen>(find.byType(AuthScreen)).controller.message.name}',
+    );
     await login(email, password);
     expect(find.text('Terminar sessão'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Ligação ao serviço'), 250);
@@ -79,8 +94,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
     }
     expect(find.text('Terminar sessão'), findsOneWidget);
-    // The server used by this test has Development-only access=3s / refresh=8s.
-    await Future<void>.delayed(const Duration(seconds: 9));
+    // The server used by this test has Development-only access=5s / refresh=30s.
+    await Future<void>.delayed(const Duration(seconds: 31));
     await tester.tap(find.text('Verificar sessão'));
     await tester.pumpAndSettle();
     for (

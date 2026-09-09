@@ -16,7 +16,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [code, setCode] = useState("");
   const generation = useRef(0);
   const check = useCallback(async (initial = false) => {
-    const current = generation.current;
+    // Only the latest session read may update private views, even if HTTP responses arrive out of order.
+    const current = ++generation.current;
     try {
       const profile = await accessApi.getCurrentMember();
       if (current === generation.current) {
@@ -106,6 +107,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
     generation.current++;
     try {
       await authApi.logout(await csrf());
+      // Also invalidate reads started while the logout request was in flight.
+      generation.current++;
       setMember(undefined);
       setPassword("");
       setCode("");

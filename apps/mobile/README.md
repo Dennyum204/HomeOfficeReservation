@@ -46,7 +46,7 @@ dart run tool/smoke_api.dart http://localhost:5080
 flutter build apk --release --dart-define=API_BASE_URL=https://api.example.invalid
 ```
 
-O smoke usa o mesmo repository e cliente gerado da app com HTTP real; verifica o contrato e um timestamp recente, sem emitir dados pessoais. Os widget tests usam respostas sintéticas e cobrem falha/retry/navegação/ecrã pequeno. Teste de plataforma com API/PG reais: primeiro seguir o guia HO-003 e iniciar API Development com access=3s/refresh=8s. Usar o ficheiro privado apenas neste entrypoint de testes; não distribuir o test bundle.
+O smoke usa o mesmo repository e cliente gerado da app com HTTP real; verifica o contrato e um timestamp recente, sem emitir dados pessoais. Os widget tests usam respostas sintéticas e cobrem falha/retry/navegação/ecrã pequeno. Teste de plataforma com API/PG reais: primeiro seguir o guia HO-003 e iniciar API Development com access=5s/refresh=30s. Usar o ficheiro privado apenas neste entrypoint de testes; não distribuir o test bundle.
 
 ```sh
 flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <device-id> --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file=<private-dir>/client-test.json
