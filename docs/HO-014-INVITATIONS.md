@@ -1,6 +1,6 @@
 # HO-014 — Convites de acesso
 
-Implementação selecionada para [issue #39](https://github.com/Dennyum204/HomeOfficeReservation/issues/39), branch `feat/ho-014-access-invitations`. [ADR-015](adr/ADR-015-access-invitations.md) documenta decisão, concorrência, limites e evidência. A interface de administração Web será HO-015; os convites Firebase de instalação do APK continuam independentes.
+Implementação selecionada para [issue #39](https://github.com/Dennyum204/HomeOfficeReservation/issues/39), branch `feat/ho-014-access-invitations`, [PR #43](https://github.com/Dennyum204/HomeOfficeReservation/pull/43). [ADR-015](adr/ADR-015-access-invitations.md) documenta decisão, concorrência, limites e evidência. A interface de administração Web será HO-015; os convites Firebase de instalação do APK continuam independentes.
 
 ## Aplicar e iniciar
 

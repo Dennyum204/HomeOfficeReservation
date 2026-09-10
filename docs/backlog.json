@@ -1008,7 +1008,7 @@
       "title": "Convites de acesso: estado, entrega e revogação",
       "release": "v1.0",
       "area": "backend",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003",
@@ -1025,8 +1025,10 @@
         "Administração consegue consultar a associação gestor-colaborador atual e estados necessários à UI dentro da organização; contratos OpenAPI e clientes gerados mantêm uma fonte única.",
         "Aceitação funciona nos ecrãs Web e Android existentes com código Identity e definição de password; testar envio simulado, validade, reenvio, cancelamento, repetição, falha SMTP, conta desativada, isolamento e impossibilidade de autoaprovação. SMTP externo real continua gate operacional HO-012, não dependência para implementar/testar esta tarefa."
       ],
-      "pr_urls": [],
-      "notes": "Implementação em feat/ho-014-access-invitations: Identity, estado e entrega durável, limites, reenvio/cancelamento, recibos e estados administrativos. ADR-015 e docs/HO-014-INVITATIONS.md. PR/CI final ainda por verificar; SMTP externo e administração Web HO-015 continuam gates separados. Sem deployment nem emails reais.",
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
+      ],
+      "notes": "Implementado em PR #43; draft até quatro checks verdes no último SHA e sem conflitos. Identity, convite/entrega duráveis, recibos, limites, revogação, lista com chefia e aceitação Web/Android. Local: 66 PG + 4 API, 13 Web unitários + 24 browser; Flutter análise + 34 testes; 178 ficheiros gerados sem drift. SMTP loopback real (451/ack perdido), sem entrega externa. Guia HO-014/ADR-015; administração Web HO-015 e operacional HO-012 continuam separados.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
       "scope_history": [
         {
