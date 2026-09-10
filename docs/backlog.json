@@ -930,7 +930,7 @@
           ]
         }
       ],
-      "notes": "Preparação do piloto em ops/ho-012-pilot-preparation: proposta Hetzner/Caddy/PostgreSQL por ambiente, configuração Production, backup/restauro isolado e assinatura Android externa. Critérios de aceitação intactos; contratação, deployment, SMTP real, distribuição física e aceitação continuam por aprovar/validar. PR draft com Refs #13, sem encerrar issue; docs/HO-012-PILOT.md e infra/pilot/README.md. PR draft #37: https://github.com/Dennyum204/HomeOfficeReservation/pull/37; preparação em validação, issue permanece aberta."
+      "notes": "Preparação do piloto em ops/ho-012-pilot-preparation: proposta Hetzner/Caddy/PostgreSQL por ambiente, configuração Production, backup/restauro isolado e assinatura Android externa. Critérios de aceitação intactos; contratação, deployment, SMTP real, distribuição física e aceitação continuam por aprovar/validar. PR draft com Refs #13, sem encerrar issue; docs/HO-012-PILOT.md e infra/pilot/README.md. PR draft #37: https://github.com/Dennyum204/HomeOfficeReservation/pull/37; ensaio Production isolado aprovado na CI de 15c4bbe (https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34525583766/job/103033891052), incluindo recuperação cifrada de dados/sessões. Quatro checks do último commit e limitações registados no PR; deployment e aceitação externa continuam pendentes, issue aberta."
     },
     {
       "id": "HO-101",
