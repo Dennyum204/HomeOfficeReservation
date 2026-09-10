@@ -190,12 +190,16 @@ def main():
                     raise RuntimeError("SMTP fixture accepted an invalid password")
                 smtp.login("pilot", password)
             ops.run("run", "--rm", "--no-deps", "app", "--bootstrap-admin", "/run/config/bootstrap.json")
+            STAGE = "activation and secure browser session"
             activate("admin@pilot.example")
             request("/api/v1/auth/web/login", {"email": "admin@pilot.example", "password": password}, csrf=True, expected=204)
-            assert any(c.name == "HomeOffice.Session" and c.secure and c.has_nonstandard_attr("HttpOnly") for c in jar)
+            # Cookie attributes are case-insensitive; CookieJar preserves the server's spelling.
+            assert any(c.name == "HomeOffice.Session" and c.secure and
+                       (c.has_nonstandard_attr("httponly") or c.has_nonstandard_attr("HttpOnly")) for c in jar), "Secure HttpOnly session cookie missing"
             key_files = list((private / "keys").glob("key-*.xml"))
             assert key_files and all("encryptedSecret" in p.read_text() for p in key_files), "Runtime key ring is not encrypted"
             admin = request("/api/v1/me")
+            STAGE = "synthetic account activation and reporting relationship"
             for name, manager in (("manager", True), ("employee", False)):
                 request("/api/v1/admin/members", {"email": name + "@pilot.example", "displayName": "Synthetic " + name,
                         "isEmployee": True, "isManager": manager, "isAccountAdministrator": False}, csrf=True, expected=204)

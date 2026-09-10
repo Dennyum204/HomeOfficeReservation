@@ -22,7 +22,7 @@ docker compose -f infra/compose.yaml down
 
 A imagem usa um utilizador PostgreSQL de desenvolvimento com privilégios administrativos de inicialização. Não é desenho de credenciais de produção. HO-003/HO-004 acrescentarão migrações explícitas; readiness HO-002 mede conexão, não esquema de tabelas. Não executar Graph nem carregar calendários para validar este ambiente.
 
-CI executa este mesmo Compose num runner descartável, com password sintética, verifica readiness/consulta EF real e encerra os containers. O PC atual não tem Docker instalado; a execução local de Compose exige instalar/iniciar Docker. Os resultados remotos ficam no PR, sem apresentar simulação como base de dados real.
+CI executa este mesmo Compose num runner descartável, com password sintética, verifica readiness/consulta EF real e encerra os containers. A execução local exige um motor Docker Linux disponível. Os resultados remotos ficam no PR, sem apresentar simulação como base de dados real.
 
 HO-012 prepara [Compose de piloto e recuperação](pilot/README.md), com [proposta sujeita a aprovação](../docs/HO-012-PILOT.md). API/Web/worker mantêm o mesmo host Linux; nenhum recurso foi contratado ou deployed. Docker Desktop está agora instalado neste PC, mas o motor Linux não funciona sem WSL; o ensaio de contentores pertence à CI Linux. O PostgreSQL portátil existente permanece disponível.
 
