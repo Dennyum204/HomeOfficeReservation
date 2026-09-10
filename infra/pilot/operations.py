@@ -27,6 +27,9 @@ class Operations:
         self.values = dict(line.split("=", 1) for line in self.env_file.read_text().splitlines()
                            if line.strip() and not line.startswith("#"))
         self.private = private_path(self.values["HO_PRIVATE_DIR"])
+        self.database = self.values.get("HO_DATABASE_NAME", "homeoffice")
+        if not re.fullmatch(r"homeoffice|ho012_restore_[a-z0-9_]{1,32}", self.database):
+            raise ValueError("Use homeoffice or an explicitly selected restored pilot database.")
         self.command = ["docker", "compose", "--env-file", str(self.env_file), "-f", str(COMPOSE), *extra]
 
     def run(self, *args, input=None, timeout=240):
@@ -38,11 +41,11 @@ class Operations:
             raise RuntimeError("Operation failed (exit " + str(result.returncode) + ", exception types " + ",".join(codes) + "); inspect private operation-error.log.")
         return result.stdout
 
-    def sql(self, query, database="homeoffice"):
+    def sql(self, query, database=None):
         return self.run("exec", "-T", "database", "psql", "-X", "-qAt", "-v", "ON_ERROR_STOP=1",
-                        "-U", "postgres", "-d", database, input=query.encode()).decode().strip()
+                        "-U", "postgres", "-d", database or self.database, input=query.encode()).decode().strip()
 
-    def counts(self, database="homeoffice"):
+    def counts(self, database=None):
         tables = self.sql("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename;", database).splitlines()
         return {table: int(self.sql('SELECT count(*) FROM "' + table.replace('"', '""') + '";', database)) for table in tables}
 
@@ -54,12 +57,12 @@ class Operations:
         if running:
             self.run("stop", "app")
         try:
-            dump = self.run("exec", "-T", "database", "pg_dump", "-U", "postgres", "-d", "homeoffice", "-Fc", "--no-owner")
+            dump = self.run("exec", "-T", "database", "pg_dump", "-U", "postgres", "-d", self.database, "-Fc", "--no-owner")
             (target / "database.dump").write_bytes(dump)
             shutil.copytree(self.private / "keys", target / "keys")
             shutil.copyfile(self.private / "protection.pfx", target / "protection.pfx")
             manifest = {"utc": datetime.now(timezone.utc).isoformat(), "environment": self.values["HO_ENVIRONMENT"],
-                        "image": self.values["HO_IMAGE"], "counts": self.counts()}
+                        "image": self.values["HO_IMAGE"], "database": self.database, "counts": self.counts()}
             manifest["sha256"] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in target.rglob("*") if p.is_file()}
             (target / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
@@ -77,6 +80,8 @@ class Operations:
         if not re.fullmatch(r"ho012_restore_[a-z0-9_]{1,32}", database):
             raise ValueError("Restore target must be a new ho012_restore_<suffix> database.")
         manifest = json.loads((source / "manifest.json").read_text())
+        if manifest["environment"] != self.values["HO_ENVIRONMENT"]:
+            raise ValueError("Restore must stay in the original environment identity.")
         for name, checksum in manifest["sha256"].items():
             path = (source / name).resolve()
             if not path.is_relative_to(source) or hashlib.sha256(path.read_bytes()).hexdigest() != checksum:

@@ -1,5 +1,6 @@
 HO_PROJECT=homeoffice-staging
 HO_ENVIRONMENT=Staging
+HO_DATABASE_NAME=homeoffice
 HO_PUBLIC_HOST=staging.homeoffice.example.invalid
 HO_PRIVATE_DIR=/srv/homeoffice-staging/private
 HO_IMAGE=homeoffice:REPLACE_WITH_COMMIT_SHA

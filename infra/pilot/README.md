@@ -64,14 +64,14 @@ sudo python3 infra/pilot/operations.py --env-file /srv/homeoffice-staging/enviro
 
 Substituir o sufixo por letras minúsculas/números/underscore. `snapshot` pára brevemente a app/worker, exporta PostgreSQL custom com `pg_dump`, copia chaves cifradas/PFX e manifesto com hashes, contagens, imagem e ambiente. O diretório de destino deve ser novo. Guardar também inventário de configuração e passwords no cofre; não entram no manifesto. Nenhuma configuração privada é impressa. Executar como operador root no host Linux para ler keys 0600. `operation-error.log` é privado e pode conter diagnóstico sensível; não anexar ao GitHub.
 
-O restauro **recusa nomes fora de `ho012_restore_*` e bases existentes**, usa `pg_restore --exit-on-error`, verifica hashes e contagens de todas as tabelas. Não apaga nem sobrescreve a base em uso. Um restauro falhado deixa o alvo isolado para diagnóstico. Depois, numa app isolada sem email/FCM externo, usar a imagem e ambiente do manifesto, chaves/PFX recuperados, password do cofre e a nova connection string. Validar login/refresh/cookie, membros e datas/tarefa conhecida. Confirmar que dados e sessões persistem após reinício. Só trocar a origem de produção após estas verificações e autorização operacional. O ensaio automático faz isto com dados sintéticos; não se copia a base real para staging.
+O restauro **recusa nomes fora de `ho012_restore_*`, bases existentes e mudança de identidade de ambiente**, usa `pg_restore --exit-on-error`, verifica hashes e contagens de todas as tabelas. Não apaga nem sobrescreve a base em uso. Um restauro falhado deixa o alvo isolado para diagnóstico. Depois, numa app isolada sem email/FCM externo, usar a imagem e ambiente do manifesto, chaves/PFX recuperados, password do cofre e a nova connection string. Atualizar também `HO_DATABASE_NAME` no ficheiro environment para esse mesmo nome: os backups e relatórios seguintes devem acompanhar a base selecionada, em vez da antiga `homeoffice`. Validar login/refresh/cookie, membros e datas/tarefa conhecida. Confirmar que dados e sessões persistem após reinício e verificar um novo backup/restauro da base recuperada. Só trocar a origem de produção após estas verificações e autorização operacional. O ensaio automático faz isto com dados sintéticos; não se copia a base real para staging.
 
 Restic cifra a exportação antes do armazenamento externo; preparar repositório SFTP e subconta separados por ambiente, SSH host key verificada e `RESTIC_PASSWORD_FILE` fora do repo. Inicializar uma vez após aprovação. Com as variáveis privadas configuradas no host:
 
 ```sh
 restic backup /srv/homeoffice-staging/exports/UTC_UNICO --tag homeoffice-staging
 restic check
-restic forget --tag homeoffice-staging --keep-daily 7 --keep-weekly 4 --prune
+restic forget --tag homeoffice-staging --group-by host,tags --keep-daily 7 --keep-weekly 4 --prune
 restic restore latest --tag homeoffice-staging --target /srv/homeoffice-staging/recovered-UTC_UNICO
 ```
 

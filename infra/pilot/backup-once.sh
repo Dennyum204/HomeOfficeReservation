@@ -18,7 +18,7 @@ exec 9>"$HO_EXPORT_ROOT/backup.lock"
 flock -n 9
 target="$HO_EXPORT_ROOT/$(date -u +%Y%m%dT%H%M%SZ)"
 python3 "$HO_CHECKOUT/infra/pilot/operations.py" --env-file "$HO_ENV_FILE" snapshot "$target"
-restic backup "$target" --tag homeoffice --quiet
+restic backup "$target" --tag "$(basename "$(dirname "$HO_EXPORT_ROOT")")" --quiet
 restic check --quiet
 date -u +%FT%TZ > "$HO_EXPORT_ROOT/last-success.tmp"
 mv -- "$HO_EXPORT_ROOT/last-success.tmp" "$HO_EXPORT_ROOT/last-success"

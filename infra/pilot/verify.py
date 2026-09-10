@@ -281,6 +281,15 @@ def main():
             STAGE = "recovery email after restoration"
             request("/api/v1/auth/recovery/request", {"email": "employee@pilot.example"}, expected=202)
             request("/api/v1/auth/recovery/complete", {"email": "employee@pilot.example", "code": email_code(), "password": password + "New"}, expected=204)
+            STAGE = "subsequent backups follow the selected restored database"
+            env_file.write_text(env_file.read_text() + f"HO_DATABASE_NAME={restored}\n")
+            recovered_ops = Operations(env_file, ("-f", str(override), "-f", str(ports)))
+            # A disposable marker distinguishes this DB from the pre-recovery source.
+            recovered_ops.sql('CREATE TABLE "HO012RecoveryMarker" (id integer PRIMARY KEY); INSERT INTO "HO012RecoveryMarker" VALUES (1);')
+            next_backup = recovered_ops.snapshot(folder / "backup-after-recovery")
+            assert next_backup["database"] == restored
+            assert next_backup["counts"] == recovered_ops.counts(restored)
+            recovered_ops.restore(folder / "backup-after-recovery", "ho012_restore_second_" + uuid.uuid4().hex[:8])
             evidence = {"production_container": "passed", "smtp": "isolated STARTTLS/authenticated sink; no external delivery", "push": "disabled; not live FCM",
                         "restart": "passed", "restic_encrypted_roundtrip": "passed", "restore_data_cookie_refresh": "passed", "existing_restore_refused": True,
                         "restore_seconds": round(time.monotonic() - restore_started, 1), "total_seconds": round(time.monotonic() - started, 1)}
