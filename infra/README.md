@@ -24,6 +24,6 @@ A imagem usa um utilizador PostgreSQL de desenvolvimento com privilégios admini
 
 CI executa este mesmo Compose num runner descartável, com password sintética, verifica readiness/consulta EF real e encerra os containers. O PC atual não tem Docker instalado; a execução local de Compose exige instalar/iniciar Docker. Os resultados remotos ficam no PR, sem apresentar simulação como base de dados real.
 
-HO-012 escolherá alojamento/região/domínio, credenciais restritas, backups/restauro, keyring protegido, entrega de email e push. API/Web/worker mantêm o host Linux previsto; nenhum recurso foi contratado ou deployed.
+HO-012 prepara [Compose de piloto e recuperação](pilot/README.md), com [proposta sujeita a aprovação](../docs/HO-012-PILOT.md). API/Web/worker mantêm o mesmo host Linux; nenhum recurso foi contratado ou deployed. Docker Desktop está agora instalado neste PC, mas o motor Linux não funciona sem WSL; o ensaio de contentores pertence à CI Linux. O PostgreSQL portátil existente permanece disponível.
 
 Fonte oficial consultada em 2026-09-08: [imagem PostgreSQL](https://hub.docker.com/_/postgres), [Docker Compose](https://docs.docker.com/compose/gettingstarted/).

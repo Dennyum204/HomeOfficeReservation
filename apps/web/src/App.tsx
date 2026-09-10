@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { p } from "./i18n/planning.pt-PT";
 import { w } from "./i18n/work.pt-PT";
@@ -33,7 +33,21 @@ const icons: Record<ShellSection, string> = {
   settings: "⚙",
 };
 export function WorkspaceShell() {
-  const [section, setSection] = useState<ShellSection>("calendar");
+  const currentSection = (): ShellSection => {
+    const path = window.location.pathname.slice(1);
+    return Object.hasOwn(icons, path) ? (path as ShellSection) : "calendar";
+  };
+  const [section, updateSection] = useState<ShellSection>(currentSection);
+  useEffect(() => {
+    const onPopState = () => updateSection(currentSection());
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+  function setSection(value: ShellSection) {
+    if (window.location.pathname !== `/${value}`)
+      window.history.pushState(null, "", `/${value}`);
+    updateSection(value);
+  }
   const [launch, setLaunch] = useState<{
     key: number;
     destination: NotificationDestination;

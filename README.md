@@ -1,5 +1,7 @@
 # HomeOfficeReservation
 
+**HO-012 em preparação, sem deployment:** [proposta de alojamento e piloto](docs/HO-012-PILOT.md), [build/backup/restauro/Android privado](infra/pilot/README.md). Aprovação, SMTP real, distribuição física e aceitação continuam pendentes; PR draft, sem lançamento V1.
+
 Calendário próprio para planear trabalho remoto em Portugal e presencial na Suíça, com pedidos, aprovações, presenças obrigatórias, tarefas e notificações. **Core V1 completo sem conta Microsoft ou Outlook.**
 
 Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter Android. iOS adiado pelo responsável em HO-005, com código/histórico preservados; reativação futura em HO-306, sem data. Autenticação própria com ASP.NET Core Identity: cookie na Web e tokens opacos do framework no mobile. Web/mobile partilham backend e calendário autoritativo. [ADR-004](docs/adr/ADR-004-independent-core.md) regista a decisão.

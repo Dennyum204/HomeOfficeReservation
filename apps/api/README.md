@@ -75,3 +75,6 @@ Contratos e drift: [contracts](../../contracts/README.md). CLI EF Core 10.0.11 f
 ## Notificações HO-007
 
 [Guia e recuperação](../../docs/HO-007-NOTIFICATIONS.md), [ADR-009](../../docs/adr/ADR-009-durable-notifications.md) e [configuração segura](notifications.example.json). Migração aditiva `20260909202903_DurableNotifications`; backup antes de aplicar, sem reprovisionar contas. Worker no mesmo host e fornecedor Disabled por defeito: sem credenciais Firebase no core. Falhas permanentes, leases e contadores por organização estão no guia. Logs não devem expor endereços push ou payloads de calendário.
+# Produção preparada em HO-012
+
+[Imagem API + Web, configuração e recuperação](../../infra/pilot/README.md). `HO_CONFIG_FILE` aponta para JSON privado absoluto; `appsettings.Local.json` só é carregado em Development. Produção/Staging requerem origem HTTPS, hostname único, proxies explícitos, SMTP STARTTLS, worker ativo e key ring persistido/cifrado. Health de produção verifica ligação e migrações; não aplica migrações. Caddy bloqueia diagnósticos no acesso público. Nenhuma contratação/deployment foi realizada.

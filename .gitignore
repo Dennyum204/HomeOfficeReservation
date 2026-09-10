@@ -129,3 +129,11 @@ accounts.json
 client-test.json
 key-*.xml
 *.pfx.password
+# Private deployment and recovery material (safe examples are explicitly named).
+*.dump
+*.backup
+*.tar.gz
+*.apk
+*.aab
+signing.properties
+ho012-*-evidence.json

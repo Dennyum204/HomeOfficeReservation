@@ -18,7 +18,7 @@ jobs:
   backend-contracts:
     name: backend-contracts
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
       POSTGRES_PASSWORD: ci-synthetic-only
       HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
@@ -51,6 +51,14 @@ jobs:
           python3 scripts/smoke_api.py
       - if: always()
         run: docker compose -f infra/compose.yaml down
+      - name: Isolated production image, HTTPS, SMTP sink, restart and verified restore
+        run: sudo -E python3 infra/pilot/verify.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: production-preparation-evidence
+          path: ho012-production-evidence.json
+          if-no-files-found: error
+          retention-days: 14
 
   web:
     name: web
@@ -109,6 +117,8 @@ jobs:
         working-directory: contracts/dart
       - run: flutter pub get --enforce-lockfile
         working-directory: apps/mobile
+      - name: Private signing path with disposable key; no APK publication or installation
+        run: python3 scripts/check_android_signing.py
       - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
         working-directory: apps/mobile
       - run: flutter analyze && flutter test

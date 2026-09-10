@@ -88,7 +88,7 @@ public static class AuthSetup
         else if (development && OperatingSystem.IsWindows()) protection.ProtectKeysWithDpapi();
         // The real host fails closed if encrypted persistence/production delivery is missing.
         services.AddOptions<IdentityRuntimeRequirements>().Configure(o => o.Configured =
-            development && OperatingSystem.IsWindows() || !string.IsNullOrEmpty(certificatePath))
+            development && OperatingSystem.IsWindows() || !string.IsNullOrEmpty(config["DataProtection:CertificatePath"]))
             .Validate(o => o.Configured, "Configure a private Data Protection certificate (see scripts/init_auth.py).").ValidateOnStart();
         if (!development)
         {

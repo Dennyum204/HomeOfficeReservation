@@ -793,7 +793,7 @@
       "title": "Integração das interfaces e testes de aceitação",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-005",
@@ -874,15 +874,15 @@
           ]
         }
       ],
-      "note": "Interfaces core Web/Android completas; PR #36 em revisão. iOS/Outlook adiados; HO-012 apenas após integração humana verificada.",
-      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md."
+      "note": "Integrado via PR #36 em main; merge e quatro checks de integração verificados em HO-012.",
+      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md. Merge humano 2026-09-10T19:05:49Z, commit 39c766043227e23b561ca4e0aa753b4fe0ce0fb2 confirmado no histórico origin/main obtido por fetch. Integração verde: https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345259 e https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345123."
     },
     {
       "id": "HO-012",
       "title": "Staging, distribuição privada e piloto V1",
       "release": "v1.0",
       "area": "operations",
-      "status": "planned",
+      "status": "in_progress",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011"
@@ -927,7 +927,8 @@
             "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios."
           ]
         }
-      ]
+      ],
+      "notes": "Preparação do piloto em ops/ho-012-pilot-preparation: proposta Hetzner/Caddy/PostgreSQL por ambiente, configuração Production, backup/restauro isolado e assinatura Android externa. Critérios de aceitação intactos; contratação, deployment, SMTP real, distribuição física e aceitação continuam por aprovar/validar. PR draft com Refs #13, sem encerrar issue; docs/HO-012-PILOT.md e infra/pilot/README.md."
     },
     {
       "id": "HO-101",
