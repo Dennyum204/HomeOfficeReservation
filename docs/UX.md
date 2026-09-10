@@ -62,3 +62,9 @@ Navegação estreita distribui cinco separadores em linhas; diálogo modal cont�
 ## Concretização HO-007
 
 Notificações é um separador real Web/Android: badge, filtros, páginas, leitura explícita e estados de rede/sessão. Web abre contexto atual; Android conserva referência e explica o tratamento pela Web enquanto os ecrãs HO-010/011 faltam. Push Android é ativado por ação explícita em Definições; recusa e configuração ausente mantêm a caixa funcional. Ler nunca aprova nem confirma presença. Polling pausa em background e o estado é descartado ao sair. [Percurso e limitações](HO-007-NOTIFICATIONS.md).
+
+## Concretização Android HO-010
+
+Mês compacto e agenda selecionada, rótulos/ícones, padrão e aprovações separados de pendentes e presenças. Nome do colaborador ativo permanece na barra superior. Pedido de dias de trabalho é distinto de uma obrigação presencial; esta última é apenas consultada neste item, com tratamento Web até HO-011.
+
+Formulários revêm o intervalo antes de o adicionar e confirmam a intenção antes de enviar. A chefia seleciona só o subconjunto pretendido; o colaborador retira pendentes sem cancelar aprovados. Cancelamento aprovado exige revisão e decisão final. Voltar no Android fecha confirmação/editor/detalhe; input local continua protegido até logout explícito. Erros de rede, versão e resultado incerto têm ações distintas. [Percurso e evidência](HO-010-ANDROID-PLANNING.md).

@@ -36,6 +36,22 @@ class AuthController extends ChangeNotifier {
   Future<void>? _refreshing;
   Future<void> _vaultQueue = Future.value();
   Future<void> Function()? onSigningOut;
+  Future<void> Function(bool discard)? onPrivateStateClearing;
+  int get sessionGeneration => _generation;
+  String? notificationIntent;
+  String? notificationActor;
+  void rememberNotification(String id) {
+    notificationIntent = id;
+    notificationActor = member?.memberId;
+  }
+
+  void consumeNotification(String id) {
+    if (notificationIntent == id) {
+      notificationIntent = null;
+      notificationActor = null;
+    }
+  }
+
   bool _pushCleanupFailed = false;
   static const _timeout = Duration(seconds: 12);
   void _notify() {
@@ -66,8 +82,18 @@ class AuthController extends ChangeNotifier {
     client.addDefaultHeader('Authorization', 'Bearer ${tokens.accessToken}');
   }
 
-  Future<void> _clear() async {
+  Future<void> _clear({bool discardPrivate = false}) async {
     _generation++;
+    var privateStorageFailed = false;
+    if (discardPrivate) {
+      notificationIntent = null;
+      notificationActor = null;
+    }
+    try {
+      await onPrivateStateClearing?.call(discardPrivate);
+    } catch (_) {
+      privateStorageFailed = true;
+    }
     _pushCleanupFailed = false;
     final cleanup = onSigningOut;
     if (cleanup != null) {
@@ -81,6 +107,7 @@ class AuthController extends ChangeNotifier {
     _refresh = null;
     client.defaultHeaderMap.remove('Authorization');
     await _vault(store.clear);
+    if (privateStorageFailed) throw StateError('private_state_cleanup');
   }
 
   Future<void> _failure(Object error, {bool login = false}) async {
@@ -192,7 +219,7 @@ class AuthController extends ChangeNotifier {
   Future<void> logout() async {
     // Built-in bearer signout does not revoke copied tokens. Local removal works offline.
     try {
-      await _clear();
+      await _clear(discardPrivate: true);
       message = _pushCleanupFailed ? AuthMessage.pushCleanup : AuthMessage.none;
     } catch (_) {
       message = AuthMessage.storage;

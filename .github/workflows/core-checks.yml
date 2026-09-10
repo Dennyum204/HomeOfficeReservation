@@ -113,6 +113,9 @@ jobs:
         working-directory: apps/mobile
       - run: flutter analyze && flutter test
         working-directory: apps/mobile
+      - name: Android planning date-only logic under both timezone settings (simulated HTTP)
+        run: TZ=Europe/Lisbon flutter test test/planning_test.dart --plain-name date-only && TZ=Europe/Zurich flutter test test/planning_test.dart --plain-name date-only
+        working-directory: apps/mobile
       - run: dotnet restore apps/api/HomeOffice.slnx --locked-mode
       - run: dotnet build apps/api/src/HomeOffice.Api -c Release --no-restore
       - uses: ./.github/actions/setup-identity
@@ -151,3 +154,14 @@ jobs:
           script: |
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/notifications_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
+            cd apps/mobile && flutter drive --driver=test_driver/planning.dart --target=integration_test/planning_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
+            adb shell cmd alarm set-timezone Europe/Lisbon
+            cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/date_timezone_test.dart --no-dds -d emulator-5554 --dart-define=TEST_DEVICE_ZONE=Europe/Lisbon --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
+            adb shell cmd alarm set-timezone Europe/Zurich
+            cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/date_timezone_test.dart --no-dds -d emulator-5554 --dart-define=TEST_DEVICE_ZONE=Europe/Zurich --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: android-planning-evidence
+          path: apps/mobile/test-results/*.png
+          retention-days: 14

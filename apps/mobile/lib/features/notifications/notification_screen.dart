@@ -23,8 +23,9 @@ String notificationTitle(AppLocalizations s, String event) => switch (event) {
 };
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({super.key, required this.controller});
+  const NotificationScreen({super.key, required this.controller, this.onOpen});
   final InboxController controller;
+  final Future<void> Function(String)? onOpen;
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: controller,
@@ -85,6 +86,12 @@ class NotificationScreen extends StatelessWidget {
                       Text(
                         detail.destination == null
                             ? s.notificationUnavailable
+                            : onOpen != null &&
+                                  (detail.destination!.kind ==
+                                          NotificationContext.request ||
+                                      detail.destination!.kind ==
+                                          NotificationContext.proposal)
+                            ? s.planSelectionHint
                             : s.notificationAndroidFallback,
                       ),
                       if (detail.destination case final destination?) ...[
@@ -104,6 +111,16 @@ class NotificationScreen extends StatelessWidget {
                       ],
                       const SizedBox(height: 12),
                       readButton(detail),
+                      if (onOpen != null &&
+                          detail.destination != null &&
+                          (detail.destination!.kind ==
+                                  NotificationContext.request ||
+                              detail.destination!.kind ==
+                                  NotificationContext.proposal))
+                        FilledButton(
+                          onPressed: c.busy ? null : () => onOpen!(detail.id),
+                          child: Text(s.planOpenRequest),
+                        ),
                     ],
                   ),
                 ),
@@ -152,7 +169,11 @@ class NotificationScreen extends StatelessWidget {
                         spacing: 8,
                         children: [
                           FilledButton.tonal(
-                            onPressed: c.busy ? null : () => c.open(item.id),
+                            onPressed: c.busy
+                                ? null
+                                : () => onOpen != null
+                                      ? onOpen!(item.id)
+                                      : c.open(item.id),
                             child: Text(s.notificationOpen),
                           ),
                           readButton(item),

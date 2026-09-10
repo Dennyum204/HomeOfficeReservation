@@ -94,3 +94,7 @@ Os critérios detalhados por entrega estão em [BACKLOG.md](BACKLOG.md).
 ### Concretização HO-007
 
 A caixa persistente e a leitura sincronizada funcionam em Web/Android independentemente de push. O tratamento completo dos destinos Android fica para HO-010/011; há detalhe explícito com referência e indicação da Web. O adaptador Android é FCM, com configuração opcional para desenvolvimento. Entrega real foi observada no emulador autorizado em foreground, background e cold start; reconexão/logout/troca de conta foram ensaiados contra os serviços reais. Recibo/aceitação do fornecedor não equivalem a leitura nem aprovação. Dispositivos físicos e distribuição não foram validados. [Guia e evidência datada](HO-007-NOTIFICATIONS.md).
+
+### Concretização HO-010
+
+Calendário e pedidos Android permitem os dois papéis: decisões parciais, retirada, revisões/cancelamentos, contrapropostas e disponibilidade manual, com dados autoritativos partilhados com a Web. Notificações de pedidos abrem o detalhe atual, sem executar decisões. Presenças/tarefas completas Android e aceitação transversal restante continuam em HO-011. [Guia e evidência](HO-010-ANDROID-PLANNING.md).

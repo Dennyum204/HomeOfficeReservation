@@ -15,10 +15,10 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-004 | Planeamento e aprovação transacional na API | v1.0 | backend | Concluído | HO-003 |
 | HO-005 | Calendário Web e fluxos de pedido/decisão | v1.0 | web | Concluído | HO-004 |
 | HO-006 | Presenças, resolução de conflitos e tarefas | v1.0 | fullstack | Concluído | HO-004, HO-005 |
-| HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Em revisão | HO-004, HO-005, HO-006 |
+| HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Concluído | HO-004, HO-005, HO-006 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
-| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Planeado | HO-004 |
+| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Em revisão | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Planeado | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Planeado | HO-011 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
@@ -206,7 +206,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/33
 
 ## HO-007 — Notificações duráveis e infraestrutura push
 
-Release: v1.0 · Área: fullstack · Estado: Em revisão
+Release: v1.0 · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -284,26 +284,30 @@ Motivo: Adiado para marco posterior à publicação opcional. Critérios de delt
 
 ## HO-010 — Android: calendário e pedidos para ambos os papéis
 
-Release: v1.0 · Área: mobile · Estado: Planeado
+Release: v1.0 · Área: mobile · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-004
+Dependências: HO-004, HO-005, HO-007
 
 Funcionalidades: FEAT-002, FEAT-003, FEAT-004, FEAT-010
 
 Critérios de aceitação:
 
-- Android apresentam mês compacto, agenda e detalhe do pedido.
-- Colaborador submete e chefe aprova parte dos dias no Android.
-- Dados vêm do cliente gerado e convergem com a Web/API.
-- Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.
-- UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique.
-- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
+- Calendário mensal compacto e agenda distinguem padrão, localização confirmada, pedidos pendentes, disponibilidade manual e presenças/conflitos, com legenda, seleção, Hoje e atualização.
+- Colaborador seleciona dias/intervalo inclusivo, revê datas, guarda/edita/submete rascunhos e consulta filtros/páginas/detalhes; retirada de pendentes mantém aprovações.
+- Colaborador propõe alterações/cancelamentos/indisponibilidade e aceita contrapropostas; o plano aprovado mantém-se até resolução final pela API.
+- Chefia vê apenas colaboradores atribuídos, decide um subconjunto com resumo explícito, contrapropõe e decide revisões aceites; comentários e histórico no contexto.
+- Cliente Dart gerado e autenticação existente; loading/rede/sessão/acesso/versões tratados sem perder input nem confirmar escritas antes da API. Datas mantêm-se em Lisboa/Zurique e DST.
+- Resultado incerto recupera chave/payload exatos; intenção alterada tem chave nova. Input e recovery protegidos por conta; logout/troca de conta eliminam dados privados e respostas antigas não os restauram.
+- Notificações de pedidos/decisões abrem detalhe atual autorizado, preservando intenção na restauração de sessão e FCM existente; presenças/tarefas conservam fallback HO-011.
+- UI PT-PT externalizada, toque/back/teclado/ecrã pequeno/texto ampliado; capturas reais do emulador com dados sintéticos.
+- Testes Flutter e Android/API/PostgreSQL reais: cinco dias submetidos, três aprovados, dois pendentes retirados sem perder aprovações; revisões, contrapropostas, recuperação e isolamento. Fluxo Web→Android converge; navegação por inbox e push real quando viável.
+- Quatro checks obrigatórios verdes no último commit e sem conflitos. Sem iOS/Outlook/fila offline/deployment/HO-011; dados e configuração privados preservados.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/11
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/35
 
 ## HO-011 — Integração das interfaces e testes de aceitação
 

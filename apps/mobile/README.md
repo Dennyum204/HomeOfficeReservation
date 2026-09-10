@@ -2,7 +2,7 @@
 
 **Alvo atual: Android.** Em HO-005 o responsável adiou iOS. As configurações/comandos iOS abaixo são referência preservada, sem execução/debug nos trabalhos core. Reativação em HO-306, sem data; não é requisito de setup ou release.
 
-Shell PT-PT equivalente à Web: navegação, estados em preparação e ligação real ao endpoint de metadados. Login, ativação/recuperação, restauro, refresh limitado e logout próprios. Sem dados fictícios de calendário, aprovação, push ou Microsoft. [Setup Identity e credenciais privadas](../../docs/HO-003-AUTHENTICATION.md). Strings ARB em `lib/l10n/app_pt.arb`; `flutter pub get`/`flutter gen-l10n` geram código ignorado. Separação entre vista, repository e cliente Dart gerado, sem regras de negócio duplicadas.
+Calendário e pedidos Android PT-PT para colaboradores e chefias, com mês/agenda, rascunhos, decisões parciais, revisões/contrapropostas e recuperação protegida. [Guia HO-010 e percurso com duas contas](../../docs/HO-010-ANDROID-PLANNING.md). Presenças/tarefas completas continuam em HO-011; os placeholders dessas áreas são explícitos. Ligação real ao endpoint de metadados mantida. Login, ativação/recuperação, restauro, refresh limitado e logout próprios. Sem dados fictícios de calendário, aprovação, push ou Microsoft. [Setup Identity e credenciais privadas](../../docs/HO-003-AUTHENTICATION.md). Strings ARB em `lib/l10n/app_pt.arb`; `flutter pub get`/`flutter gen-l10n` geram código ignorado. Separação entre vista, repository e cliente Dart gerado, sem regras de negócio duplicadas.
 
 ## Ferramentas fixadas
 
@@ -72,7 +72,7 @@ HO-003 acrescenta `flutter_secure_storage` 11.0.0: refresh por origem API em arm
 
 ## Caixa e push Android HO-007
 
-Caixa real: páginas de 20, badge, filtros, leitura/não lida e detalhe autorizado. O detalhe informa que o calendário/pedidos/tarefas completos Android ainda pertencem a HO-010/011 e preserva a referência. Polling de 15 s pausa em background; só leituras idempotentes repetem uma vez após refresh Identity. O teste de expiração Android passa agora por background para não confundir atividade da caixa com sessão inativa; a lógica iOS anterior não foi alterada nem executada.
+Caixa real: páginas de 20, badge, filtros, leitura/não lida e detalhe autorizado. HO-010 liga notificações de pedidos/decisões ao pedido atual autorizado; presenças/tarefas preservam o fallback Web até HO-011. Polling de 15 s pausa em background; só leituras idempotentes repetem uma vez após refresh Identity. O teste de expiração Android passa agora por background para não confundir atividade da caixa com sessão inativa; a lógica iOS anterior não foi alterada nem executada.
 
 FCM está desativado por defeito; [configuração privada, limites e evidência externa](../../docs/HO-007-NOTIFICATIONS.md). FirebaseAdmin/FlutterFire com versões fixadas; sem Firebase Auth, sem configuração real em Git. Só pedir permissão na ação de Definições. Recusa mantém a caixa. Registo expira após 24 h sem renovação; abrir diariamente. Logout offline mostra quando não foi possível confirmar remoção; IDs pendentes em armazenamento seguro, sem conservar credenciais da conta anterior. Entrega/abertura foreground/background/cold start e reconexão/troca de conta foram verificadas no emulador API 37.
 
@@ -87,3 +87,11 @@ flutter drive --driver=test_driver/integration_test.dart --target=integration_te
 ```
 
 Prova submissão gerada por colaborador, consumo real pelo worker, inbox da chefia, leitura sem decisão e detalhe/contexto; não usa Firebase. Os testes em `test/notifications_test.dart` simulam fornecedor/HTTP para recusa, rotação, logout e respostas atrasadas. iOS permanece adiado. O SDK Android atual emite avisos de migração Kotlin em plugins Firebase mantidos; não foram modificadas dependências para ocultar avisos.
+
+## Planeamento Android HO-010
+
+Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submissão, filtros/paginação, retirada só de pendentes, decisões parciais e revisões. A localização confirmada nunca desaparece enquanto a alteração está pendente. Indisponibilidade manual usa o mesmo processo. O seletor de colaborador é autorizado pela API e o nome ativo permanece na barra durante scroll.
+
+`features/planning` separa vistas/controller/repository; só o cliente gerado serializa contratos. Input e envelopes de recuperação são cifrados por origem e conta via secure storage. Logout explícito elimina-os; expiração conserva input protegido para a mesma conta. Uma resposta de transporte perdida exige recuperar a chave/corpo originais. A retoma atualiza leituras, sem fila offline. [ADR-011](../../docs/adr/ADR-011-android-planning.md).
+
+`integration_test/planning_test.dart` prova o percurso cinco/três/dois, revisão pendente e contraproposta até decisão final contra API/PG reais. `date_timezone_test.dart` verifica os dois limites DST com a zona real do dispositivo selecionada; `web_handoff_test.dart` completa o pedido criado pelo browser. O [guia HO-010](../../docs/HO-010-ANDROID-PLANNING.md) contém comandos e evidência separada das simulações. Usar o driver `test_driver/planning.dart` para screenshots sanitizados. O teste `planning_push_live_test.dart` é manual, com Firebase/contas privadas e permissão previamente concedida; nunca é gate do core.

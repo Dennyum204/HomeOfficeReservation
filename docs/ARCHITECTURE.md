@@ -98,3 +98,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Notificações implementadas em HO-007
 
 [ADR-009](adr/ADR-009-durable-notifications.md) concretiza worker no mesmo host, leases PostgreSQL, commit conjunto inbox/intenção/outbox, histórico sem alertas e autorização atual. Web/Android usam polling limitado e contratos gerados; FCM usa ADC no backend e recursos nativos privados no Android. [ADR-010](adr/ADR-010-android-fcm-registration.md) substitui apenas o registo Android: APIs FID oficiais numa fila de trabalho Flutter, callbacks na thread principal e filtro de repetições. Provider Disabled mantém core/CI independentes. Processamento interno, simulação, aceitação FCM e recibo do cliente são estados distintos. Entrega real observada no emulador autorizado, com [evidência, limitações e operação](HO-007-NOTIFICATIONS.md).
+
+## Planeamento Android HO-010
+
+[ADR-011](adr/ADR-011-android-planning.md): mês/agenda, pedidos e decisões usam os contratos gerados existentes. Controller separa estado confirmado, input e envelope cifrado da operação incerta; gerações de sessão/consulta descartam resultados atrasados. Notificações resolvem o destino na API e abrem o pedido atual. Contraproposta sobre revisão pendente transporta a aprovação original apenas pela referência e versão explicitamente existentes na revisão; mesma transação/autorização, sem migração nem mudança de contrato. [Guia de utilização e ensaios](HO-010-ANDROID-PLANNING.md).

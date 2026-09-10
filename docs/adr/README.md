@@ -18,5 +18,7 @@ Cada ADR distingue decisões confirmadas de pressupostos. HO-000 confirma a stac
 
 Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência e ID da tarefa/PR. Não apagar decisões antigas; marcar como superseded e ligar a substituição.
 
-| [ADR-009](ADR-009-durable-notifications.md) | Worker durável, caixa Web/Android e infraestrutura FCM | HO-007 em revisão; registo Android revisto por ADR-010 |
+| [ADR-009](ADR-009-durable-notifications.md) | Worker durável, caixa Web/Android e infraestrutura FCM | HO-007 integrado pelo PR #34; quatro checks de integração verificados em HO-010; registo revisto por ADR-010 |
 | [ADR-010](ADR-010-android-fcm-registration.md) | Registo FCM Android oficial por FID e adaptação Flutter | HO-007; correções motivadas pelo ensaio real |
+
+| [ADR-011](ADR-011-android-planning.md) | Calendário/pedidos Android, recuperação por conta e continuidade da base aprovada | HO-010; revisão/merge pendentes |

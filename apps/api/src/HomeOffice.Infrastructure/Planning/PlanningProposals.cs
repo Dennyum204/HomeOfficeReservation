@@ -46,7 +46,8 @@ public sealed partial class PlanningService
             foreach (var d in affected.Where(d => d.Decision == DayDecision.Approved))
                 Require(input.Days.Any(x => x.BaseDayId == d.Id), "approved_replacement_must_be_explicit");
             foreach (var d in input.Days.Where(d => d.BaseDayId is not null))
-                Require(affected.Any(a => a.Id == d.BaseDayId && a.Decision == DayDecision.Approved), "invalid_proposal_base");
+                Require(affected.Any(a => a.Id == d.BaseDayId && a.Decision == DayDecision.Approved ||
+                    a.LocalDate == d.LocalDate && a.BaseDayId == d.BaseDayId && a.BasePlanVersion == d.BasePlanVersion), "invalid_proposal_base");
             var proposal = new ChangeProposal
             {
                 RequirementId = input.RequirementId,

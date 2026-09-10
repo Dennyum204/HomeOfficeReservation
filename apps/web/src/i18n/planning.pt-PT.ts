@@ -227,7 +227,7 @@ export const p = {
   accountSettings:
     "A gestão de membros é reservada ao administrador de contas. Não está disponível nesta interface de planeamento.",
   plannedFeatures:
-    "Outlook ainda não está disponível. O calendário e as tarefas Android serão disponibilizados mais tarde.",
+    "Outlook ainda não está disponível. As presenças e as tarefas no Android serão disponibilizadas mais tarde.",
   selectedOnly: "Selecione dias com um estado compatível com esta ação.",
   cancelHint:
     "O cancelamento só retira a aprovação após decisão do gestor. O padrão volta então a ficar visível.",

@@ -44,3 +44,7 @@ Playwright usa 5083/5174 com instâncias próprias; os servidores normais 5080/5
 ## Caixa de notificações HO-007
 
 [Percurso com duas contas](../../docs/HO-007-NOTIFICATIONS.md): filtros atuais/não lidas/histórico, páginas de 20, badge e leitura idempotente, links para pedido/presença/tarefa atuais. Polling de 15 s pausado ao ocultar/offline, sem Web OS push. Strings em `src/i18n/notifications.pt-PT.ts`; `NotificationsApi` gerado, sem DTOs copiados. `tests/notifications.spec.ts` usa API, worker e PostgreSQL reais em desktop/ecrã estreito e verifica que ler não decide nem confirma presença. Nenhuma credencial Firebase exigida no browser.
+
+## Passagem para Android HO-010
+
+Com Web/API já em execução e contas privadas autorizadas, `node tools/android-handoff.mjs create` cria um pedido pelo formulário browser. Depois da decisão Android, `node tools/android-handoff.mjs verify` confirma o detalhe e calendário pela sessão Web. Não arranca outra API nem reseta fixtures. Variáveis, comandos Android e evidência no [guia HO-010](../../docs/HO-010-ANDROID-PLANNING.md).

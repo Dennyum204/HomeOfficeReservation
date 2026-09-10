@@ -565,7 +565,7 @@
       "title": "Notificações duráveis e infraestrutura push",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004",
@@ -615,7 +615,16 @@
           ]
         }
       ],
-      "note": "PR #34: caixa Web/Android e worker implementados/testados. FCM real observado no emulador autorizado em foreground/background/cold start e após reinício; aceitação e recibo separados no guia HO-007. Reconexão/logout/troca de conta passaram contra serviços reais; correções de registo/threading em ADR-010. 14 testes Flutter e evidência simulada separados dos envios reais. Sem setup externo em falta para este ensaio; dispositivos físicos/lojas não validados. Review até merge humano e integração; só retirar draft com quatro checks verdes no último head e sem conflitos."
+      "note": "Integrado pelo PR #34; merge e CI de integração verificados em HO-010. Entrega FCM real no emulador documentada no guia HO-007/ADR-010, distinta de simulação e aceitação. Sem validação de dispositivo físico/lojas.",
+      "merge_evidence": {
+        "merged_at": "2026-09-09T23:09:36Z",
+        "merge_commit": "aa5970de1ef97670858fe9c44be2c7dc63ed1d7d",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34415655490",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34415655520"
+        ],
+        "note": "PR #34 merged em main; ancestralidade verificada e os quatro checks de integração passaram. Ensaio FCM real no emulador em HO-007 mantém os limites documentados."
+      }
     },
     {
       "id": "HO-008",
@@ -720,10 +729,12 @@
       "title": "Android: calendário e pedidos para ambos os papéis",
       "release": "v1.0",
       "area": "mobile",
-      "status": "planned",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-004"
+        "HO-004",
+        "HO-005",
+        "HO-007"
       ],
       "features": [
         "FEAT-002",
@@ -732,15 +743,21 @@
         "FEAT-010"
       ],
       "acceptance": [
-        "Android apresentam mês compacto, agenda e detalhe do pedido.",
-        "Colaborador submete e chefe aprova parte dos dias no Android.",
-        "Dados vêm do cliente gerado e convergem com a Web/API.",
-        "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
-        "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique.",
-        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+        "Calendário mensal compacto e agenda distinguem padrão, localização confirmada, pedidos pendentes, disponibilidade manual e presenças/conflitos, com legenda, seleção, Hoje e atualização.",
+        "Colaborador seleciona dias/intervalo inclusivo, revê datas, guarda/edita/submete rascunhos e consulta filtros/páginas/detalhes; retirada de pendentes mantém aprovações.",
+        "Colaborador propõe alterações/cancelamentos/indisponibilidade e aceita contrapropostas; o plano aprovado mantém-se até resolução final pela API.",
+        "Chefia vê apenas colaboradores atribuídos, decide um subconjunto com resumo explícito, contrapropõe e decide revisões aceites; comentários e histórico no contexto.",
+        "Cliente Dart gerado e autenticação existente; loading/rede/sessão/acesso/versões tratados sem perder input nem confirmar escritas antes da API. Datas mantêm-se em Lisboa/Zurique e DST.",
+        "Resultado incerto recupera chave/payload exatos; intenção alterada tem chave nova. Input e recovery protegidos por conta; logout/troca de conta eliminam dados privados e respostas antigas não os restauram.",
+        "Notificações de pedidos/decisões abrem detalhe atual autorizado, preservando intenção na restauração de sessão e FCM existente; presenças/tarefas conservam fallback HO-011.",
+        "UI PT-PT externalizada, toque/back/teclado/ecrã pequeno/texto ampliado; capturas reais do emulador com dados sintéticos.",
+        "Testes Flutter e Android/API/PostgreSQL reais: cinco dias submetidos, três aprovados, dois pendentes retirados sem perder aprovações; revisões, contrapropostas, recuperação e isolamento. Fluxo Web→Android converge; navegação por inbox e push real quando viável.",
+        "Quatro checks obrigatórios verdes no último commit e sem conflitos. Sem iOS/Outlook/fila offline/deployment/HO-011; dados e configuração privados preservados."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/11",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/35"
+      ],
       "scope_history": [
         {
           "date": "2026-09-09",
@@ -752,8 +769,24 @@
             "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
             "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique."
           ]
+        },
+        {
+          "date": "2026-09-10",
+          "reason": "Pedido HO-010 completo: calendário/pedidos/decisões Android, recuperação fiável, navegação por notificações e evidência nativa/cross-platform. HO-011 conserva presenças/tarefas Android.",
+          "previous_acceptance": [
+            "Android apresentam mês compacto, agenda e detalhe do pedido.",
+            "Colaborador submete e chefe aprova parte dos dias no Android.",
+            "Dados vêm do cliente gerado e convergem com a Web/API.",
+            "Sem rede ou com sessão expirada, a aplicação não apresenta escritas como confirmadas.",
+            "UI tem estados de erro/pendente e mantém datas em Lisboa/Zurique.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+          ],
+          "previous_dependencies": [
+            "HO-004"
+          ]
         }
-      ]
+      ],
+      "note": "Implementação e evidência local concluídas no PR #35. 25 testes Flutter, 4 unitários e 47 PostgreSQL, percurso Android cinco/três/dois, Web→Android→Web, DST Lisboa/Zurique e FCM foreground real. Falha inicial de CI: teste de autenticação procurava diagnósticos no calendário; navegação corrigida para Definições, preservando asserções. Quatro checks do último commit e ausência de conflitos são obrigatórios antes de retirar draft; evidência remota final no PR. Integração/merge ainda pendentes."
     },
     {
       "id": "HO-011",

@@ -7,6 +7,8 @@ import 'workspace_repository.dart';
 import '../notifications/inbox_controller.dart';
 import '../notifications/push_coordinator.dart';
 import '../notifications/notification_screen.dart';
+import '../planning/planning_controller.dart';
+import '../planning/planning_screen.dart';
 
 class WorkspaceScreen extends StatefulWidget {
   const WorkspaceScreen({
@@ -14,10 +16,12 @@ class WorkspaceScreen extends StatefulWidget {
     required this.repository,
     this.inbox,
     this.push,
+    this.planning,
   });
   final WorkspaceRepository? repository;
   final InboxController? inbox;
   final PushCoordinator? push;
+  final PlanningController? planning;
   @override
   State<WorkspaceScreen> createState() => WorkspaceScreenState();
 }
@@ -29,9 +33,43 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
     widget.inbox?.showInbox(value == 3);
   }
 
-  void openNotification(String id) {
+  bool _openingNotification = false;
+  Future<void> openNotification(String id) async {
+    if (_openingNotification) return;
+    _openingNotification = true;
+    final planning = widget.planning;
+    planning?.repository.auth.rememberNotification(id);
     selectSection(3);
-    widget.inbox?.open(id);
+    try {
+      if (planning != null && !planning.initialized) {
+        await planning.initialize();
+        if (!mounted || !planning.active || !planning.initialized) return;
+      }
+      await widget.inbox?.open(id);
+      if (!mounted || (planning != null && !planning.active)) return;
+      final destination = widget.inbox?.detail?.destination;
+      if (destination != null &&
+          planning != null &&
+          (destination.kind == NotificationContext.request ||
+              destination.kind == NotificationContext.proposal)) {
+        final opened = await planning.openRequest(
+          destination.resourceId,
+          target: destination.employeeId,
+        );
+        if (!mounted || !planning.active) return;
+        selectSection(1);
+        if (opened ||
+            planning.failure == PlanningFailure.missing ||
+            planning.failure == PlanningFailure.forbidden) {
+          planning.repository.auth.consumeNotification(id);
+        }
+      } else if (widget.inbox?.detail != null ||
+          widget.inbox?.unavailable == true) {
+        planning?.repository.auth.consumeNotification(id);
+      }
+    } finally {
+      _openingNotification = false;
+    }
   }
 
   Widget navIcon(int index, IconData icon) => index == 3 && widget.inbox != null
@@ -97,6 +135,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
     ];
     final wide = MediaQuery.sizeOf(context).width >= 700;
     return Scaffold(
+      primary: widget.planning == null,
       appBar: AppBar(
         title: Row(
           children: [
@@ -105,9 +144,34 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
               color: Color(0xff264e3e),
             ),
             const SizedBox(width: 10),
-            Text(
-              s.appName,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+            Expanded(
+              child: widget.planning != null && (_section == 0 || _section == 1)
+                  ? ListenableBuilder(
+                      listenable: widget.planning!,
+                      builder: (context, _) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            labels[_section],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (widget.planning!.employee != null)
+                            Text(
+                              widget.planning!.employee!.displayName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                        ],
+                      ),
+                    )
+                  : Text(
+                      s.appName,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
             ),
           ],
         ),
@@ -144,8 +208,17 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
               ),
             ),
           Expanded(
-            child: _section == 3 && widget.inbox != null
-                ? NotificationScreen(controller: widget.inbox!)
+            child: (_section == 0 || _section == 1) && widget.planning != null
+                ? PlanningScreen(
+                    controller: widget.planning!,
+                    requests: _section == 1,
+                    onRequests: () => selectSection(1),
+                  )
+                : _section == 3 && widget.inbox != null
+                ? NotificationScreen(
+                    controller: widget.inbox!,
+                    onOpen: openNotification,
+                  )
                 : SingleChildScrollView(
                     child: Center(
                       child: ConstrainedBox(
