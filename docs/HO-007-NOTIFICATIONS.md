@@ -142,3 +142,7 @@ flutter run -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --d
 ```
 
 Compilação sintética, simulações de canal/fornecedor e ensaios reais continuam separados. Recusa de permissão, logout offline, crashes/duplicados e registos atrasados são cobertos por simulações/testes PostgreSQL, não por afirmações de entrega externa nesses cenários. Não foram validados dispositivo físico, fabricante/modo de bateria, lojas, assinatura release, iOS, redes de produção nem recuperação após perda das chaves. A lease de 24 h exige abrir a app diariamente. A receção em background só é reportada ao abrir. Force-stop pelo utilizador pode impedir entrega até reabrir. Issue #8 permanece aberta até revisão/merge e verificação de integração; o PR só sai de draft com CI final verde e sem conflitos.
+
+## Continuidade verificada em HO-010
+
+PR #34 integrado em main em 2026-09-09T23:09:36Z, commit `aa5970de1ef97670858fe9c44be2c7dc63ed1d7d`, confirmado no histórico remoto obtido por fetch. Os quatro checks de integração passaram ([documentação](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34415655490), [core](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34415655520)); HO-007 está concluído e a issue #8 encerrada. As referências anteriores a revisão/issue aberta descrevem o momento da entrega original. HO-010 acrescenta navegação Android para pedidos/decisões, preservando esta configuração FCM e os fallbacks de presenças/tarefas.

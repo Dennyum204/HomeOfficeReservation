@@ -19,7 +19,11 @@ public sealed partial class PlanningService
             {
                 Require(parent is not null, "revision_required");
                 var source = await db.Set<RequestedDay>().SingleOrDefaultAsync(x => x.Id == baseId && x.EmployeeId == profile.EmployeeId, ct);
-                Require(source is not null && source.RequestId == parent && source.LocalDate == d.LocalDate, "invalid_revision_base");
+                // A pending revision can explicitly carry the still-effective approval
+                // through another revision/counterproposal. Never infer a base by date alone.
+                var inherited = await db.Set<RequestedDay>().AnyAsync(x => x.RequestId == parent && x.EmployeeId == profile.EmployeeId &&
+                    x.LocalDate == d.LocalDate && x.BaseDayId == baseId && x.BasePlanVersion == d.BasePlanVersion, ct);
+                Require(source is not null && source.LocalDate == d.LocalDate && (source.RequestId == parent || inherited), "invalid_revision_base");
             }
         }
     }

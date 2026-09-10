@@ -373,7 +373,7 @@ class PushCoordinator extends ChangeNotifier {
     _disposed = true;
     _epoch++;
     _renewal?.cancel();
-    auth.onSigningOut = null;
+    if (auth.onSigningOut == signOut) auth.onSigningOut = null;
     for (final subscription in _subscriptions) {
       unawaited(subscription.cancel());
     }

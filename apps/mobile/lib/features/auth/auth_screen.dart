@@ -12,6 +12,9 @@ import '../notifications/inbox_controller.dart';
 import '../notifications/notification_repository.dart';
 import '../notifications/push_coordinator.dart';
 import '../notifications/push_gateway.dart';
+import '../planning/planning_controller.dart';
+import '../planning/planning_repository.dart';
+import '../planning/planning_store.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key, required this.controller});
@@ -30,7 +33,17 @@ class _AuthScreenState extends State<AuthScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    widget.controller.addListener(_authChanged);
     widget.controller.restore();
+  }
+
+  void _authChanged() {
+    if (widget.controller.member != null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || widget.controller.member != null) return;
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      ScaffoldMessenger.of(context).clearSnackBars();
+    });
   }
 
   @override
@@ -44,6 +57,7 @@ class _AuthScreenState extends State<AuthScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    widget.controller.removeListener(_authChanged);
     _email.dispose();
     _password.dispose();
     _code.dispose();
@@ -260,6 +274,10 @@ class _AccountWorkspace extends StatefulWidget {
 class _AccountWorkspaceState extends State<_AccountWorkspace>
     with WidgetsBindingObserver {
   final workspaceKey = GlobalKey<WorkspaceScreenState>();
+  late final planning = PlanningController(
+    PlanningRepository(widget.controller),
+    SecurePlanningStore(ApiSettings.baseUrl),
+  );
   late final inbox = InboxController(NotificationRepository(widget.controller));
   late final push = PushCoordinator(
     widget.controller,
@@ -287,6 +305,20 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    unawaited(
+      planning.initialize().then((_) {
+        if (!mounted || !planning.active) return;
+        final auth = widget.controller;
+        final intended = auth.notificationIntent;
+        if (intended == null) return;
+        if (auth.notificationActor != null &&
+            auth.notificationActor != auth.member?.memberId) {
+          auth.consumeNotification(intended);
+          return;
+        }
+        workspaceKey.currentState?.openNotification(intended);
+      }),
+    );
     unawaited(inbox.refresh());
     unawaited(push.initialize());
   }
@@ -295,11 +327,17 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     inbox.activity(state == AppLifecycleState.resumed);
     push.activity(state == AppLifecycleState.resumed);
+    if (state == AppLifecycleState.resumed && planning.initialized) {
+      unawaited(planning.refresh());
+    } else if (planning.active) {
+      unawaited(planning.persist().catchError((Object _) {}));
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    planning.dispose();
     inbox.dispose();
     push.dispose();
     super.dispose();
@@ -355,6 +393,7 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
             repository: repository,
             inbox: inbox,
             push: push,
+            planning: planning,
           ),
         ),
       ],

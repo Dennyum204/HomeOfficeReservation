@@ -106,3 +106,7 @@ Presenças são projetadas sem sobrescrever PlanDays; edição/cancelamento usa 
 ## Implementação HO-007
 
 InboxNotification é única por EventId/RecipientId. PushDevice pertence ao membro/organização, tem endereço cifrado, versão, expiração e revogação permanente por instalação. PushDelivery tem lease, tentativas e estados separados de aceitação/recibo. A outbox captura destinatário pelo servidor e mantém histórico; Notificação.ReadAt não altera OnsiteAcknowledgement nem decisões. [Mapa de eventos e recuperação](HO-007-NOTIFICATIONS.md), [ADR-009](adr/ADR-009-durable-notifications.md).
+
+## Continuidade de revisões em HO-010
+
+Uma revisão/contraproposta de uma revisão pendente pode preservar a aprovação original através da mesma data, BaseDayId e BasePlanVersion já explicitamente associados ao pedido anterior. A seleção afetada confirma essa ligação; plano, versão e conflitos são novamente validados na reserva/decisão. Não se aceita uma base inferida apenas por data. [ADR-011](adr/ADR-011-android-planning.md) documenta a lacuna reproduzida e o teste PostgreSQL.

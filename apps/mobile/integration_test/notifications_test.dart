@@ -194,20 +194,16 @@ void main() {
       await tester.pumpAndSettle();
       for (
         var i = 0;
-        i < 20 &&
-            find.byKey(const Key('notification-context')).evaluate().isEmpty;
+        i < 20 && find.byKey(const Key('request-counts')).evaluate().isEmpty;
         i++
       ) {
         await tester.pump(const Duration(milliseconds: 500));
       }
-      expect(find.text(draft.contextId), findsOneWidget);
-      expect(
-        find.textContaining('Consulte e trate este assunto na Web.'),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('request-counts')), findsOneWidget);
+      expect(find.text('Android notification integration'), findsOneWidget);
       await tester.tap(find.text('Terminar sessão'));
       await tester.pumpAndSettle();
-      expect(find.text(draft.contextId), findsNothing);
+      expect(find.byKey(const Key('request-counts')), findsNothing);
       expect(find.text('Entre no seu espaço'), findsOneWidget);
       // No Firebase credentials/provider are used. This proves native inbox/API/worker connectivity only.
     },
