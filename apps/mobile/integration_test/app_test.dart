@@ -159,6 +159,14 @@ Future<void> main() async {
       'Chefia de teste',
     );
     await tester.tap(find.text('Terminar sessão'));
+    // Frame settling alone does not await the native secure-storage operation.
+    for (
+      var i = 0;
+      i < 100 && find.text('Entre no seu espaço').evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 200));
+    }
     await tester.pumpAndSettle();
     expect(find.text('Entre no seu espaço'), findsOneWidget);
     expect(find.text('Chefia de teste'), findsNothing);

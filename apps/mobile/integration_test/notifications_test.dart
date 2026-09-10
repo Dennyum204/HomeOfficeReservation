@@ -202,9 +202,19 @@ void main() {
       expect(find.byKey(const Key('request-counts')), findsOneWidget);
       expect(find.text('Android notification integration'), findsOneWidget);
       await tester.tap(find.text('Terminar sessão'));
+      // Native secure-storage cleanup can finish after animation frames settle.
+      // Wait for the observable logout result, then still require private state to be absent.
+      for (
+        var i = 0;
+        i < 100 && find.text('Entre no seu espaço').evaluate().isEmpty;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 200));
+      }
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('request-counts')), findsNothing);
       expect(find.text('Entre no seu espaço'), findsOneWidget);
+      expect(await SecureTokenStore(ApiSettings.baseUrl).read(), isNull);
       // No Firebase credentials/provider are used. This proves native inbox/API/worker connectivity only.
     },
   );
