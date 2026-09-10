@@ -24,6 +24,7 @@ public sealed class AccountEmail(IConfiguration config, IHostEnvironment environ
             if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserWrite);
             return;
         }
+        var stage = "prepare";
         try
         {
             var message = new MimeMessage();
@@ -35,15 +36,19 @@ public sealed class AccountEmail(IConfiguration config, IHostEnvironment environ
                 Text = $"Na aplicação HomeOffice, escolha {(purpose == "activate" ? "Ativar conta" : "Repor palavra-passe")} e introduza este código:\n\n{code}\n\nSe não solicitou esta operação, ignore esta mensagem."
             };
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
+            stage = "connect";
             await smtp.ConnectAsync(config["Email:Host"]!, config.GetValue("Email:Port", 587), SecureSocketOptions.StartTls);
+            stage = "authenticate";
             await smtp.AuthenticateAsync(config["Email:Username"]!, config["Email:Password"]!);
+            stage = "send";
             await smtp.SendAsync(message);
+            stage = "disconnect";
             await smtp.DisconnectAsync(true);
         }
-        catch (Exception)
+        catch (Exception error)
         {
             // SMTP exception messages can contain recipients. Record no message, token, credentials or recipient.
-            logger.LogError("Account email delivery failed. Check the configured SMTP service.");
+            logger.LogError("Account email delivery failed at {Stage}; failure type {FailureType}.", stage, error.GetType().Name);
             throw new EmailDeliveryException();
         }
     }

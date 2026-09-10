@@ -8,12 +8,14 @@ import re
 import secrets
 import shutil
 import ssl
+import smtplib
 import subprocess
 import tempfile
 import time
 import urllib.error
 import urllib.request
 import uuid
+from datetime import datetime, timedelta, timezone
 from operations import Operations, ROOT
 
 STAGE = "initialization"
@@ -41,6 +43,8 @@ def main():
         (private / "keys").mkdir()
         os.chown(private / "keys", 1654, 1654)
         password = "Ho9!" + secrets.token_hex(24)
+        day = datetime.now(timezone.utc).date() + timedelta(days=30)
+        planned_date = (day + timedelta(days=(7 - day.weekday()) % 7)).isoformat()
         def write(name, value):
             (private / name).write_text(value, encoding="utf-8")
         write("postgres-password", secrets.token_hex(32))
@@ -48,15 +52,13 @@ def main():
         write("smtp-auth", "pilot:" + password + "\n")
         write("firebase-admin.json", "{}\n")
         STAGE = "ephemeral TLS and protected keys"
-        command(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "2", "-subj", "/CN=HO012 isolated CA",
-                 "-keyout", str(private / "ca.key"), "-out", str(private / "ca.pem")])
-        for name, san in (("server", "DNS:localhost,DNS:mailpit"),):
-            command(["openssl", "req", "-newkey", "rsa:2048", "-nodes", "-subj", "/CN=localhost", "-keyout", str(private / (name + ".key")),
-                     "-out", str(private / (name + ".csr"))])
-            write("extensions", "subjectAltName=" + san + "\nextendedKeyUsage=serverAuth\n")
-            command(["openssl", "x509", "-req", "-in", str(private / (name + ".csr")), "-CA", str(private / "ca.pem"),
-                     "-CAkey", str(private / "ca.key"), "-CAcreateserial", "-days", "2", "-extfile", str(private / "extensions"),
-                     "-out", str(private / (name + ".pem"))])
+        # Trust this self-signed endpoint explicitly in this disposable environment only.
+        # Do not disable MailKit certificate/revocation validation or install trust on the developer PC.
+        command(["openssl", "req", "-x509", "-newkey", "rsa:3072", "-nodes", "-days", "2", "-subj", "/CN=localhost",
+                 "-addext", "subjectAltName=DNS:localhost,DNS:mailpit", "-addext", "basicConstraints=critical,CA:TRUE",
+                 "-addext", "keyUsage=digitalSignature,keyEncipherment,keyCertSign", "-addext", "extendedKeyUsage=serverAuth",
+                 "-keyout", str(private / "server.key"), "-out", str(private / "server.pem")])
+        shutil.copyfile(private / "server.pem", private / "ca.pem")
         command(["openssl", "pkcs12", "-export", "-inkey", str(private / "server.key"), "-in", str(private / "server.pem"),
                  "-out", str(private / "protection.pfx"), "-passout", "env:HO_PFX_PASSWORD"], env={**os.environ, "HO_PFX_PASSWORD": password})
         for path in private.iterdir():
@@ -81,7 +83,7 @@ def main():
         override.write_text(json.dumps({"services": {
             "edge": {"ports": [], "volumes": [str(private / "Caddyfile") + ":/etc/caddy/Caddyfile:ro", str(private) + ":/run/config:ro"]},
             "app": {"environment": {"SSL_CERT_FILE": "/run/config/ca.pem"}, "volumes": [str(private / "ca.pem") + ":/run/config/ca.pem:ro"]},
-            "mailpit": {"image": "axllent/mailpit:v1.31.1", "networks": ["pilot"], "ports": ["127.0.0.1:18025:8025"],
+            "mailpit": {"image": "axllent/mailpit:v1.31.1", "networks": ["pilot"], "ports": ["127.0.0.1:18025:8025", "127.0.0.1:11025:1025"],
                         "volumes": [str(private) + ":/run/config:ro"], "environment": {
                             "MP_SMTP_TLS_CERT": "/run/config/server.pem", "MP_SMTP_TLS_KEY": "/run/config/server.key",
                             "MP_SMTP_REQUIRE_STARTTLS": "true", "MP_SMTP_AUTH_FILE": "/run/config/smtp-auth"}}
@@ -171,6 +173,22 @@ def main():
                     config[section][key] = original
                     write("application.json", json.dumps(config))
             STAGE = "real production SMTP adapter against isolated STARTTLS sink"
+            try:
+                with smtplib.SMTP("localhost", 11025, timeout=10) as smtp:
+                    smtp.starttls(context=ssl.create_default_context())
+            except ssl.SSLError:
+                pass
+            else:
+                raise RuntimeError("The isolated certificate was trusted without the explicit test trust store")
+            with smtplib.SMTP("localhost", 11025, timeout=10) as smtp:
+                smtp.starttls(context=context)
+                try:
+                    smtp.login("pilot", "deliberately-invalid")
+                except smtplib.SMTPAuthenticationError:
+                    pass
+                else:
+                    raise RuntimeError("SMTP fixture accepted an invalid password")
+                smtp.login("pilot", password)
             ops.run("run", "--rm", "--no-deps", "app", "--bootstrap-admin", "/run/config/bootstrap.json")
             activate("admin@pilot.example")
             request("/api/v1/auth/web/login", {"email": "admin@pilot.example", "password": password}, csrf=True, expected=204)
@@ -190,7 +208,7 @@ def main():
             STAGE = "application planning and durable worker"
             base = '/api/v1/planning/' + employee["memberId"]
             draft = request(base + "/requests", {"expectedCalendarVersion": 0, "expectedRequestVersion": None, "parentRevisionId": None,
-                "note": "Synthetic production recovery", "days": [{"localDate": "2027-02-15", "location": "RemotePortugal", "availability": "Working"}]},
+                "note": "Synthetic production recovery", "days": [{"localDate": planned_date, "location": "RemotePortugal", "availability": "Working"}]},
                 token=employee_tokens["accessToken"], method="POST")
             request(base + '/requests/' + draft["contextId"] + '/submit', {"expectedCalendarVersion": draft["calendarVersion"], "expectedRequestVersion": draft["version"]},
                     token=employee_tokens["accessToken"], method="POST")
@@ -255,7 +273,7 @@ def main():
             assert request("/api/v1/me", token=refreshed["accessToken"])["memberId"] == employee["memberId"]
             recovered_request = request(base + '/requests/' + draft["contextId"], token=refreshed["accessToken"])
             assert recovered_request["note"] == "Synthetic production recovery"
-            assert recovered_request["days"][0]["localDate"] == "2027-02-15"
+            assert recovered_request["days"][0]["localDate"] == planned_date
             STAGE = "recovery email after restoration"
             request("/api/v1/auth/recovery/request", {"email": "employee@pilot.example"}, expected=202)
             request("/api/v1/auth/recovery/complete", {"email": "employee@pilot.example", "code": email_code(), "password": password + "New"}, expected=204)

@@ -45,7 +45,7 @@ docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/com
 docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml ps
 ```
 
-A inicialização de PostgreSQL cria apenas uma base/role. Migrações não são executadas pelo arranque normal. Só depois de validar SMTP e com destinatário autorizado:
+A inicialização de PostgreSQL cria apenas uma base/role. Migrações não são executadas pelo arranque normal. O piloto de duas pessoas não exige uma terceira conta: o administrador inicial pode acumular o papel de chefia, definido na gestão de membros, e criar o colaborador. O ensaio automatizado separa esses papéis em três contas sintéticas para exercitar a autorização. Só depois de validar SMTP e com destinatário autorizado:
 
 ```sh
 docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml run --rm --no-deps app --bootstrap-admin /run/config/bootstrap.json

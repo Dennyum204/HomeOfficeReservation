@@ -8,6 +8,11 @@ umask 077
 : "${RESTIC_REPOSITORY:?approved repository}"
 : "${RESTIC_PASSWORD_FILE:?private password file}"
 [[ "$HO_EXPORT_ROOT" == /* && "$HO_CHECKOUT" == /* && "$HO_ENV_FILE" == /* ]]
+case "$HO_EXPORT_ROOT" in
+  /srv/homeoffice-staging/exports|/srv/homeoffice-production/exports) ;;
+  *) echo 'Use the documented environment-specific export directory.' >&2; exit 1 ;;
+esac
+[[ "$(realpath -m -- "$HO_EXPORT_ROOT")" == "$HO_EXPORT_ROOT" ]]
 install -d -m 0700 "$HO_EXPORT_ROOT"
 exec 9>"$HO_EXPORT_ROOT/backup.lock"
 flock -n 9
