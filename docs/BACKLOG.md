@@ -21,7 +21,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013 |
-| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Em curso | HO-003, HO-004 |
+| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Em revisão | HO-003, HO-004 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -361,7 +361,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/37
 
 ## HO-013 — Titular administrador e colaborador: bootstrap seguro
 
-Release: v1.0 · Área: backend · Estado: Em curso
+Release: v1.0 · Área: backend · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -379,7 +379,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/38
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/42
 
 ## HO-101 — Lembretes e resumo semanal por email
 

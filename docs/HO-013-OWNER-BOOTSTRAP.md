@@ -1,6 +1,6 @@
 # HO-013 — Titular administrador e colaborador
 
-Procedimento de operador, [issue #38](https://github.com/Dennyum204/HomeOfficeReservation/issues/38), [ADR-014](adr/ADR-014-owner-bootstrap.md). Autenticação existente, sem registo público. O titular administra contas e planeia como colaborador; o chefe é uma pessoa/conta distinta, com relação explícita. Administração não permite autoaprovação.
+Procedimento de operador, [PR #42](https://github.com/Dennyum204/HomeOfficeReservation/pull/42), [issue #38](https://github.com/Dennyum204/HomeOfficeReservation/issues/38), [ADR-014](adr/ADR-014-owner-bootstrap.md). Autenticação existente, sem registo público. O titular administra contas e planeia como colaborador; o chefe é uma pessoa/conta distinta, com relação explícita. Administração não permite autoaprovação.
 
 ## Preparar um ensaio isolado
 

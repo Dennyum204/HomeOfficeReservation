@@ -962,7 +962,7 @@
       "title": "Titular administrador e colaborador: bootstrap seguro",
       "release": "v1.0",
       "area": "backend",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003",
@@ -978,8 +978,10 @@
         "Edição geral dos próprios papéis continua recusada; alterações administrativas não podem deixar a organização sem administrador ativo. Documentar a recuperação controlada pelo operador.",
         "Testes PostgreSQL cobrem titular com papéis acumulados, associação ao chefe, decisão pelo chefe, recusa de autoaprovação mesmo com todos os papéis, isolamento entre organizações e preservação de contas existentes."
       ],
-      "pr_urls": [],
-      "notes": "Bootstrap explícito e extensão idempotente de colaborador, com auditoria transacional; antigo bootstrap preservado. Guia docs/HO-013-OWNER-BOOTSTRAP.md e ADR-014. HO-014/015/016 continuam no PR #37 e issues #39/#40/#41, sem implementação aqui. Quatro checks finais pendentes; issue permanece aberta até merge humano.",
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/42"
+      ],
+      "notes": "Bootstrap explícito e extensão idempotente de colaborador, com auditoria transacional; antigo bootstrap preservado. Guia docs/HO-013-OWNER-BOOTSTRAP.md e ADR-014. HO-014/015/016 continuam no PR #37 e issues #39/#40/#41, sem implementação aqui. PR #42: resultados/SHA final dos quatro checks registados no PR; só retirar draft após todos verdes e ausência de conflitos. Issue aberta até merge humano. Local: 55 PG + 4 API, 13 Web unitários + 22 browser, 34 Flutter, contrato sem drift (172 ficheiros).",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38",
       "scope_history": [
         {
