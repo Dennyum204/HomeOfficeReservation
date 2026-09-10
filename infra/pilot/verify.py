@@ -46,6 +46,7 @@ def main():
         write("postgres-password", secrets.token_hex(32))
         write("database-password", password)
         write("smtp-auth", "pilot:" + password + "\n")
+        write("firebase-admin.json", "{}\n")
         STAGE = "ephemeral TLS and protected keys"
         command(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "2", "-subj", "/CN=HO012 isolated CA",
                  "-keyout", str(private / "ca.key"), "-out", str(private / "ca.pem")])
@@ -79,7 +80,7 @@ def main():
         override = folder / "verify.yaml"
         override.write_text(json.dumps({"services": {
             "edge": {"ports": [], "volumes": [str(private / "Caddyfile") + ":/etc/caddy/Caddyfile:ro", str(private) + ":/run/config:ro"]},
-            "app": {"environment": {"SSL_CERT_FILE": "/run/config/ca.pem"}},
+            "app": {"environment": {"SSL_CERT_FILE": "/run/config/ca.pem"}, "volumes": [str(private / "ca.pem") + ":/run/config/ca.pem:ro"]},
             "mailpit": {"image": "axllent/mailpit:v1.31.1", "networks": ["pilot"], "ports": ["127.0.0.1:18025:8025"],
                         "volumes": [str(private) + ":/run/config:ro"], "environment": {
                             "MP_SMTP_TLS_CERT": "/run/config/server.pem", "MP_SMTP_TLS_KEY": "/run/config/server.key",
@@ -147,6 +148,24 @@ def main():
                 request(route, expected=404)
             request("/api/v1/me", expected=401)
             request("/api/v1/auth/web/login", {"email": "admin@pilot.example", "password": password}, expected=400)
+            STAGE = "proxy spoofing and production configuration rejection"
+            direct = ops.run("exec", "-T", "database", "bash", "-c",
+                "exec 3<>/dev/tcp/app/8080; printf 'GET /api/v1/workspace HTTP/1.1\\r\\nHost: localhost\\r\\nX-Forwarded-Proto: https\\r\\nConnection: close\\r\\n\\r\\n' >&3; IFS= read -r status <&3; printf '%s' \"$status\"")
+            assert b" 400 " in direct, "Untrusted proxy spoof was accepted"
+            ops.run("exec", "-T", "app", "bash", "-c", "test ! -e /run/config/postgres-password")
+            for section, key, value in (("Hosting", "PublicOrigin", "http://localhost"), ("Hosting", "KnownProxies", ""), ("Notifications", "WorkerEnabled", False)):
+                original = config[section][key]
+                config[section][key] = value
+                write("application.json", json.dumps(config))
+                try:
+                    ops.run("run", "--rm", "--no-deps", "app", timeout=30)
+                except RuntimeError as rejected:
+                    assert "OptionsValidationException" in str(rejected), "Unexpected configuration failure"
+                else:
+                    raise RuntimeError("Unsafe production configuration was accepted")
+                finally:
+                    config[section][key] = original
+                    write("application.json", json.dumps(config))
             STAGE = "real production SMTP adapter against isolated STARTTLS sink"
             ops.run("run", "--rm", "--no-deps", "app", "--bootstrap-admin", "/run/config/bootstrap.json")
             activate("admin@pilot.example")
@@ -199,6 +218,10 @@ def main():
             write("application.json", json.dumps(config))
             shutil.rmtree(private / "keys")  # This harness owns this new temporary directory only.
             shutil.copytree(backup / "keys", private / "keys")
+            (private / "protection.pfx").unlink()
+            shutil.copyfile(backup / "protection.pfx", private / "protection.pfx")
+            os.chown(private / "protection.pfx", 1654, 1654)
+            (private / "protection.pfx").chmod(0o600)
             for path in [private / "keys", *(private / "keys").rglob("*")]:
                 os.chown(path, 1654, 1654)
             ops.run("up", "-d", "--force-recreate", "app")
@@ -217,6 +240,16 @@ def main():
                         "restore_seconds": round(time.monotonic() - restore_started, 1), "total_seconds": round(time.monotonic() - started, 1)}
             (ROOT / "ho012-production-evidence.json").write_text(json.dumps(evidence, indent=2) + "\n")
             print(json.dumps(evidence))
+        except Exception:
+            # Before any account/token exists, expose bounded, redacted startup diagnostics only.
+            # Later authentication/calendar stages never print application logs or responses.
+            if STAGE == "isolated database initialization and migrations":
+                output = (private / "operation-error.log").read_text(errors="replace") if (private / "operation-error.log").exists() else ""
+                output += ops.run("logs", "--no-color", "--tail", "15", "database", "mailpit").decode(errors="replace")
+                for value in (password, (private / "postgres-password").read_text(), str(private)):
+                    output = output.replace(value, "[redacted]")
+                print(output[-5000:])
+            raise
         finally:
             ops.run("down", "--volumes", "--remove-orphans")
             command(["docker", "image", "rm", image])

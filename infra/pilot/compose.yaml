@@ -29,7 +29,11 @@ services:
       HO_PUBLIC_HOST: ${HO_PUBLIC_HOST:?}
       GOOGLE_APPLICATION_CREDENTIALS: /run/config/firebase-admin.json
     volumes:
-      - ${HO_PRIVATE_DIR:?absolute private directory}:/run/config:ro
+      # The API never receives the PostgreSQL cluster administrator password.
+      - ${HO_PRIVATE_DIR:?absolute private directory}/application.json:/run/config/application.json:ro
+      - ${HO_PRIVATE_DIR:?}/protection.pfx:/run/config/protection.pfx:ro
+      - ${HO_PRIVATE_DIR:?}/firebase-admin.json:/run/config/firebase-admin.json:ro
+      - ${HO_PRIVATE_DIR:?}/bootstrap.json:/run/config/bootstrap.json:ro
       - ${HO_PRIVATE_DIR:?}/keys:/var/lib/homeoffice/keys
     depends_on:
       database: { condition: service_healthy }

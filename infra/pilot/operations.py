@@ -50,7 +50,9 @@ class Operations:
         target = private_path(destination)
         target.mkdir(mode=0o700, parents=True, exist_ok=False)
         # A brief maintenance window gives the DB/key ring a consistent recovery point.
-        self.run("stop", "app")
+        running = "app" in self.run("ps", "--status", "running", "--services").decode().splitlines()
+        if running:
+            self.run("stop", "app")
         try:
             dump = self.run("exec", "-T", "database", "pg_dump", "-U", "postgres", "-d", "homeoffice", "-Fc", "--no-owner")
             (target / "database.dump").write_bytes(dump)
@@ -65,7 +67,8 @@ class Operations:
                 for p in target.rglob("*"):
                     p.chmod(0o700 if p.is_dir() else 0o600)
         finally:
-            self.run("start", "app")
+            if running:
+                self.run("start", "app")
         return manifest
 
     def restore(self, source, database):

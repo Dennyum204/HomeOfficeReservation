@@ -882,7 +882,7 @@
       "title": "Staging, distribuição privada e piloto V1",
       "release": "v1.0",
       "area": "operations",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011"
@@ -897,7 +897,9 @@
         "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/37"
+      ],
       "scope_history": [
         {
           "date": "2026-09-08",
@@ -928,7 +930,7 @@
           ]
         }
       ],
-      "notes": "Preparação do piloto em ops/ho-012-pilot-preparation: proposta Hetzner/Caddy/PostgreSQL por ambiente, configuração Production, backup/restauro isolado e assinatura Android externa. Critérios de aceitação intactos; contratação, deployment, SMTP real, distribuição física e aceitação continuam por aprovar/validar. PR draft com Refs #13, sem encerrar issue; docs/HO-012-PILOT.md e infra/pilot/README.md."
+      "notes": "Preparação do piloto em ops/ho-012-pilot-preparation: proposta Hetzner/Caddy/PostgreSQL por ambiente, configuração Production, backup/restauro isolado e assinatura Android externa. Critérios de aceitação intactos; contratação, deployment, SMTP real, distribuição física e aceitação continuam por aprovar/validar. PR draft com Refs #13, sem encerrar issue; docs/HO-012-PILOT.md e infra/pilot/README.md. PR draft #37: https://github.com/Dennyum204/HomeOfficeReservation/pull/37; preparação em validação, issue permanece aberta."
     },
     {
       "id": "HO-101",

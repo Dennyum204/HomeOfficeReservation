@@ -27,7 +27,7 @@ Copiar `environment.example` para um ficheiro **fora do checkout**, substituir h
 | `postgres-password` | Password administrativa separada, só operador; não usada pela API |
 | `protection.pfx` | Certificado RSA privado para cifrar o key ring, protegido por password; não é o certificado TLS público |
 | `keys/` | Key ring persistente; não apagar ficheiros antigos durante rotação |
-| `firebase-admin.json` | Apenas quando FCM autorizado; credencial do projeto do ambiente e permissões mínimas de envio |
+| `firebase-admin.json` | `{}` enquanto FCM Disabled; depois de autorizado, credencial do projeto do ambiente com permissões mínimas de envio |
 | `bootstrap.json` | Nome da organização, nome/email do administrador aprovado, sem password; nunca dados de dev |
 
 O certificado pode ser gerado com OpenSSL, RSA 3072, finalidade Data Protection, export PKCS#12 com password por `env:`/ficheiro privado. Guardar PFX + password em cofre/backup independente do host; nunca argumentos contendo passwords reais em histórico de shell. Monitorizar expiração/rotação. Para rotação futura, manter os certificados antigos para decifrar chaves antigas antes de trocar o protetor; o piloto inicial usa um certificado estável. Perder chave/password inviabiliza sessões e endereços FCM cifrados; restaurar DB sozinha não repara isso.
@@ -53,7 +53,7 @@ docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/com
 
 Formato de `bootstrap.json`: `{"organizationName":"Organização piloto","email":"admin@example.invalid","displayName":"Administrador"}` — substituir privadamente. Ativação chega pelo SMTP configurado; o administrador cria apenas os participantes autorizados na app e atribui relação chefia/colaborador. Bootstrap recusa organização existente. Se SMTP falhar depois de criar o administrador, corrigir SMTP e pedir novo código de ativação pela app; não repetir criando outra organização. Produção rejeita `--provision-dev` e configuração de tempos de sessão/limites/captura de email de teste.
 
-Atualização: confirmar backup restaurável, colocar app em manutenção (`stop app`), snapshot, aplicar `migrate` com a imagem candidata e voltar a `up --wait`. `snapshot` retoma a app no final; manter a janela controlada antes da migração. Comparar migrações com a imagem anterior; reverter só imagem é seguro apenas com esquema compatível. Caso contrário, restaurar para nova base, verificar, e trocar configuração durante manutenção. Nunca fazer downgrade de esquema automático. HO-012 não acrescenta migrações de negócio.
+Atualização: confirmar backup restaurável, colocar app em manutenção (`stop app`), snapshot, aplicar `migrate` com a imagem candidata e voltar a `up --wait`. `snapshot` só retoma a app se ela estava a correr ao iniciar o comando; preserva uma paragem administrativa. Comparar migrações com a imagem anterior; reverter só imagem é seguro apenas com esquema compatível. Caso contrário, restaurar para nova base, verificar, e trocar configuração durante manutenção. Nunca fazer downgrade de esquema automático. HO-012 não acrescenta migrações de negócio.
 
 ## Backup, restauro e isolamento
 

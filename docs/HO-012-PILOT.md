@@ -1,6 +1,6 @@
 # HO-012 — Proposta e preparação do piloto
 
-Atualizado: 2026-09-10. [Issue #13](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **Preparação não equivale a staging publicado nem a aceitação V1.** Não foi contratado, publicado ou distribuído qualquer recurso. [ADR-013](adr/ADR-013-pilot-hosting.md), [procedimentos executáveis](../infra/pilot/README.md).
+Atualizado: 2026-09-10. [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37). [Issue #13](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **Preparação não equivale a staging publicado nem a aceitação V1.** Não foi contratado, publicado ou distribuído qualquer recurso. [ADR-013](adr/ADR-013-pilot-hosting.md), [procedimentos executáveis](../infra/pilot/README.md).
 
 ## Duas opções de alojamento
 
