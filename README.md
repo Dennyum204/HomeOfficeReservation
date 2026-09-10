@@ -14,7 +14,9 @@ Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter 
 
 **HO-011 completa presenças/tarefas Android e navegação de notificações:** leitura por revisão, resolução explícita, atribuição/progresso e histórico, com input e recuperação protegidos. A Web distingue pedidos próprios de exigências da chefia e abre o detalhe antes da lista em ecrãs estreitos. [Matriz corrente, comandos e percurso com duas contas](docs/HO-011-CORE-ACCEPTANCE.md). Sem nova API/migração nem deployment.
 
-**HO-013 acrescenta bootstrap explícito do titular com os papéis de administrador e colaborador**, na mesma Identity, e extensão idempotente de um administrador existente pelo operador. [Comandos, migração, recuperação e exemplo sintético](docs/HO-013-OWNER-BOOTSTRAP.md). O chefe distinto continua a exigir relação explícita; autoaprovação e autoedição de papéis pela API são recusadas. Convites e interface administrativa continuam em HO-014/HO-015, registados no PR #37; não foram implementados aqui.
+**HO-013 acrescenta bootstrap explícito do titular com os papéis de administrador e colaborador**, na mesma Identity, e extensão idempotente de um administrador existente pelo operador. [Comandos, migração, recuperação e exemplo sintético](docs/HO-013-OWNER-BOOTSTRAP.md). O chefe distinto continua a exigir relação explícita; autoaprovação e autoedição de papéis pela API são recusadas.
+
+**HO-014 acrescenta convites recuperáveis:** estados administrativos, validade separada do convite, reenvio/cancelamento, entrega durável protegida e recuperação de respostas perdidas. [Migração, endpoints e teste sintético](docs/HO-014-INVITATIONS.md). Web/Android aceitam o código Identity no ecrã existente, incluindo «Já tenho um código». Interface administrativa continua para HO-015; SMTP externo e piloto continuam dependentes da preparação operacional HO-012.
 
 ## Outlook opcional
 

@@ -4,6 +4,8 @@ HO-003: ASP.NET Core Identity, EF Core/PostgreSQL, migração inicial, sessões 
 
 ## Versões e estrutura
 
+HO-014: [convites e entrega recuperável](../../docs/HO-014-INVITATIONS.md), [ADR-015](../../docs/adr/ADR-015-access-invitations.md). Aplicar explicitamente `20260910230508_AccessInvitations` antes da versão nova. Reenvio/cancelamento e lista administrativa paginada usam contratos gerados; criação conserva API existente e passa a ser recuperável por replay exato. Worker HO-007 trata entregas pendentes; Development usa captura privada, sem email externo.
+
 HO-013: [titular administrador/colaborador e recuperação pelo operador](../../docs/HO-013-OWNER-BOOTSTRAP.md), [ADR-014](../../docs/adr/ADR-014-owner-bootstrap.md). Aplicar a migração aditiva `20260910214756_AccessAudit` antes da nova versão. `--bootstrap-owner` cria os dois papéis explicitamente; `--enable-admin-employee` acrescenta apenas colaboração a um administrador ativo identificado por organização/membro. `--bootstrap-admin` continua a criar administrador apenas. Sem endpoint novo, mudança de sessão/contrato ou interface administrativa HO-015.
 
 HO-006: [presenças e tarefas](../../docs/HO-006-ONSITE-TASKS.md), com migração aditiva, autorização, leitura por revisão e resolução de conflitos sob o mesmo lock do planeamento. HO-007 consome a outbox; DeliveredAt legado passa a significar processamento interno, nunca receção Android.

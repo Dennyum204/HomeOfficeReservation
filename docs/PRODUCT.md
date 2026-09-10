@@ -80,6 +80,8 @@ Registo manual para planeamento. Não substitui autorização de férias de RH. 
 
 ## Aceitação do produto
 
+Admissão privada HO-014: só o administrador ativo convida para a sua organização. Pending/Accepted/Cancelled e estado de entrega são distintos; expiração do código Identity não apaga o convite. Reenvio invalida códigos anteriores; cancelamento é terminal. Web/Android aceitam código/password sem registo público. Interface administrativa autónoma pertence a HO-015. [Percurso e limites](HO-014-INVITATIONS.md).
+
 1. Colaborador submete cinco dias pela Web; chefe aprova três pelo mobile; ambos veem os mesmos três dias confirmados.
 2. Dois dias rejeitados não aparecem como aprovados no calendário interno; não é preciso configurar integração externa.
 3. Uma instalação sobre um dia aprovado abre conflito e mantém a aprovação até à resolução explícita.

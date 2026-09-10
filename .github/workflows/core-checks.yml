@@ -144,6 +144,7 @@ jobs:
             sleep 1
           done
           test "$ready" = 1
+          python3 scripts/prepare_invitation_test.py --base-url http://localhost:5080 --accounts "$RUNNER_TEMP/identity/accounts.json" --output "$RUNNER_TEMP/identity/client-test.json"
       - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 35

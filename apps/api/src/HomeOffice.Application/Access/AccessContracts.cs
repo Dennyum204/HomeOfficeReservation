@@ -9,6 +9,13 @@ public sealed record ProvisionMemberRequest(string Email, string DisplayName, bo
 public sealed record UpdateMemberRequest(bool Active, bool IsEmployee, bool IsManager, bool IsAccountAdministrator);
 public sealed record SetManagerRequest(Guid ManagerId);
 public sealed record OperationResult(bool Succeeded, string Code);
+public sealed record InvitationChangeRequest(Guid CommandId, long ExpectedVersion);
+public sealed record InvitationProfile(Guid MemberId, string Email, string DisplayName, bool Active,
+    bool IsEmployee, bool IsManager, bool IsAccountAdministrator, Guid? ManagerId, bool ManagerRelationshipValid,
+    bool EmailConfirmed, string State, long Version, string DeliveryState, int DeliveryAttempts,
+    string? DeliveryError, DateTimeOffset? CodeExpiresAt, DateTimeOffset? DeliveredAt,
+    DateTimeOffset? AcceptedAt, DateTimeOffset? CancelledAt, DateTimeOffset? ResendAvailableAt);
+public sealed record InvitationPage(InvitationProfile[] Members, Guid? NextAfter);
 
 public interface IMemberDirectory
 {

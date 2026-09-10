@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeOffice.Infrastructure.Access;
 
-public sealed class AccountProvisioner(HomeOfficeDbContext db, UserManager<IdentityUser> users, IAccountEmail email, TimeProvider clock)
+public sealed class AccountProvisioner(HomeOfficeDbContext db, UserManager<IdentityUser> users, InvitationService invitations, InvitationDelivery delivery, TimeProvider clock)
 {
     public async Task<OperationResult> ProvisionAsync(Member actor, ProvisionMemberRequest request)
     {
@@ -18,7 +18,23 @@ public sealed class AccountProvisioner(HomeOfficeDbContext db, UserManager<Ident
         await using var transaction = await db.Database.BeginTransactionAsync();
         if (!await AccessChanges.LockOrganization(db, actor.OrganizationId) ||
             await AccessChanges.Administrator(db, actor) is null) return new(false, "forbidden");
-        if (await users.FindByEmailAsync(request.Email) is not null) return new(false, "account_exists");
+        var normalizedEmail = users.NormalizeEmail(request.Email);
+        var fingerprint = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(
+            System.Text.Json.JsonSerializer.Serialize(request with { Email = normalizedEmail, DisplayName = request.DisplayName.Trim() }))));
+        // Cross-organization creates of the same address are serialized before Identity uniqueness is evaluated.
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT pg_advisory_xact_lock(hashtextextended({normalizedEmail}, 1))");
+        var existingUser = await users.FindByEmailAsync(request.Email);
+        if (existingUser is not null)
+        {
+            var existing = await (from m in db.Members
+                                  join i in db.Set<AccessInvitation>() on m.Id equals i.MemberId
+                                  where m.OrganizationId == actor.OrganizationId && m.IdentityUserId == existingUser.Id
+                                  select i).AsNoTracking().SingleOrDefaultAsync();
+            return existing?.CreatedBy == actor.Id && existing.CreationFingerprint == fingerprint
+                ? new(true, "already_provisioned") : new(false, "account_exists");
+        }
+        if (await db.Set<AccessInvitation>().CountAsync(i => i.OrganizationId == actor.OrganizationId && i.CreatedAt > clock.GetUtcNow().AddHours(-1)) >= 20)
+            return new(false, "invitation_limit");
         var user = new IdentityUser { UserName = request.Email, Email = request.Email, LockoutEnabled = true };
         var result = await users.CreateAsync(user); // No password until the account owner activates it.
         if (!result.Succeeded) return new(false, "invalid_member");
@@ -33,10 +49,10 @@ public sealed class AccountProvisioner(HomeOfficeDbContext db, UserManager<Ident
         };
         db.Members.Add(member);
         AccessChanges.Record(db, clock, member, actor.Id, "access.member_provisioned", null, AccessChanges.State(member));
+        await invitations.Create(member, user, actor.Id, fingerprint);
         await db.SaveChangesAsync();
         await transaction.CommitAsync();
-        // Delivery is outside the transaction. A failed delivery can be retried through the activation request endpoint.
-        await email.SendAsync(user.Email, "activate", await users.GenerateEmailConfirmationTokenAsync(user));
+        await delivery.TryNow(member.Id);
         return new(true, "provisioned");
     }
 }

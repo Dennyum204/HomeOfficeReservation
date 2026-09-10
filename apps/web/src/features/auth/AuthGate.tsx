@@ -252,6 +252,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
           </button>
         </form>
         <nav className="auth-links" aria-label={s.auth.account}>
+          {mode === "activation" && (
+            <button disabled={busy} onClick={() => switchMode("activate")}>
+              {s.auth.haveCode}
+            </button>
+          )}
           {mode !== "login" && (
             <button disabled={busy} onClick={() => switchMode("login")}>
               {s.auth.back}

@@ -61,6 +61,51 @@ class AccessApi {
     }
   }
 
+  /// Performs an HTTP 'POST /api/v1/admin/members/{memberId}/invitation/cancel' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] memberId (required):
+  ///
+  /// * [InvitationChangeRequest] invitationChangeRequest (required):
+  Future<Response> cancelInvitationWithHttpInfo(String memberId, InvitationChangeRequest invitationChangeRequest, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/members/{memberId}/invitation/cancel'
+      .replaceAll('{memberId}', memberId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = invitationChangeRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] memberId (required):
+  ///
+  /// * [InvitationChangeRequest] invitationChangeRequest (required):
+  Future<void> cancelInvitation(String memberId, InvitationChangeRequest invitationChangeRequest, { Future<void>? abortTrigger, }) async {
+    final response = await cancelInvitationWithHttpInfo(memberId, invitationChangeRequest, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
   /// Read-only relationship/role guard. Does not create or approve any request.
   ///
   /// Note: This method returns the HTTP [Response].
@@ -206,6 +251,65 @@ class AccessApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/v1/admin/invitations' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] after:
+  ///
+  /// * [int] limit:
+  Future<Response> listInvitationsWithHttpInfo({ String? after, int? limit, Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/invitations';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (after != null) {
+      queryParams.addAll(_queryParams('', 'after', after));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] after:
+  ///
+  /// * [int] limit:
+  Future<InvitationPage?> listInvitations({ String? after, int? limit, Future<void>? abortTrigger, }) async {
+    final response = await listInvitationsWithHttpInfo(after: after, limit: limit, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'InvitationPage',) as InvitationPage;
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/v1/members' operation and returns the [Response].
   Future<Response> listMembersWithHttpInfo({ Future<void>? abortTrigger, }) async {
     // ignore: prefer_const_declarations
@@ -248,7 +352,10 @@ class AccessApi {
     return null;
   }
 
-  /// Performs an HTTP 'POST /api/v1/admin/members' operation and returns the [Response].
+  /// Create an admitted member and durable invitation. Repeating the identical normalized request by the same administrator returns success without creating or resending.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
   /// Parameters:
   ///
   /// * [ProvisionMemberRequest] provisionMemberRequest (required):
@@ -278,11 +385,58 @@ class AccessApi {
     );
   }
 
+  /// Create an admitted member and durable invitation. Repeating the identical normalized request by the same administrator returns success without creating or resending.
+  ///
   /// Parameters:
   ///
   /// * [ProvisionMemberRequest] provisionMemberRequest (required):
   Future<void> provisionMember(ProvisionMemberRequest provisionMemberRequest, { Future<void>? abortTrigger, }) async {
     final response = await provisionMemberWithHttpInfo(provisionMemberRequest, abortTrigger: abortTrigger,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
+  /// Performs an HTTP 'POST /api/v1/admin/members/{memberId}/invitation/resend' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] memberId (required):
+  ///
+  /// * [InvitationChangeRequest] invitationChangeRequest (required):
+  Future<Response> resendInvitationWithHttpInfo(String memberId, InvitationChangeRequest invitationChangeRequest, { Future<void>? abortTrigger, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/admin/members/{memberId}/invitation/resend'
+      .replaceAll('{memberId}', memberId);
+
+    // ignore: prefer_final_locals
+    Object? postBody = invitationChangeRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+      abortTrigger: abortTrigger,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] memberId (required):
+  ///
+  /// * [InvitationChangeRequest] invitationChangeRequest (required):
+  Future<void> resendInvitation(String memberId, InvitationChangeRequest invitationChangeRequest, { Future<void>? abortTrigger, }) async {
+    final response = await resendInvitationWithHttpInfo(memberId, invitationChangeRequest, abortTrigger: abortTrigger,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

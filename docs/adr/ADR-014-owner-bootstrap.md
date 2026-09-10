@@ -1,5 +1,7 @@
 # ADR-014 — Titular com administração e colaboração na mesma identidade
 
+> Continuidade 2026-09-11: PR #42 integrado em main; quatro checks do merge verificados em HO-014 (Android retry 2 após falha de espera no teste de logout). A entrega de ativação passa a durável em HO-014; consultar [ADR-015](ADR-015-access-invitations.md). O texto abaixo preserva a decisão/evidência original.
+
 Data: 2026-09-11. Estado: implementado em HO-013, sujeito a revisão/merge humano. [Issue #38](https://github.com/Dennyum204/HomeOfficeReservation/issues/38).
 
 ## Contexto e continuidade

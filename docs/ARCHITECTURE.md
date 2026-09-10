@@ -60,6 +60,8 @@ Quando HO-008 for selecionado, a ação explícita em Definições associa uma c
 
 ## Contratos e persistência
 
+HO-014 acrescenta `AccessInvitation` e recibos `InvitationCommand` na mesma base. Identity gera/valida códigos; Data Protection protege a intenção de entrega. Reenvio/cancelamento/aceitação partilham o lock administrativo da organização e reconsultam estado atual. O worker existente reclama entregas por lease PostgreSQL; não envia SMTP dentro da transação de criação. Lista administrativa paginada expõe estados e relação atual, sem códigos. [ADR-015](adr/ADR-015-access-invitations.md) e [guia](HO-014-INVITATIONS.md). Não implementa administração Web HO-015.
+
 HO-013 complementa Identity com comandos de operador para titular administrador/colaborador e auditoria transacional de acesso, sem HTTP novo. Escritas administrativas bloqueiam a organização e revalidam o ator dentro da transação, preservando pelo menos um administrador ativo sob concorrência. A extensão de colaboração não modifica credenciais, calendário ou relações. `AccessAudits` reutiliza a persistência/auditoria mínima, separada das versões de planeamento. [ADR-014](adr/ADR-014-owner-bootstrap.md), [procedimento e recuperação](HO-013-OWNER-BOOTSTRAP.md). Convites/administração Web permanecem HO-014/015; HO-012 não foi incorporada.
 
 - REST em `/api/v1`, OpenAPI gerado de forma reprodutível a partir do backend.

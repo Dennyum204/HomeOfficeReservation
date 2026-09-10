@@ -1,5 +1,7 @@
 # HO-013 — Titular administrador e colaborador
 
+> Continuidade 2026-09-11: PR #42 integrado em main; quatro checks do merge verificados em HO-014 (Android retry 2 após falha de espera no teste de logout). A entrega de ativação passa a durável em HO-014; consultar [guia HO-014](HO-014-INVITATIONS.md). O texto abaixo preserva a decisão/evidência original.
+
 Procedimento de operador, [PR #42](https://github.com/Dennyum204/HomeOfficeReservation/pull/42), [issue #38](https://github.com/Dennyum204/HomeOfficeReservation/issues/38), [ADR-014](adr/ADR-014-owner-bootstrap.md). Autenticação existente, sem registo público. O titular administra contas e planeia como colaborador; o chefe é uma pessoa/conta distinta, com relação explícita. Administração não permite autoaprovação.
 
 ## Preparar um ensaio isolado

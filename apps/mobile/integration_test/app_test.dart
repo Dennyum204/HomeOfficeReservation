@@ -160,8 +160,89 @@ Future<void> main() async {
     );
     await tester.tap(find.text('Terminar sessão'));
     await tester.pumpAndSettle();
+    for (
+      var i = 0;
+      i < 40 && find.text('Entre no seu espaço').evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
     expect(find.text('Entre no seu espaço'), findsOneWidget);
     expect(find.text('Chefia de teste'), findsNothing);
+    expect(await SecureTokenStore(ApiSettings.baseUrl).read() == null, isTrue);
+  });
+
+  testWidgets('invited account accepts a captured Identity code on Android', (
+    tester,
+  ) async {
+    const email = String.fromEnvironment('TEST_INVITE_EMAIL');
+    const code = String.fromEnvironment('TEST_INVITE_CODE');
+    const password = String.fromEnvironment('TEST_INVITE_PASSWORD');
+    expect(
+      email.isNotEmpty && code.isNotEmpty && password.isNotEmpty,
+      isTrue,
+      reason: 'Prepare the private invitation fixture; native acceptance must not be skipped.',
+    );
+    await SecureTokenStore(ApiSettings.baseUrl).clear();
+    app.main();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ainda não ativei a conta'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Já tenho um código'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('email')), email);
+    await tester.enterText(find.byKey(const Key('code')), code);
+    await tester.enterText(find.byKey(const Key('password')), password);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('submit')));
+    await tester.tap(find.byKey(const Key('submit')));
+    await tester.pumpAndSettle();
+    for (
+      var i = 0;
+      i < 40 &&
+          find
+              .text('Palavra-passe definida. Pode iniciar sessão.')
+              .evaluate()
+              .isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    expect(
+      find.text('Palavra-passe definida. Pode iniciar sessão.'),
+      findsOneWidget,
+    );
+    await tester.enterText(find.byKey(const Key('password')), password);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('submit')));
+    await tester.tap(find.byKey(const Key('submit')));
+    await tester.pumpAndSettle();
+    for (
+      var i = 0;
+      i < 40 &&
+          find.byKey(const Key('authenticated-member-name')).evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('authenticated-member-name')))
+          .data,
+      'Convite Android sintético',
+    );
+    await tester.tap(find.text('Terminar sessão'));
+    await tester.pumpAndSettle();
+    for (
+      var i = 0;
+      i < 40 && find.text('Entre no seu espaço').evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    expect(find.text('Entre no seu espaço'), findsOneWidget);
     expect(await SecureTokenStore(ApiSettings.baseUrl).read() == null, isTrue);
   });
 }

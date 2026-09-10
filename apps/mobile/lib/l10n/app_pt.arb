@@ -73,6 +73,7 @@
   "authLogout": "Terminar sessão",
   "authBack": "Voltar ao início de sessão",
   "authActivateLink": "Ainda não ativei a conta",
+  "authHaveCode": "Já tenho um código",
   "authRecoverLink": "Esqueci-me da palavra-passe",
   "authEmailRequired": "Introduza um email válido.",
   "authRequired": "Preencha este campo.",
