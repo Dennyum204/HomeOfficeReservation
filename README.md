@@ -8,9 +8,11 @@ Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter 
 
 **HO-006 acrescenta API e Web para presenças e tarefas:** intervalos obrigatórios, leitura por revisão, preview de conflitos, resolução explícita sem apagar aprovações, tarefas ligadas e progresso autorizado. [Setup, migração e percurso de teste](docs/HO-006-ONSITE-TASKS.md). A outbox alimenta o worker de notificações de HO-007.
 
-**HO-007 disponibiliza caixa persistente Web/Android**, com contagem, filtros, estado de leitura e contexto autorizado, worker PostgreSQL durável e adaptador FCM opcional. [Setup, testes com duas contas e recuperação](docs/HO-007-NOTIFICATIONS.md). O core funciona sem credenciais push. Entrega FCM real foi observada no emulador Android autorizado em foreground, background e cold start; o guia separa essa evidência das simulações e regista as limitações. Pedidos/decisões abrem no Android em HO-010; presenças/tarefas completas continuam em HO-011.
+**HO-007 disponibiliza caixa persistente Web/Android**, com contagem, filtros, estado de leitura e contexto autorizado, worker PostgreSQL durável e adaptador FCM opcional. [Setup, testes com duas contas e recuperação](docs/HO-007-NOTIFICATIONS.md). O core funciona sem credenciais push. Entrega FCM real foi observada no emulador Android autorizado em foreground, background e cold start; o guia separa essa evidência das simulações e regista as limitações. Pedidos/decisões abrem no Android em HO-010; HO-011 completa detalhes de presenças/tarefas no Android e a aceitação entre plataformas.
 
 **HO-010 disponibiliza calendário e pedidos Android para os dois papéis:** mês/agenda, rascunhos, aprovação parcial, retirada, revisões, contrapropostas e disponibilidade manual. Recuperação explícita de envios incertos e input protegido por conta. [Utilização, testes e passagem Web → Android](docs/HO-010-ANDROID-PLANNING.md).
+
+**HO-011 completa presenças/tarefas Android e navegação de notificações:** leitura por revisão, resolução explícita, atribuição/progresso e histórico, com input e recuperação protegidos. A Web distingue pedidos próprios de exigências da chefia e abre o detalhe antes da lista em ecrãs estreitos. [Matriz corrente, comandos e percurso com duas contas](docs/HO-011-CORE-ACCEPTANCE.md). Sem nova API/migração nem deployment.
 
 ## Outlook opcional
 

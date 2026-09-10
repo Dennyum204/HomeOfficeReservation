@@ -38,6 +38,7 @@ export const strings = {
     limited: "Demasiadas tentativas. Aguarde um minuto e tente novamente.",
     loading: "A verificar a sessão…",
     account: "Conta",
+    signedInAs: "Sessão iniciada como",
     employee: "Colaborador",
     manager: "Gestor",
     admin: "Administrador de contas",

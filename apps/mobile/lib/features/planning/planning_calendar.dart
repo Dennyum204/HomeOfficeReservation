@@ -13,10 +13,14 @@ class PlanningCalendar extends StatelessWidget {
     super.key,
     required this.openRequest,
     required this.newRequest,
+    this.openRequirement,
+    this.newRequirement,
   });
   final PlanningController controller;
   final Future<void> Function(String) openRequest;
   final VoidCallback newRequest;
+  final Future<void> Function(String)? openRequirement;
+  final VoidCallback? newRequirement;
   @override
   Widget build(BuildContext context) {
     final c = controller, s = AppLocalizations.of(context)!;
@@ -316,7 +320,14 @@ class PlanningCalendar extends StatelessWidget {
                 ),
                 Text(requirement.reason),
                 Text(requirement.location),
-                Text(s.planRequirementFallback),
+                if (requirement.state == OnsiteState.needsResolution)
+                  Text(s.workConflict),
+                TextButton(
+                  onPressed: openRequirement == null
+                      ? null
+                      : () => openRequirement!(requirement.id),
+                  child: Text(s.workOpen),
+                ),
               ],
             ),
           ),
@@ -331,6 +342,12 @@ class PlanningCalendar extends StatelessWidget {
             onPressed: c.canWrite ? newRequest : null,
             icon: const Icon(Icons.add),
             label: Text(c.hasSavedEditor ? s.planRestoreDraft : s.planNew),
+          ),
+        if (c.manager && newRequirement != null)
+          FilledButton.tonal(
+            key: const Key('calendar-new-onsite'),
+            onPressed: c.canWrite ? newRequirement : null,
+            child: Text(s.workNewOnsite),
           ),
         if (c.updatedAt != null)
           Padding(

@@ -2,10 +2,10 @@ export const w = {
   filter: "Filtrar por estado",
   onsite: "Presenças",
   tasks: "Tarefas",
-  newOnsite: "Nova presença",
+  newOnsite: "Exigir presença do colaborador",
   newTask: "Atribuir tarefa",
   onsiteIntro:
-    "Compromissos presenciais com motivo, revisão e confirmação de leitura.",
+    "A chefia exige presença com datas e motivo. O colaborador confirma a leitura; qualquer alteração ao plano aprovado exige uma decisão separada.",
   taskIntro:
     "Trabalho atribuído, prazos e progresso. A necessidade de presença é informativa.",
   state: {
@@ -30,7 +30,7 @@ export const w = {
   previewTitle: "Revisão antes de publicar",
   confirm: "Confirmar presença",
   previewHint:
-    "A API volta a validar o calendário ao guardar. Nenhuma aprovação será apagada.",
+    "Reveja as datas, o motivo e os conflitos. O plano aprovado mantém-se enquanto a alteração não for resolvida.",
   noConflicts: "Sem conflitos impeditivos neste momento.",
   conflict: "O plano aprovado mantém-se até uma resolução explícita.",
   conflictCode: {

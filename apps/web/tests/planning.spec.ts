@@ -97,7 +97,10 @@ async function newDraft(
   await page.getByRole("button", { name: "Pedidos", exact: true }).click();
   await ready(page);
   await page
-    .getByRole("button", { name: "+ Novo pedido", exact: true })
+    .getByRole("button", {
+      name: "+ Pedir os meus dias de trabalho",
+      exact: true,
+    })
     .click();
   await dialog(page)
     .getByRole("combobox", { name: "Disponibilidade", exact: true })
@@ -168,7 +171,7 @@ test("five days, partial decision, withdrawal, revision and stale recovery use r
   await signIn(page);
   await ready(page);
   const employeeId = await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .inputValue();
   const dates = await freeWeek(page, employeeId);
   const note = `Ensaio HO-005 · ${info.project.name} · ${randomUUID().slice(0, 8)}`;
@@ -184,7 +187,7 @@ test("five days, partial decision, withdrawal, revision and stale recovery use r
   try {
     await signIn(manager, "manager");
     await manager
-      .getByLabel("Calendário de", { exact: true })
+      .getByLabel("Colaborador selecionado", { exact: true })
       .selectOption(employeeId);
     await openRequest(manager, note);
     await select(manager, dates.slice(0, 3));
@@ -351,7 +354,7 @@ test("lost response replays the exact command after reload; logout clears privat
   await signIn(page);
   await ready(page);
   const employeeId = await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .inputValue();
   const dates = await freeWeek(page, employeeId);
   const note = `Recuperação HO-005 · ${info.project.name} · ${randomUUID().slice(0, 8)}`;
@@ -395,7 +398,10 @@ test("lost response replays the exact command after reload; logout clears privat
   expect(after.pendingDays).toHaveLength(1);
   await action(page, "Retirar dias pendentes");
   await page
-    .getByRole("button", { name: "+ Novo pedido", exact: true })
+    .getByRole("button", {
+      name: "+ Pedir os meus dias de trabalho",
+      exact: true,
+    })
     .click();
   await dialog(page)
     .getByLabel("Comentário do pedido")
@@ -443,9 +449,9 @@ test("real authorization denial exposes no planning or approval controls to an u
   await expect(
     page.getByRole("button", { name: "Aprovar dias", exact: true }),
   ).toHaveCount(0);
-  await expect(page.getByLabel("Calendário de", { exact: true })).toHaveCount(
-    0,
-  );
+  await expect(
+    page.getByLabel("Colaborador selecionado", { exact: true }),
+  ).toHaveCount(0);
 });
 
 test("counterproposal acceptance still needs a final decision; cancellation and rejection preserve history", async ({
@@ -455,7 +461,7 @@ test("counterproposal acceptance still needs a final decision; cancellation and 
   await signIn(page);
   await ready(page);
   const employeeId = await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .inputValue();
   const dates = await freeWeek(page, employeeId);
   const note = `Alternativa HO-005 · ${info.project.name} · ${randomUUID().slice(0, 8)}`;
@@ -469,7 +475,7 @@ test("counterproposal acceptance still needs a final decision; cancellation and 
   try {
     await signIn(manager, "manager");
     await manager
-      .getByLabel("Calendário de", { exact: true })
+      .getByLabel("Colaborador selecionado", { exact: true })
       .selectOption(employeeId);
     await openRequest(manager, note);
     await select(manager, [dates[0]]);

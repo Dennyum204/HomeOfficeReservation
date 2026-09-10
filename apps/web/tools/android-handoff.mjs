@@ -43,7 +43,7 @@ try {
   ).toBeVisible();
   await ready();
   const employeeId = await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .inputValue();
   let state;
   if (action === "create") {
@@ -84,7 +84,10 @@ try {
     await page.getByRole("button", { name: "Pedidos", exact: true }).click();
     await ready();
     await page
-      .getByRole("button", { name: "+ Novo pedido", exact: true })
+      .getByRole("button", {
+        name: "+ Pedir os meus dias de trabalho",
+        exact: true,
+      })
       .click();
     await dialog.getByLabel("De", { exact: true }).fill(date);
     await dialog.getByLabel("Até", { exact: true }).fill(date);

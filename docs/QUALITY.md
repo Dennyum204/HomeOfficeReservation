@@ -68,3 +68,7 @@ O objetivo do piloto é observar duas semanas de utilização antes de priorizar
 ## Evidência HO-007
 
 Gates existentes mantidos: project-docs, backend-contracts, web, flutter-android. Acrescentados ensaios PostgreSQL de worker/leases/crashes/retry/deduplicação/autorização/migração, Web E2E de notificações e inbox Android contra API real. `scripts/check_fcm_build.py` compila configuração nativa inventada e externa sem instalar; não envia mensagens. Permissão/rotação/logout simulados não satisfazem o gate de push real acima. FCM com projeto/credencial/dispositivo autorizados continua pendente; PR deve permanecer draft até registar essa evidência. Nenhum gate iOS/Outlook acrescentado.
+
+## Evidência corrente HO-011
+
+O estado pendente FCM no parágrafo histórico HO-007 acima foi resolvido nessa tarefa; a sua evidência não substitui os novos destinos. HO-011 mantém os quatro gates, reexecuta o PostgreSQL e acrescenta testes reais Android de presenças/tarefas e passagem Web/Android. A [matriz HO-011](HO-011-CORE-ACCEPTANCE.md) separa simulações, browser/API/PG/emulador e entrega FCM atual. Push real é ensaio externo com credenciais privadas; o core CI conserva build sem Firebase e compilação FCM sintética. iOS/Graph/produção não foram reativados.

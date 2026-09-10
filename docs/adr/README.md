@@ -21,4 +21,6 @@ Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência 
 | [ADR-009](ADR-009-durable-notifications.md) | Worker durável, caixa Web/Android e infraestrutura FCM | HO-007 integrado pelo PR #34; quatro checks de integração verificados em HO-010; registo revisto por ADR-010 |
 | [ADR-010](ADR-010-android-fcm-registration.md) | Registo FCM Android oficial por FID e adaptação Flutter | HO-007; correções motivadas pelo ensaio real |
 
-| [ADR-011](ADR-011-android-planning.md) | Calendário/pedidos Android, recuperação por conta e continuidade da base aprovada | HO-010; revisão/merge pendentes |
+| [ADR-011](ADR-011-android-planning.md) | Calendário/pedidos Android, recuperação por conta e continuidade da base aprovada | HO-010 integrado pelo PR #35; quatro checks de integração verificados em HO-011 |
+
+| [ADR-012](ADR-012-core-interfaces.md) | Interfaces core, journal comum e aceitação Web/Android | HO-011; revisão pendente |

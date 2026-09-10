@@ -729,7 +729,7 @@
       "title": "Android: calendário e pedidos para ambos os papéis",
       "release": "v1.0",
       "area": "mobile",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004",
@@ -786,14 +786,14 @@
           ]
         }
       ],
-      "note": "Implementação e evidência local concluídas no PR #35. 25 testes Flutter, 4 unitários e 47 PostgreSQL, percurso Android cinco/três/dois, Web→Android→Web, DST Lisboa/Zurique e FCM foreground real. Falha inicial de CI: teste de autenticação procurava diagnósticos no calendário; navegação corrigida para Definições, preservando asserções. Quatro checks do último commit e ausência de conflitos são obrigatórios antes de retirar draft; evidência remota final no PR. Integração/merge ainda pendentes."
+      "note": "PR #35 integrado em main em 2026-09-10T17:17:47Z, merge 96cf3c3e06a6f753c29e3295875593a5370101da confirmado no histórico remoto. Documentação 34507336388 e core 34507336432 passaram no commit de integração; quatro checks verdes. Evidência da entrega original preservada no guia/PR."
     },
     {
       "id": "HO-011",
       "title": "Integração das interfaces e testes de aceitação",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "planned",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-005",
@@ -808,15 +808,20 @@
         "FEAT-009"
       ],
       "acceptance": [
-        "Web e Android completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.",
-        "Push real abre detalhe autenticado; permissão recusada mantém caixa interna.",
-        "Cenário cruzado: pedido Web, decisão Android e mesmos dias confirmados no calendário interno, sem conector configurado.",
-        "Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.",
-        "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação.",
-        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+        "Web e Android completam calendário, presenças, tarefas e notificações para colaborador/chefia com contas locais, sem Microsoft; iOS/HO-306 permanece adiado.",
+        "Android permite lista/filtros/detalhe/histórico, preview/criação/edição/cancelamento de presença pela chefia e leitura da revisão pelo colaborador; remoto aprovado mantém-se até proposta/aceitação/decisão explícitas.",
+        "Tarefas Android permitem atribuição/edição autorizada e progresso limitado, prazo/RequiresOnsite/comentários/histórico/ligação atual; mudar a presença ligada não altera tarefa nem aprova dias.",
+        "Notificações de pedidos/presenças/tarefas abrem detalhe autorizado sem ação de negócio; push real foreground/background/cold start, sessão expirada, duplicados, recurso indisponível e conta alterada têm evidência; recusa mantém caixa.",
+        "Conta autenticada e colaborador selecionado, pedido próprio e exigência da chefia são claros em PT-PT; Web estreita/desktop e Android suportam foco/teclado/voltar/scroll/erros e texto escalável, sem IDs técnicos como rótulos.",
+        "Clientes gerados, input protegido por conta, replay de chave/corpo originais e revisão explícita após versões stale; sem escritas offline ou respostas atrasadas a repor estado de outra conta.",
+        "Matriz real Web/Android/API/PG: cinco dias pedidos Web, três aprovados Android, dois retirados Android; revisão preservada; presença lida sem mudar plano; resolução atómica; tarefa/progresso cruzados e destino correto de notificações.",
+        "Evidência distingue testes simulados, PG/browser/emulador e FCM real; reutiliza testes adequados de autorização/concorrência/retries/sessão/Lisboa/Zurique/DST; capturas sintéticas e quatro checks verdes no commit final.",
+        "Guias/STATUS/backlog/issue/PR alinhados; app normal restaurada e serviços locais preservados quando possível. Sem merge, auto-merge, deployment ou início HO-012."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/12",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/36"
+      ],
       "scope_history": [
         {
           "date": "2026-09-08",
@@ -855,8 +860,22 @@
             "Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.",
             "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação."
           ]
+        },
+        {
+          "date": "2026-09-10",
+          "reason": "Pedido detalhado HO-011: completar interfaces Android, navegação e aceitação real cruzada; preservar âmbito core e histórico.",
+          "previous_acceptance": [
+            "Web e Android completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.",
+            "Push real abre detalhe autenticado; permissão recusada mantém caixa interna.",
+            "Cenário cruzado: pedido Web, decisão Android e mesmos dias confirmados no calendário interno, sem conector configurado.",
+            "Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.",
+            "Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+          ]
         }
-      ]
+      ],
+      "note": "Interfaces core Web/Android completas; PR #36 em revisão. iOS/Outlook adiados; HO-012 apenas após integração humana verificada.",
+      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md."
     },
     {
       "id": "HO-012",
