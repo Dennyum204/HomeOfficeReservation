@@ -364,6 +364,7 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
                 children: [
                   Text(
                     member.displayName,
+                    key: const Key('authenticated-member-name'),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(

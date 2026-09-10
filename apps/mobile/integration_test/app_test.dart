@@ -150,7 +150,14 @@ Future<void> main() async {
       const String.fromEnvironment('TEST_MANAGER_EMAIL'),
       const String.fromEnvironment('TEST_MANAGER_PASSWORD'),
     );
-    expect(find.text('Chefia de teste'), findsOneWidget);
+    // The calendar also names the selected employee; assert the authenticated
+    // identity header rather than assuming the name appears only once on screen.
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('authenticated-member-name')))
+          .data,
+      'Chefia de teste',
+    );
     await tester.tap(find.text('Terminar sessão'));
     await tester.pumpAndSettle();
     expect(find.text('Entre no seu espaço'), findsOneWidget);
