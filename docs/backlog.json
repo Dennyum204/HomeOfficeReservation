@@ -1028,7 +1028,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
       ],
-      "notes": "Implementado em PR #43; draft até quatro checks verdes no último SHA e sem conflitos. Identity, convite/entrega duráveis, recibos, limites, revogação, lista com chefia e aceitação Web/Android. Local: 66 PG + 4 API, 13 Web unitários + 24 browser; Flutter análise + 34 testes; 178 ficheiros gerados sem drift. SMTP loopback real (451/ack perdido), sem entrega externa. Guia HO-014/ADR-015; administração Web HO-015 e operacional HO-012 continuam separados.",
+      "notes": "Implementado em PR #43; prontidão exige quatro checks verdes no último SHA e sem conflitos, com recibo final no PR. Identity, convite/entrega duráveis, recibos, limites, revogação, lista com chefia e aceitação Web/Android. Local: 66 PG + 4 API, 13 Web unitários + 24 browser; Flutter análise + 35 testes e aceitação/login/logout no emulador contra API/PG reais; 178 ficheiros gerados sem drift. SMTP loopback real (451/ack perdido), sem entrega externa. Guia HO-014/ADR-015; administração Web HO-015 e operacional HO-012 continuam separados.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
       "scope_history": [
         {

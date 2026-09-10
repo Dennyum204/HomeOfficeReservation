@@ -2,6 +2,8 @@
 
 Implementação de 2026-09-09, issue [#4](https://github.com/Dennyum204/HomeOfficeReservation/issues/4). Concretiza ADR-004; [ADR-005](adr/ADR-005-identity-implementation.md) preserva os detalhes e limites decididos. Calendário, aprovações, tarefas e notificações continuam fora deste âmbito. Nenhuma conta Microsoft, consentimento ou validação Graph faz parte deste setup.
 
+Continuidade em 2026-09-11: [HO-014](HO-014-INVITATIONS.md) acrescenta estados de convite, reenvio/cancelamento e entrega durável ao provisionamento abaixo. Um recibo de criação não confirma entrega. O código expira em uma hora, mas o convite permanece pendente; cancelamento é terminal. Para usar um código recebido, escolher **Ainda não ativei a conta → Já tenho um código**, sem pedir outra emissão. A administração consulta estados e chefia pela API; a interface administrativa continua HO-015. Os comandos históricos abaixo não devem ser usados para recriar contas/bases já utilizadas; preparar uma instância separada para ensaios.
+
 ## Testar neste Windows, com o ambiente já preparado
 
 Na raiz do repositório, PowerShell:

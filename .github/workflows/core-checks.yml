@@ -153,6 +153,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
+            python3 scripts/wait_android_api.py --serial emulator-5554 --port 5080
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/notifications_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
             cd apps/mobile && flutter drive --driver=test_driver/planning.dart --target=integration_test/planning_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"

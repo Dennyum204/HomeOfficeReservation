@@ -84,11 +84,14 @@ Android: preparar API local descartável como documentado nos testes nativos (ac
 
 ```sh
 python scripts/prepare_invitation_test.py --base-url http://localhost:5080 --accounts /private/accounts.json --output /private/client-test.json
+python scripts/wait_android_api.py --serial <emulador-descartavel> --port 5080
 cd apps/mobile
 flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d <emulador-descartavel> --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file=/private/client-test.json
 ```
 
 O helper é loopback-only, cria uma conta sintética única e **não a ativa**. Códigos/passwords ficam no ficheiro privado, apenas consumido pelo entrypoint de teste; nunca compilar esse input para a app que se distribui. Repetir a suite exige novo convite, pois aceitação é consumível. O CI executa esta preparação e mantém os quatro checks obrigatórios.
+
+`wait_android_api.py` exige HTTP 200 Healthy através de `10.0.2.2`, além da verificação anterior no host: boot completo não garante que a rede do emulador já esteja pronta. Retenta apenas esta leitura por prazo limitado e falha se continuar indisponível; não dispensa testes nativos nem repete mutations. O teste do formulário com HTTP simulado e o ensaio nativo são evidências distintas. No nativo, aguardar o foco/teclado após a transição de definição de password para login evita que uma atualização tardia de IME sobreponha o texto introduzido pelo teste.
 
 ## Recuperação, limitações e operação futura
 
