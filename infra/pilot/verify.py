@@ -123,7 +123,7 @@ def main():
                 messages = json.load(urllib.request.urlopen("http://127.0.0.1:18025/api/v1/messages"))
                 if messages["messages"]:
                     message = json.load(urllib.request.urlopen("http://127.0.0.1:18025/api/v1/message/" + messages["messages"][0]["ID"]))
-                    return message["Text"].split("\n\n")[1].strip()
+                    return message["Text"].replace("\r\n", "\n").split("\n\n")[1].strip()
                 time.sleep(1)
             raise RuntimeError("STARTTLS capture timeout")
         def clear_mail():
@@ -171,6 +171,8 @@ def main():
             activate("admin@pilot.example")
             request("/api/v1/auth/web/login", {"email": "admin@pilot.example", "password": password}, csrf=True, expected=204)
             assert any(c.name == "HomeOffice.Session" and c.secure and c.has_nonstandard_attr("HttpOnly") for c in jar)
+            key_files = list((private / "keys").glob("key-*.xml"))
+            assert key_files and all("encryptedSecret" in p.read_text() for p in key_files), "Runtime key ring is not encrypted"
             admin = request("/api/v1/me")
             for name, manager in (("manager", True), ("employee", False)):
                 request("/api/v1/admin/members", {"email": name + "@pilot.example", "displayName": "Synthetic " + name,
@@ -203,6 +205,24 @@ def main():
             STAGE = "snapshot and new database restore"
             backup = folder / "backup"
             ops.snapshot(backup)
+            STAGE = "encrypted restic backup and recovery"
+            write("restic-password", secrets.token_hex(32))
+            encrypted = folder / "encrypted"
+            recovered = folder / "recovered"
+            encrypted.mkdir()
+            recovered.mkdir()
+            def restic(*arguments):
+                return command(["docker", "run", "--rm", "--network", "none",
+                    "-e", "RESTIC_PASSWORD_FILE=/run/password", "-e", "RESTIC_REPOSITORY=/repository",
+                    "-v", str(private / "restic-password") + ":/run/password:ro",
+                    "-v", str(encrypted) + ":/repository", "-v", str(backup) + ":/source:ro",
+                    "-v", str(recovered) + ":/restore", "restic/restic:0.19.1", *arguments])
+            restic("init")
+            restic("backup", "/source", "--tag", "isolated-validation")
+            restic("check")
+            restic("restore", "latest", "--target", "/restore")
+            backup = recovered / "source"
+            STAGE = "new database restored from encrypted backup"
             restored = "ho012_restore_" + uuid.uuid4().hex[:12]
             restore_started = time.monotonic()
             ops.restore(backup, restored)
@@ -236,7 +256,7 @@ def main():
             request("/api/v1/auth/recovery/request", {"email": "employee@pilot.example"}, expected=202)
             request("/api/v1/auth/recovery/complete", {"email": "employee@pilot.example", "code": email_code(), "password": password + "New"}, expected=204)
             evidence = {"production_container": "passed", "smtp": "isolated STARTTLS/authenticated sink; no external delivery", "push": "disabled; not live FCM",
-                        "restart": "passed", "restore_data_cookie_refresh": "passed", "existing_restore_refused": True,
+                        "restart": "passed", "restic_encrypted_roundtrip": "passed", "restore_data_cookie_refresh": "passed", "existing_restore_refused": True,
                         "restore_seconds": round(time.monotonic() - restore_started, 1), "total_seconds": round(time.monotonic() - started, 1)}
             (ROOT / "ho012-production-evidence.json").write_text(json.dumps(evidence, indent=2) + "\n")
             print(json.dumps(evidence))

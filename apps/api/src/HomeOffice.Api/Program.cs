@@ -84,8 +84,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 // Deliberate client routes only: an unknown /api path must remain a real 404.
-foreach (var route in new[] { "/calendar", "/requests", "/onsite", "/tasks", "/notifications", "/settings" })
-    app.MapFallbackToFile(route, "index.html").ExcludeFromDescription();
+if (Directory.Exists(app.Environment.WebRootPath))
+    foreach (var route in new[] { "/calendar", "/requests", "/onsite", "/tasks", "/notifications", "/settings" })
+        app.MapFallbackToFile(route, "index.html").ExcludeFromDescription();
 app.Run();
 
 public partial class Program;

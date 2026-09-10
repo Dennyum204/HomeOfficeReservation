@@ -22,7 +22,7 @@ services:
     image: ${HO_IMAGE:?use the immutable prepared image tag}
     restart: unless-stopped
     read_only: true
-    tmpfs: [/tmp:uid=1654,gid=1654,mode=700]
+    tmpfs: ["/tmp:uid=1654,gid=1654,mode=700"]
     environment:
       ASPNETCORE_ENVIRONMENT: ${HO_ENVIRONMENT:?Production or Staging}
       HO_CONFIG_FILE: /run/config/application.json
