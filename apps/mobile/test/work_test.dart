@@ -142,6 +142,31 @@ void main() {
     expect(f.c.workCommentDrafts, isEmpty);
     expect(f.store.value, isNull);
   });
+  test('missing destinations and an unassigned employee never retain the previous work detail', () async {
+    final f = WorkFixture();
+    await f.start();
+    addTearDown(f.dispose);
+    await f.c.openWork(WorkContext.task, 'task');
+    expect(f.c.task, isNotNull);
+    f.workIntercept = (r) async => r.url.path.endsWith('/tasks/missing')
+        ? json({'code': 'not_found'}, 404)
+        : null;
+    expect(await f.c.openWork(WorkContext.task, 'missing'), false);
+    expect(f.c.task, isNull);
+    expect(f.c.failure, PlanningFailure.missing);
+    expect(f.c.workCanWrite, false);
+    await f.c.openWork(WorkContext.requirement, 'onsite');
+    expect(f.c.requirement, isNotNull);
+    expect(
+      await f.c.openWork(WorkContext.task, 'task', target: 'unassigned'),
+      false,
+    );
+    expect(f.c.requirement, isNull);
+    expect(f.c.task, isNull);
+    expect(f.c.failure, PlanningFailure.forbidden);
+    expect(f.c.workCanWrite, false);
+    expect(f.writes, isEmpty);
+  });
   test('linked task creation closes to a task list and restores private form without altering the requirement', () async {
     final f = WorkFixture();
     await f.start();

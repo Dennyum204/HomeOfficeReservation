@@ -1,6 +1,6 @@
 # HO-011 — Interfaces core e aceitação Web/Android
 
-Data: 2026-09-10 · [issue #12](https://github.com/Dennyum204/HomeOfficeReservation/issues/12) · branch `feat/ho-011-core-integration`.
+Data: 2026-09-10 · [issue #12](https://github.com/Dennyum204/HomeOfficeReservation/issues/12) · [PR #36](https://github.com/Dennyum204/HomeOfficeReservation/pull/36) · branch `feat/ho-011-core-integration`, em revisão, sem merge.
 
 ## Âmbito
 
@@ -30,15 +30,27 @@ Estes ensaios usam contas locais sintéticas já autorizadas, API real e Postgre
 | Tarefa ligada Web → progresso Android | Fases `task`/`progress`/`verify` | Real, passou; ambos os papéis Web veem progresso e ligação; calendário inalterado |
 | Criar, editar e cancelar presença; revisão de leitura; resolução; tarefa/comentário Android | `integration_test/work_test.dart` | Real, passou; revisão 2 invalida leitura antiga, cancelamento mantém tarefa Em curso e aprovação |
 | Caixa com permissão recusada | `work_push_live_test.dart`, fase `denied` | Real, passou após escolher Don’t allow no diálogo Android de teste; caixa e detalhe continuam utilizáveis |
-| Destinos Requirement/Task e duplicação; logout | `test/work_widget_test.dart` | HTTP/widgets simulados, passaram; zero escritas ao abrir e dados eliminados no logout |
+| Destinos Requirement/Task e duplicação; logout; 403/404 e colaborador não atribuído | `test/work_widget_test.dart` e `test/work_test.dart` | HTTP/widgets simulados, passaram; zero escritas ao abrir, detalhe antigo eliminado e dados eliminados no logout |
 | Journal incerto, stale, input, resposta atrasada | `test/work_test.dart` + testes de HO-010 mantidos | Simulados, passaram; replay exato e um efeito; revisão explícita; isolamento |
 | Android 320 px, texto 100%/200%, formulário e voltar | `test/work_widget_test.dart` + `planning_widget_test.dart` | Widgets simulados, passaram, sem overflow |
 | Autorização, concorrência, idempotência, transições e datas | 47 testes PostgreSQL + 4 testes API | Reexecutados, passaram, zero skips; contratos idênticos (172 ficheiros gerados) |
 | FCM real foreground de presenças/tarefas | `work_push_live_test.dart` com configuração privada existente | Real, passou; callbacks FCM abriram recurso atual, leitura/progresso/calendário inalterados |
-| FCM background/cold start atual | Ensaio externo no mesmo emulador | Em curso; ainda não contar como aprovado |
-| Quatro checks remotos no commit final | project-docs, backend-contracts, web, flutter-android | A verificar no PR; sucesso local não substitui CI |
+| FCM background de tarefa | App normal, Home, tarefa sintética criada na API, notificação real Android tocada | Real, passou; recibo do dispositivo, detalhe correto; tarefa Todo/versão 1 e notificação não lida |
+| FCM cold start de presença | App normal em background, presença sintética criada, processo terminado com `am kill`, notificação real tocada | Real, passou; processo ausente antes/sessão restaurada, recibo do dispositivo, recurso/calendário idênticos, revisão 1 ainda sem leitura |
+| FCM e mudança de conta | `integration_test/fcm_live_test.dart` com configuração privada | Real, reexecutado e passou; desligar/religar revoga binding anterior, chefia recebe 404 para notificação do colaborador, registo isolado após regresso à conta |
+| Quatro checks remotos no commit final | project-docs, backend-contracts, web, flutter-android | SHA, links e resultados no [recibo de entrega do PR](https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694); draft só pode ser retirado após os quatro verdes e ausência de conflitos |
 
 Os testes de datas Lisboa/Zurique/DST e de sessão nativa de HO-010 continuam nos quatro gates CI. O ensaio atual de resolução inclui datas date-only; os testes dedicados de zonas/sessão só contam como reexecutados quando o respetivo job remoto passar. Sem validação física, loja, produção, iOS ou Graph.
+
+Execuções locais finais: análise Flutter limpa e **34 testes unit/widget**, Web format/typecheck/lint e **13 testes unit/build**, **4 testes browser de autenticação + 18 de planeamento/presenças** (14 passaram na execução completa; os quatro de presenças passaram novamente após corrigir a paginação do helper de teste). Na CI a suite completa é executada de novo. Um teste Web encontrou mais de 25 tarefas sintéticas acumuladas; o helper agora percorre as páginas reais, sem limpar dados nem retirar asserções. Os 47 testes PostgreSQL + 4 API passaram sem skips; os 172 ficheiros gerados coincidem. O build Release local encontrou DLLs ocupadas pela API em execução: a API foi reiniciada em Debug com a mesma configuração/base, e o build Release passou sem avisos.
+
+### Capturas sintéticas
+
+- [Android: presença com conflito](evidence/ho011/android-onsite-conflict.png) e [tarefa ligada](evidence/ho011/android-linked-task.png).
+- [Web chefia: progresso vindo do Android](evidence/ho011/web-manager-task.png) e [Web estreita, colaborador](evidence/ho011/web-employee-task-narrow.png).
+- [Android: FCM foreground](evidence/ho011/android-task-fcm.png), [tarefa aberta do background](evidence/ho011/android-task-background.png) e [presença após cold start](evidence/ho011/android-onsite-cold.png).
+
+As capturas Web usam diretamente o elemento do detalhe para não incluir outros registos locais. A fase `capture` consulta a tarefa atual de uma passagem já concluída, sem repetir nem reivindicar novamente a aceitação cinco/três/dois. Essa aceitação exige `verify` imediatamente após as fases anteriores: mais tarde outro ensaio autorizado usou uma das datas retiradas, e a repetição de `verify` recusou corretamente o calendário já alterado. Não se apagaram esses dados para obter uma captura.
 
 ## Percurso manual com duas contas
 
@@ -102,6 +114,10 @@ flutter drive --driver=test_driver/planning.dart --target=integration_test/work_
 ```
 
 Para o ensaio de recusa acrescentar `--dart-define=TEST_CORE_PHASE=denied`. O teste não concede permissão nem recria o projeto Firebase. Registar separadamente aceitação do fornecedor, callback/recibo e abertura; um HTTP 200 do fornecedor não prova entrega. Background/cold start e mudança de conta precisam da evidência externa explícita, não de um deep link inventado.
+
+Procedimento background/cold start executado nesta entrega: restaurar `lib/main.dart` com configuração Firebase privada, sem defines de contas; iniciar sessão como colaborador sintético e enviar a app para Home. A chefia cria uma tarefa/presença sintética pela API existente. Confirmar a notificação genérica na barra Android. No caso cold start, terminar o processo em background com `adb shell am kill dev.homeoffice.homeoffice_mobile` e confirmar `pidof` vazio, sem limpar dados nem usar force-stop. Tocar na notificação real, observar o detalhe correto e comparar recurso/calendário/leitura antes/depois. A aceitação do fornecedor e o recibo autenticado do dispositivo são evidências separadas. O registo privado guardou identificadores/snapshots; o Git contém apenas resultados e capturas sintéticos.
+
+O ensaio `fcm_live_test.dart` foi reexecutado para desligar/religar, trocar colaborador→chefia→colaborador e verificar o 404 ao tentar abrir uma notificação da outra conta. O projeto, chaves e registos de outros dispositivos foram preservados. Uma instalação anterior offline também era elegível para a conta sintética: a aceitação FCM dessa instalação não foi contada como recibo; apenas o emulador aberto reportou receção nestes ensaios.
 
 ## Limites e recuperação
 

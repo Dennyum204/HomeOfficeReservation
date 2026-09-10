@@ -4,8 +4,10 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { resolve, relative, isAbsolute } from "node:path";
 const phase = process.argv[2];
-if (!["create", "onsite", "proposal", "task", "verify"].includes(phase))
-  throw new Error("Select create|onsite|proposal|task|verify.");
+if (
+  !["create", "onsite", "proposal", "task", "verify", "capture"].includes(phase)
+)
+  throw new Error("Select create|onsite|proposal|task|verify|capture.");
 const statePath = process.env.HO_CROSS_STATE,
   accountsPath = process.env.HO_DEV_ACCOUNTS;
 if (!statePath || !accountsPath)
@@ -83,10 +85,26 @@ async function openWork(kind, title) {
   await nav(kind);
   await button("Atualizar dados").click();
   await ready();
-  await page
-    .locator(".request-list-item")
-    .filter({ has: page.getByText(title, { exact: true }) })
-    .click();
+  const list = page.locator(".work-layout > .request-list");
+  for (let index = 0; index < 100; index++) {
+    await expect(list.getByRole("status")).toHaveCount(0);
+    const item = list
+      .locator(".request-list-item")
+      .filter({ has: page.getByText(title, { exact: true }) });
+    if (await item.count()) {
+      await item.click();
+      break;
+    }
+    const next = list.getByRole("button", {
+      name: "Página seguinte",
+      exact: true,
+    });
+    await expect(
+      next,
+      "The synthetic resource must exist on a result page",
+    ).toBeEnabled();
+    await next.click();
+  }
   await expect(
     work.getByRole("heading", { name: title, exact: true }),
   ).toBeVisible();
@@ -208,7 +226,8 @@ try {
     );
     await capture("employee-five-days");
   } else {
-    await calendarEvidence(phase === "task" || phase === "verify");
+    if (phase !== "capture")
+      await calendarEvidence(phase === "task" || phase === "verify");
     if (phase === "onsite") {
       await nav("Presenças");
       await button("+ Exigir presença do colaborador").click();
@@ -292,7 +311,10 @@ try {
     } else {
       for (const role of ["manager", "employee"]) {
         if (role === "employee") await login(role);
-        await calendarEvidence(true);
+        // Capture revisits only the current synthetic task. Other authorized
+        // tests may since have used the withdrawn dates; it is not a replay of
+        // the five-day acceptance assertion, which remains required by verify.
+        if (phase !== "capture") await calendarEvidence(true);
         const task = await get(`tasks/${state.TEST_CORE_TASK}`);
         expect(task.state).toBe("InProgress");
         expect(task.progressNote).toBe("Progresso confirmado no Android");

@@ -793,7 +793,7 @@
       "title": "Integração das interfaces e testes de aceitação",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-005",
@@ -819,7 +819,9 @@
         "Guias/STATUS/backlog/issue/PR alinhados; app normal restaurada e serviços locais preservados quando possível. Sem merge, auto-merge, deployment ou início HO-012."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/12",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/36"
+      ],
       "scope_history": [
         {
           "date": "2026-09-08",
@@ -872,8 +874,8 @@
           ]
         }
       ],
-      "note": "Interfaces Android de presenças/tarefas, navegação completa, clareza Web/Android e aceitação transversal. Implementação/ensaios em curso; nenhuma validação nova presumida.",
-      "notes": "Implementação HO-011 e ensaios core reais em curso: Android presenças/tarefas e matriz cruzada passaram localmente; 33 testes Flutter, 51 backend/PG e contratos reprodutíveis. FCM externo e CI final ainda em validação. Sem nova API/migração; sem merge/deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md."
+      "note": "Interfaces core Web/Android completas; PR #36 em revisão. iOS/Outlook adiados; HO-012 apenas após integração humana verificada.",
+      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md."
     },
     {
       "id": "HO-012",
