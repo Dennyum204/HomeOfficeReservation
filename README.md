@@ -14,6 +14,8 @@ Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter 
 
 **HO-011 completa presenças/tarefas Android e navegação de notificações:** leitura por revisão, resolução explícita, atribuição/progresso e histórico, com input e recuperação protegidos. A Web distingue pedidos próprios de exigências da chefia e abre o detalhe antes da lista em ecrãs estreitos. [Matriz corrente, comandos e percurso com duas contas](docs/HO-011-CORE-ACCEPTANCE.md). Sem nova API/migração nem deployment.
 
+**HO-013 acrescenta bootstrap explícito do titular com os papéis de administrador e colaborador**, na mesma Identity, e extensão idempotente de um administrador existente pelo operador. [Comandos, migração, recuperação e exemplo sintético](docs/HO-013-OWNER-BOOTSTRAP.md). O chefe distinto continua a exigir relação explícita; autoaprovação e autoedição de papéis pela API são recusadas. Convites e interface administrativa continuam em HO-014/HO-015, registados no PR #37; não foram implementados aqui.
+
 ## Outlook opcional
 
 Ligação em Definições, num marco independente após o core. HO-008 publica unidirecionalmente dias explícitos confirmados, `showAs=free` por defeito, apenas eventos próprios e sem convites. HO-009 preserva importação de disponibilidade, delta, webhooks e reconciliação de alterações externas para um marco posterior. Nenhum deles bloqueia login, calendário ou lançamento core.
@@ -89,4 +91,4 @@ O workflow documental permite `outlook-probe-tests` apenas manualmente com `run_
 
 [Issues com IDs estáveis](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [milestones core/opcionais](https://github.com/Dennyum204/HomeOfficeReservation/milestones). URLs reais e histórico de mudanças de âmbito no backlog canónico. Repositório público; segredos, configuração privada e dados de calendário ficam fora do Git. Lockfiles, migrações e exemplos seguros devem ser versionados quando existirem.
 
-Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. Não foram escolhidos fornecedor/região/domínio de alojamento, contas de distribuição mobile ou licença de distribuição.
+Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. Alojamento continua pendente; preparação operacional no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), sem autorização de contratação, DNS, deployment ou distribuição. O domínio existente escolhido é ferbatech.com, com `homeoffice.ferbatech.com` e `staging.homeoffice.ferbatech.com`; nenhuma configuração DNS foi aplicada nesta tarefa.

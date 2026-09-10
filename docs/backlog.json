@@ -1,17 +1,24 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-10",
+  "updated_at": "2026-09-11",
   "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.",
   "releases": [
     {
       "id": "v1.0",
       "title": "Core V1 autónomo",
       "timing": "Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.",
-      "gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.",
+      "gate": "HO-000 a HO-007 e HO-010 a HO-015 integrados; acesso privado por convite, titular administrador/colaborador e chefe associado, duas contas autorizadas e gates core de QUALITY.md cumpridos. HO-008/HO-009/HO-016 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.",
       "review_trigger": "Em cada entrega do core e na retrospetiva do piloto.",
       "status": "planned",
-      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1"
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Preservar gate privado acordado no PR #37; apenas HO-013 importada nesta entrega.",
+          "previous_gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos."
+        }
+      ]
     },
     {
       "id": "outlook-publish",
@@ -793,7 +800,7 @@
       "title": "Integração das interfaces e testes de aceitação",
       "release": "v1.0",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-005",
@@ -874,18 +881,29 @@
           ]
         }
       ],
-      "note": "Interfaces core Web/Android completas; PR #36 em revisão. iOS/Outlook adiados; HO-012 apenas após integração humana verificada.",
-      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md."
+      "note": "PR #36 integrado; merge/CI de integração verificados em HO-013. A preparação operacional HO-012 permanece incompleta.",
+      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md.",
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/36",
+        "merged_at": "2026-09-10T19:05:49Z",
+        "merge_commit": "39c766043227e23b561ca4e0aa753b4fe0ce0fb2",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345259",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345123"
+        ],
+        "note": "Fetch e ancestralidade confirmados; project-docs/backend-contracts/web/flutter-android verdes na integração main. iOS/Outlook adiados."
+      }
     },
     {
       "id": "HO-012",
       "title": "Staging, distribuição privada e piloto V1",
       "release": "v1.0",
       "area": "operations",
-      "status": "planned",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-011"
+        "HO-011",
+        "HO-013"
       ],
       "features": [],
       "acceptance": [
@@ -897,7 +915,9 @@
         "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/37"
+      ],
       "scope_history": [
         {
           "date": "2026-09-08",
@@ -926,6 +946,47 @@
             "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
             "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios."
           ]
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "HO-013 selecionada separadamente. Referenciar apenas o gate de titular; proposta operacional completa e outras novas entradas continuam no PR draft #37.",
+          "previous_depends_on": [
+            "HO-011"
+          ]
+        }
+      ],
+      "notes": "Incompleta; PR #37 continua draft na branch ops/ho-012-pilot-preparation, preservada. Alojamento aguarda decisão; sem contratação/DNS/deployment/emails reais/distribuição. Domínio existente ferbatech.com, homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Convites HO-014 (#39) e administração Web HO-015 (#40) continuam gates do piloto conforme PR #37; tema HO-016 (#41) separado. Apenas HO-013 importada para esta branch."
+    },
+    {
+      "id": "HO-013",
+      "title": "Titular administrador e colaborador: bootstrap seguro",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "in_progress",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-003",
+        "HO-004"
+      ],
+      "features": [
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Bootstrap explícito permite criar o titular autorizado como administrador e colaborador na mesma conta, sem registo público nem autoatribuição de papéis pela API.",
+        "Procedimento restrito ao operador permite corrigir um administrador já criado pelo bootstrap anterior, de forma idempotente, auditável e sem apagar contas, dados ou criar uma segunda identidade para o titular.",
+        "Chefe distinto pode ser criado como gestor e associado ao titular colaborador pelos comandos administrativos autorizados; nenhum papel administrativo concede autoaprovação ou acesso de gestão sem relação válida.",
+        "Edição geral dos próprios papéis continua recusada; alterações administrativas não podem deixar a organização sem administrador ativo. Documentar a recuperação controlada pelo operador.",
+        "Testes PostgreSQL cobrem titular com papéis acumulados, associação ao chefe, decisão pelo chefe, recusa de autoaprovação mesmo com todos os papéis, isolamento entre organizações e preservação de contas existentes."
+      ],
+      "pr_urls": [],
+      "notes": "Bootstrap explícito e extensão idempotente de colaborador, com auditoria transacional; antigo bootstrap preservado. Guia docs/HO-013-OWNER-BOOTSTRAP.md e ADR-014. HO-014/015/016 continuam no PR #37 e issues #39/#40/#41, sem implementação aqui. Quatro checks finais pendentes; issue permanece aberta até merge humano.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Implementação HO-013 autorizada explicitamente em PR separado, sem incorporar a preparação operacional PR #37.",
+          "previous_notes": "Lacuna identificada por leitura de MaintenanceCommands/MemberDirectory em HO-012: bootstrap atual cria apenas IsAccountAdministrator e a API recusa editar o próprio membro. Implementação futura em PR próprio; não reabre nem invalida a entrega histórica HO-003.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6"
         }
       ]
     },

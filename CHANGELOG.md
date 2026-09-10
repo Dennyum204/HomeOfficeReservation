@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- HO-013: bootstrap explícito de titular administrador/colaborador, extensão idempotente de administrador antigo por IDs e auditoria de acesso aditiva. Escritas administrativas revalidam autoridade sob lock por organização, protegendo o último administrador em concorrência. Contratos/credenciais/calendário preservados; sem convites ou administração Web.
+- HO-011 reconciliado com merge humano do PR #36 e quatro checks de integração verdes. HO-012 permanece incompleta no PR draft #37; apenas o registo HO-013 e referências foram importados.
+
 - HO-002: API .NET 10/EF Core/PostgreSQL, shell React PT-PT e Flutter Android/iOS; clientes TypeScript/Dart gerados, health/readiness, Compose e CI real por stack. Funcionalidades de negócio continuam por implementar.
 - HO-001 reconciliado após merge humano do PR #27 (`7f783bf9bde5a72ac8271c42cc2916b054170d17`) e CI de integração verde; Graph real continua adiado.
 - HO-001 reformulado por decisão do responsável: calendário autoritativo e contas próprias ASP.NET Core Identity; core V1 completo sem Microsoft.

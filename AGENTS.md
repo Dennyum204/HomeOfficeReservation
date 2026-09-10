@@ -49,6 +49,8 @@ User instructions and applicable higher-priority instructions take precedence. T
 
 ## Working conventions
 
+- HO-013 owner maintenance is operator-only: read docs/HO-013-OWNER-BOOTSTRAP.md and ADR-014. Preserve legacy admin-only bootstrap, credentials and calendar data. All administrative writers must lock the organization and reload current authority within the transaction; never permit general self-role changes or self-approval. HO-014 invitations and HO-015 administration UI remain separate work items in PR #37.
+
 - IDs in docs/backlog.json are stable. It is the canonical release/work-item inventory. ROADMAP.md and docs/BACKLOG.md are generated from it.
 - User-facing copy and product docs: European Portuguese initially. Code identifiers: English. Externalize UI strings for later localization.
 - Prefer small vertical slices including their contract and tests. Keep unrelated refactoring separate.

@@ -73,6 +73,8 @@ As três contas sintéticas de setup já estão ativadas exclusivamente pelo com
 
 ## Administração controlada
 
+Extensão HO-013: [procedimento de titular com dois papéis](HO-013-OWNER-BOOTSTRAP.md). O comando abaixo conserva o comportamento original de administrador apenas; `--bootstrap-owner` é a escolha explícita para titular novo, e `--enable-admin-employee` acrescenta colaboração ao administrador existente sem tocar em credenciais/dados. Migração aditiva de auditoria e exclusão mútua por organização protegem alterações administrativas concorrentes. A API continua a proibir autoedição de papéis e autoaprovação. A interface administrativa é HO-015; não confundir este provisionamento com o ciclo de convites HO-014.
+
 Não há registo público ou bootstrap HTTP. Para uma organização nova fora de Development, o operador copia o [exemplo de bootstrap](../scripts/bootstrap-admin.example.json) para fora do repositório e prepara um JSON privado com `organizationName`, `email` e `displayName`, aplica migrações e executa `dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --bootstrap-admin /caminho/privado/admin.json`. Exige configuração de produção válida, recusa organização existente e envia ativação; não recebe password inicial. Não usar `--provision-dev` em produção.
 
 Depois da ativação, os endpoints administrativos exigem um membro ativo com **IsAccountAdministrator**. Exemplo PowerShell para o ambiente sintético, sem password/token no histórico nem na saída:

@@ -19,8 +19,9 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
-| HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Em revisão | HO-005, HO-006, HO-007, HO-010 |
-| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Planeado | HO-011 |
+| HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
+| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013 |
+| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Em curso | HO-003, HO-004 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -311,7 +312,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/35
 
 ## HO-011 — Integração das interfaces e testes de aceitação
 
-Release: v1.0 · Área: fullstack · Estado: Em revisão
+Release: v1.0 · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -337,11 +338,11 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/36
 
 ## HO-012 — Staging, distribuição privada e piloto V1
 
-Release: v1.0 · Área: operations · Estado: Planeado
+Release: v1.0 · Área: operations · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-011
+Dependências: HO-011, HO-013
 
 Funcionalidades: Preparação/fundação da release.
 
@@ -355,6 +356,28 @@ Critérios de aceitação:
 - Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
+
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/37
+
+## HO-013 — Titular administrador e colaborador: bootstrap seguro
+
+Release: v1.0 · Área: backend · Estado: Em curso
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-003, HO-004
+
+Funcionalidades: FEAT-001
+
+Critérios de aceitação:
+
+- Bootstrap explícito permite criar o titular autorizado como administrador e colaborador na mesma conta, sem registo público nem autoatribuição de papéis pela API.
+- Procedimento restrito ao operador permite corrigir um administrador já criado pelo bootstrap anterior, de forma idempotente, auditável e sem apagar contas, dados ou criar uma segunda identidade para o titular.
+- Chefe distinto pode ser criado como gestor e associado ao titular colaborador pelos comandos administrativos autorizados; nenhum papel administrativo concede autoaprovação ou acesso de gestão sem relação válida.
+- Edição geral dos próprios papéis continua recusada; alterações administrativas não podem deixar a organização sem administrador ativo. Documentar a recuperação controlada pelo operador.
+- Testes PostgreSQL cobrem titular com papéis acumulados, associação ao chefe, decisão pelo chefe, recusa de autoaprovação mesmo com todos os papéis, isolamento entre organizações e preservação de contas existentes.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/38
 
 PR: ainda não criado.
 

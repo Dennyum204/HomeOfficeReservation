@@ -38,5 +38,20 @@ public sealed class HomeOfficeDbContext(DbContextOptions<HomeOfficeDbContext> op
                 .HasPrincipalKey(x => new { x.OrganizationId, x.Id }).OnDelete(DeleteBehavior.Restrict);
             entity.ToTable("ReportingLines", table => table.HasCheckConstraint("CK_ReportingLine_NoSelf", "\"EmployeeId\" <> \"ManagerId\""));
         });
+        builder.Entity<AccessAudit>(entity =>
+        {
+            entity.Property(x => x.Source).HasMaxLength(20);
+            entity.Property(x => x.Action).HasMaxLength(80);
+            entity.Property(x => x.Reason).HasMaxLength(500);
+            entity.Property(x => x.BeforeJson).HasColumnType("jsonb");
+            entity.Property(x => x.AfterJson).HasColumnType("jsonb");
+            entity.HasIndex(x => new { x.OrganizationId, x.CreatedAt, x.Id });
+            entity.HasOne<Member>().WithMany().HasForeignKey(x => new { x.OrganizationId, x.MemberId })
+                .HasPrincipalKey(x => new { x.OrganizationId, x.Id }).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<Member>().WithMany().HasForeignKey(x => new { x.OrganizationId, x.ActorMemberId })
+                .HasPrincipalKey(x => new { x.OrganizationId, x.Id }).OnDelete(DeleteBehavior.Restrict);
+            entity.ToTable("AccessAudits", table => table.HasCheckConstraint("CK_AccessAudit_Source",
+                "(\"Source\" = 'operator' AND \"ActorMemberId\" IS NULL) OR (\"Source\" = 'administrator' AND \"ActorMemberId\" IS NOT NULL)"));
+        });
     }
 }
