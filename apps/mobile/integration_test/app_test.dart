@@ -93,7 +93,10 @@ Future<void> main() async {
     );
     await login(email, password);
     expect(find.text('Terminar sessão'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Ligação ao serviço'), 250);
+    // Connectivity diagnostics live in Settings; the calendar has its own scroll view.
+    await tester.tap(find.text('Definições'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Ligação ao serviço'));
     for (
       var i = 0;
       i < 30 && find.text('Serviço ligado').evaluate().isEmpty;
