@@ -2,6 +2,16 @@
 
 Mobile no âmbito atual significa Android; iOS está adiado para HO-306, sem data. As interfaces futuras abaixo permanecem planos até ao respetivo item estar implementado.
 
+## Próxima melhoria visual escolhida, não implementada
+
+Em 2026-09-10 o responsável selecionou **[Claude +](https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application)**. Página pública confirmada com esse título, autoria Luis Llanes. [HO-016 — #41](https://github.com/Dennyum204/HomeOfficeReservation/issues/41), [milestone visual](https://github.com/Dennyum204/HomeOfficeReservation/milestone/8): tarefa futura dedicada, sem gate do piloto ou alteração de código nesta revisão.
+
+Web mantém a estética neutra, aplica claro/escuro e preferência do sistema; modais/pedidos separam contexto, secções, resumo e ações. Android partilha a identidade com cartões simples, badges legíveis e animações discretas, respeitando redução de movimento. Local de trabalho e estado de aprovação têm rótulos/ícones distintos, sem depender apenas de cor ou esconder conflitos/plano vigente.
+
+Ao implementar, inspecionar tokens e condições de utilização da referência, adaptar às bibliotecas atuais e verificar contraste, foco, teclado, leitores de ecrã, alvos táteis e texto ampliado. Não se decidiu adicionar shadcn, Tailwind ou outra infraestrutura apenas pela origem do tema. Funcionalidades, permissões e acessibilidade mantêm-se; iOS continua adiado. Cores ilustrativas abaixo não substituem os tokens a verificar na tarefa.
+
+Administração de acesso é outro trabalho, [HO-015](https://github.com/Dennyum204/HomeOfficeReservation/issues/40): superfície Web responsiva para o titular gerir membros, convites e associação ao chefe. Os ecrãs existentes de ativação Web/Android não constituem essa administração. O redesenho visual pode avançar quando selecionado sem aguardar deployment; não autoriza implementar administração dentro do PR HO-012.
+
 ## Estrutura de navegação
 
 | Ecrã | Web | Mobile |

@@ -2,6 +2,8 @@
 
 Estado: implementado em HO-003, 2026-09-09; integrado pelo PR #29 às 14:50:29Z, commit 95027c7b8795b5b4f55e817633fe9521c32fd9ab, CI de integração 34366275543/34366275654 verde e verificada em HO-004. Concretiza [ADR-004](ADR-004-independent-core.md), sem substituir a direção de produto. Issue [#4](https://github.com/Dennyum204/HomeOfficeReservation/issues/4).
 
+Adenda documental 2026-09-10, sem alteração da implementação: HO-012 confirmou acesso privado, titular administrador/colaborador e chefe associado. O bootstrap aqui implementado cria **só administrador** e a API recusa editar o próprio membro; provisionamento/ativação existem, mas não administração UI ou ciclo completo de convites. [Inspeção e tarefas futuras HO-013/014/015](../HO-012-PRIVATE-ACCESS.md). Esta distinção preserva a aceitação histórica de HO-003; não apresenta as novas capacidades como entregues nem substitui Identity.
+
 ## Contexto
 
 O scaffold já contém .NET/EF/PostgreSQL e clientes gerados. A autenticação precisa de uma implementação pequena, controlada e verificável nos clientes próprios. Não existe requisito de OAuth para terceiros, Microsoft, MFA ou SSO nesta tarefa.

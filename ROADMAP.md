@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-10.
 
-Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.
+Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core. Acesso privado por convite: HO-013/014/015 preparam titular e convidados; HO-016 regista tema Claude + num marco visual separado, sem gate do piloto.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
@@ -14,13 +14,13 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 
 **Quando:** Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.
 
-**Gate:** HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.
+**Gate:** HO-000 a HO-007 e HO-010 a HO-015 integrados; acesso privado por convite, titular administrador/colaborador e chefe associado, duas contas autorizadas e gates core de QUALITY.md cumpridos. HO-008/HO-009/HO-016 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.
 
 **Reavaliar:** Em cada entrega do core e na retrospetiva do piloto.
 
 | ID | Funcionalidade | Tarefas |
 |---|---|---|
-| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003 |
+| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003, HO-013, HO-014, HO-015 |
 | FEAT-002 | Calendário próprio autoritativo, dashboard e padrão base explícito | HO-005, HO-010 |
 | FEAT-003 | Pedidos por datas, rascunhos e comentários | HO-004, HO-005, HO-010 |
 | FEAT-004 | Aprovação parcial, contrapropostas e revisões | HO-004, HO-005, HO-010 |
@@ -29,6 +29,18 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 | FEAT-007 | Notificações internas e push mobile | HO-007, HO-011 |
 | FEAT-009 | Histórico, privacidade e recuperação | HO-003, HO-004, HO-011 |
 | FEAT-010 | Férias/indisponibilidade manual para planeamento | HO-004, HO-005, HO-010 |
+
+## ui-refresh — Identidade visual Claude + — Web e Android
+
+**Quando:** Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.
+
+**Gate:** HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.
+
+**Reavaliar:** Ao selecionar o próximo trabalho visual e após feedback de utilização.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-025 | Tema Claude + e hierarquia visual acessível Web/Android | HO-016 |
 
 ## outlook-publish — Outlook opcional: publicação unidirecional
 

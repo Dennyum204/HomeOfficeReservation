@@ -34,6 +34,19 @@ O certificado pode ser gerado com OpenSSL, RSA 3072, finalidade Data Protection,
 
 `HO_CONFIG_FILE=/run/config/application.json` é carregado pelo host; `appsettings.Local.json` só em Development. O exemplo contém `REPLACE` deliberadamente rejeitado. `AllowedHosts` é o hostname da origem sem porta. `Hosting:KnownProxies=10.77.0.2` coincide com Caddy; não limpar a restrição nem confiar em todas as redes. A sub-rede fixa exige hosts separados; escolher outra sub-rede se colidir e atualizar ambos os lados antes de ensaiar. Não usar CDN/proxy adicional sem rever a cadeia de confiança.
 
+Hostnames escolhidos em 2026-09-10 no domínio **ferbatech.com** existente na Cloudflare. Valores para os ficheiros externos, só quando a criação/configuração for autorizada:
+
+| Campo | Staging | Produção |
+|---|---|---|
+| `HO_PROJECT` | `homeoffice-staging` | `homeoffice-production` |
+| `HO_ENVIRONMENT` | `Staging` | `Production` |
+| `HO_PUBLIC_HOST` / `AllowedHosts` | `staging.homeoffice.ferbatech.com` | `homeoffice.ferbatech.com` |
+| `Hosting:PublicOrigin` | `https://staging.homeoffice.ferbatech.com` | `https://homeoffice.ferbatech.com` |
+| `HO_PRIVATE_DIR` | `/srv/homeoffice-staging/private` | `/srv/homeoffice-production/private` |
+| Android `API_BASE_URL` | `https://staging.homeoffice.ferbatech.com` | `https://homeoffice.ferbatech.com` |
+
+Web usa `/api/v1` na mesma origem. Conservar os restantes nomes de campos e valores de segurança dos exemplos; não copiar passwords ou configuração de desenvolvimento. A tabela é preparação documental, não prova de hosts existentes. Plano DNS: apenas `A homeoffice` e `A staging.homeoffice`, DNS-only, para os IPv4 ainda não atribuídos; preservar restantes registos e email. [Inventário, custos e etapas de aprovação](../../docs/HO-012-PILOT.md).
+
 Firewall cloud: apenas TCP 80/443 públicos; SSH 22 só do IP administrativo, chave SSH, sem password/root remoto. PostgreSQL e app não publicam portas. Caddy gere HTTPS para o domínio DNS aprovado; a app conserva cookies Secure/HttpOnly, CSRF e recusa API HTTP. Não expor health, OpenAPI, Mailpit, logs ou base de dados. `/api/v1/admin/*` mantém autorização de administrador de contas; não é diagnóstico anónimo. Sem CORS entre origens. Nunca publicar o `verify.yaml` temporário.
 
 ## Primeiro arranque e atualização explícita
@@ -45,13 +58,13 @@ docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/com
 docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml ps
 ```
 
-A inicialização de PostgreSQL cria apenas uma base/role. Migrações não são executadas pelo arranque normal. O piloto de duas pessoas não exige uma terceira conta: o administrador inicial pode acumular o papel de chefia, definido na gestão de membros, e criar o colaborador. O ensaio automatizado separa esses papéis em três contas sintéticas para exercitar a autorização. Só depois de validar SMTP e com destinatário autorizado:
+A inicialização de PostgreSQL cria apenas uma base/role. Migrações não são executadas pelo arranque normal. **Correção da preparação inicial:** o bootstrap atual cria apenas administrador; não atribui colaborador/gestor e a API recusa editar o próprio membro. Logo, não prepara hoje Fernando como administrador e colaborador na mesma conta. HO-013 resolve esta lacuna em tarefa própria; não usar uma terceira conta artificial ou SQL manual como atalho. O ensaio automatizado usa três contas sintéticas e não prova esse percurso de duas pessoas. [Auditoria, convites e gates HO-013/014/015](../../docs/HO-012-PRIVATE-ACCESS.md). Comportamento atual do comando, apenas depois de validar SMTP e com destinatário autorizado:
 
 ```sh
 docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml run --rm --no-deps app --bootstrap-admin /run/config/bootstrap.json
 ```
 
-Formato de `bootstrap.json`: `{"organizationName":"Organização piloto","email":"admin@example.invalid","displayName":"Administrador"}` — substituir privadamente. Ativação chega pelo SMTP configurado; o administrador cria apenas os participantes autorizados na app e atribui relação chefia/colaborador. Bootstrap recusa organização existente. Se SMTP falhar depois de criar o administrador, corrigir SMTP e pedir novo código de ativação pela app; não repetir criando outra organização. Produção rejeita `--provision-dev` e configuração de tempos de sessão/limites/captura de email de teste.
+Formato atual de `bootstrap.json`: `{"organizationName":"Organização piloto","email":"admin@example.invalid","displayName":"Administrador"}` — substituir privadamente; não acrescentar campos de papéis que o comando ainda não suporta. Ativação usa o SMTP configurado; restantes membros e relação chefia/colaborador são geridos hoje pela API administrativa, sem interface de administração. Bootstrap recusa organização existente. Se SMTP falhar depois de criar o administrador, corrigir SMTP e pedir novo código de ativação pela app; não repetir criando outra organização. Produção rejeita `--provision-dev` e configuração de tempos de sessão/limites/captura de email de teste. Não enviar convites reais até cumprir os gates de acesso e obter autorização de envio.
 
 Atualização: confirmar backup restaurável, colocar app em manutenção (`stop app`), snapshot, aplicar `migrate` com a imagem candidata e voltar a `up --wait`. `snapshot` só retoma a app se ela estava a correr ao iniciar o comando; preserva uma paragem administrativa. Comparar migrações com a imagem anterior; reverter só imagem é seguro apenas com esquema compatível. Caso contrário, restaurar para nova base, verificar, e trocar configuração durante manutenção. Nunca fazer downgrade de esquema automático. HO-012 não acrescenta migrações de negócio.
 

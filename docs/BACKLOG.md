@@ -20,7 +20,11 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
-| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011 |
+| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014, HO-015 |
+| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Planeado | HO-003, HO-004 |
+| HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Planeado | HO-003, HO-007 |
+| HO-015 | Administração Web de membros e convites | v1.0 | web | Planeado | HO-011, HO-013, HO-014 |
+| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Planeado | HO-011 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -341,22 +345,113 @@ Release: v1.0 · Área: operations · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-011
+Dependências: HO-011, HO-013, HO-014, HO-015
 
 Funcionalidades: Preparação/fundação da release.
 
 Critérios de aceitação:
 
-- Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.
+- Alojamento/região, retenção e plataformas definidos pelo responsável. Domínio existente ferbatech.com: homeoffice.ferbatech.com em produção e staging.homeoffice.ferbatech.com em staging, sem compra/transferência e preservando DNS/email existentes.
 - Staging/produção isolados; segredos externos; migração e restauro demonstrados.
 - Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.
 - Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.
 - Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.
 - Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
+- Antes de convidar pessoas reais: titular administrador/colaborador e chefe associado configuráveis com segurança (HO-013), ciclo de convite recuperável e revogável (HO-014), SMTP real e autorização ensaiados. Antes da gestão autónoma de convidados/piloto aceite: administração Web HO-015 concluída. Convites da aplicação não são convites Firebase para APK.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/37
+
+## HO-013 — Titular administrador e colaborador: bootstrap seguro
+
+Release: v1.0 · Área: backend · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-003, HO-004
+
+Funcionalidades: FEAT-001
+
+Critérios de aceitação:
+
+- Bootstrap explícito permite criar o titular autorizado como administrador e colaborador na mesma conta, sem registo público nem autoatribuição de papéis pela API.
+- Procedimento restrito ao operador permite corrigir um administrador já criado pelo bootstrap anterior, de forma idempotente, auditável e sem apagar contas, dados ou criar uma segunda identidade para o titular.
+- Chefe distinto pode ser criado como gestor e associado ao titular colaborador pelos comandos administrativos autorizados; nenhum papel administrativo concede autoaprovação ou acesso de gestão sem relação válida.
+- Edição geral dos próprios papéis continua recusada; alterações administrativas não podem deixar a organização sem administrador ativo. Documentar a recuperação controlada pelo operador.
+- Testes PostgreSQL cobrem titular com papéis acumulados, associação ao chefe, decisão pelo chefe, recusa de autoaprovação mesmo com todos os papéis, isolamento entre organizações e preservação de contas existentes.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/38
+
+PR: ainda não criado.
+
+## HO-014 — Convites de acesso: estado, entrega e revogação
+
+Release: v1.0 · Área: backend · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-003, HO-007
+
+Funcionalidades: FEAT-001
+
+Critérios de aceitação:
+
+- Reutilizar ASP.NET Core Identity e a criação administrativa existente; apenas administrador ativo convida para a sua organização e atribui papéis permitidos. Pedir ativação anonimamente nunca cria conta.
+- Expor ao administrador estado mínimo de ativação/convite e resultado de envio, sem códigos/tokens, distinguindo pendente, aceite, cancelado/desativado e falha de entrega. Separar validade do código Identity da permanência do convite.
+- Reenvio e cancelamento explícitos, com limites e auditoria: códigos expirados, consumidos ou revogados não ativam a conta. Não criar protocolo criptográfico próprio nem permitir recuperar convite cancelado pelo endpoint anónimo.
+- Recuperar falhas SMTP e respostas incertas após criação da conta sem duplicar membro/email nem perder o convite. Implementar entrega recuperável com a infraestrutura durável existente quando necessária; não guardar códigos em texto simples em filas, logs ou tracking.
+- Administração consegue consultar a associação gestor-colaborador atual e estados necessários à UI dentro da organização; contratos OpenAPI e clientes gerados mantêm uma fonte única.
+- Aceitação funciona nos ecrãs Web e Android existentes com código Identity e definição de password; testar envio simulado, validade, reenvio, cancelamento, repetição, falha SMTP, conta desativada, isolamento e impossibilidade de autoaprovação. SMTP externo real continua gate operacional HO-012, não dependência para implementar/testar esta tarefa.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/39
+
+PR: ainda não criado.
+
+## HO-015 — Administração Web de membros e convites
+
+Release: v1.0 · Área: web · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-011, HO-013, HO-014
+
+Funcionalidades: FEAT-001
+
+Critérios de aceitação:
+
+- Interface Web responsiva exclusiva do administrador ativo permite listar membros e estado de convite/ativação, convidar, reenviar, cancelar e tratar falhas com os contratos gerados.
+- Consultar e alterar papéis/estado dos outros membros e a associação gestor-colaborador, mostrando o chefe atual e confirmação das operações sensíveis; a API continua autoritativa.
+- Titular administrador e colaborador usa a mesma conta para gerir a organização e submeter os seus pedidos; chefe associado decide. Não há edição privilegiada do próprio papel, autoaprovação ou acesso anónimo aos dados.
+- Estados de carregamento, vazio, erro, autorização, conflito e envio incerto são explícitos; teclado, foco, leitores de ecrã e viewport estreito funcionam. Não apresentar envio SMTP como convite aceite.
+- Percurso com PostgreSQL e contas sintéticas demonstra titular, chefe e pessoa adicional convidada, aceitação Web/Android, associação correta, suspensão/cancelamento e negações. Administração nativa Android fica fora desta tarefa; o administrador pode usar a Web responsiva.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/40
+
+PR: ainda não criado.
+
+## HO-016 — Tema Claude + e hierarquia visual Web/Android
+
+Release: ui-refresh · Área: fullstack · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-011
+
+Funcionalidades: FEAT-025
+
+Critérios de aceitação:
+
+- Usar como referência escolhida Claude + em https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application; inspecionar tokens e condições de utilização quando a tarefa for selecionada, sem inventar valores ou impor uma nova biblioteca de UI.
+- Web preserva a estética neutra com tema claro/escuro e preferência do sistema; modais e pedidos distinguem secções, contexto, resumo e ações com hierarquia consistente.
+- Android partilha a identidade visual com cartões simples, badges legíveis e animações discretas que respeitam redução de movimento; manter strings externalizadas.
+- Local de trabalho e estado de aprovação são representados separadamente com rótulos/ícones; não depender apenas de cor nem ocultar plano confirmado, pedido pendente ou conflito.
+- Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.
+- Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/41
+
+PR: ainda não criado.
 
 ## HO-101 — Lembretes e resumo semanal por email
 

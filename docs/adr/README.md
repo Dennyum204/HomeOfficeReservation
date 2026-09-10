@@ -23,4 +23,5 @@ Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência 
 
 | [ADR-011](ADR-011-android-planning.md) | Calendário/pedidos Android, recuperação por conta e continuidade da base aprovada | HO-010 integrado pelo PR #35; quatro checks de integração verificados em HO-011 |
 
-| [ADR-012](ADR-012-core-interfaces.md) | Interfaces core, journal comum e aceitação Web/Android | HO-011; revisão pendente |
+| [ADR-012](ADR-012-core-interfaces.md) | Interfaces core, journal comum e aceitação Web/Android | HO-011 integrado pelo PR #36; merge/CI reconciliados em HO-012 |
+| [ADR-013](ADR-013-pilot-hosting.md) | Preparação de alojamento, recuperação e distribuição piloto | PR #37 draft; domínio escolhido, contratação/deployment pendentes; adenda de acesso privado |

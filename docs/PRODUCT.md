@@ -16,6 +16,12 @@ A aplicação tem calendário próprio autoritativo e funciona integralmente sem
 
 Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identidades usam IDs locais estáveis do ASP.NET Core Identity associados ao MemberId; não confiar apenas no endereço de email. A associação de chefe é configurada pela aplicação, não inferida do Microsoft Graph.
 
+### Acesso privado por convite — decisão em HO-012
+
+A aplicação é usada por Fernando, pelo seu chefe e pelas pessoas que Fernando convidar para a organização. **Sem registo público.** A conta do titular acumula administrador e colaborador; o chefe é outro membro, gestor explicitamente associado ao titular. O papel administrativo não permite autoaprovação nem dispensa autorização por organização/relação. Sem autenticação não se consultam dados privados; login, ativação e recuperação continuam acessíveis.
+
+Identity já suporta criação administrativa sem password, envio de código e aceitação por ativação na Web/Android. Ainda faltam bootstrap do titular com ambos os papéis (HO-013), gestão recuperável/revogável de convites (HO-014) e administração Web (HO-015). São tarefas separadas, necessárias nas etapas de acesso real/aceitação do piloto, sem implementação no PR HO-012. [Inspeção do que existe e gates](HO-012-PRIVATE-ACCESS.md). Convites Firebase dão acesso ao APK, não à organização ou aos seus dados. HO-301 continua a tratar expansão por equipas e substituição do aprovador; convites básicos não aguardam V2.
+
 ## V1: comportamento funcional
 
 ### Calendário e dashboard
@@ -66,6 +72,8 @@ Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identi
 - Leituras sincronizadas entre dispositivos. Push é uma tentativa de entrega, não prova de leitura.
 - Emails, resumos semanais e lembretes automáticos entram em V1.1.
 
+Emails de ativação, convites de acesso e recuperação são parte da admissão/autenticação core; a referência a V1.1 acima diz respeito às notificações de acompanhamento de negócio.
+
 ### Outlook opcional, após o core
 
 Ligação apenas em Definições, sem requisito para login, planeamento ou lançamento. O primeiro marco opcional HO-008 publica unidirecionalmente dias explícitos de localização confirmada no calendário principal do utilizador ligado: disponibilidade livre por defeito, eventos próprios e sem convites. Trabalho remoto não é ausência. Sem ligação, o calendário interno e todos os fluxos permanecem completos.
@@ -90,6 +98,8 @@ Registo manual para planeamento. Não substitui autorização de férias de RH. 
 10. O utilizador sabe se as datas vêm do padrão base, de aprovação ou de obrigação presencial.
 
 Os critérios detalhados por entrega estão em [BACKLOG.md](BACKLOG.md).
+
+Melhoria visual futura: [HO-016 — Claude +](https://github.com/Dennyum204/HomeOfficeReservation/issues/41), Web claro/escuro com hierarquia de modais/pedidos e identidade equivalente Android. [Direção de UX](UX.md). Só planeada; preserva funcionalidades, permissões, acessibilidade e separação entre local de trabalho/estado de aprovação. Não é gate do piloto; iOS adiado.
 
 ### Concretização HO-007
 

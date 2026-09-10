@@ -2,16 +2,31 @@
   "schema_version": 1,
   "project": "HomeOfficeReservation",
   "updated_at": "2026-09-10",
-  "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.",
+  "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core. Acesso privado por convite: HO-013/014/015 preparam titular e convidados; HO-016 regista tema Claude + num marco visual separado, sem gate do piloto.",
   "releases": [
     {
       "id": "v1.0",
       "title": "Core V1 autónomo",
       "timing": "Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.",
-      "gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.",
+      "gate": "HO-000 a HO-007 e HO-010 a HO-015 integrados; acesso privado por convite, titular administrador/colaborador e chefe associado, duas contas autorizadas e gates core de QUALITY.md cumpridos. HO-008/HO-009/HO-016 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.",
       "review_trigger": "Em cada entrega do core e na retrospetiva do piloto.",
       "status": "planned",
-      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1"
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1",
+      "scope_history": [
+        {
+          "date": "2026-09-10",
+          "reason": "Acesso privado escolhido pelo responsável; acrescentados gates HO-013/014/015 sem iniciar implementação nem bloquear a decisão de alojamento."
+        }
+      ]
+    },
+    {
+      "id": "ui-refresh",
+      "title": "Identidade visual Claude + — Web e Android",
+      "timing": "Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.",
+      "gate": "HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.",
+      "review_trigger": "Ao selecionar o próximo trabalho visual e após feedback de utilização.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/8"
     },
     {
       "id": "outlook-publish",
@@ -214,6 +229,12 @@
       "release": "ios-reactivation",
       "status": "parked",
       "reason": "Direção Web/Android em HO-005; sem data."
+    },
+    {
+      "id": "FEAT-025",
+      "title": "Tema Claude + e hierarquia visual acessível Web/Android",
+      "release": "ui-refresh",
+      "status": "planned"
     }
   ],
   "work_items": [
@@ -885,16 +906,20 @@
       "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-011"
+        "HO-011",
+        "HO-013",
+        "HO-014",
+        "HO-015"
       ],
       "features": [],
       "acceptance": [
-        "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+        "Alojamento/região, retenção e plataformas definidos pelo responsável. Domínio existente ferbatech.com: homeoffice.ferbatech.com em produção e staging.homeoffice.ferbatech.com em staging, sem compra/transferência e preservando DNS/email existentes.",
         "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
         "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
         "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
         "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
-        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.",
+        "Antes de convidar pessoas reais: titular administrador/colaborador e chefe associado configuráveis com segurança (HO-013), ciclo de convite recuperável e revogável (HO-014), SMTP real e autorização ensaiados. Antes da gestão autónoma de convidados/piloto aceite: administração Web HO-015 concluída. Convites da aplicação não são convites Firebase para APK."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
       "pr_urls": [
@@ -928,9 +953,126 @@
             "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
             "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios."
           ]
+        },
+        {
+          "date": "2026-09-10",
+          "reason": "Responsável escolheu ferbatech.com existente, acesso privado por convite e titular administrador/colaborador; lacunas de acesso separadas do PR operacional, sem autorizar ações externas.",
+          "previous_depends_on": [
+            "HO-011"
+          ],
+          "previous_acceptance": [
+            "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+            "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+            "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
+            "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+            "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+          ]
         }
       ],
-      "notes": "Preparação do piloto em ops/ho-012-pilot-preparation: proposta Hetzner/Caddy/PostgreSQL por ambiente, configuração Production, backup/restauro isolado e assinatura Android externa. Critérios de aceitação intactos; contratação, deployment, SMTP real, distribuição física e aceitação continuam por aprovar/validar. PR draft com Refs #13, sem encerrar issue; docs/HO-012-PILOT.md e infra/pilot/README.md. PR draft #37: https://github.com/Dennyum204/HomeOfficeReservation/pull/37; ensaio Production isolado aprovado na CI de 15c4bbe (https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34525583766/job/103033891052), incluindo recuperação cifrada de dados/sessões. Quatro checks do último commit e limitações registados no PR; deployment e aceitação externa continuam pendentes, issue aberta."
+      "notes": "PR #37 permanece draft e issue #13 aberta. Dependências HO-013/014/015 são gates para acesso real/aceitação final, não impedem documentar nem decidir o alojamento agora; não dependem de HO-012, evitando ciclo. Revisão atual só documentação/tracking: domínio escolhido, reserva de compra removida, proposta €17,38/mês antes de impostos, manutenção explícita e nenhum recurso/DNS/deployment/email/convite/APK autorizado. Preparação técnica verificada no commit b07b756576b5ad982eb4bf2b8e1d121c4355e57a: docs 34528244453 e core 34528244465 verdes. Não equivale a alojamento ou aceitação externa; resultados do novo commit documental registados no PR. Ver docs/HO-012-PILOT.md, docs/HO-012-PRIVATE-ACCESS.md e infra/pilot/README.md. HO-016 é UI futura, sem implementação nem gate do piloto."
+    },
+    {
+      "id": "HO-013",
+      "title": "Titular administrador e colaborador: bootstrap seguro",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-003",
+        "HO-004"
+      ],
+      "features": [
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Bootstrap explícito permite criar o titular autorizado como administrador e colaborador na mesma conta, sem registo público nem autoatribuição de papéis pela API.",
+        "Procedimento restrito ao operador permite corrigir um administrador já criado pelo bootstrap anterior, de forma idempotente, auditável e sem apagar contas, dados ou criar uma segunda identidade para o titular.",
+        "Chefe distinto pode ser criado como gestor e associado ao titular colaborador pelos comandos administrativos autorizados; nenhum papel administrativo concede autoaprovação ou acesso de gestão sem relação válida.",
+        "Edição geral dos próprios papéis continua recusada; alterações administrativas não podem deixar a organização sem administrador ativo. Documentar a recuperação controlada pelo operador.",
+        "Testes PostgreSQL cobrem titular com papéis acumulados, associação ao chefe, decisão pelo chefe, recusa de autoaprovação mesmo com todos os papéis, isolamento entre organizações e preservação de contas existentes."
+      ],
+      "pr_urls": [],
+      "notes": "Lacuna identificada por leitura de MaintenanceCommands/MemberDirectory em HO-012: bootstrap atual cria apenas IsAccountAdministrator e a API recusa editar o próprio membro. Implementação futura em PR próprio; não reabre nem invalida a entrega histórica HO-003.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38"
+    },
+    {
+      "id": "HO-014",
+      "title": "Convites de acesso: estado, entrega e revogação",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-003",
+        "HO-007"
+      ],
+      "features": [
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Reutilizar ASP.NET Core Identity e a criação administrativa existente; apenas administrador ativo convida para a sua organização e atribui papéis permitidos. Pedir ativação anonimamente nunca cria conta.",
+        "Expor ao administrador estado mínimo de ativação/convite e resultado de envio, sem códigos/tokens, distinguindo pendente, aceite, cancelado/desativado e falha de entrega. Separar validade do código Identity da permanência do convite.",
+        "Reenvio e cancelamento explícitos, com limites e auditoria: códigos expirados, consumidos ou revogados não ativam a conta. Não criar protocolo criptográfico próprio nem permitir recuperar convite cancelado pelo endpoint anónimo.",
+        "Recuperar falhas SMTP e respostas incertas após criação da conta sem duplicar membro/email nem perder o convite. Implementar entrega recuperável com a infraestrutura durável existente quando necessária; não guardar códigos em texto simples em filas, logs ou tracking.",
+        "Administração consegue consultar a associação gestor-colaborador atual e estados necessários à UI dentro da organização; contratos OpenAPI e clientes gerados mantêm uma fonte única.",
+        "Aceitação funciona nos ecrãs Web e Android existentes com código Identity e definição de password; testar envio simulado, validade, reenvio, cancelamento, repetição, falha SMTP, conta desativada, isolamento e impossibilidade de autoaprovação. SMTP externo real continua gate operacional HO-012, não dependência para implementar/testar esta tarefa."
+      ],
+      "pr_urls": [],
+      "notes": "Já existe POST administrativo, envio SMTP e aceitação por código. Esta tarefa cobre gestão do ciclo e recuperação que faltam; não é um novo fornecedor de identidade. Convites Firebase só dão acesso ao APK.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39"
+    },
+    {
+      "id": "HO-015",
+      "title": "Administração Web de membros e convites",
+      "release": "v1.0",
+      "area": "web",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-011",
+        "HO-013",
+        "HO-014"
+      ],
+      "features": [
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Interface Web responsiva exclusiva do administrador ativo permite listar membros e estado de convite/ativação, convidar, reenviar, cancelar e tratar falhas com os contratos gerados.",
+        "Consultar e alterar papéis/estado dos outros membros e a associação gestor-colaborador, mostrando o chefe atual e confirmação das operações sensíveis; a API continua autoritativa.",
+        "Titular administrador e colaborador usa a mesma conta para gerir a organização e submeter os seus pedidos; chefe associado decide. Não há edição privilegiada do próprio papel, autoaprovação ou acesso anónimo aos dados.",
+        "Estados de carregamento, vazio, erro, autorização, conflito e envio incerto são explícitos; teclado, foco, leitores de ecrã e viewport estreito funcionam. Não apresentar envio SMTP como convite aceite.",
+        "Percurso com PostgreSQL e contas sintéticas demonstra titular, chefe e pessoa adicional convidada, aceitação Web/Android, associação correta, suspensão/cancelamento e negações. Administração nativa Android fica fora desta tarefa; o administrador pode usar a Web responsiva."
+      ],
+      "pr_urls": [],
+      "notes": "Necessária antes de Fernando gerir autonomamente convidados reais. Não iniciar módulo administrativo dentro do PR #37. Não exige nova infraestrutura de identidade nem gestão de várias empresas.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40"
+    },
+    {
+      "id": "HO-016",
+      "title": "Tema Claude + e hierarquia visual Web/Android",
+      "release": "ui-refresh",
+      "area": "fullstack",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-011"
+      ],
+      "features": [
+        "FEAT-025"
+      ],
+      "acceptance": [
+        "Usar como referência escolhida Claude + em https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application; inspecionar tokens e condições de utilização quando a tarefa for selecionada, sem inventar valores ou impor uma nova biblioteca de UI.",
+        "Web preserva a estética neutra com tema claro/escuro e preferência do sistema; modais e pedidos distinguem secções, contexto, resumo e ações com hierarquia consistente.",
+        "Android partilha a identidade visual com cartões simples, badges legíveis e animações discretas que respeitam redução de movimento; manter strings externalizadas.",
+        "Local de trabalho e estado de aprovação são representados separadamente com rótulos/ícones; não depender apenas de cor nem ocultar plano confirmado, pedido pendente ou conflito.",
+        "Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.",
+        "Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306."
+      ],
+      "pr_urls": [],
+      "notes": "Tema confirmado pelo responsável em HO-012 em 2026-09-10; página pública identifica Claude +, de Luis Llanes. Tarefa futura dedicada, sem dependência nem gate de contratação/piloto; iniciar só quando selecionada.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41"
     },
     {
       "id": "HO-101",
@@ -1108,7 +1250,8 @@
         "Pedidos em curso têm encaminhamento explícito quando o aprovador está indisponível."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/20",
-      "pr_urls": []
+      "pr_urls": [],
+      "notes": "HO-013/014/015 antecipam apenas o acesso privado por convite e a administração básica da organização V1, conforme decisão de 2026-09-10. HO-301 preserva o ID, histórico e critérios de expansão por equipas/substituição temporária do aprovador em V2; não bloqueia convites básicos do piloto."
     },
     {
       "id": "HO-302",
