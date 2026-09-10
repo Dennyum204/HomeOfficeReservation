@@ -90,6 +90,10 @@ def main():
         ports = folder / "ports.yaml"
         ports.write_text('services:\n  edge:\n    ports: !override ["127.0.0.1:18443:443"]\n')
         ops = Operations(env_file, ("-f", str(override), "-f", str(ports)))
+        effective = json.loads(ops.run("config", "--format", "json"))
+        assert effective["services"]["app"]["tmpfs"] == ["/tmp:uid=1654,gid=1654,mode=700"]
+        assert not effective["services"]["app"].get("ports") and not effective["services"]["database"].get("ports")
+        assert effective["networks"]["pilot"]["ipam"]["config"][0]["ip_range"] == "10.77.0.128/25"
         context = ssl.create_default_context(cafile=str(private / "ca.pem"))
         jar = http.cookiejar.CookieJar()
         browser = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar), urllib.request.HTTPSHandler(context=context))

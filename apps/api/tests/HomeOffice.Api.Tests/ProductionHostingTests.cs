@@ -15,6 +15,9 @@ public class ProductionHostingTests
     [InlineData("Email:CaptureDirectory", "/tmp/capture")]
     [InlineData("Notifications:WorkerEnabled", "false")]
     [InlineData("DataProtection:CertificatePassword", "REPLACE_ME")]
+    [InlineData("ConnectionStrings:Database", "Host=database;Database=homeoffice;Username=homeoffice")]
+    [InlineData("ConnectionStrings:Database", "invalid connection")]
+    [InlineData("Notifications:PushProvider", "fcm")]
     public void Unsafe_production_configuration_is_rejected(string key, string value)
     {
         var data = Valid();

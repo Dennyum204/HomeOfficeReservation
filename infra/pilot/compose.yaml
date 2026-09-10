@@ -68,4 +68,5 @@ volumes:
 networks:
   pilot:
     ipam:
-      config: [{ subnet: 10.77.0.0/24 }]
+      # Reserve the low addresses for explicit services, even when database starts first.
+      config: [{ subnet: 10.77.0.0/24, ip_range: 10.77.0.128/25 }]

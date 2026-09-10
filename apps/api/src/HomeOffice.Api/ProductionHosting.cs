@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.HttpOverrides;
+using Npgsql;
 
 namespace HomeOffice.Api;
 
@@ -35,11 +36,23 @@ public static class ProductionHosting
                 !ip.Equals(IPAddress.Any) && !ip.Equals(IPAddress.IPv6Any)) &&
             forbidden.All(k => config[k] is null) &&
             secrets.All(k => !string.IsNullOrWhiteSpace(config[k]) && !config[k]!.Contains("REPLACE", StringComparison.OrdinalIgnoreCase)) &&
+            DatabaseConfigured(config.GetConnectionString("Database")) &&
             config.GetValue("Notifications:WorkerEnabled", true) &&
             config.GetValue("Email:Port", 587) is > 0 and <= 65535 &&
-            (config["Notifications:PushProvider"] != "Fcm" || !string.IsNullOrWhiteSpace(config["Notifications:FirebaseProjectId"])) &&
+            (!string.Equals(config["Notifications:PushProvider"], "Fcm", StringComparison.OrdinalIgnoreCase) || !string.IsNullOrWhiteSpace(config["Notifications:FirebaseProjectId"])) &&
             Path.IsPathFullyQualified(config["DataProtection:KeyDirectory"] ?? "") &&
             Path.IsPathFullyQualified(config["DataProtection:CertificatePath"] ?? "");
+    }
+
+    private static bool DatabaseConfigured(string? connection)
+    {
+        try
+        {
+            var parsed = new NpgsqlConnectionStringBuilder(connection);
+            return !string.IsNullOrWhiteSpace(parsed.Host) && !string.IsNullOrWhiteSpace(parsed.Database) &&
+                !string.IsNullOrWhiteSpace(parsed.Username) && !string.IsNullOrWhiteSpace(parsed.Password);
+        }
+        catch (ArgumentException) { return false; }
     }
 }
 
