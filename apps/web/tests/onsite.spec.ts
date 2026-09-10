@@ -94,14 +94,44 @@ async function navigate(page: Page, name: "Presenças" | "Tarefas") {
 async function openOnsite(page: Page, title: string) {
   await navigate(page, "Presenças");
   await refresh(page);
-  await page
-    .locator(".request-list-item")
-    .filter({ has: page.getByText(title, { exact: true }) })
-    .click();
+  await openListedWork(page, title);
   await expect(
     work(page).getByRole("heading", { name: title, exact: true }),
   ).toBeVisible();
   await ready(page);
+  await expect(work(page)).toBeFocused();
+  if ((page.viewportSize()?.width ?? 1366) <= 1000) {
+    const detailBounds = await work(page).boundingBox();
+    const listBounds = await page
+      .locator(".work-layout > .request-list")
+      .boundingBox();
+    expect(detailBounds!.y).toBeLessThan(listBounds!.y);
+  }
+}
+async function openListedWork(page: Page, title: string) {
+  const list = page.locator(".work-layout > .request-list");
+  for (let pageNumber = 0; pageNumber < 100; pageNumber++) {
+    await expect(list.getByRole("status")).toHaveCount(0);
+    const item = list
+      .locator(".request-list-item")
+      .filter({ has: page.getByText(title, { exact: true }) });
+    if (await item.count()) {
+      await item.click();
+      return;
+    }
+    const next = list.getByRole("button", {
+      name: "Página seguinte",
+      exact: true,
+    });
+    await expect(
+      next,
+      "The new synthetic item must exist on a real result page",
+    ).toBeEnabled();
+    await next.click();
+  }
+  throw new Error(
+    "Synthetic item was not found; existing records were preserved.",
+  );
 }
 async function createOnsite(
   page: Page,
@@ -118,9 +148,15 @@ async function createOnsite(
     await page.locator(`button[data-date="${date}"]`).click();
   } else await navigate(page, "Presenças");
   await page
-    .getByRole("button", { name: "+ Nova presença", exact: true })
+    .getByRole("button", {
+      name: "+ Exigir presença do colaborador",
+      exact: true,
+    })
     .click();
-  const form = page.getByRole("form", { name: "Nova presença", exact: true });
+  const form = page.getByRole("form", {
+    name: "Exigir presença do colaborador",
+    exact: true,
+  });
   if (fromCalendar) {
     await expect(form.getByLabel("Primeiro dia")).toHaveValue(date);
     await expect(form.getByLabel("Último dia")).toHaveValue(date);
@@ -171,7 +207,7 @@ test("onsite reading, preserved remote conflict, explicit resolution and linked 
   await signIn(page);
   await ready(page);
   const employee = await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .inputValue();
   const dates = await freeDates(page, employee);
   const tag = `${info.project.name} ${randomUUID().slice(0, 6)}`;
@@ -186,7 +222,7 @@ test("onsite reading, preserved remote conflict, explicit resolution and linked 
     await signIn(manager, "manager");
     await ready(manager);
     await manager
-      .getByLabel("Calendário de", { exact: true })
+      .getByLabel("Colaborador selecionado", { exact: true })
       .selectOption(employee);
     await ready(manager);
     await createOnsite(manager, title, dates[0], "Ativa", true);
@@ -363,12 +399,7 @@ test("onsite reading, preserved remote conflict, explicit resolution and linked 
     await ready(manager);
     await navigate(page, "Tarefas");
     await refresh(page);
-    await page
-      .locator(".request-list-item")
-      .filter({
-        has: page.getByText(`Preparar instalação · ${tag}`, { exact: true }),
-      })
-      .click();
+    await openListedWork(page, `Preparar instalação · ${tag}`);
     const progress = page.getByRole("form", {
       name: "Atualizar progresso",
       exact: true,
@@ -409,11 +440,11 @@ test("onsite inputs survive stale versions and reauthentication; uncertain commi
   await signIn(page, "manager");
   await ready(page);
   await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .selectOption({ label: "Colaborador de teste" });
   await ready(page);
   const employee = await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .inputValue();
   const dates = await freeDates(page, employee);
   const tag = `${info.project.name} ${randomUUID().slice(0, 6)}`;
@@ -424,9 +455,15 @@ test("onsite inputs survive stale versions and reauthentication; uncertain commi
     "Ativa",
   );
   await page
-    .getByRole("button", { name: "+ Nova presença", exact: true })
+    .getByRole("button", {
+      name: "+ Exigir presença do colaborador",
+      exact: true,
+    })
     .click();
-  let form = page.getByRole("form", { name: "Nova presença", exact: true });
+  let form = page.getByRole("form", {
+    name: "Exigir presença do colaborador",
+    exact: true,
+  });
   const title = `Texto conservado · ${tag}`;
   await form.getByLabel("Motivo", { exact: true }).fill(title);
   await form.getByLabel("Primeiro dia").fill(dates[1]);
@@ -473,14 +510,20 @@ test("onsite inputs survive stale versions and reauthentication; uncertain commi
   await signIn(page, "manager");
   await ready(page);
   await page
-    .getByLabel("Calendário de", { exact: true })
+    .getByLabel("Colaborador selecionado", { exact: true })
     .selectOption(employee);
   await ready(page);
   await navigate(page, "Presenças");
   await page
-    .getByRole("button", { name: "+ Nova presença", exact: true })
+    .getByRole("button", {
+      name: "+ Exigir presença do colaborador",
+      exact: true,
+    })
     .click();
-  form = page.getByRole("form", { name: "Nova presença", exact: true });
+  form = page.getByRole("form", {
+    name: "Exigir presença do colaborador",
+    exact: true,
+  });
   await expect(form.getByLabel("Motivo", { exact: true })).toHaveValue(title);
   await expect(form.getByLabel("Primeiro dia")).toHaveValue(dates[1]);
   await form

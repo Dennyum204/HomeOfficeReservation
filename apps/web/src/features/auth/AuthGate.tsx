@@ -152,6 +152,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       <>
         <section className="account-bar" aria-label={s.auth.account}>
           <div>
+            <span>{s.auth.signedInAs}</span>
             <strong>{member.displayName}</strong>
             <span>
               {member.organizationName} ·{" "}

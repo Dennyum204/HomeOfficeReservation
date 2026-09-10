@@ -68,3 +68,9 @@ Notificações é um separador real Web/Android: badge, filtros, páginas, leitu
 Mês compacto e agenda selecionada, rótulos/ícones, padrão e aprovações separados de pendentes e presenças. Nome do colaborador ativo permanece na barra superior. Pedido de dias de trabalho é distinto de uma obrigação presencial; esta última é apenas consultada neste item, com tratamento Web até HO-011.
 
 Formulários revêm o intervalo antes de o adicionar e confirmam a intenção antes de enviar. A chefia seleciona só o subconjunto pretendido; o colaborador retira pendentes sem cancelar aprovados. Cancelamento aprovado exige revisão e decisão final. Voltar no Android fecha confirmação/editor/detalhe; input local continua protegido até logout explícito. Erros de rede, versão e resultado incerto têm ações distintas. [Percurso e evidência](HO-010-ANDROID-PLANNING.md).
+
+## Concretização HO-011
+
+Os planos de interface Android dos parágrafos históricos acima são concretizados neste item: Presenças/tarefas tem listas, filtros, detalhes, edição autorizada e histórico. **Conta com sessão iniciada** e **Colaborador selecionado** são distintos. **Pedir os meus dias de trabalho** cria um pedido próprio; **Exigir presença do colaborador** é uma ação da chefia.
+
+Um conflito explica que o plano aprovado permanece e quem atua a seguir. Confirmar leitura não aceita uma contraproposta; aceitar não é a decisão final. Calendário e notificações abrem o detalhe atual. A Web estreita coloca o detalhe antes da lista e move/devolve foco; Android usa voltar/scroll/formulários com texto escalável. [Ensaios, capturas e percurso](HO-011-CORE-ACCEPTANCE.md).

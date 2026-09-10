@@ -18,8 +18,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Concluído | HO-004, HO-005, HO-006 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
-| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Em revisão | HO-004, HO-005, HO-007 |
-| HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Planeado | HO-005, HO-006, HO-007, HO-010 |
+| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
+| HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Em curso | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Planeado | HO-011 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
@@ -284,7 +284,7 @@ Motivo: Adiado para marco posterior à publicação opcional. Critérios de delt
 
 ## HO-010 — Android: calendário e pedidos para ambos os papéis
 
-Release: v1.0 · Área: mobile · Estado: Em revisão
+Release: v1.0 · Área: mobile · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -311,7 +311,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/35
 
 ## HO-011 — Integração das interfaces e testes de aceitação
 
-Release: v1.0 · Área: fullstack · Estado: Planeado
+Release: v1.0 · Área: fullstack · Estado: Em curso
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -321,12 +321,15 @@ Funcionalidades: FEAT-005, FEAT-006, FEAT-007, FEAT-009
 
 Critérios de aceitação:
 
-- Web e Android completam calendário próprio, presença/motivo, conflito, tarefa e notificações para ambos os papéis com contas locais, sem Microsoft.
-- Push real abre detalhe autenticado; permissão recusada mantém caixa interna.
-- Cenário cruzado: pedido Web, decisão Android e mesmos dias confirmados no calendário interno, sem conector configurado.
-- Autorização negativa, concorrência, datas Lisboa/Zurique/DST, retries, recuperação de sessão e alterações de aprovação têm evidência.
-- Capturas/execuções e builds demonstram comportamento real do core; Graph/probe não são gates de aceitação.
-- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
+- Web e Android completam calendário, presenças, tarefas e notificações para colaborador/chefia com contas locais, sem Microsoft; iOS/HO-306 permanece adiado.
+- Android permite lista/filtros/detalhe/histórico, preview/criação/edição/cancelamento de presença pela chefia e leitura da revisão pelo colaborador; remoto aprovado mantém-se até proposta/aceitação/decisão explícitas.
+- Tarefas Android permitem atribuição/edição autorizada e progresso limitado, prazo/RequiresOnsite/comentários/histórico/ligação atual; mudar a presença ligada não altera tarefa nem aprova dias.
+- Notificações de pedidos/presenças/tarefas abrem detalhe autorizado sem ação de negócio; push real foreground/background/cold start, sessão expirada, duplicados, recurso indisponível e conta alterada têm evidência; recusa mantém caixa.
+- Conta autenticada e colaborador selecionado, pedido próprio e exigência da chefia são claros em PT-PT; Web estreita/desktop e Android suportam foco/teclado/voltar/scroll/erros e texto escalável, sem IDs técnicos como rótulos.
+- Clientes gerados, input protegido por conta, replay de chave/corpo originais e revisão explícita após versões stale; sem escritas offline ou respostas atrasadas a repor estado de outra conta.
+- Matriz real Web/Android/API/PG: cinco dias pedidos Web, três aprovados Android, dois retirados Android; revisão preservada; presença lida sem mudar plano; resolução atómica; tarefa/progresso cruzados e destino correto de notificações.
+- Evidência distingue testes simulados, PG/browser/emulador e FCM real; reutiliza testes adequados de autorização/concorrência/retries/sessão/Lisboa/Zurique/DST; capturas sintéticas e quatro checks verdes no commit final.
+- Guias/STATUS/backlog/issue/PR alinhados; app normal restaurada e serviços locais preservados quando possível. Sem merge, auto-merge, deployment ou início HO-012.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/12
 

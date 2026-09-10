@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type {
   AssignedTaskState,
   OnsiteInput,
@@ -39,7 +39,17 @@ interface Props {
   onResolve: (requirement: OnsiteView, requestId: string) => void;
 }
 export function WorkPanel(props: Props) {
-  const { section, employeeId, nonce, own, focus, onFocus } = props;
+  const { section, employeeId, nonce, own, focus } = props;
+  const listHeading = useRef<HTMLHeadingElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  function onFocus(value?: WorkFocus) {
+    props.onFocus(value);
+    requestAnimationFrame(() => {
+      if (value)
+        panel.current?.querySelector<HTMLElement>(".work-detail")?.focus();
+      else listHeading.current?.focus();
+    });
+  }
   const kind = section === "onsite" ? "Requirement" : "Task";
   const [filter, setFilter] = useState<OnsiteState | AssignedTaskState | "">(
     "",
@@ -74,10 +84,22 @@ export function WorkPanel(props: Props) {
     `${employeeId}:${kind}:${filter}:${offset}`,
   );
   return (
-    <div className="work-layout">
+    <div className="work-layout" ref={panel}>
+      {focus?.kind === kind ? (
+        <WorkDetail
+          key={`${kind}:${focus.id ?? "new"}:${focus.seed?.join()}`}
+          {...props}
+          onFocus={onFocus}
+          focus={focus}
+        />
+      ) : (
+        <p className="empty-state">{w.choose}</p>
+      )}
       <section className="request-list" aria-label={w[section]}>
         <div className="section-heading">
-          <h2>{w[section]}</h2>
+          <h2 ref={listHeading} tabIndex={-1}>
+            {w[section]}
+          </h2>
           {!own && (
             <button
               className="primary"
@@ -154,20 +176,15 @@ export function WorkPanel(props: Props) {
           </button>
         </div>
       </section>
-      {focus?.kind === kind ? (
-        <WorkDetail
-          key={`${kind}:${focus.id ?? "new"}:${focus.seed?.join()}`}
-          {...props}
-          focus={focus}
-        />
-      ) : (
-        <p className="empty-state">{w.choose}</p>
-      )}
     </div>
   );
 }
 
 function WorkDetail(props: Props & { focus: WorkFocus }) {
+  const focusDetail = useCallback(
+    (node: HTMLElement | null) => node?.focus(),
+    [],
+  );
   const { employeeId, focus, nonce, own, disabled, run, version, onFocus } =
     props;
   const kind = focus.kind;
@@ -237,6 +254,8 @@ function WorkDetail(props: Props & { focus: WorkFocus }) {
   return (
     <section
       className="work-detail"
+      ref={focusDetail}
+      tabIndex={-1}
       aria-label={kind === "Requirement" ? w.onsite : w.tasks}
     >
       <div className="section-heading">
@@ -333,7 +352,7 @@ function WorkDetail(props: Props & { focus: WorkFocus }) {
                         disabled={locked}
                         onClick={() => props.onResolve(requirement, id)}
                       >
-                        {w.resolve} · {id.slice(0, 8)}
+                        {w.resolve}
                       </button>
                     ))}
                 </>
@@ -841,9 +860,7 @@ function TaskForm({
         <select value={link} onChange={(e) => setLink(e.target.value)}>
           <option value="">{w.noLink}</option>
           {link && !options.data?.items.some((x) => x.id === link) && (
-            <option value={link}>
-              {w.link} · {link.slice(0, 8)}
-            </option>
+            <option value={link}>{w.link}</option>
           )}
           {options.data?.items
             .filter((x) => x.state !== "Cancelled" || x.id === link)

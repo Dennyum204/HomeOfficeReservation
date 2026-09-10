@@ -13,10 +13,14 @@ class PlanningScreen extends StatelessWidget {
     required this.controller,
     required this.requests,
     required this.onRequests,
+    this.onRequirement,
+    this.onNewRequirement,
   });
   final PlanningController controller;
   final bool requests;
   final VoidCallback onRequests;
+  final Future<void> Function(String)? onRequirement;
+  final VoidCallback? onNewRequirement;
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: controller,
@@ -51,49 +55,13 @@ class PlanningScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 12),
-            if (c.employees.isNotEmpty)
-              DropdownButtonFormField<String>(
-                key: ValueKey('employee-${c.employeeId}'),
-                initialValue: c.employeeId,
-                isExpanded: true,
-                decoration: InputDecoration(labelText: s.planEmployee),
-                items: c.employees
-                    .map(
-                      (member) => DropdownMenuItem(
-                        value: member.memberId,
-                        child: Text(member.displayName),
-                      ),
-                    )
-                    .toList(),
-                onChanged: c.locked || c.editor != null || review != null
-                    ? null
-                    : (value) => c.selectEmployee(value!),
-              ),
+            PlanningEmployeePicker(c),
             const SizedBox(height: 12),
             PlanningNotice(c),
             if (c.initialized && c.employees.isEmpty) Text(s.planNoEmployees),
-            if (review != null) ...[
-              Text(
-                s.planReview,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Text(review.title, style: Theme.of(context).textTheme.titleLarge),
-              Text(s.planSendingHint),
-              for (final line in review.lines)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Text(line),
-                ),
-              FilledButton(
-                key: const Key('planning-confirm'),
-                onPressed: c.canWrite ? c.confirmReview : null,
-                child: Text(s.planConfirm),
-              ),
-              TextButton(
-                onPressed: c.busy ? null : c.closeReview,
-                child: Text(s.planBack),
-              ),
-            ] else if (c.editor != null)
+            if (review != null)
+              PlanningConfirmation(c)
+            else if (c.editor != null)
               PlanningEditorView(c, key: ObjectKey(c.editor))
             else if (requests && c.detail != null)
               PlanningRequestDetail(c, key: ValueKey(c.detail!.id))
@@ -102,6 +70,8 @@ class PlanningScreen extends StatelessWidget {
                   ? PlanningRequests(c)
                   : PlanningCalendar(
                       c,
+                      openRequirement: onRequirement,
+                      newRequirement: onNewRequirement,
                       openRequest: (id) async {
                         onRequests();
                         await c.openRequest(id);

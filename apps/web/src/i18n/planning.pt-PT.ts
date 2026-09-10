@@ -17,7 +17,7 @@ export const p = {
   teamIntro:
     "Consulte o plano e acompanhe os pedidos dos colaboradores que lhe estão atribuídos.",
   activeTargets: "Web e Android",
-  employee: "Calendário de",
+  employee: "Colaborador selecionado",
   own: "O meu calendário",
   noEmployees: "Não tem colaboradores atribuídos para consultar.",
   noPlanning: "Esta conta não tem acesso a um calendário de colaborador.",
@@ -133,7 +133,7 @@ export const p = {
   recovering: "A recuperar envio…",
   storage:
     "Não foi possível preparar a recuperação do envio neste navegador. Verifique se o armazenamento da sessão está disponível.",
-  newRequest: "Novo pedido",
+  newRequest: "Pedir os meus dias de trabalho",
   selectDates: "Selecionar datas",
   selectedDates: "Datas selecionadas",
   selectHelp:
@@ -227,7 +227,7 @@ export const p = {
   accountSettings:
     "A gestão de membros é reservada ao administrador de contas. Não está disponível nesta interface de planeamento.",
   plannedFeatures:
-    "Outlook ainda não está disponível. As presenças e as tarefas no Android serão disponibilizadas mais tarde.",
+    "Calendário, pedidos, presenças e tarefas partilham o mesmo plano no Web e Android. Outlook é opcional e ainda não está disponível.",
   selectedOnly: "Selecione dias com um estado compatível com esta ação.",
   cancelHint:
     "O cancelamento só retira a aprovação após decisão do gestor. O padrão volta então a ficar visível.",

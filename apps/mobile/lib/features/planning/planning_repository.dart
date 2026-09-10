@@ -15,6 +15,14 @@ enum PlanningOperation {
   reviseProposal,
   accept,
   comment,
+  createRequirement,
+  editRequirement,
+  cancelRequirement,
+  acknowledgeRequirement,
+  createTask,
+  editTask,
+  progressTask,
+  workComment,
 }
 
 // A recovery envelope, not a parallel API DTO. The generated DTO owns the body.
@@ -27,6 +35,7 @@ class PlanningCommand {
     required this.key,
     this.request,
     this.proposal,
+    this.workContext,
   });
   factory PlanningCommand.prepare(
     String actor,
@@ -35,6 +44,7 @@ class PlanningCommand {
     Object dto, {
     String? request,
     String? proposal,
+    WorkContext? workContext,
   }) {
     final random = Random.secure();
     final key = List.generate(
@@ -49,11 +59,25 @@ class PlanningCommand {
       key: key,
       request: request,
       proposal: proposal,
+      workContext: workContext,
     );
   }
   final String actor, employee, body, key;
   final String? request, proposal;
   final PlanningOperation operation;
+  final WorkContext? workContext;
+  WorkContext? get workKind => switch (operation) {
+    PlanningOperation.createRequirement ||
+    PlanningOperation.editRequirement ||
+    PlanningOperation.cancelRequirement ||
+    PlanningOperation.acknowledgeRequirement => WorkContext.requirement,
+    PlanningOperation.createTask ||
+    PlanningOperation.editTask ||
+    PlanningOperation.progressTask => WorkContext.task,
+    PlanningOperation.workComment => workContext,
+    _ => null,
+  };
+  bool get isWork => workKind != null;
   Map<String, dynamic> toJson() => {
     'actor': actor,
     'employee': employee,
@@ -62,6 +86,7 @@ class PlanningCommand {
     'key': key,
     'request': request,
     'proposal': proposal,
+    'workContext': workContext?.name,
   };
   factory PlanningCommand.fromJson(Map<String, dynamic> value) =>
       PlanningCommand(
@@ -74,6 +99,9 @@ class PlanningCommand {
         key: value['key'] as String,
         request: value['request'] as String?,
         proposal: value['proposal'] as String?,
+        workContext: value['workContext'] == null
+            ? null
+            : WorkContext.values.byName(value['workContext'] as String),
       );
 }
 
@@ -164,6 +192,54 @@ class PlanningRepository {
         command.request!,
         key,
         CommentInput.fromJson(body)!,
+      ),
+      PlanningOperation.createRequirement => api.createOnsiteRequirement(
+        employee,
+        key,
+        OnsiteInput.fromJson(body)!,
+      ),
+      PlanningOperation.editRequirement => api.editOnsiteRequirement(
+        employee,
+        command.request!,
+        key,
+        OnsiteInput.fromJson(body)!,
+      ),
+      PlanningOperation.cancelRequirement => api.cancelOnsiteRequirement(
+        employee,
+        command.request!,
+        key,
+        WorkVersionInput.fromJson(body)!,
+      ),
+      PlanningOperation.acknowledgeRequirement =>
+        api.acknowledgeOnsiteRequirement(
+          employee,
+          command.request!,
+          key,
+          OnsiteAcknowledgeInput.fromJson(body)!,
+        ),
+      PlanningOperation.createTask => api.createAssignedTask(
+        employee,
+        key,
+        TaskInput.fromJson(body)!,
+      ),
+      PlanningOperation.editTask => api.editAssignedTask(
+        employee,
+        command.request!,
+        key,
+        TaskInput.fromJson(body)!,
+      ),
+      PlanningOperation.progressTask => api.updateTaskProgress(
+        employee,
+        command.request!,
+        key,
+        TaskProgressInput.fromJson(body)!,
+      ),
+      PlanningOperation.workComment => api.addWorkComment(
+        employee,
+        command.workContext!,
+        command.request!,
+        key,
+        WorkCommentInput.fromJson(body)!,
       ),
     }).timeout(const Duration(seconds: 12));
     if (result == null) throw const FormatException('empty_mutation_receipt');

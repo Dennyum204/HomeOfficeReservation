@@ -8,6 +8,9 @@ import 'planning_dates.dart';
 import 'planning_editor.dart';
 import 'planning_repository.dart';
 import 'planning_store.dart';
+import '../work/work_editor.dart';
+
+part 'planning_work.dart';
 
 enum PlanningFailure {
   none,
@@ -74,6 +77,21 @@ class PlanningController extends ChangeNotifier {
   final Map<String, String> reasons = {}, commentDrafts = {};
   DateTime? updatedAt;
   MutationReceipt? lastReceipt;
+  WorkContext workKind = WorkContext.requirement;
+  OnsitePage? requirements, requirementOptions;
+  TaskPage? tasks;
+  OnsiteView? requirement, linkedRequirement;
+  TaskView? task;
+  WorkEntryPage? workEntries;
+  OnsitePreview? workConflicts, editorPreview;
+  String? workId, editorPreviewFingerprint;
+  int workOffset = 0, entryOffset = 0, _workQuery = 0, _workPreviewQuery = 0;
+  bool workLoading = false, workStale = false;
+  OnsiteState? requirementFilter;
+  AssignedTaskState? taskFilter;
+  WorkEditor? workEditor;
+  final Map<String, WorkEditor> workEditors = {};
+  final Map<String, String> workCommentDrafts = {};
   bool get active =>
       !_disposed &&
       !_cleared &&
@@ -89,6 +107,7 @@ class PlanningController extends ChangeNotifier {
       !needsReview &&
       !loading &&
       !opening &&
+      !workLoading &&
       !dataStale &&
       calendar != null;
   MemberProfile? get employee =>
@@ -122,6 +141,14 @@ class PlanningController extends ChangeNotifier {
           );
           commentDrafts.addAll(
             Map<String, String>.from(value['comments'] as Map? ?? {}),
+          );
+          for (final entry in (value['workEditors'] as Map? ?? {}).entries) {
+            workEditors[entry.key as String] = WorkEditor.fromJson(
+              Map<String, dynamic>.from(entry.value as Map),
+            );
+          }
+          workCommentDrafts.addAll(
+            Map<String, String>.from(value['workComments'] as Map? ?? {}),
           );
           if (value['journal'] != null) {
             final restored = PlanningCommand.fromJson(
@@ -169,6 +196,8 @@ class PlanningController extends ChangeNotifier {
       'editors': _editors,
       'reasons': reasons,
       'comments': commentDrafts,
+      'workEditors': workEditors,
+      'workComments': workCommentDrafts,
     });
     await store.write(value);
   }
@@ -199,12 +228,17 @@ class PlanningController extends ChangeNotifier {
       'editors': _editors,
       'reasons': reasons,
       'comments': commentDrafts,
+      'workEditors': workEditors,
+      'workComments': workCommentDrafts,
     });
     _cleared = true;
     _scope++;
     _query++;
     _detailQuery++;
     _previewQuery++;
+    _resetWork();
+    workEditors.clear();
+    workCommentDrafts.clear();
     employees = [];
     employeeId = null;
     calendar = null;
@@ -236,6 +270,7 @@ class PlanningController extends ChangeNotifier {
     _scope++;
     _detailQuery++;
     _previewQuery++;
+    _resetWork();
     employeeId = id;
     calendar = null;
     requests = null;
@@ -558,6 +593,7 @@ class PlanningController extends ChangeNotifier {
     Object dto, {
     String? request,
     String? proposal,
+    WorkContext? workContext,
   }) => PlanningCommand.prepare(
     actor,
     employeeId!,
@@ -565,6 +601,7 @@ class PlanningController extends ChangeNotifier {
     dto,
     request: request,
     proposal: proposal,
+    workContext: workContext,
   );
   void reviewCommand(
     PlanningCommand command,
@@ -593,7 +630,10 @@ class PlanningController extends ChangeNotifier {
   }
 
   Future<bool> run(PlanningCommand command) async {
-    if (!canWrite || command.actor != actor || command.employee != employeeId) {
+    if (!canWrite ||
+        (command.isWork && !workCanWrite) ||
+        command.actor != actor ||
+        command.employee != employeeId) {
       return false;
     }
     busy = true;
@@ -644,6 +684,20 @@ class PlanningController extends ChangeNotifier {
         commentDrafts.remove(command.request);
         commentEditGeneration++;
       }
+      if (command.isWork) {
+        if (command.operation == PlanningOperation.workComment) {
+          workCommentDrafts.remove(
+            '${command.employee}:${command.workKind!.name}:${command.request}',
+          );
+          commentEditGeneration++;
+        } else {
+          workEditors.remove(
+            '${command.employee}:${command.workKind!.name}:${command.request ?? "new"}:${command.operation == PlanningOperation.progressTask}',
+          );
+          workEditor = null;
+          editorPreview = null;
+        }
+      }
       await persist();
       failure = PlanningFailure.none;
       needsReview = false;
@@ -654,7 +708,11 @@ class PlanningController extends ChangeNotifier {
           }.contains(command.operation)
           ? command.request!
           : receipt.contextId;
-      await openRequest(id);
+      if (command.isWork) {
+        await openWork(command.workKind!, receipt.contextId);
+      } else {
+        await openRequest(id);
+      }
       return true;
     } catch (error) {
       if (!_current(scope)) return false;
@@ -672,7 +730,20 @@ class PlanningController extends ChangeNotifier {
           needsReview = true;
           final id = detail?.id;
           await refresh();
-          if (id != null) await openRequest(id, preserveSelection: true);
+          if (command.isWork) {
+            editorPreview = null;
+            editorPreviewFingerprint = null;
+            workStale = dataStale;
+            if (command.request != null) {
+              await openWork(
+                command.workKind!,
+                command.request!,
+                preserveEditor: true,
+              );
+            }
+          } else if (id != null) {
+            await openRequest(id, preserveSelection: true);
+          }
         }
       } else {
         journal = command;
@@ -688,7 +759,7 @@ class PlanningController extends ChangeNotifier {
   }
 
   void reviewed() {
-    if (!dataStale && !loading && !opening) {
+    if (!dataStale && !loading && !opening && !workLoading && !workStale) {
       needsReview = false;
       failure = PlanningFailure.none;
       problemCode = null;

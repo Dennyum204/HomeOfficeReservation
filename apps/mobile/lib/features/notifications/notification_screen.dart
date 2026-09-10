@@ -86,13 +86,7 @@ class NotificationScreen extends StatelessWidget {
                       Text(
                         detail.destination == null
                             ? s.notificationUnavailable
-                            : onOpen != null &&
-                                  (detail.destination!.kind ==
-                                          NotificationContext.request ||
-                                      detail.destination!.kind ==
-                                          NotificationContext.proposal)
-                            ? s.planSelectionHint
-                            : s.notificationAndroidFallback,
+                            : s.notificationReadOnly,
                       ),
                       if (detail.destination case final destination?) ...[
                         const SizedBox(height: 12),
@@ -104,22 +98,13 @@ class NotificationScreen extends StatelessWidget {
                             _ => s.tasks,
                           }),
                         ),
-                        SelectableText(
-                          destination.resourceId,
-                          key: const Key('notification-context'),
-                        ),
                       ],
                       const SizedBox(height: 12),
                       readButton(detail),
-                      if (onOpen != null &&
-                          detail.destination != null &&
-                          (detail.destination!.kind ==
-                                  NotificationContext.request ||
-                              detail.destination!.kind ==
-                                  NotificationContext.proposal))
+                      if (onOpen != null && detail.destination != null)
                         FilledButton(
                           onPressed: c.busy ? null : () => onOpen!(detail.id),
-                          child: Text(s.planOpenRequest),
+                          child: Text(s.notificationOpen),
                         ),
                     ],
                   ),

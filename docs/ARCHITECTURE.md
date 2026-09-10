@@ -102,3 +102,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Planeamento Android HO-010
 
 [ADR-011](adr/ADR-011-android-planning.md): mês/agenda, pedidos e decisões usam os contratos gerados existentes. Controller separa estado confirmado, input e envelope cifrado da operação incerta; gerações de sessão/consulta descartam resultados atrasados. Notificações resolvem o destino na API e abrem o pedido atual. Contraproposta sobre revisão pendente transporta a aprovação original apenas pela referência e versão explicitamente existentes na revisão; mesma transação/autorização, sem migração nem mudança de contrato. [Guia de utilização e ensaios](HO-010-ANDROID-PLANNING.md).
+
+## Interfaces core HO-011
+
+[ADR-012](adr/ADR-012-core-interfaces.md) estende o controller/journal Android a presenças/tarefas, conservando um colaborador autorizado e uma intenção incerta de cada vez. Gerações separadas protegem leituras/previews; input e comandos são protegidos por conta. Notificações resolvem destinos atuais de pedidos, presenças e tarefas. Não há alteração de contrato, migração ou infraestrutura. [Matriz de aceitação corrente](HO-011-CORE-ACCEPTANCE.md).

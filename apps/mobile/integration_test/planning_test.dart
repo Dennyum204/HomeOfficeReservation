@@ -45,6 +45,15 @@ Future<void> tap(WidgetTester t, Finder finder) async {
   FocusManager.instance.primaryFocus?.unfocus();
   await t.pumpAndSettle();
   if (finder.evaluate().isEmpty) {
+    // A previously visited detail may have retained a lower scroll position.
+    // Search from the top so header actions and filters remain reachable.
+    final scroll = find.byType(Scrollable).first;
+    if (scroll.evaluate().isNotEmpty) {
+      await t.drag(scroll, const Offset(0, 3000));
+      await t.pumpAndSettle();
+    }
+  }
+  if (finder.evaluate().isEmpty) {
     await t.scrollUntilVisible(
       finder,
       280,

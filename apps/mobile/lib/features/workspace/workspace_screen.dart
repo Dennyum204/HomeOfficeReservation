@@ -9,6 +9,7 @@ import '../notifications/push_coordinator.dart';
 import '../notifications/notification_screen.dart';
 import '../planning/planning_controller.dart';
 import '../planning/planning_screen.dart';
+import '../work/work_screen.dart';
 
 class WorkspaceScreen extends StatefulWidget {
   const WorkspaceScreen({
@@ -31,6 +32,10 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
   void selectSection(int value) {
     setState(() => _section = value);
     widget.inbox?.showInbox(value == 3);
+    final c = widget.planning;
+    if (value == 2 && c != null && c.workId == null && c.workEditor == null) {
+      c.loadWork();
+    }
   }
 
   bool _openingNotification = false;
@@ -58,6 +63,24 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
         );
         if (!mounted || !planning.active) return;
         selectSection(1);
+        if (opened ||
+            planning.failure == PlanningFailure.missing ||
+            planning.failure == PlanningFailure.forbidden) {
+          planning.repository.auth.consumeNotification(id);
+        }
+      } else if (destination != null &&
+          planning != null &&
+          (destination.kind == NotificationContext.requirement ||
+              destination.kind == NotificationContext.task)) {
+        final opened = await planning.openWork(
+          destination.kind == NotificationContext.requirement
+              ? WorkContext.requirement
+              : WorkContext.task,
+          destination.resourceId,
+          target: destination.employeeId,
+        );
+        if (!mounted || !planning.active) return;
+        selectSection(2);
         if (opened ||
             planning.failure == PlanningFailure.missing ||
             planning.failure == PlanningFailure.forbidden) {
@@ -101,7 +124,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
     final labels = [
       s.calendar,
       s.requests,
-      s.tasks,
+      widget.planning == null ? s.tasks : s.workNavigation,
       s.notifications,
       s.settings,
     ];
@@ -145,7 +168,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: widget.planning != null && (_section == 0 || _section == 1)
+              child: widget.planning != null && _section < 3
                   ? ListenableBuilder(
                       listenable: widget.planning!,
                       builder: (context, _) => Column(
@@ -213,6 +236,25 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                     controller: widget.planning!,
                     requests: _section == 1,
                     onRequests: () => selectSection(1),
+                    onRequirement: (id) async {
+                      await widget.planning!.openWork(
+                        WorkContext.requirement,
+                        id,
+                      );
+                      if (mounted && widget.planning!.active) selectSection(2);
+                    },
+                    onNewRequirement: () async {
+                      final c = widget.planning!;
+                      await c.selectWorkKind(WorkContext.requirement);
+                      if (!mounted || !c.active) return;
+                      await c.editWork(creating: true);
+                      if (mounted && c.active) selectSection(2);
+                    },
+                  )
+                : _section == 2 && widget.planning != null
+                ? WorkScreen(
+                    widget.planning!,
+                    onRequests: () => selectSection(1),
                   )
                 : _section == 3 && widget.inbox != null
                 ? NotificationScreen(
@@ -230,164 +272,181 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                             children: [
                               if (_section == 4 && widget.push != null)
                                 PushSettings(controller: widget.push!),
-                              Text(
-                                s.countries,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  letterSpacing: 2,
-                                  color: Color(0xff6d806b),
+                              if (widget.planning != null) ...[
+                                Text(
+                                  s.settingsTitle,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall,
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                s.welcome,
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: -1,
-                                  color: Color(0xff203d38),
+                                Text(s.workSettings),
+                                Text(s.workSettingsHint),
+                                Text(s.workOutlookLater),
+                              ] else ...[
+                                Text(
+                                  s.countries,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    letterSpacing: 2,
+                                    color: Color(0xff6d806b),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                s.introduction,
-                                style: const TextStyle(
-                                  color: Color(0xff637268),
-                                  height: 1.65,
+                                const SizedBox(height: 16),
+                                Text(
+                                  s.welcome,
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -1,
+                                    color: Color(0xff203d38),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              Chip(
-                                label: Text(
-                                  s.foundation,
-                                  style: const TextStyle(fontSize: 11),
+                                const SizedBox(height: 16),
+                                Text(
+                                  s.introduction,
+                                  style: const TextStyle(
+                                    color: Color(0xff637268),
+                                    height: 1.65,
+                                  ),
                                 ),
-                                avatar: const Icon(
-                                  Icons.construction,
-                                  size: 14,
+                                const SizedBox(height: 16),
+                                Chip(
+                                  label: Text(
+                                    s.foundation,
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                  avatar: const Icon(
+                                    Icons.construction,
+                                    size: 14,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(24),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        labels[_section].toUpperCase(),
-                                        style: const TextStyle(
-                                          fontSize: 10,
-                                          letterSpacing: 1.5,
-                                          color: Color(0xff6d806b),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 14),
-                                      Text(
-                                        titles[_section],
-                                        style: const TextStyle(
-                                          fontSize: 25,
-                                          height: 1.25,
-                                          color: Color(0xff203d38),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 14),
-                                      Text(
-                                        descriptions[_section],
-                                        style: const TextStyle(
-                                          height: 1.65,
-                                          color: Color(0xff637268),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 24,
-                                          horizontal: 16,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffedf1e7),
-                                          borderRadius: BorderRadius.circular(
-                                            12,
+                                const SizedBox(height: 24),
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(24),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          labels[_section].toUpperCase(),
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            letterSpacing: 1.5,
+                                            color: Color(0xff6d806b),
                                           ),
                                         ),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.cottage_outlined,
-                                                    size: 42,
-                                                    color: Color(0xff68805e),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    s.remote,
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
+                                        const SizedBox(height: 14),
+                                        Text(
+                                          titles[_section],
+                                          style: const TextStyle(
+                                            fontSize: 25,
+                                            height: 1.25,
+                                            color: Color(0xff203d38),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                        Text(
+                                          descriptions[_section],
+                                          style: const TextStyle(
+                                            height: 1.65,
+                                            color: Color(0xff637268),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 24),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 24,
+                                            horizontal: 16,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xffedf1e7),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.cottage_outlined,
+                                                      size: 42,
+                                                      color: Color(0xff68805e),
                                                     ),
-                                                  ),
-                                                ],
+                                                    const SizedBox(height: 8),
+                                                    Text(
+                                                      s.remote,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const Icon(
-                                              Icons.more_horiz,
-                                              color: Color(0xff98a88f),
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.landscape_outlined,
-                                                    size: 42,
-                                                    color: Color(0xff68805e),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    s.onsite,
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
+                                              const Icon(
+                                                Icons.more_horiz,
+                                                color: Color(0xff98a88f),
+                                              ),
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.landscape_outlined,
+                                                      size: 42,
+                                                      color: Color(0xff68805e),
                                                     ),
-                                                  ),
-                                                ],
+                                                    const SizedBox(height: 8),
+                                                    Text(
+                                                      s.onsite,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 24),
+                                        const Divider(),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.schedule,
+                                              size: 18,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              s.inPreparation,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      const Divider(),
-                                      const SizedBox(height: 12),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.schedule, size: 18),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            s.inPreparation,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          pending[_section],
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            height: 1.7,
+                                            color: Color(0xff637268),
                                           ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        pending[_section],
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          height: 1.7,
-                                          color: Color(0xff637268),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                               const SizedBox(height: 20),
                               Card(
                                 child: Padding(

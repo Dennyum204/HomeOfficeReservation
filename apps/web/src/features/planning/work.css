@@ -7,6 +7,15 @@
 .work-layout > * {
   min-width: 0;
 }
+.work-layout > .request-list {
+  grid-column: 1;
+  grid-row: 1;
+}
+.work-layout > .work-detail,
+.work-layout > .empty-state {
+  grid-column: 2;
+  grid-row: 1;
+}
 .work-detail {
   padding: 24px;
   background: #fff;
@@ -120,6 +129,15 @@
 @media (max-width: 1000px) {
   .work-layout {
     grid-template-columns: 1fr;
+  }
+  .work-layout > .request-list {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .work-layout > .work-detail,
+  .work-layout > .empty-state {
+    grid-column: 1;
+    grid-row: 1;
   }
 }
 @media (max-width: 540px) {

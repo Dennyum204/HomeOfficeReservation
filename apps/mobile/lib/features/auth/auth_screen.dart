@@ -328,7 +328,7 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
     inbox.activity(state == AppLifecycleState.resumed);
     push.activity(state == AppLifecycleState.resumed);
     if (state == AppLifecycleState.resumed && planning.initialized) {
-      unawaited(planning.refresh());
+      unawaited(planning.refreshWorkspace());
     } else if (planning.active) {
       unawaited(planning.persist().catchError((Object _) {}));
     }
@@ -362,6 +362,10 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text(
+                    s.workAccount,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                   Text(
                     member.displayName,
                     key: const Key('authenticated-member-name'),

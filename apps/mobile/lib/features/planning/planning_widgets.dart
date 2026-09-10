@@ -167,3 +167,73 @@ class PlanCard extends StatelessWidget {
     ),
   );
 }
+
+class PlanningEmployeePicker extends StatelessWidget {
+  const PlanningEmployeePicker(this.c, {super.key, this.work = false});
+  final PlanningController c;
+  final bool work;
+  @override
+  Widget build(BuildContext context) {
+    final s = AppLocalizations.of(context)!;
+    if (c.employees.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: DropdownButtonFormField<String>(
+        key: ValueKey('employee-${c.employeeId}'),
+        initialValue: c.employeeId,
+        isExpanded: true,
+        decoration: InputDecoration(labelText: s.workEmployee),
+        items: c.employees
+            .map(
+              (m) => DropdownMenuItem(
+                value: m.memberId,
+                child: Text(m.displayName),
+              ),
+            )
+            .toList(),
+        onChanged:
+            c.locked ||
+                c.review != null ||
+                (work ? c.workEditor != null : c.editor != null)
+            ? null
+            : (id) async {
+                await c.selectEmployee(id!);
+                if (work) await c.loadWork();
+              },
+      ),
+    );
+  }
+}
+
+class PlanningConfirmation extends StatelessWidget {
+  const PlanningConfirmation(this.c, {super.key});
+  final PlanningController c;
+  @override
+  Widget build(BuildContext context) {
+    final s = AppLocalizations.of(context)!, review = c.review!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(s.planReview, style: Theme.of(context).textTheme.headlineSmall),
+        Text(review.title, style: Theme.of(context).textTheme.titleLarge),
+        Text(s.planSendingHint),
+        for (final line in review.lines)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Text(line),
+          ),
+        FilledButton(
+          key: const Key('planning-confirm'),
+          onPressed: (review.command.isWork ? c.workCanWrite : c.canWrite)
+              ? c.confirmReview
+              : null,
+          child: Text(s.planConfirm),
+        ),
+        TextButton(
+          onPressed: c.busy ? null : c.closeReview,
+          child: Text(s.planBack),
+        ),
+      ],
+    );
+  }
+}

@@ -48,3 +48,7 @@ Playwright usa 5083/5174 com instâncias próprias; os servidores normais 5080/5
 ## Passagem para Android HO-010
 
 Com Web/API já em execução e contas privadas autorizadas, `node tools/android-handoff.mjs create` cria um pedido pelo formulário browser. Depois da decisão Android, `node tools/android-handoff.mjs verify` confirma o detalhe e calendário pela sessão Web. Não arranca outra API nem reseta fixtures. Variáveis, comandos Android e evidência no [guia HO-010](../../docs/HO-010-ANDROID-PLANNING.md).
+
+## Aceitação Web/Android HO-011
+
+Os rótulos distinguem **Pedir os meus dias de trabalho** de **Exigir presença do colaborador**, e a conta autenticada do colaborador selecionado. Em ecrã estreito, abrir presença/tarefa mostra o detalhe antes da lista, recebe foco e devolve-o à lista ao fechar. As ações de resolução não usam UUIDs como nomes. `tools/core-acceptance.mjs` coordena ensaios reais com Android, sem mocks nem reset de dados. [Matriz, estado privado e sequência exata](../../docs/HO-011-CORE-ACCEPTANCE.md).
