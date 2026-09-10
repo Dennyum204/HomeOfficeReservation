@@ -18,7 +18,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-007 | Notificações duráveis e infraestrutura push | v1.0 | fullstack | Concluído | HO-004, HO-005, HO-006 |
 | HO-008 | Outlook opcional: publicar dias confirmados | outlook-publish | integration | Planeado | HO-012 |
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
-| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Em curso | HO-004, HO-005, HO-007 |
+| HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Em revisão | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Planeado | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Planeado | HO-011 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
@@ -284,7 +284,7 @@ Motivo: Adiado para marco posterior à publicação opcional. Critérios de delt
 
 ## HO-010 — Android: calendário e pedidos para ambos os papéis
 
-Release: v1.0 · Área: mobile · Estado: Em curso
+Release: v1.0 · Área: mobile · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -307,7 +307,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/11
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/35
 
 ## HO-011 — Integração das interfaces e testes de aceitação
 

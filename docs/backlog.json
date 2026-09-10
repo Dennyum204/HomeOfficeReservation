@@ -729,7 +729,7 @@
       "title": "Android: calendário e pedidos para ambos os papéis",
       "release": "v1.0",
       "area": "mobile",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-004",
@@ -755,7 +755,9 @@
         "Quatro checks obrigatórios verdes no último commit e sem conflitos. Sem iOS/Outlook/fila offline/deployment/HO-011; dados e configuração privados preservados."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/11",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/35"
+      ],
       "scope_history": [
         {
           "date": "2026-09-09",
@@ -784,7 +786,7 @@
           ]
         }
       ],
-      "note": "Implementação Android e correção mínima da continuidade de revisões na API. 25 testes Flutter, 47 testes PostgreSQL, percurso nativo cinco/três/dois, passagem Web→Android→Web e DST nativo Lisboa/Zurique passaram. Push real com aceitação/recibo/abertura observados. CI da PR e revisão final pendentes; sem merge."
+      "note": "Implementação e evidência local concluídas no PR #35. 25 testes Flutter, 4 unitários e 47 PostgreSQL, percurso Android cinco/três/dois, Web→Android→Web, DST Lisboa/Zurique e FCM foreground real. Falha inicial de CI: teste de autenticação procurava diagnósticos no calendário; navegação corrigida para Definições, preservando asserções. Quatro checks do último commit e ausência de conflitos são obrigatórios antes de retirar draft; evidência remota final no PR. Integração/merge ainda pendentes."
     },
     {
       "id": "HO-011",
