@@ -60,6 +60,8 @@ Quando HO-008 for selecionado, a ação explícita em Definições associa uma c
 
 ## Contratos e persistência
 
+HO-013 complementa Identity com comandos de operador para titular administrador/colaborador e auditoria transacional de acesso, sem HTTP novo. Escritas administrativas bloqueiam a organização e revalidam o ator dentro da transação, preservando pelo menos um administrador ativo sob concorrência. A extensão de colaboração não modifica credenciais, calendário ou relações. `AccessAudits` reutiliza a persistência/auditoria mínima, separada das versões de planeamento. [ADR-014](adr/ADR-014-owner-bootstrap.md), [procedimento e recuperação](HO-013-OWNER-BOOTSTRAP.md). Convites/administração Web permanecem HO-014/015; HO-012 não foi incorporada.
+
 - REST em `/api/v1`, OpenAPI gerado de forma reprodutível a partir do backend.
 - DTOs explícitos; não expor entidades EF diretamente. Clientes TypeScript/Dart gerados e versionados.
 - Datas de planeamento em ISO `YYYY-MM-DD`; instantes em ISO 8601 com offset/UTC e zona guardada separadamente quando relevante.

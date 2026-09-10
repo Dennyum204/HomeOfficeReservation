@@ -18,6 +18,8 @@ Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identi
 
 ## V1: comportamento funcional
 
+O acesso é privado, sem registo público. HO-013 permite ao operador criar explicitamente o titular como administrador e colaborador na mesma identidade ou acrescentar colaboração a um administrador ativo existente. O chefe distinto precisa de papel gestor e associação explícita; administrar não concede autoridade de aprovação. O ciclo de convites de acesso (HO-014) e a interface administrativa (HO-015) continuam por implementar, com [tracking no PR #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37); esta entrega não torna o piloto operacional nem autoriza convites reais.
+
 ### Calendário e dashboard
 
 - Calendário próprio mensal e semanal, com agenda compacta no mobile, mostrando remoto em Portugal, presencial na Suíça, pedidos pendentes e períodos presenciais obrigatórios. Web/mobile partilham o mesmo backend e dados autoritativos.

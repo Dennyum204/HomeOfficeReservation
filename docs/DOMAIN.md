@@ -40,6 +40,7 @@
 | GraphSubscription | ConnectionId, SubscriptionId, expiração e clientState protegido |
 | OutboxMessage | Id, tipo, agregado/versão, payload mínimo, lease, tentativa e entrega |
 | AuditEntry | ActorId, ação, entidade/revisão, instante e mudança mínima |
+| AccessAudit (HO-013) | Organização, membro alvo, ator opcional, origem operador/administrador, ação, motivo e estados mínimos; independente da versão de calendário |
 
 OutlookConnection e ExternalEventMap pertencem apenas a HO-008. ExternalBusyInterval, SyncCursor e GraphSubscription pertencem apenas a HO-009; não são tabelas obrigatórias do core nem do scaffold. A conta da aplicação é IdentityUser; ligação Microsoft posterior é opcional, vinculada ao MemberId local, sem comparar emails como prova.
 

@@ -4,6 +4,8 @@ HO-003: ASP.NET Core Identity, EF Core/PostgreSQL, migração inicial, sessões 
 
 ## Versões e estrutura
 
+HO-013: [titular administrador/colaborador e recuperação pelo operador](../../docs/HO-013-OWNER-BOOTSTRAP.md), [ADR-014](../../docs/adr/ADR-014-owner-bootstrap.md). Aplicar a migração aditiva `20260910214756_AccessAudit` antes da nova versão. `--bootstrap-owner` cria os dois papéis explicitamente; `--enable-admin-employee` acrescenta apenas colaboração a um administrador ativo identificado por organização/membro. `--bootstrap-admin` continua a criar administrador apenas. Sem endpoint novo, mudança de sessão/contrato ou interface administrativa HO-015.
+
 HO-006: [presenças e tarefas](../../docs/HO-006-ONSITE-TASKS.md), com migração aditiva, autorização, leitura por revisão e resolução de conflitos sob o mesmo lock do planeamento. HO-007 consome a outbox; DeliveredAt legado passa a significar processamento interno, nunca receção Android.
 
 HO-004: [guia HTTP e demonstração repetível](../../docs/HO-004-PLANNING.md), com migração aditiva explícita, calendário por intervalo, rascunhos/submissão, decisões/retirada por dias, revisões, contrapropostas e comentários. Os comandos usam CalendarVersion, versões específicas e Idempotency-Key; concretizados com UI Web/presenças em HO-005/006 e worker em HO-007. [ADR-006](../../docs/adr/ADR-006-transactional-planning.md).

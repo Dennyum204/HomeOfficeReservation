@@ -30,8 +30,17 @@ public sealed class TestClock : TimeProvider
 
 public sealed class CapturedEmail : IAccountEmail
 {
+    private int sentCount;
+    public int SentCount => sentCount;
+    public bool FailDelivery { get; set; }
     public Dictionary<string, (string Purpose, string Code)> Messages { get; } = [];
-    public Task SendAsync(string email, string purpose, string code) { Messages[email] = (purpose, code); return Task.CompletedTask; }
+    public Task SendAsync(string email, string purpose, string code)
+    {
+        if (FailDelivery) throw new IOException("Synthetic delivery unavailable.");
+        Messages[email] = (purpose, code);
+        Interlocked.Increment(ref sentCount);
+        return Task.CompletedTask;
+    }
 }
 
 public sealed class IdentityFixture : IAsyncDisposable

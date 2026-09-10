@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeOffice.Infrastructure.Access;
 
-public sealed class MemberDirectory(HomeOfficeDbContext db) : IMemberDirectory
+public sealed class MemberDirectory(HomeOfficeDbContext db, TimeProvider clock) : IMemberDirectory
 {
     public Task<Member?> CurrentAsync(string identityUserId) =>
         db.Members.AsNoTracking().SingleOrDefaultAsync(m => m.IdentityUserId == identityUserId);
@@ -40,30 +40,49 @@ public sealed class MemberDirectory(HomeOfficeDbContext db) : IMemberDirectory
 
     public async Task<OperationResult> UpdateAsync(Member actor, Guid memberId, UpdateMemberRequest request)
     {
+        await using var tx = await db.Database.BeginTransactionAsync();
+        if (!await AccessChanges.LockOrganization(db, actor.OrganizationId) ||
+            await AccessChanges.Administrator(db, actor) is null) return new(false, "forbidden");
         var target = await db.Members.SingleOrDefaultAsync(x => x.Id == memberId);
+        if (target is not null) await db.Entry(target).ReloadAsync();
         if (target is null || !AccessRules.CanAdminister(actor, target)) return new(false, "forbidden");
         // Account administrators cannot lock themselves out or alter their own privileges through this endpoint.
         if (actor.Id == target.Id) return new(false, "self_administration_denied");
+        if (target.Active && target.IsAccountAdministrator && !(request.Active && request.IsAccountAdministrator) &&
+            !await db.Members.AnyAsync(m => m.OrganizationId == target.OrganizationId && m.Id != target.Id && m.Active && m.IsAccountAdministrator))
+            return new(false, "last_active_administrator");
+        var before = AccessChanges.State(target);
         target.Active = request.Active;
         target.IsEmployee = request.IsEmployee;
         target.IsManager = request.IsManager;
         target.IsAccountAdministrator = request.IsAccountAdministrator;
+        if (before != AccessChanges.State(target))
+            AccessChanges.Record(db, clock, target, actor.Id, "access.member_updated", before, AccessChanges.State(target));
         await db.SaveChangesAsync();
+        await tx.CommitAsync();
         return new(true, "updated");
     }
 
     public async Task<OperationResult> AssignManagerAsync(Member actor, Guid employeeId, Guid managerId)
     {
-        var employee = await db.Members.SingleOrDefaultAsync(x => x.Id == employeeId);
-        var manager = await db.Members.SingleOrDefaultAsync(x => x.Id == managerId);
+        await using var tx = await db.Database.BeginTransactionAsync();
+        if (!await AccessChanges.LockOrganization(db, actor.OrganizationId) ||
+            await AccessChanges.Administrator(db, actor) is null) return new(false, "forbidden");
+        var employee = await db.Members.AsNoTracking().SingleOrDefaultAsync(x => x.Id == employeeId);
+        var manager = await db.Members.AsNoTracking().SingleOrDefaultAsync(x => x.Id == managerId);
         if (employee is null || manager is null || !AccessRules.CanAdminister(actor, employee) ||
             !AccessRules.CanAdminister(actor, manager)) return new(false, "forbidden");
         if (!employee.Active || !manager.Active || !employee.IsEmployee || !manager.IsManager || employee.Id == manager.Id)
             return new(false, "invalid_relationship");
         var line = await db.ReportingLines.SingleOrDefaultAsync(x => x.EmployeeId == employeeId);
+        if (line is not null) await db.Entry(line).ReloadAsync();
+        var previousManager = line?.ManagerId;
         if (line is null) db.ReportingLines.Add(new() { OrganizationId = actor.OrganizationId, EmployeeId = employeeId, ManagerId = managerId });
         else line.ManagerId = managerId;
+        if (previousManager != managerId)
+            AccessChanges.Record(db, clock, employee, actor.Id, "access.manager_assigned", new { managerId = previousManager }, new { managerId });
         await db.SaveChangesAsync();
+        await tx.CommitAsync();
         return new(true, "assigned");
     }
 }

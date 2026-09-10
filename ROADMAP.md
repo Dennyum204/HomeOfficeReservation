@@ -2,7 +2,7 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-10.
+Atualizado: 2026-09-11.
 
 Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.
 
@@ -14,13 +14,13 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 
 **Quando:** Após implementação e aceitação do core; piloto de duas semanas, sem depender de Microsoft.
 
-**Gate:** HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.
+**Gate:** HO-000 a HO-007 e HO-010 a HO-015 integrados; acesso privado por convite, titular administrador/colaborador e chefe associado, duas contas autorizadas e gates core de QUALITY.md cumpridos. HO-008/HO-009/HO-016 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos.
 
 **Reavaliar:** Em cada entrega do core e na retrospetiva do piloto.
 
 | ID | Funcionalidade | Tarefas |
 |---|---|---|
-| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003 |
+| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003, HO-013 |
 | FEAT-002 | Calendário próprio autoritativo, dashboard e padrão base explícito | HO-005, HO-010 |
 | FEAT-003 | Pedidos por datas, rascunhos e comentários | HO-004, HO-005, HO-010 |
 | FEAT-004 | Aprovação parcial, contrapropostas e revisões | HO-004, HO-005, HO-010 |
