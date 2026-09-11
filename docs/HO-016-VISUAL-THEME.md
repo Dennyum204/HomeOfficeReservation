@@ -1,6 +1,6 @@
 # HO-016 — Tema Claude + e hierarquia visual
 
-Issue: [#41](https://github.com/Dennyum204/HomeOfficeReservation/issues/41). Data: 2026-09-11. Estado: implementação e verificação em curso; sem merge automático.
+Issue: [#41](https://github.com/Dennyum204/HomeOfficeReservation/issues/41). Data: 2026-09-11. Estado: `review` no [PR #45](https://github.com/Dennyum204/HomeOfficeReservation/pull/45); sem merge automático. Os [checks do head](https://github.com/Dennyum204/HomeOfficeReservation/pull/45/checks) registam a validação remota antes da entrega pronta.
 
 ## Base e âmbito
 
@@ -59,7 +59,7 @@ Os testes de aparência complementam os percursos core existentes de autenticaç
 - Documentação, geração/contraste do tema e configuração nativa: passaram.
 - Backend: 4 testes API + 69 integração com PostgreSQL real, sem skips. Contratos: 178 ficheiros correspondem à regeneração.
 - Web: formatter, TypeScript, ESLint, testes unitários e build passaram; 4 E2E de autenticação + 34 percursos core/tema passaram em desktop e viewport estreito. O contraste DOM usa superfícies efetivamente renderizadas; seletor, foco do diálogo, Escape, preservação de datas e movimento reduzido estão cobertos.
-- Android: análise e testes de aparência/layout/estado; matriz a 320 px com texto 100%/200% em ambos os temas. Guidelines Flutter verificam alvos táteis, rótulos semânticos e contraste no calendário a 411 px. Ensaios widget usam HTTP simulado; capturas nativas usam dados/API reais.
+- Android: análise e 51 testes passaram, incluindo aparência/layout/estado; matriz a 320 px com texto 100%/200% em ambos os temas. Guidelines Flutter verificam alvos táteis, rótulos semânticos e contraste no calendário a 411 px. Ensaios widget usam HTTP simulado; capturas nativas usam dados/API reais.
 - Tentativas anteriores do exportador Android falharam por imports/seletores do novo ensaio e não contam como sucesso. Foram corrigidas antes da execução completa com 14 capturas. A tentativa inicial da base anterior encontrou a colisão de PageStorage; a captura antes foi obtida com montagem isolada e a regressão foi corrigida na aplicação.
 
 A certificação com utilizadores de leitores de ecrã, dispositivos físicos diversos, perfis de cores e diferenças de renderização de fabricantes não foi realizada. Foram verificados rótulos/semântica automatizados; não se afirma uma sessão auditiva completa de TalkBack. A CI remota do PR é registada separadamente e nunca inferida a partir destes resultados locais.

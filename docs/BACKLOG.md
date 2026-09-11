@@ -24,7 +24,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
 | HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Concluído | HO-003, HO-007 |
 | HO-015 | Administração Web de membros e convites | v1.0 | web | Concluído | HO-011, HO-013, HO-014 |
-| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Em curso | HO-011, HO-015 |
+| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Em revisão | HO-011, HO-015 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -431,7 +431,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/44
 
 ## HO-016 — Tema Claude + e hierarquia visual Web/Android
 
-Release: ui-refresh · Área: fullstack · Estado: Em curso
+Release: ui-refresh · Área: fullstack · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
