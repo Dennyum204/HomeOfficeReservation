@@ -25,6 +25,7 @@ def main():
     global STAGE
     if os.name != 'posix' or os.geteuid() != 0:
         raise RuntimeError('Use an isolated Linux CI runner with Docker, as root.')
+    subprocess.run(['docker', 'info', '--format', 'Runner: memory={{.MemoryLimit}} swap={{.SwapLimit}} CPU quota={{.CPUCfsQuota}}'], check=True)
     sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip()
     image = 'homeoffice:ho012-' + sha
     # Build on the runner, never on the NAS. Versions and lockfiles are shared with core CI.
