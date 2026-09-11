@@ -6,6 +6,8 @@
 
 Na sessão SSH já autorizada (`ssh OverseekersAdmin@192.168.1.102`), executar o conteúdo de [inventory.sh](inventory.sh). Se Docker negar acesso, usar a sessão sudo de operador apenas para as mesmas leituras; não alterar grupos/serviços. Não partilhar logs completos com dados privados. O script imprime versão, CPU/kernel, memória/swap/disco, limites do Engine, carga, redes/rotas e cauda de dmesg. Recusa de leitura de dmesg não equivale a ausência de OOM.
 
+A instalação futura requer SSH com chave/credenciais locais, permissões Docker/sudo do operador apenas para o projeto, escrita no novo diretório do volume escolhido e encaminhamento SSH (direct-tcpip) para a rede do ensaio. Se algum acesso faltar, registar; não alterar sshd/DSM nesta etapa.
+
 O IP foi observado por DHCP; confirmar destino/host key habitual antes de autenticar. O timeout nesta sessão não identifica a causa: NAS desligado, outra rede/IP ou SSH indisponível continuam hipóteses. Não instalar ou abrir portas para contornar. Password SSH nunca entra no Git ou chat.
 
 Confirmar x86_64, Engine >=20.10.10, Compose 2.x ou avaliar o 1.28.5 legado, cgroups com MemoryLimit/SwapLimit/CpuCfsQuota verdadeiros. Engine novo é necessário mas não suficiente: kernel/libseccomp do fabricante precisam de executar as imagens Noble/Bookworm. Docker 20.10.3, presente em notas antigas Synology, fica abaixo do piso do script. Parar e discutir compatibilidade; não atualizar DSM/Engine, instalar WSL no NAS ou retirar seccomp.

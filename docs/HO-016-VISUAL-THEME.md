@@ -1,5 +1,7 @@
 # HO-016 — Tema Claude + e hierarquia visual
 
+> Integração verificada em 2026-09-11: merge humano do PR #45, quatro checks de main verdes; [SHA/runs](HO-012-INTEGRATION.md). O relato de execução abaixo preserva a evidência da entrega e não é deployment.
+
 Issue: [#41](https://github.com/Dennyum204/HomeOfficeReservation/issues/41). Data: 2026-09-11. Estado: `review` no [PR #45](https://github.com/Dennyum204/HomeOfficeReservation/pull/45); sem merge automático. Os [checks do head](https://github.com/Dennyum204/HomeOfficeReservation/pull/45/checks) registam a validação remota antes da entrega pronta.
 
 ## Base e âmbito
