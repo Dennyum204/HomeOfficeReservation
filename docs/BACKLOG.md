@@ -451,7 +451,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/41
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/45
 
 ## HO-101 — Lembretes e resumo semanal por email
 
