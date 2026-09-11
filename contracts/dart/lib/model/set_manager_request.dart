@@ -13,35 +13,66 @@ part of openapi.api;
 class SetManagerRequest {
   /// Returns a new [SetManagerRequest] instance.
   SetManagerRequest({
+    this.commandId,
+    this.expectedAccessVersion,
     required this.managerId,
   });
 
-  final String managerId;
+  final String? commandId;
+
+  final int? expectedAccessVersion;
+
+  final String? managerId;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is SetManagerRequest &&
+    other.commandId == commandId &&
+    other.expectedAccessVersion == expectedAccessVersion &&
     other.managerId == managerId;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (managerId.hashCode);
+    (commandId == null ? 0 : commandId!.hashCode) +
+    (expectedAccessVersion == null ? 0 : expectedAccessVersion!.hashCode) +
+    (managerId == null ? 0 : managerId!.hashCode);
 
   @override
-  String toString() => 'SetManagerRequest[managerId=$managerId]';
+  String toString() => 'SetManagerRequest[commandId=$commandId, expectedAccessVersion=$expectedAccessVersion, managerId=$managerId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+    if (this.commandId != null) {
+      json[r'commandId'] = this.commandId;
+    } else {
+      json[r'commandId'] = null;
+    }
+    if (this.expectedAccessVersion != null) {
+      json[r'expectedAccessVersion'] = this.expectedAccessVersion;
+    } else {
+      json[r'expectedAccessVersion'] = null;
+    }
+    if (this.managerId != null) {
       json[r'managerId'] = this.managerId;
+    } else {
+      json[r'managerId'] = null;
+    }
     return json;
   }
 
   /// Clones this instance of [SetManagerRequest] and returns a new one where some of the
   /// properties have changed.
   SetManagerRequest copyWith({
+    String? commandId,
+    bool commandIdSetToNull = false,
+    int? expectedAccessVersion,
+    bool expectedAccessVersionSetToNull = false,
     String? managerId,
+    bool managerIdSetToNull = false,
   }) => SetManagerRequest(
-    managerId: managerId ?? this.managerId,
+    commandId: commandIdSetToNull ? null : commandId ?? this.commandId,
+    expectedAccessVersion: expectedAccessVersionSetToNull ? null : expectedAccessVersion ?? this.expectedAccessVersion,
+    managerId: managerIdSetToNull ? null : managerId ?? this.managerId,
   );
 
   /// Returns a new [SetManagerRequest] instance and imports its values from
@@ -56,12 +87,13 @@ class SetManagerRequest {
       // Note 2: this code is stripped in release mode!
       assert(() {
         assert(json.containsKey(r'managerId'), 'Required key "SetManagerRequest[managerId]" is missing from JSON.');
-        assert(json[r'managerId'] != null, 'Required key "SetManagerRequest[managerId]" has a null value in JSON.');
         return true;
       }());
 
       return SetManagerRequest(
-        managerId: mapValueOfType<String>(json, r'managerId')!,
+        commandId: mapValueOfType<String>(json, r'commandId'),
+        expectedAccessVersion: mapValueOfType<int>(json, r'expectedAccessVersion'),
+        managerId: mapValueOfType<String>(json, r'managerId'),
       );
     }
     return null;

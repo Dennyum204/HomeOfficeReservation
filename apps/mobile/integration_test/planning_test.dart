@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:homeoffice_api/api.dart';
+import 'package:http/http.dart' as http;
 import 'package:integration_test/integration_test.dart';
 import 'package:homeoffice_mobile/main.dart' as app;
 import 'package:homeoffice_mobile/config/api_settings.dart';
@@ -17,6 +18,32 @@ const managerEmail = String.fromEnvironment('TEST_MANAGER_EMAIL');
 const managerPassword = String.fromEnvironment('TEST_MANAGER_PASSWORD');
 String? selectedEmployee;
 bool _surfaceConverted = false;
+
+// CI uses five-second Identity access tokens. Delay only the first already-built
+// mutation request, so its captured bearer expires even if background reads renew.
+// This exercises real API rejection/renewal without changing the request body/key.
+class ExpireFirstPlanningWrite extends http.BaseClient {
+  ExpireFirstPlanningWrite(this.inner);
+  final http.Client inner;
+  final statuses = <int>[];
+  bool first = true;
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    final mutation =
+        request.method != 'GET' && request.url.path.contains('/planning/');
+    if (mutation && first) {
+      first = false;
+      await Future<void>.delayed(const Duration(seconds: 6));
+    }
+    final response = await inner.send(request);
+    if (mutation) statuses.add(response.statusCode);
+    return response;
+  }
+
+  @override
+  void close() => inner.close();
+}
+
 Future<void> screenshot(WidgetTester t, String name) async {
   final binding = IntegrationTestWidgetsFlutterBinding.instance;
   if (!_surfaceConverted) {
@@ -261,7 +288,20 @@ void main() {
         days.map(dateKey),
       );
       await note(t, marker);
+      final apiClient = controller(t).repository.auth.client;
+      final originalTransport = apiClient.client;
+      final expiryProbe =
+          const bool.fromEnvironment('TEST_EXPIRE_PLANNING_WRITE')
+          ? ExpireFirstPlanningWrite(originalTransport)
+          : null;
+      if (expiryProbe != null) apiClient.client = expiryProbe;
       await confirm(t, 'editor-save');
+      if (expiryProbe != null) {
+        expect(expiryProbe.statuses, hasLength(2));
+        expect(expiryProbe.statuses.first, 401);
+        expect(expiryProbe.statuses.last, inInclusiveRange(200, 299));
+        apiClient.client = originalTransport;
+      }
       final request = controller(t).detail!.id;
       expect(controller(t).detail!.state, RequestState.draft);
       await confirm(t, 'request-submit');

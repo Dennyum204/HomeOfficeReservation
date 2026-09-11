@@ -96,10 +96,10 @@ public static class AccessEndpoints
             .ProducesProblem(409).WithName("CancelInvitation");
         access.MapPut("/admin/members/{memberId:guid}", async (Guid memberId, UpdateMemberRequest request, HttpContext context, IMemberDirectory members) =>
             Operation(await members.UpdateAsync(Actor(context), memberId, request))).AddEndpointFilter<CsrfFilter>()
-            .Produces(204).ProducesProblem(403).ProducesProblem(400).WithName("UpdateMember");
+            .Produces(204).ProducesProblem(403).ProducesProblem(400).ProducesProblem(409).WithName("UpdateMember");
         access.MapPut("/admin/members/{employeeId:guid}/manager", async (Guid employeeId, SetManagerRequest request, HttpContext context, IMemberDirectory members) =>
-            Operation(await members.AssignManagerAsync(Actor(context), employeeId, request.ManagerId))).AddEndpointFilter<CsrfFilter>()
-            .Produces(204).ProducesProblem(403).ProducesProblem(400).WithName("AssignManager");
+            Operation(await members.AssignManagerAsync(Actor(context), employeeId, request.ManagerId, request.ExpectedAccessVersion, request.CommandId))).AddEndpointFilter<CsrfFilter>()
+            .Produces(204).ProducesProblem(403).ProducesProblem(400).ProducesProblem(409).WithName("AssignManager");
     }
 
     private static IResult Operation(OperationResult result) => result.Succeeded ? Results.NoContent() :
@@ -107,7 +107,7 @@ public static class AccessEndpoints
         {
             "forbidden" => 403,
             "resend_limited" or "invitation_limit" => 429,
-            "stale_invitation" or "idempotency_conflict" => 409,
+            "stale_member" or "stale_invitation" or "idempotency_conflict" => 409,
             _ => 400
         }, title: result.Code);
 

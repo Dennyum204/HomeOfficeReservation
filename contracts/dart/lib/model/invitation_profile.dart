@@ -14,6 +14,7 @@ class InvitationProfile {
   /// Returns a new [InvitationProfile] instance.
   InvitationProfile({
     required this.acceptedAt,
+    required this.accessVersion,
     required this.active,
     required this.cancelledAt,
     required this.codeExpiresAt,
@@ -36,6 +37,8 @@ class InvitationProfile {
   });
 
   final DateTime? acceptedAt;
+
+  final int accessVersion;
 
   final bool active;
 
@@ -78,6 +81,7 @@ class InvitationProfile {
   @override
   bool operator ==(Object other) => identical(this, other) || other is InvitationProfile &&
     other.acceptedAt == acceptedAt &&
+    other.accessVersion == accessVersion &&
     other.active == active &&
     other.cancelledAt == cancelledAt &&
     other.codeExpiresAt == codeExpiresAt &&
@@ -102,6 +106,7 @@ class InvitationProfile {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (acceptedAt == null ? 0 : acceptedAt!.hashCode) +
+    (accessVersion.hashCode) +
     (active.hashCode) +
     (cancelledAt == null ? 0 : cancelledAt!.hashCode) +
     (codeExpiresAt == null ? 0 : codeExpiresAt!.hashCode) +
@@ -123,7 +128,7 @@ class InvitationProfile {
     (version.hashCode);
 
   @override
-  String toString() => 'InvitationProfile[acceptedAt=$acceptedAt, active=$active, cancelledAt=$cancelledAt, codeExpiresAt=$codeExpiresAt, deliveredAt=$deliveredAt, deliveryAttempts=$deliveryAttempts, deliveryError=$deliveryError, deliveryState=$deliveryState, displayName=$displayName, email=$email, emailConfirmed=$emailConfirmed, isAccountAdministrator=$isAccountAdministrator, isEmployee=$isEmployee, isManager=$isManager, managerId=$managerId, managerRelationshipValid=$managerRelationshipValid, memberId=$memberId, resendAvailableAt=$resendAvailableAt, state=$state, version=$version]';
+  String toString() => 'InvitationProfile[acceptedAt=$acceptedAt, accessVersion=$accessVersion, active=$active, cancelledAt=$cancelledAt, codeExpiresAt=$codeExpiresAt, deliveredAt=$deliveredAt, deliveryAttempts=$deliveryAttempts, deliveryError=$deliveryError, deliveryState=$deliveryState, displayName=$displayName, email=$email, emailConfirmed=$emailConfirmed, isAccountAdministrator=$isAccountAdministrator, isEmployee=$isEmployee, isManager=$isManager, managerId=$managerId, managerRelationshipValid=$managerRelationshipValid, memberId=$memberId, resendAvailableAt=$resendAvailableAt, state=$state, version=$version]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -132,6 +137,7 @@ class InvitationProfile {
     } else {
       json[r'acceptedAt'] = null;
     }
+      json[r'accessVersion'] = this.accessVersion;
       json[r'active'] = this.active;
     if (this.cancelledAt != null) {
       json[r'cancelledAt'] = this.cancelledAt!.toUtc().toIso8601String();
@@ -183,6 +189,7 @@ class InvitationProfile {
   InvitationProfile copyWith({
     DateTime? acceptedAt,
     bool acceptedAtSetToNull = false,
+    int? accessVersion,
     bool? active,
     DateTime? cancelledAt,
     bool cancelledAtSetToNull = false,
@@ -210,6 +217,7 @@ class InvitationProfile {
     int? version,
   }) => InvitationProfile(
     acceptedAt: acceptedAtSetToNull ? null : acceptedAt ?? this.acceptedAt,
+    accessVersion: accessVersion ?? this.accessVersion,
     active: active ?? this.active,
     cancelledAt: cancelledAtSetToNull ? null : cancelledAt ?? this.cancelledAt,
     codeExpiresAt: codeExpiresAtSetToNull ? null : codeExpiresAt ?? this.codeExpiresAt,
@@ -243,6 +251,8 @@ class InvitationProfile {
       // Note 2: this code is stripped in release mode!
       assert(() {
         assert(json.containsKey(r'acceptedAt'), 'Required key "InvitationProfile[acceptedAt]" is missing from JSON.');
+        assert(json.containsKey(r'accessVersion'), 'Required key "InvitationProfile[accessVersion]" is missing from JSON.');
+        assert(json[r'accessVersion'] != null, 'Required key "InvitationProfile[accessVersion]" has a null value in JSON.');
         assert(json.containsKey(r'active'), 'Required key "InvitationProfile[active]" is missing from JSON.');
         assert(json[r'active'] != null, 'Required key "InvitationProfile[active]" has a null value in JSON.');
         assert(json.containsKey(r'cancelledAt'), 'Required key "InvitationProfile[cancelledAt]" is missing from JSON.');
@@ -280,6 +290,7 @@ class InvitationProfile {
 
       return InvitationProfile(
         acceptedAt: mapDateTime(json, r'acceptedAt', r''),
+        accessVersion: mapValueOfType<int>(json, r'accessVersion')!,
         active: mapValueOfType<bool>(json, r'active')!,
         cancelledAt: mapDateTime(json, r'cancelledAt', r''),
         codeExpiresAt: mapDateTime(json, r'codeExpiresAt', r''),
@@ -347,6 +358,7 @@ class InvitationProfile {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'acceptedAt',
+    'accessVersion',
     'active',
     'cancelledAt',
     'codeExpiresAt',

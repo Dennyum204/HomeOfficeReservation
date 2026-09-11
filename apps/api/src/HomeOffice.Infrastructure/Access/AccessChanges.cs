@@ -30,6 +30,8 @@ internal static class AccessChanges
     internal static AccessAudit Record(HomeOfficeDbContext db, TimeProvider clock, Member member,
         Guid? actor, string action, object? before, object? after, string reason = "", string? source = null)
     {
+        if (action is "access.member_updated" or "access.manager_assigned" or "access.admin_employee_enabled")
+            member.AccessVersion++;
         var audit = new AccessAudit
         {
             OrganizationId = member.OrganizationId,

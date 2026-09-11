@@ -20,7 +20,7 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 
 | ID | Funcionalidade | Tarefas |
 |---|---|---|
-| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003, HO-013, HO-014 |
+| FEAT-001 | Contas próprias, papéis e relação colaborador/chefe | HO-001, HO-003, HO-013, HO-014, HO-015 |
 | FEAT-002 | Calendário próprio autoritativo, dashboard e padrão base explícito | HO-005, HO-010 |
 | FEAT-003 | Pedidos por datas, rascunhos e comentários | HO-004, HO-005, HO-010 |
 | FEAT-004 | Aprovação parcial, contrapropostas e revisões | HO-004, HO-005, HO-010 |

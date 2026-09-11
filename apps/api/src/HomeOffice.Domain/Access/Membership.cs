@@ -17,6 +17,7 @@ public sealed class Member
     public bool IsEmployee { get; set; }
     public bool IsManager { get; set; }
     public bool IsAccountAdministrator { get; set; }
+    public long AccessVersion { get; set; }
 }
 
 public sealed class ReportingLine

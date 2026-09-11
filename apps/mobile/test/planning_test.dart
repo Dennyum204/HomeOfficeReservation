@@ -12,6 +12,70 @@ import 'auth_test.dart' show json;
 import 'planning_fixture.dart';
 
 void main() {
+  test('explicit 401 between preflight and mutation renews and replays the exact command once', () async {
+    final f = PlanningFixture();
+    await f.start();
+    addTearDown(f.dispose);
+    var expired = false;
+    f.intercept = (r) async {
+      if (r.method == 'GET' && r.url.path.endsWith('/me') && expired) {
+        expired = false;
+        return json({}, 401);
+      }
+      if (r.method != 'GET' && f.writes.length == 1) {
+        expired = true;
+        return json({}, 401);
+      }
+      return null;
+    };
+    expect(await f.c.run(f.draft()), true);
+    expect(
+      expired,
+      false,
+      reason: 'The profile read encountered expiry and renewed before replay.',
+    );
+    expect(f.writes, hasLength(2));
+    expect(f.writes.last.body, f.writes.first.body);
+    expect(
+      f.writes.last.headers['Idempotency-Key'],
+      f.writes.first.headers['Idempotency-Key'],
+    );
+    expect(f.c.failure, PlanningFailure.none);
+    expect(f.c.journal, isNull);
+  });
+
+  test(
+    'persistent mutation 401 stops after one replay and 403 is never retried',
+    () async {
+      for (final status in [401, 403]) {
+        final f = PlanningFixture();
+        await f.start();
+        addTearDown(f.dispose);
+        f.intercept = (r) async => r.method == 'GET' ? null : json({}, status);
+        expect(await f.c.run(f.draft()), false);
+        expect(f.writes, hasLength(status == 401 ? 2 : 1));
+        expect(f.c.failure, PlanningFailure.forbidden);
+        expect(f.c.journal, isNull);
+      }
+    },
+  );
+
+  test('mutation 401 cannot replay for a different actor', () async {
+    final f = PlanningFixture();
+    await f.start();
+    addTearDown(f.dispose);
+    f.intercept = (r) async {
+      if (r.method != 'GET') {
+        f.actor = 'different-member';
+        return json({}, 401);
+      }
+      return null;
+    };
+    expect(await f.c.run(f.draft()), false);
+    expect(f.writes, hasLength(1));
+    expect(f.c.failure, PlanningFailure.forbidden);
+  });
+
   test('uncertain write persists exact generated body and key across restart; recovery has one effect', () async {
     final f = PlanningFixture();
     await f.start();
