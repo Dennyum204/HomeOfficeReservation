@@ -1,14 +1,14 @@
 # HO-012 — Candidato NAS e preparação do piloto
 
-Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **O NAS está em avaliação; não foi instalado nem medido.** Hetzner não foi aprovado. [Runbook do ensaio](../infra/nas/README.md), [ADR-018](adr/ADR-018-nas-trial.md).
+Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **HomeOffice não foi instalado nem medido no NAS; o inventário identifica condições por resolver.** Hetzner não foi aprovado. [Runbook do ensaio](../infra/nas/README.md), [ADR-018](adr/ADR-018-nas-trial.md).
 
 ## Evidência disponível
 
-Dados fornecidos pelo responsável: Synology DS218+, Celeron J3355 x86_64, 2 GB; DSM observado 7.1-42661 Update 1, Docker instalado; IP DHCP observado 192.168.1.102; utilizador SSH OverseekersAdmin. Versões efetivas Engine/Compose, kernel, armazenamento, memória livre e carga ainda por obter. Não guardar passwords no Git.
+O [inventário SSH direto de 2026-09-11](HO-012-NAS-INVENTORY.md) confirma DS218+, Celeron J3355 x86_64, DSM 7.1.1-42962 Update 9, kernel 4.4.180+, Engine 20.10.3 e Compose 1.28.5. O responsável efetuou a atualização DSM antes da inspeção. Não guardar passwords no Git.
 
 `docker pull cloudflare/cloudflared:latest` funcionou por SSH e `nas-connectivity-test` apresentou «Tunnel connected successfully». Teste terminado, sem hostname/rotas, serviços publicados ou alterações ao router. **Prova apenas conectividade, não compatibilidade/desempenho HomeOffice.** Não repetir nem publicar rotas nesta etapa.
 
-A tentativa SSH desta sessão, não interativa, com validação do host conhecido e timeout de 5 s, terminou em timeout de banner. Não houve acesso ao NAS. Docker Desktop local tem CLI/Compose, mas não motor Linux disponível. Builds e ensaios de contentores usam o runner Linux, separados das medições futuras no DS218+.
+A tentativa SSH inicial tinha terminado em timeout; o acesso posterior autorizado funcionou e permitiu concluir leituras. Bloqueios concretos: Engine abaixo do piso do script, quotas CFS indisponíveis no kernel, encaminhamento SSH desativado e RAM disponível aproximadamente 1048 MiB, abaixo da margem inicial. Arrays de sistema/swap degradados exigem esclarecimento, embora RAID1 de dados esteja saudável e SMART global tenha passado. Não houve reparação/instalação. Docker Desktop local continua sem motor Linux; builds/ensaios usam o runner, sem provar comportamento neste NAS.
 
 ## Stack concreta para revisão
 
@@ -22,7 +22,7 @@ A tentativa SSH desta sessão, não interativa, com validação do host conhecid
 | Volumes Docker próprios | homeoffice-nas-trial_database e homeoffice-nas-trial_mail | PostgreSQL e email sintético |
 | Diretório privado novo | Volume/caminho por escolher após inventário | Configuração, credenciais sintéticas, PFX/key ring, TLS, backups e medições |
 
-896 MiB é a soma dos limites, não previsão do consumo. Restam nominalmente 1152 MiB dos 2 GiB para DSM/kernel/Docker/serviços existentes e margem; a memória realmente disponível pode ser muito menor. Swap dos contentores limitado a zero e CPU total até 1,6 dos dois núcleos. Não desativar OOM/seccomp. Limites insuficientes devem produzir falha observável, não aumento automático nem reinícios infinitos.
+896 MiB é a soma dos limites, não previsão do consumo. Restam nominalmente 1152 MiB dos 2 GiB para DSM/kernel/Docker/serviços existentes e margem; a memória realmente disponível observada é menor. A proposta limita swap dos contentores a zero e CPU total a 1,6 dos dois núcleos, mas **essas quotas CPU não são suportadas no kernel observado**. Não desativar OOM/seccomp nem trocar quotas por prioridades sem rever e validar a proposta. Limites insuficientes devem produzir falha observável, não aumento automático nem reinícios infinitos.
 
 Imagens compiladas/exportadas fora do NAS, com SHA do código, IDs/digests e SHA-256. Transferência SSH; configuração privada gerada separadamente no PC, nunca no artifact. Não se cria VM, túnel, DNS, registry público, infraestrutura de monitorização, FCM ou serviço Microsoft.
 
@@ -46,6 +46,6 @@ Alternativa histórica: duas Hetzner CX23 com IPv4/backups/Storage Box, estimati
 
 HO-013/014/015/016 têm merges humanos e [evidência de integração](HO-012-INTEGRATION.md). Bootstrap, convites e administração deixaram de ser lacunas de implementação; [configuração/aceitação no ambiente final](HO-012-PRIVATE-ACCESS.md) continuam necessárias.
 
-Faltam inventário/compatibilidade NAS, autorização/execução do ensaio e medições/restauro nesse hardware, decisão de alojamento/residência/retenção, proteção externa, HTTPS externo, SMTP real autorizado, alertas, assinatura/distribuição e aceitação física. Um único Staging sintético não comprova staging/produção isolados no alojamento final.
+Inventário concluído; faltam resolver os pontos de armazenamento, compatibilidade, acesso e margem identificados no recibo, aprovar/executar o ensaio e medir/restaurar nesse hardware, decidir alojamento/residência/retenção, proteção externa, HTTPS externo, SMTP real autorizado, alertas, assinatura/distribuição e aceitação física. Um único Staging sintético não comprova staging/produção isolados no alojamento final.
 
 Domínio existente **ferbatech.com**: homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Preservar DNS/email/NS/router/DSM. HTTPS externo e Cloudflare só depois do ensaio local. Sem deployment, email real, APK, release/tag, merge ou auto-merge nesta etapa. HO-012 incompleta/draft.

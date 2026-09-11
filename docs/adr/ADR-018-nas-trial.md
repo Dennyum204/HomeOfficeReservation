@@ -11,3 +11,9 @@ Build/exportação fora do NAS; manifesto com SHA do código, IDs/digests e hash
 Limites iniciais: 896 MiB, 1,6 CPU; hipóteses a medir com carga DSM, não dimensionamento de produção. Restart automático desligado para tornar falhas visíveis. Backup próprio e restauro CREATE-only preservam fonte. Cópia local não protege contra perda do NAS.
 
 Acesso Web exige SSH e confiança explícita no certificado local. Não valida Android físico/FCM, HTTPS externo ou entrega real. Um Staging sintético não satisfaz isolamento staging/produção nem aceitação final. [Runbook/fontes datadas](../../infra/nas/README.md). PR #37 draft, issue aberta.
+
+## Evidência posterior — 2026-09-11
+
+[Inventário SSH autorizado](../HO-012-NAS-INVENTORY.md) confirma Engine 20.10.3, Compose 1.28.5 e kernel 4.4.180+. Não há suporte de quotas CFS nem encaminhamento SSH; a memória disponível no baseline curto fica abaixo da margem proposta. RAID1 de dados saudável, mas arrays de sistema/swap degradados, ainda por esclarecer. Não se atribui a causa à atualização DSM efetuada pelo responsável.
+
+A topologia acima continua uma proposta bloqueada, não uma decisão de instalação nem prova de adequação. Não basta atualizar o Engine. Preservam-se preflight, limites e proibição de alterações não autorizadas; qualquer adaptação terá de documentar proteção dos serviços existentes e evidência nova. Nenhuma reparação, alteração DSM/SSH ou execução HomeOffice no NAS nesta revisão. O inventário foi concluído sem exigir uma cópia externa como pré-condição dessas leituras; recuperação do piloto permanece um critério próprio.

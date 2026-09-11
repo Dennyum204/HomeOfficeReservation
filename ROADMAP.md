@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-11.
 
-Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara ensaio NAS isolado, ainda sem instalação, medições ou alojamento escolhido. iOS e Outlook adiados, sem bloquear core.
+Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012: inventário SSH NAS concluído, instalação bloqueada por condições de armazenamento, runtime/quotas, acesso e margem de RAM; aplicação não instalada/medida nem alojamento escolhido. iOS e Outlook adiados, sem bloquear core.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
