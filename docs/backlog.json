@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-10",
-  "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core. Acesso privado por convite: HO-013/014/015 preparam titular e convidados; HO-016 regista tema Claude + num marco visual separado, sem gate do piloto.",
+  "updated_at": "2026-09-11",
+  "planning_note": "Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara ensaio NAS isolado, ainda sem instalação, medições ou alojamento escolhido. iOS e Outlook adiados, sem bloquear core.",
   "releases": [
     {
       "id": "v1.0",
@@ -16,17 +16,13 @@
         {
           "date": "2026-09-10",
           "reason": "Acesso privado escolhido pelo responsável; acrescentados gates HO-013/014/015 sem iniciar implementação nem bloquear a decisão de alojamento."
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Preservar gate privado acordado no PR #37; apenas HO-013 importada nesta entrega.",
+          "previous_gate": "HO-000 a HO-007 e HO-010 a HO-012 integrados; duas contas locais da aplicação e gates core de QUALITY.md cumpridos. HO-008/HO-009 não são gates. Alvos atuais Web/Android; iOS/HO-306 excluídos."
         }
       ]
-    },
-    {
-      "id": "ui-refresh",
-      "title": "Identidade visual Claude + — Web e Android",
-      "timing": "Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.",
-      "gate": "HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.",
-      "review_trigger": "Ao selecionar o próximo trabalho visual e após feedback de utilização.",
-      "status": "planned",
-      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/8"
     },
     {
       "id": "outlook-publish",
@@ -82,6 +78,15 @@
       "status": "parked",
       "reason": "Responsável adiou iOS em HO-005.",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/7"
+    },
+    {
+      "id": "ui-refresh",
+      "title": "Identidade visual Claude + — Web e Android",
+      "timing": "HO-016 integrado pelo PR #45 em 2026-09-11; claro/escuro e regressão verificados.",
+      "gate": "HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.",
+      "review_trigger": "Ao selecionar o próximo trabalho visual e após feedback de utilização.",
+      "status": "done",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/8"
     }
   ],
   "features": [
@@ -895,8 +900,18 @@
           ]
         }
       ],
-      "note": "Integrado via PR #36 em main; merge e quatro checks de integração verificados em HO-012.",
-      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md. Merge humano 2026-09-10T19:05:49Z, commit 39c766043227e23b561ca4e0aa753b4fe0ce0fb2 confirmado no histórico origin/main obtido por fetch. Integração verde: https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345259 e https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345123."
+      "note": "PR #36 integrado; merge/CI de integração verificados em HO-013. A preparação operacional HO-012 permanece incompleta.",
+      "notes": "PR #36: matriz real Web/Android/API/PostgreSQL passou; 34 testes Flutter e 51 backend/PG, contratos sem drift, Web estática/unit/build/browser. FCM foreground, background, cold start, recusa real de permissão e mudança de conta passaram. SHA final e quatro checks remotos no recibo https://github.com/Dennyum204/HomeOfficeReservation/pull/36#issuecomment-5623557694; draft só retirado após CI verde e ausência de conflitos. Sem nova API/migração, merge ou deployment. Guia docs/HO-011-CORE-ACCEPTANCE.md.",
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/36",
+        "merged_at": "2026-09-10T19:05:49Z",
+        "merge_commit": "39c766043227e23b561ca4e0aa753b4fe0ce0fb2",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345259",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34518345123"
+        ],
+        "note": "Fetch e ancestralidade confirmados; project-docs/backend-contracts/web/flutter-android verdes na integração main. iOS/Outlook adiados."
+      }
     },
     {
       "id": "HO-012",
@@ -968,16 +983,20 @@
             "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
             "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
           ]
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou preparar ensaio NAS isolado antes de escolher alojamento; Hetzner não aprovado. Instalação é próximo passo, sem mudar critérios finais de piloto/distribuição. HO-013/014/015/016 entretanto integrados."
         }
       ],
-      "notes": "PR #37 permanece draft e issue #13 aberta. Dependências HO-013/014/015 são gates para acesso real/aceitação final, não impedem documentar nem decidir o alojamento agora; não dependem de HO-012, evitando ciclo. Revisão atual só documentação/tracking: domínio escolhido, reserva de compra removida, proposta €17,38/mês antes de impostos, manutenção explícita e nenhum recurso/DNS/deployment/email/convite/APK autorizado. Preparação técnica verificada no commit b07b756576b5ad982eb4bf2b8e1d121c4355e57a: docs 34528244453 e core 34528244465 verdes. Não equivale a alojamento ou aceitação externa; resultados do novo commit documental registados no PR. Ver docs/HO-012-PILOT.md, docs/HO-012-PRIVATE-ACCESS.md e infra/pilot/README.md. HO-016 é UI futura, sem implementação nem gate do piloto."
+      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados com merge/CI verificados; ver docs/HO-012-INTEGRATION.md. NAS DS218+ agora candidato em avaliação; Hetzner é alternativa histórica não aprovada. Apenas conectividade Cloudflare anterior reportada; aplicação nunca instalada/medida no NAS. Preparação isolada Linux amd64, quatro contentores/896 MiB, zero portas publicadas, SMTP capturado, volumes/chaves privados, backup/restauro novo. Artefactos e ensaio Linux no check nas-preparation; não equivalem a NAS ou produção. Inventário/acesso/compatibilidade e instalação autorizada são próximos gates; HTTPS externo, SMTP real, backup fora do NAS, distribuição/piloto permanecem pendentes. Sem deployment, DNS, DSM, router, emails reais, APK ou contratação nesta etapa."
     },
     {
       "id": "HO-013",
       "title": "Titular administrador e colaborador: bootstrap seguro",
       "release": "v1.0",
       "area": "backend",
-      "status": "planned",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003",
@@ -993,16 +1012,36 @@
         "Edição geral dos próprios papéis continua recusada; alterações administrativas não podem deixar a organização sem administrador ativo. Documentar a recuperação controlada pelo operador.",
         "Testes PostgreSQL cobrem titular com papéis acumulados, associação ao chefe, decisão pelo chefe, recusa de autoaprovação mesmo com todos os papéis, isolamento entre organizações e preservação de contas existentes."
       ],
-      "pr_urls": [],
-      "notes": "Lacuna identificada por leitura de MaintenanceCommands/MemberDirectory em HO-012: bootstrap atual cria apenas IsAccountAdministrator e a API recusa editar o próprio membro. Implementação futura em PR próprio; não reabre nem invalida a entrega histórica HO-003.",
-      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38"
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/42"
+      ],
+      "notes": "HO-013 integrado pelo PR #42, merge f62408eaab4bd47bdf039d53b210a7798fc76dc3, com quatro checks de integração verificados em HO-014 (Android retry 2). Bootstrap legado/titular, extensão idempotente e dados/credenciais preservados. Teste manual aprovado pelo responsável. Convites HO-014 selecionados separadamente; HO-015/016 e preparação HO-012 mantêm âmbito próprio. Reconciliação HO-012 em 2026-09-11: PR #42 MERGED em main; f62408eaab4bd47bdf039d53b210a7798fc76dc3 ancestral de origin/main; project-docs 34539320219, backend-contracts/web/flutter-android 34539320227 verdes na integração. Teste manual aprovado pelo responsável.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Implementação HO-013 autorizada explicitamente em PR separado, sem incorporar a preparação operacional PR #37.",
+          "previous_notes": "Lacuna identificada por leitura de MaintenanceCommands/MemberDirectory em HO-012: bootstrap atual cria apenas IsAccountAdministrator e a API recusa editar o próprio membro. Implementação futura em PR próprio; não reabre nem invalida a entrega histórica HO-003.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6"
+        }
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/42",
+        "merged_at": "2026-09-10T22:49:40Z",
+        "merge_commit": "f62408eaab4bd47bdf039d53b210a7798fc76dc3",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34539320219",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34539320227"
+        ],
+        "note": "Merge/ancestralidade confirmados; project-docs, backend-contracts, web e flutter-android passaram no merge f62408e. Android passou no retry 2 do mesmo SHA após a primeira tentativa falhar numa asserção prematura do logout; HO-014 corrige a espera sem remover asserts. Teste manual do responsável também aprovado."
+      }
     },
     {
       "id": "HO-014",
       "title": "Convites de acesso: estado, entrega e revogação",
       "release": "v1.0",
       "area": "backend",
-      "status": "planned",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003",
@@ -1019,16 +1058,36 @@
         "Administração consegue consultar a associação gestor-colaborador atual e estados necessários à UI dentro da organização; contratos OpenAPI e clientes gerados mantêm uma fonte única.",
         "Aceitação funciona nos ecrãs Web e Android existentes com código Identity e definição de password; testar envio simulado, validade, reenvio, cancelamento, repetição, falha SMTP, conta desativada, isolamento e impossibilidade de autoaprovação. SMTP externo real continua gate operacional HO-012, não dependência para implementar/testar esta tarefa."
       ],
-      "pr_urls": [],
-      "notes": "Já existe POST administrativo, envio SMTP e aceitação por código. Esta tarefa cobre gestão do ciclo e recuperação que faltam; não é um novo fornecedor de identidade. Convites Firebase só dão acesso ao APK.",
-      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39"
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
+      ],
+      "notes": "PR #43 integrado em main, teste manual aprovado pelo responsável e integração remota confirmada. Primeira falha Android e repetição verde da mesma base preservadas na evidência; SMTP externo continua gate operacional HO-012. Reconciliação HO-012 em 2026-09-11: PR #43 MERGED em main; e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9 ancestral de origin/main; project-docs 34576735019, backend-contracts/web/flutter-android 34576735065 verdes na integração. Teste manual aprovado pelo responsável.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Implementação autorizada em branch própria após merge humano HO-013; não incorpora PR operacional #37.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6",
+          "previous_notes": "Já existe POST administrativo, envio SMTP e aceitação por código. Esta tarefa cobre gestão do ciclo e recuperação que faltam; não é um novo fornecedor de identidade. Convites Firebase só dão acesso ao APK."
+        }
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/43",
+        "merged_at": "2026-09-11T07:56:17Z",
+        "merge_commit": "e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735019",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735065"
+        ],
+        "note": "Merge e ancestralidade confirmados em origin/main. Teste manual aprovado pelo responsável. Documentação e backend/Web verdes; Android falhou inicialmente no encerramento assíncrono de push. Uma repetição do job (attempt 2) passou no mesmo SHA e terminou em 2026-09-11T08:41:01Z. A primeira execução não é contabilizada como verde. HO-015 acrescenta guarda de ciclo de vida e regressões preventivas."
+      }
     },
     {
       "id": "HO-015",
       "title": "Administração Web de membros e convites",
       "release": "v1.0",
       "area": "web",
-      "status": "planned",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011",
@@ -1045,34 +1104,86 @@
         "Estados de carregamento, vazio, erro, autorização, conflito e envio incerto são explícitos; teclado, foco, leitores de ecrã e viewport estreito funcionam. Não apresentar envio SMTP como convite aceite.",
         "Percurso com PostgreSQL e contas sintéticas demonstra titular, chefe e pessoa adicional convidada, aceitação Web/Android, associação correta, suspensão/cancelamento e negações. Administração nativa Android fica fora desta tarefa; o administrador pode usar a Web responsiva."
       ],
-      "pr_urls": [],
-      "notes": "Necessária antes de Fernando gerir autonomamente convidados reais. Não iniciar módulo administrativo dentro do PR #37. Não exige nova infraestrutura de identidade nem gestão de várias empresas.",
-      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40"
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/44"
+      ],
+      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks. HO-016 verificou merge humano #44 e os quatro checks de integração verdes no commit dcda6e2; trabalho concluído. Reconciliação HO-012 em 2026-09-11: PR #44 MERGED em main; dcda6e2cceef570b3f8ab6dc5d5905d6af6212ec ancestral de origin/main; project-docs 34591956785, backend-contracts/web/flutter-android 34591956766 verdes na integração. Teste manual aprovado pelo responsável.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Implementação HO-015 selecionada pelo responsável após teste manual e merge HO-014; apenas este registo trazido do PR #37.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6"
+        }
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/44",
+        "merged_at": "2026-09-11T11:00:36Z",
+        "merge_commit": "dcda6e2cceef570b3f8ab6dc5d5905d6af6212ec",
+        "verified_in": "origin/main after fetch on 2026-09-11",
+        "documentation_run": "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34591956785",
+        "core_run": "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34591956766",
+        "checks": [
+          "project-docs",
+          "backend-contracts",
+          "web",
+          "flutter-android"
+        ],
+        "manual_test": "Responsável confirmou teste HO-015 com sucesso antes do merge humano."
+      }
     },
     {
       "id": "HO-016",
       "title": "Tema Claude + e hierarquia visual Web/Android",
       "release": "ui-refresh",
       "area": "fullstack",
-      "status": "planned",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
-        "HO-011"
+        "HO-011",
+        "HO-015"
       ],
       "features": [
         "FEAT-025"
       ],
       "acceptance": [
-        "Usar como referência escolhida Claude + em https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application; inspecionar tokens e condições de utilização quando a tarefa for selecionada, sem inventar valores ou impor uma nova biblioteca de UI.",
-        "Web preserva a estética neutra com tema claro/escuro e preferência do sistema; modais e pedidos distinguem secções, contexto, resumo e ações com hierarquia consistente.",
-        "Android partilha a identidade visual com cartões simples, badges legíveis e animações discretas que respeitam redução de movimento; manter strings externalizadas.",
-        "Local de trabalho e estado de aprovação são representados separadamente com rótulos/ícones; não depender apenas de cor nem ocultar plano confirmado, pedido pendente ou conflito.",
-        "Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.",
-        "Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306."
+        "Inspecionar tokens reais e condições de utilização do Claude + de Luis Llanes, referência escolhida no tweakcn; adaptar aos componentes existentes sem nova biblioteca de UI.",
+        "Web suporta claro, escuro e sistema; cartões neutros, cores semânticas consistentes e hierarquia de contexto, seleção por intervalo/dias, resumo, comentário, ações e histórico; consistência em todas as áreas incluindo Administração.",
+        "Android partilha tokens e componentes reutilizáveis, strings externalizadas, texto ampliado, alvos táteis adequados e animações discretas com redução de movimento.",
+        "Localização e aprovação têm rótulos/ícones separados; plano confirmado, proposta pendente e conflito permanecem visíveis sem depender apenas da cor.",
+        "Preservar funcionalidades, permissões, autenticação, leitura versus aceitação e resolução explícita; verificar percursos Web/Android com API e PostgreSQL reais e dados sintéticos.",
+        "Registar comparações reais antes/depois em claro/escuro desktop/viewport estreito/Android e verificar contraste, foco/teclado/semântica de acessibilidade; falhas de execução não contam como evidência concluída.",
+        "Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook.",
+        "Refinamento Android PR #45: títulos compactos dentro do scroll, sem painel de sessão persistente/AppBar; Conta e sessão em Definições, seletor contextual de colaborador preservado. Verificar sessão, logout/limpeza/troca de conta e validação automática independente, com testes e capturas claro/escuro. Web inalterada neste refinamento."
       ],
-      "pr_urls": [],
-      "notes": "Tema confirmado pelo responsável em HO-012 em 2026-09-10; página pública identifica Claude +, de Luis Llanes. Tarefa futura dedicada, sem dependência nem gate de contratação/piloto; iniciar só quando selecionada.",
-      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41"
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/45"
+      ],
+      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft. PR #45 aberto; entrega para revisão humana apenas após os quatro checks do head final verdes e sem conflitos. 51 testes Flutter passaram; aplicação normal de revisão sem credenciais compiladas. HO-016 permanece review até integração humana. Refinamento Android: 52 testes locais, análise/format e ensaio nativo com 26 capturas adicionais passaram; scroll por conta, identidade em Definições e seletor da chefia preservados. As 84 capturas iniciais ficam como histórico. Quatro checks remotos devem ser novamente verificados no head final; issue permanece aberta até merge humano. Reconciliação HO-012 em 2026-09-11: PR #45 MERGED em main; f07c3dd7185743c62f5c47d15c4b8a5198d92cbb ancestral de origin/main; project-docs 34605827077, backend-contracts/web/flutter-android 34605827090 verdes na integração. Teste manual aprovado pelo responsável.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou implementação HO-016 após merge HO-015; importado apenas este item, funcionalidade e marco do PR #37, que permanece draft.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6",
+          "previous_depends_on": [
+            "HO-011"
+          ],
+          "previous_acceptance": [
+            "Usar como referência escolhida Claude + em https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application; inspecionar tokens e condições de utilização quando a tarefa for selecionada, sem inventar valores ou impor uma nova biblioteca de UI.",
+            "Web preserva a estética neutra com tema claro/escuro e preferência do sistema; modais e pedidos distinguem secções, contexto, resumo e ações com hierarquia consistente.",
+            "Android partilha a identidade visual com cartões simples, badges legíveis e animações discretas que respeitam redução de movimento; manter strings externalizadas.",
+            "Local de trabalho e estado de aprovação são representados separadamente com rótulos/ícones; não depender apenas de cor nem ocultar plano confirmado, pedido pendente ou conflito.",
+            "Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.",
+            "Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306."
+          ]
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Revisão visual do responsável pede títulos Android no scroll e conta/sessão em Definições; continuação do mesmo PR #45, sem mudar Web.",
+          "source_commit": "75fae2d631205e50a47876ab9a0e763d9b760a21"
+        }
+      ]
     },
     {
       "id": "HO-101",
@@ -1250,8 +1361,7 @@
         "Pedidos em curso têm encaminhamento explícito quando o aprovador está indisponível."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/20",
-      "pr_urls": [],
-      "notes": "HO-013/014/015 antecipam apenas o acesso privado por convite e a administração básica da organização V1, conforme decisão de 2026-09-10. HO-301 preserva o ID, histórico e critérios de expansão por equipas/substituição temporária do aprovador em V2; não bloqueia convites básicos do piloto."
+      "pr_urls": []
     },
     {
       "id": "HO-302",

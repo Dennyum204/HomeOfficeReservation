@@ -41,14 +41,20 @@ public static class AccessEndpoints
             return TypedResults.NoContent();
         }).AddEndpointFilter<CsrfFilter>().WithName("Logout");
         // Anonymous JSON operations use explicit single-purpose Identity tokens, not ambient cookie authority.
-        auth.MapPost("/activation/request", (EmailRequest request, UserManager<IdentityUser> users,
-            IMemberDirectory members, IAccountEmail email) => SendCode(request, users, members, email, true))
+        auth.MapPost("/activation/request", async (EmailRequest request, InvitationService invitations, InvitationDelivery delivery) =>
+        {
+            var memberId = await invitations.RequestAnonymous(request.Email);
+            if (memberId is not null) await delivery.TryNow(memberId.Value);
+            return Results.Accepted();
+        })
             .Produces(202).WithName("RequestActivation");
         auth.MapPost("/recovery/request", (EmailRequest request, UserManager<IdentityUser> users,
             IMemberDirectory members, IAccountEmail email) => SendCode(request, users, members, email, false))
             .Produces(202).WithName("RequestRecovery");
-        auth.MapPost("/activation/complete", (CompleteAccountRequest request, UserManager<IdentityUser> users,
-            HomeOfficeDbContext db) => Complete(request, users, db, true)).Produces(204).ProducesProblem(400).WithName("ActivateAccount");
+        auth.MapPost("/activation/complete", async (CompleteAccountRequest request, InvitationService invitations) =>
+            await invitations.Complete(request.Email, request.Code, request.Password) ? Results.NoContent() :
+                Results.Problem(statusCode: 400, title: "invalid_code_or_password"))
+            .Produces(204).ProducesProblem(400).WithName("ActivateAccount");
         auth.MapPost("/recovery/complete", (CompleteAccountRequest request, UserManager<IdentityUser> users,
             HomeOfficeDbContext db) => Complete(request, users, db, false)).Produces(204).ProducesProblem(400).WithName("ResetPassword");
 
@@ -69,17 +75,41 @@ public static class AccessEndpoints
             .WithSummary("Read-only relationship/role guard. Does not create or approve any request.");
         access.MapPost("/admin/members", async (ProvisionMemberRequest request, HttpContext context, AccountProvisioner provisioner) =>
             Operation(await provisioner.ProvisionAsync(Actor(context), request))).AddEndpointFilter<CsrfFilter>()
-            .Produces(204).ProducesProblem(403).ProducesProblem(400).WithName("ProvisionMember");
+            .RequireRateLimiting("account").Produces(204).ProducesProblem(403).ProducesProblem(400).ProducesProblem(429).WithName("ProvisionMember")
+            .WithSummary("Create an admitted member and durable invitation. Repeating the identical normalized request by the same administrator returns success without creating or resending.");
+        access.MapGet("/admin/invitations", async (Guid? after, int? limit, HttpContext context, InvitationService invitations) =>
+        {
+            var page = await invitations.List(Actor(context), after, limit ?? 50);
+            return page is null ? Results.Problem(statusCode: 403, title: "forbidden_or_invalid_page") : Results.Ok(page);
+        }).Produces<InvitationPage>().ProducesProblem(403).WithName("ListInvitations");
+        access.MapPost("/admin/members/{memberId:guid}/invitation/resend", async (Guid memberId, InvitationChangeRequest request,
+            HttpContext context, InvitationService invitations, InvitationDelivery delivery) =>
+        {
+            var result = await invitations.Change(Actor(context), memberId, request, cancel: false);
+            if (result.Succeeded && result.Code != "already_applied") await delivery.TryNow(memberId);
+            return Operation(result);
+        }).AddEndpointFilter<CsrfFilter>().RequireRateLimiting("account").Produces(204).ProducesProblem(400).ProducesProblem(403)
+            .ProducesProblem(409).ProducesProblem(429).WithName("ResendInvitation");
+        access.MapPost("/admin/members/{memberId:guid}/invitation/cancel", async (Guid memberId, InvitationChangeRequest request,
+            HttpContext context, InvitationService invitations) => Operation(await invitations.Change(Actor(context), memberId, request, cancel: true)))
+            .AddEndpointFilter<CsrfFilter>().RequireRateLimiting("account").Produces(204).ProducesProblem(400).ProducesProblem(403)
+            .ProducesProblem(409).WithName("CancelInvitation");
         access.MapPut("/admin/members/{memberId:guid}", async (Guid memberId, UpdateMemberRequest request, HttpContext context, IMemberDirectory members) =>
             Operation(await members.UpdateAsync(Actor(context), memberId, request))).AddEndpointFilter<CsrfFilter>()
-            .Produces(204).ProducesProblem(403).ProducesProblem(400).WithName("UpdateMember");
+            .Produces(204).ProducesProblem(403).ProducesProblem(400).ProducesProblem(409).WithName("UpdateMember");
         access.MapPut("/admin/members/{employeeId:guid}/manager", async (Guid employeeId, SetManagerRequest request, HttpContext context, IMemberDirectory members) =>
-            Operation(await members.AssignManagerAsync(Actor(context), employeeId, request.ManagerId))).AddEndpointFilter<CsrfFilter>()
-            .Produces(204).ProducesProblem(403).ProducesProblem(400).WithName("AssignManager");
+            Operation(await members.AssignManagerAsync(Actor(context), employeeId, request.ManagerId, request.ExpectedAccessVersion, request.CommandId))).AddEndpointFilter<CsrfFilter>()
+            .Produces(204).ProducesProblem(403).ProducesProblem(400).ProducesProblem(409).WithName("AssignManager");
     }
 
     private static IResult Operation(OperationResult result) => result.Succeeded ? Results.NoContent() :
-        Results.Problem(statusCode: result.Code == "forbidden" ? 403 : 400, title: result.Code);
+        Results.Problem(statusCode: result.Code switch
+        {
+            "forbidden" => 403,
+            "resend_limited" or "invitation_limit" => 429,
+            "stale_member" or "stale_invitation" or "idempotency_conflict" => 409,
+            _ => 400
+        }, title: result.Code);
 
     private static Member Actor(HttpContext context) => (Member)context.Items[typeof(Member)]!;
 

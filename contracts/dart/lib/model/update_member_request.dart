@@ -14,12 +14,18 @@ class UpdateMemberRequest {
   /// Returns a new [UpdateMemberRequest] instance.
   UpdateMemberRequest({
     required this.active,
+    this.commandId,
+    this.expectedAccessVersion,
     required this.isAccountAdministrator,
     required this.isEmployee,
     required this.isManager,
   });
 
   final bool active;
+
+  final String? commandId;
+
+  final int? expectedAccessVersion;
 
   final bool isAccountAdministrator;
 
@@ -30,6 +36,8 @@ class UpdateMemberRequest {
   @override
   bool operator ==(Object other) => identical(this, other) || other is UpdateMemberRequest &&
     other.active == active &&
+    other.commandId == commandId &&
+    other.expectedAccessVersion == expectedAccessVersion &&
     other.isAccountAdministrator == isAccountAdministrator &&
     other.isEmployee == isEmployee &&
     other.isManager == isManager;
@@ -38,16 +46,28 @@ class UpdateMemberRequest {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (active.hashCode) +
+    (commandId == null ? 0 : commandId!.hashCode) +
+    (expectedAccessVersion == null ? 0 : expectedAccessVersion!.hashCode) +
     (isAccountAdministrator.hashCode) +
     (isEmployee.hashCode) +
     (isManager.hashCode);
 
   @override
-  String toString() => 'UpdateMemberRequest[active=$active, isAccountAdministrator=$isAccountAdministrator, isEmployee=$isEmployee, isManager=$isManager]';
+  String toString() => 'UpdateMemberRequest[active=$active, commandId=$commandId, expectedAccessVersion=$expectedAccessVersion, isAccountAdministrator=$isAccountAdministrator, isEmployee=$isEmployee, isManager=$isManager]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'active'] = this.active;
+    if (this.commandId != null) {
+      json[r'commandId'] = this.commandId;
+    } else {
+      json[r'commandId'] = null;
+    }
+    if (this.expectedAccessVersion != null) {
+      json[r'expectedAccessVersion'] = this.expectedAccessVersion;
+    } else {
+      json[r'expectedAccessVersion'] = null;
+    }
       json[r'isAccountAdministrator'] = this.isAccountAdministrator;
       json[r'isEmployee'] = this.isEmployee;
       json[r'isManager'] = this.isManager;
@@ -58,11 +78,17 @@ class UpdateMemberRequest {
   /// properties have changed.
   UpdateMemberRequest copyWith({
     bool? active,
+    String? commandId,
+    bool commandIdSetToNull = false,
+    int? expectedAccessVersion,
+    bool expectedAccessVersionSetToNull = false,
     bool? isAccountAdministrator,
     bool? isEmployee,
     bool? isManager,
   }) => UpdateMemberRequest(
     active: active ?? this.active,
+    commandId: commandIdSetToNull ? null : commandId ?? this.commandId,
+    expectedAccessVersion: expectedAccessVersionSetToNull ? null : expectedAccessVersion ?? this.expectedAccessVersion,
     isAccountAdministrator: isAccountAdministrator ?? this.isAccountAdministrator,
     isEmployee: isEmployee ?? this.isEmployee,
     isManager: isManager ?? this.isManager,
@@ -92,6 +118,8 @@ class UpdateMemberRequest {
 
       return UpdateMemberRequest(
         active: mapValueOfType<bool>(json, r'active')!,
+        commandId: mapValueOfType<String>(json, r'commandId'),
+        expectedAccessVersion: mapValueOfType<int>(json, r'expectedAccessVersion'),
         isAccountAdministrator: mapValueOfType<bool>(json, r'isAccountAdministrator')!,
         isEmployee: mapValueOfType<bool>(json, r'isEmployee')!,
         isManager: mapValueOfType<bool>(json, r'isManager')!,

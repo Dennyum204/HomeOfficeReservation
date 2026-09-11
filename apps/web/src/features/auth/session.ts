@@ -11,7 +11,13 @@ export const EDITOR_KEY = "homeoffice:planning-editor";
 export const WORK_DRAFT_KEY = "homeoffice:work-drafts";
 export function clearPlanningSession() {
   try {
-    for (const key of [JOURNAL_KEY, OWNER_KEY, EDITOR_KEY, WORK_DRAFT_KEY])
+    for (const key of [
+      JOURNAL_KEY,
+      OWNER_KEY,
+      EDITOR_KEY,
+      WORK_DRAFT_KEY,
+      "homeoffice:admin-command",
+    ])
       sessionStorage.removeItem(key);
   } catch {
     /* No readable browser storage. */

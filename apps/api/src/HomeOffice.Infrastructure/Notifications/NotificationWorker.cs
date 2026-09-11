@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using HomeOffice.Infrastructure.Access;
 
 namespace HomeOffice.Infrastructure.Notifications;
 
@@ -14,6 +15,14 @@ public sealed class NotificationWorker(IServiceScopeFactory scopes, IOptions<Not
         {
             try
             {
+                for (var i = 0; i < 4; i++)
+                {
+                    await using var scope = scopes.CreateAsyncScope();
+                    var delivery = scope.ServiceProvider.GetRequiredService<InvitationDelivery>();
+                    var claim = await delivery.Claim(ct: stoppingToken);
+                    if (claim is null) break;
+                    await delivery.Process(claim, stoppingToken);
+                }
                 NotificationLease[] claims;
                 await using (var scope = scopes.CreateAsyncScope()) claims = await scope.ServiceProvider.GetRequiredService<NotificationProcessor>().ClaimOutbox(stoppingToken);
                 foreach (var claim in claims)

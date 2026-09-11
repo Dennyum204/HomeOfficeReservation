@@ -12,10 +12,11 @@ import type {
   SelectedDay,
 } from "../../../../../contracts/typescript";
 import { p } from "../../i18n/planning.pt-PT";
+import { appearance as v } from "../../i18n/appearance.pt-PT";
 import { w } from "../../i18n/work.pt-PT";
 import { planningApi } from "./api";
 import { dateKey, dayLabel, instantLabel } from "./dates";
-import { DayChip, Dialog } from "./shared";
+import { DayChip, Dialog, StatusBadge } from "./shared";
 import { readError } from "./errors";
 import { useRead } from "./useRead";
 import type { RunCommand } from "./useCommand";
@@ -98,6 +99,13 @@ export function RequestDetails(props: Props) {
     chosen.length > 0 && chosen.every((d) => d.decision === "Pending");
   const approvedSelection =
     chosen.length > 0 && chosen.every((d) => d.decision === "Approved");
+  const hasPending =
+    request.state !== "Draft" &&
+    request.days.some((d) => d.decision === "Pending");
+  const hasApproved =
+    request.state !== "Draft" &&
+    request.days.some((d) => d.decision === "Approved");
+  const selectable = (own || manager) && (hasPending || hasApproved);
   function openReview(
     action: Review["action"],
     title: string,
@@ -182,9 +190,9 @@ export function RequestDetails(props: Props) {
             {request.note || p.request}
           </h2>
         </div>
-        <span className={`status-badge ${request.state.toLowerCase()}`}>
+        <StatusBadge state={request.state}>
           {p.requestState[request.state]}
-        </span>
+        </StatusBadge>
       </div>
       <p className="request-counts">{requestCounts(request)}</p>
       <p className="muted">
@@ -201,23 +209,27 @@ export function RequestDetails(props: Props) {
         </button>
       )}
       <h3>{p.decisions}</h3>
-      <div className="button-row">
-        <button
-          disabled={disabled}
-          onClick={() =>
-            setSelection(
-              request.days
-                .filter((d) => d.decision === "Pending")
-                .map((d) => d.id),
-            )
-          }
-        >
-          {p.selectPending}
-        </button>
-        <button disabled={disabled} onClick={() => setSelection([])}>
-          {p.clearSelection}
-        </button>
-      </div>
+      {selectable && (
+        <div className="button-row">
+          {hasPending && (
+            <button
+              disabled={disabled}
+              onClick={() =>
+                setSelection(
+                  request.days
+                    .filter((d) => d.decision === "Pending")
+                    .map((d) => d.id),
+                )
+              }
+            >
+              {p.selectPending}
+            </button>
+          )}
+          <button disabled={disabled} onClick={() => setSelection([])}>
+            {p.clearSelection}
+          </button>
+        </div>
+      )}
       <div className="decision-days">
         {request.days.map((day) => (
           <article
@@ -226,21 +238,23 @@ export function RequestDetails(props: Props) {
             key={day.id}
           >
             <label className="check-label">
-              <input
-                type="checkbox"
-                aria-label={`${p.selected} ${dateKey(day.localDate)}`}
-                disabled={
-                  disabled || !["Pending", "Approved"].includes(day.decision)
-                }
-                checked={selection.includes(day.id)}
-                onChange={(event) =>
-                  setSelection((ids) =>
-                    event.target.checked
-                      ? [...ids, day.id]
-                      : ids.filter((id) => id !== day.id),
-                  )
-                }
-              />
+              {selectable && (
+                <input
+                  type="checkbox"
+                  aria-label={`${p.selected} ${dateKey(day.localDate)}`}
+                  disabled={
+                    disabled || !["Pending", "Approved"].includes(day.decision)
+                  }
+                  checked={selection.includes(day.id)}
+                  onChange={(event) =>
+                    setSelection((ids) =>
+                      event.target.checked
+                        ? [...ids, day.id]
+                        : ids.filter((id) => id !== day.id),
+                    )
+                  }
+                />
+              )}
               <strong>{dayLabel(dateKey(day.localDate))}</strong>
             </label>
             <DayChip
@@ -250,11 +264,13 @@ export function RequestDetails(props: Props) {
               cancel={day.cancel}
               plain
             />
-            <span className={`status-badge ${day.decision.toLowerCase()}`}>
+            <StatusBadge
+              state={request.state === "Draft" ? "Draft" : day.decision}
+            >
               {request.state === "Draft"
                 ? p.requestState.Draft
                 : p.decision[day.decision]}
-            </span>
+            </StatusBadge>
             {day.reason && <p>{day.reason}</p>}
             {day.decidedAt && (
               <p className="muted">
@@ -266,6 +282,10 @@ export function RequestDetails(props: Props) {
         ))}
       </div>
       <div className="decision-actions">
+        <h3>{v.actions}</h3>
+        {!selectable && request.state !== "Draft" && (
+          <p className="muted">{v.noActions}</p>
+        )}
         {own && request.state === "Draft" && (
           <>
             <button
@@ -285,64 +305,76 @@ export function RequestDetails(props: Props) {
         )}
         {request.state !== "Draft" && (
           <>
-            {(manager || own) && (
+            {selectable && (
               <p className="muted">
                 {p.selected}: {p.countDays(chosen.length)}
               </p>
             )}
             {own && (
               <>
-                <button
-                  disabled={disabled || !pendingSelection}
-                  onClick={() => openReview("withdraw", p.withdraw)}
-                >
-                  {p.withdraw}
-                </button>
-                <button
-                  disabled={disabled || !approvedSelection}
-                  onClick={() => props.onEditor("revision", request, chosen)}
-                >
-                  {p.proposeChange}
-                </button>
-                <button
-                  disabled={disabled || !approvedSelection}
-                  onClick={() =>
-                    props.onEditor("revision", request, chosen, true)
-                  }
-                >
-                  {p.proposeCancellation}
-                </button>
+                {hasPending && (
+                  <button
+                    disabled={disabled || !pendingSelection}
+                    onClick={() => openReview("withdraw", p.withdraw)}
+                  >
+                    {p.withdraw}
+                  </button>
+                )}
+                {hasApproved && (
+                  <>
+                    <button
+                      disabled={disabled || !approvedSelection}
+                      onClick={() =>
+                        props.onEditor("revision", request, chosen)
+                      }
+                    >
+                      {p.proposeChange}
+                    </button>
+                    <button
+                      disabled={disabled || !approvedSelection}
+                      onClick={() =>
+                        props.onEditor("revision", request, chosen, true)
+                      }
+                    >
+                      {p.proposeCancellation}
+                    </button>
+                  </>
+                )}
               </>
             )}
-            {manager && (
+            {manager && selectable && (
               <>
-                <label className="full-width">
-                  {p.reason}
-                  <textarea
-                    rows={2}
-                    maxLength={1000}
-                    value={reason}
-                    disabled={locked}
-                    onChange={(e) => {
-                      setReason(e.target.value);
-                      setError("");
-                    }}
-                  />
-                </label>
-                <span className="muted full-width">{p.reasonHelp}</span>
-                <button
-                  className="primary"
-                  disabled={disabled || !pendingSelection}
-                  onClick={() => openReview("approve", p.approve)}
-                >
-                  {p.approve}
-                </button>
-                <button
-                  disabled={disabled || !pendingSelection}
-                  onClick={() => openReview("reject", p.reject)}
-                >
-                  {p.reject}
-                </button>
+                {hasPending && (
+                  <>
+                    <label className="full-width">
+                      {p.reason}
+                      <textarea
+                        rows={2}
+                        maxLength={1000}
+                        value={reason}
+                        disabled={locked}
+                        onChange={(e) => {
+                          setReason(e.target.value);
+                          setError("");
+                        }}
+                      />
+                    </label>
+                    <span className="muted full-width">{p.reasonHelp}</span>
+                    <button
+                      className="primary"
+                      disabled={disabled || !pendingSelection}
+                      onClick={() => openReview("approve", p.approve)}
+                    >
+                      {p.approve}
+                    </button>
+                    <button
+                      disabled={disabled || !pendingSelection}
+                      onClick={() => openReview("reject", p.reject)}
+                    >
+                      {p.reject}
+                    </button>
+                  </>
+                )}
                 <button
                   disabled={disabled || !chosen.length}
                   onClick={() => props.onEditor("proposal", request, chosen)}
@@ -359,6 +391,7 @@ export function RequestDetails(props: Props) {
           {error}
         </p>
       )}
+      <h3>{v.history}</h3>
       <section className="context-section" aria-label={p.proposals}>
         <h3>{p.proposals}</h3>
         {proposals.loading && <p role="status">{p.loading}</p>}
@@ -443,20 +476,22 @@ export function RequestDetails(props: Props) {
             )}
           </article>
         ))}
-        <div className="button-row">
-          <button
-            disabled={proposalPage === 0 || proposals.loading}
-            onClick={() => setProposalPage((n) => n - 25)}
-          >
-            {p.previousPage}
-          </button>
-          <button
-            disabled={proposals.data?.nextOffset == null || proposals.loading}
-            onClick={() => setProposalPage(proposals.data!.nextOffset!)}
-          >
-            {p.nextPage}
-          </button>
-        </div>
+        {(proposalPage > 0 || proposals.data?.nextOffset != null) && (
+          <div className="button-row">
+            <button
+              disabled={proposalPage === 0 || proposals.loading}
+              onClick={() => setProposalPage((n) => n - 25)}
+            >
+              {p.previousPage}
+            </button>
+            <button
+              disabled={proposals.data?.nextOffset == null || proposals.loading}
+              onClick={() => setProposalPage(proposals.data!.nextOffset!)}
+            >
+              {p.nextPage}
+            </button>
+          </div>
+        )}
       </section>
       <section className="context-section" aria-label={p.comments}>
         <h3>{p.comments}</h3>
@@ -475,20 +510,22 @@ export function RequestDetails(props: Props) {
             {comment.proposalId && <span className="muted">{p.proposals}</span>}
           </article>
         ))}
-        <div className="button-row">
-          <button
-            disabled={!commentPage || comments.loading}
-            onClick={() => setCommentPage((n) => n - 25)}
-          >
-            {p.previousPage}
-          </button>
-          <button
-            disabled={comments.data?.nextOffset == null || comments.loading}
-            onClick={() => setCommentPage(comments.data!.nextOffset!)}
-          >
-            {p.nextPage}
-          </button>
-        </div>
+        {(commentPage > 0 || comments.data?.nextOffset != null) && (
+          <div className="button-row">
+            <button
+              disabled={!commentPage || comments.loading}
+              onClick={() => setCommentPage((n) => n - 25)}
+            >
+              {p.previousPage}
+            </button>
+            <button
+              disabled={comments.data?.nextOffset == null || comments.loading}
+              onClick={() => setCommentPage(comments.data!.nextOffset!)}
+            >
+              {p.nextPage}
+            </button>
+          </div>
+        )}
         <form
           onSubmit={(event) => {
             event.preventDefault();

@@ -14,7 +14,83 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'planning_fixture.dart';
 import 'auth_test.dart' show json;
 
+import 'package:homeoffice_mobile/theme/app_theme.dart';
+
 void main() {
+  for (final brightness in Brightness.values) {
+    testWidgets(
+      'calendar has labeled touch targets and accessible text contrast in $brightness',
+      (t) async {
+        await initializeDateFormatting('pt_PT');
+        t.view.physicalSize = const Size(411, 914);
+        t.view.devicePixelRatio = 1;
+        addTearDown(t.view.resetPhysicalSize);
+        addTearDown(t.view.resetDevicePixelRatio);
+        final semantics = t.ensureSemantics();
+        final f = PlanningFixture();
+        await f.start();
+        addTearDown(f.dispose);
+        await t.pumpWidget(
+          MaterialApp(
+            theme: appTheme(brightness),
+            locale: const Locale('pt'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: PlanningScreen(
+                controller: f.c,
+                requests: false,
+                onRequests: () {},
+              ),
+            ),
+          ),
+        );
+        await t.pumpAndSettle();
+        try {
+          await expectLater(t, meetsGuideline(androidTapTargetGuideline));
+          await expectLater(t, meetsGuideline(labeledTapTargetGuideline));
+          await expectLater(t, meetsGuideline(textContrastGuideline));
+        } finally {
+          semantics.dispose();
+        }
+        expect(t.takeException(), isNull);
+        await t.pumpWidget(const SizedBox.shrink());
+      },
+    );
+  }
+  testWidgets(
+    'returning to a scrolled calendar keeps legend state separate from scroll offset',
+    (t) async {
+      await initializeDateFormatting('pt_PT');
+      final f = PlanningFixture();
+      await f.start();
+      addTearDown(f.dispose);
+      final key = GlobalKey<WorkspaceScreenState>();
+      await t.pumpWidget(
+        MaterialApp(
+          theme: appTheme(Brightness.dark),
+          locale: const Locale('pt'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: WorkspaceScreen(key: key, repository: null, planning: f.c),
+        ),
+      );
+      await t.pumpAndSettle();
+      await t.drag(find.byType(ListView).first, const Offset(0, -300));
+      await t.pumpAndSettle();
+      await t.ensureVisible(find.byType(ExpansionTile));
+      await t.tap(find.byType(ExpansionTile));
+      await t.pumpAndSettle();
+      key.currentState!.selectSection(4);
+      await t.pumpAndSettle();
+      key.currentState!.selectSection(0);
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull);
+      expect(find.byType(ExpansionTile), findsOneWidget);
+      expect(f.writes, isEmpty);
+      await t.pumpWidget(const SizedBox.shrink());
+    },
+  );
   testWidgets(
     'notification duplicate taps fetch authorized current detail once and retain no push business data',
     (tester) async {
@@ -87,9 +163,12 @@ void main() {
       f.dispose();
     },
   );
-  for (final scale in [1.0, 2.0]) {
+  for (final (scale, brightness) in [
+    for (final b in Brightness.values)
+      for (final s in [1.0, 2.0]) (s, b),
+  ]) {
     testWidgets(
-      'calendar, editor and frozen review fit 320px at text scale $scale',
+      'calendar, editor and frozen review fit 320px at text scale $scale in $brightness',
       (tester) async {
         await initializeDateFormatting('pt_PT');
         tester.view.physicalSize = const Size(320, 700);
@@ -101,6 +180,7 @@ void main() {
         addTearDown(f.dispose);
         await tester.pumpWidget(
           MaterialApp(
+            theme: appTheme(brightness),
             locale: const Locale('pt'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

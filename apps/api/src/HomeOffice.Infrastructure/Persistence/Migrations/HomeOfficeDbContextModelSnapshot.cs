@@ -22,11 +22,181 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HomeOffice.Domain.Access.AccessAudit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<Guid?>("ActorMemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AfterJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("BeforeJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId", "ActorMemberId");
+
+                    b.HasIndex("OrganizationId", "MemberId");
+
+                    b.HasIndex("OrganizationId", "CreatedAt", "Id");
+
+                    b.ToTable("AccessAudits", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_AccessAudit_Source", "(\"Source\" IN ('operator', 'anonymous', 'worker') AND \"ActorMemberId\" IS NULL) OR (\"Source\" = 'administrator' AND \"ActorMemberId\" IS NOT NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Access.AccessInvitation", b =>
+                {
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("AcceptedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("CodeExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreationFingerprint")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset?>("DeliveredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DeliveryState")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<DateTimeOffset>("LastRequestedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("LeaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("LeaseUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("NextAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProtectedCode")
+                        .HasMaxLength(16384)
+                        .HasColumnType("character varying(16384)");
+
+                    b.Property<int>("RequestsInWindow")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("WindowStartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("MemberId");
+
+                    b.HasIndex("DeliveryState", "NextAttemptAt");
+
+                    b.HasIndex("OrganizationId", "CreatedBy");
+
+                    b.HasIndex("OrganizationId", "MemberId");
+
+                    b.ToTable("AccessInvitations", (string)null);
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Access.InvitationCommand", b =>
+                {
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ActorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CommandId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("ExpectedVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Operation")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.HasKey("OrganizationId", "ActorId", "CommandId");
+
+                    b.HasIndex("OrganizationId", "MemberId");
+
+                    b.ToTable("InvitationCommands", (string)null);
+                });
+
             modelBuilder.Entity("HomeOffice.Domain.Access.Member", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<long>("AccessVersion")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
@@ -1164,6 +1334,55 @@ namespace HomeOffice.Infrastructure.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Access.AccessAudit", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "ActorMemberId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "MemberId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Access.AccessInvitation", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "CreatedBy")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "MemberId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeOffice.Domain.Access.InvitationCommand", b =>
+                {
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "ActorId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomeOffice.Domain.Access.Member", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId", "MemberId")
+                        .HasPrincipalKey("OrganizationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HomeOffice.Domain.Access.Member", b =>

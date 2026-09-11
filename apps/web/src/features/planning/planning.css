@@ -58,7 +58,7 @@
   max-width: 800px;
   margin-bottom: 24px;
   line-height: 1.6;
-  color: #586d60;
+  color: var(--muted-foreground);
 }
 .eyebrow {
   margin-bottom: 10px;
@@ -66,28 +66,28 @@
 .planning-workspace button,
 .planning-dialog button {
   min-height: 42px;
-  border: 1px solid #b9c8bb;
+  border: 1px solid var(--input);
   border-radius: 8px;
-  color: #244c3c;
-  background: white;
+  color: var(--foreground);
+  background: var(--surface);
   padding: 9px 13px;
   font-size: 13px;
   line-height: 1.35;
 }
 .planning-workspace button:hover:not(:disabled),
 .planning-dialog button:hover:not(:disabled) {
-  background: #eaf1e9;
-  border-color: #5d8069;
+  background: var(--secondary);
+  border-color: var(--border);
 }
 .planning-workspace .primary,
 .planning-dialog .primary {
-  color: white;
-  background: #285842;
-  border-color: #285842;
+  color: var(--primary-foreground);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 .planning-workspace .primary:hover:not(:disabled),
 .planning-dialog .primary:hover:not(:disabled) {
-  background: #173e2d;
+  background: var(--primary);
 }
 .planning-workspace button:disabled,
 .planning-dialog button:disabled {
@@ -97,14 +97,14 @@
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid #b26827;
+  outline: 3px solid var(--ring);
   outline-offset: 2px;
 }
 .planning-workspace label,
 .planning-dialog label {
   display: grid;
   gap: 7px;
-  color: #365846;
+  color: var(--foreground);
   font-size: 13px;
   font-weight: 600;
 }
@@ -118,10 +118,10 @@ textarea:focus-visible {
   width: 100%;
   min-height: 42px;
   padding: 10px;
-  background: white;
-  border: 1px solid #9fb3a2;
+  background: var(--surface);
+  border: 1px solid var(--input);
   border-radius: 7px;
-  color: #203d38;
+  color: var(--foreground);
   font: inherit;
   font-weight: 400;
 }
@@ -172,8 +172,8 @@ textarea:focus-visible {
 }
 .notice {
   padding: 14px 18px;
-  border: 1px solid #d8dfd3;
-  background: #f1f4ed;
+  border: 1px solid var(--border);
+  background: var(--secondary);
   border-radius: 10px;
   font-size: 14px;
   line-height: 1.6;
@@ -186,23 +186,23 @@ textarea:focus-visible {
   margin: 8px 0 0 12px;
 }
 .notice.success {
-  background: #e9f3e8;
-  color: #234d34;
-  border-color: #8eb195;
+  background: var(--secondary);
+  color: var(--foreground);
+  border-color: var(--border);
 }
 .notice.warning {
-  background: #fff5dd;
-  color: #654711;
-  border-color: #dbba74;
+  background: var(--pending-surface);
+  color: var(--pending);
+  border-color: var(--border);
 }
 .notice.error {
-  background: #fff0eb;
-  color: #843f23;
-  border-color: #dca18a;
+  background: var(--danger-surface);
+  color: var(--danger);
+  border-color: var(--border);
 }
 .loading-line {
   font-size: 13px;
-  color: #63725b;
+  color: var(--muted-foreground);
 }
 .period-summary {
   margin-bottom: 24px;
@@ -213,21 +213,21 @@ textarea:focus-visible {
   flex-wrap: wrap;
   gap: 8px;
   font-size: 12px;
-  color: #4f6657;
+  color: var(--muted-foreground);
   margin-bottom: 12px;
 }
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  background: white;
-  border: 1px solid #dce5d9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 17px 0;
   margin-bottom: 9px;
 }
 .summary-item {
   padding: 0 18px;
-  border-right: 1px solid #e4e9df;
+  border-right: 1px solid var(--border);
   display: grid;
   gap: 6px;
 }
@@ -237,10 +237,10 @@ textarea:focus-visible {
 .summary-item strong {
   font-size: 28px;
   font-weight: 550;
-  color: #285640;
+  color: var(--foreground);
 }
 .summary-item span {
-  color: #58705c;
+  color: var(--muted-foreground);
   font-size: 11px;
   line-height: 1.4;
 }
@@ -255,9 +255,9 @@ textarea:focus-visible {
 .request-list,
 .request-detail,
 .settings-card {
-  border: 1px solid #dce5d9;
+  border: 1px solid var(--border);
   border-radius: 14px;
-  background: white;
+  background: var(--surface);
   min-width: 0;
 }
 .calendar-toolbar {
@@ -285,7 +285,7 @@ textarea:focus-visible {
 }
 .segmented {
   display: inline-flex;
-  background: #f3f5ef;
+  background: var(--secondary);
   border-radius: 9px;
   padding: 3px;
 }
@@ -296,9 +296,9 @@ textarea:focus-visible {
   padding: 6px 11px;
 }
 .segmented button[aria-pressed="true"] {
-  border-color: #c9d5c5;
-  background: white;
-  box-shadow: 0 1px 3px #203d3812;
+  border-color: var(--border);
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgb(20 20 19 / 0.12);
 }
 .calendar-selection {
   padding: 0 18px 16px;
@@ -310,13 +310,13 @@ textarea:focus-visible {
 .calendar-selection > span {
   font-size: 11px;
   line-height: 1.6;
-  color: #536954;
+  color: var(--muted-foreground);
   flex: 1;
   min-width: 120px;
 }
 .calendar-selection [aria-pressed="true"] {
-  background: #e6efdf;
-  border-color: #759669;
+  background: var(--accent);
+  border-color: var(--border);
 }
 .weekday-row,
 .calendar-week {
@@ -324,20 +324,20 @@ textarea:focus-visible {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 .weekday-row {
-  border-top: 1px solid #e1e7dd;
-  background: #f8f9f5;
+  border-top: 1px solid var(--border);
+  background: var(--secondary);
 }
 .weekday-row > div {
   padding: 12px 6px;
   font-size: 11px;
   font-weight: 600;
-  color: #61735e;
+  color: var(--muted-foreground);
   text-align: center;
 }
 .calendar-week [role="gridcell"] {
   min-width: 0;
-  border-top: 1px solid #e8ece3;
-  border-right: 1px solid #e8ece3;
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 .calendar-week [role="gridcell"]:last-child {
   border-right: 0;
@@ -354,11 +354,11 @@ textarea:focus-visible {
   flex-direction: column;
   align-items: stretch;
   gap: 5px;
-  color: #2f4e3c;
+  color: var(--foreground);
 }
 .calendar-day.outside {
-  background: #fafbf8;
-  color: #768171;
+  background: var(--secondary);
+  color: var(--muted-foreground);
 }
 .calendar-day.outside .day-chip {
   opacity: 0.65;
@@ -369,20 +369,20 @@ textarea:focus-visible {
   margin-bottom: 3px;
 }
 .calendar-day[aria-current="date"] .day-number {
-  background: #285842;
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
   align-self: start;
   border-radius: 6px;
 }
 .calendar-day.active {
-  box-shadow: inset 0 0 0 2px #789a70;
-  background: #f1f6eb;
+  box-shadow: inset 0 0 0 2px var(--ring);
+  background: var(--accent);
 }
 .calendar-day[aria-pressed="true"] {
-  background: #e8f1df;
+  background: var(--accent);
 }
 .calendar-day:focus-visible {
-  outline: 3px solid #b26827;
+  outline: 3px solid var(--ring);
   outline-offset: -3px;
   position: relative;
   z-index: 1;
@@ -400,8 +400,8 @@ textarea:focus-visible {
   align-items: start;
   gap: 4px;
   overflow-wrap: anywhere;
-  color: #244d36;
-  background: #e4f1dd;
+  color: var(--foreground);
+  background: var(--secondary);
 }
 .day-chip > span:first-child {
   flex-shrink: 0;
@@ -409,22 +409,22 @@ textarea:focus-visible {
   line-height: 1.2;
 }
 .day-chip.office {
-  background: #e9f0f6;
-  color: #355e7a;
+  background: var(--info-surface);
+  color: var(--info);
 }
 .day-chip.pattern {
-  background: #f4f5f0;
-  color: #647361;
-  border: 1px dashed #c1cbb9;
+  background: var(--secondary);
+  color: var(--muted-foreground);
+  border: 1px dashed var(--border);
 }
 .day-chip.pending {
-  background: #fff3d7;
-  color: #77540d;
-  border: 1px solid #d5b66c;
+  background: var(--pending-surface);
+  color: var(--pending);
+  border: 1px solid var(--border);
 }
 .day-chip.away {
-  background: #eee9f3;
-  color: #69557c;
+  background: var(--secondary);
+  color: var(--foreground);
 }
 .calendar-legend {
   display: flex;
@@ -432,7 +432,7 @@ textarea:focus-visible {
   flex-wrap: wrap;
   gap: 12px;
   padding: 16px;
-  color: #52664f;
+  color: var(--muted-foreground);
   font-size: 10px;
   line-height: 1.5;
 }
@@ -441,12 +441,12 @@ textarea:focus-visible {
 }
 .legend-pattern {
   padding: 3px 5px;
-  border: 1px dashed #b8c5ae;
+  border: 1px dashed var(--border);
   border-radius: 4px;
 }
 .day-detail {
   padding: 23px 20px;
-  background: #f9faf6;
+  background: var(--secondary);
 }
 .day-detail h2 {
   font-size: 21px;
@@ -471,7 +471,7 @@ textarea:focus-visible {
 }
 .day-detail hr {
   border: 0;
-  border-top: 1px solid #dfe6d9;
+  border-top: 1px solid var(--border);
   margin: 24px 0;
 }
 .pending-detail {
@@ -480,11 +480,11 @@ textarea:focus-visible {
   margin-bottom: 14px;
 }
 .detail-note {
-  background: #eef2e7;
+  background: var(--secondary);
   padding: 13px;
   border-radius: 8px;
   font-size: 12px;
-  color: #4c6548;
+  color: var(--foreground);
   line-height: 1.7;
   margin: 20px 0 0;
 }
@@ -512,13 +512,13 @@ textarea:focus-visible {
   width: 100%;
   text-align: left;
   padding: 18px 14px;
-  border: 1px solid #e2e8dc;
+  border: 1px solid var(--border);
   margin-bottom: 12px;
   overflow-wrap: anywhere;
 }
 .request-list-item.selected {
-  background: #f0f5e9;
-  border-color: #769571;
+  background: var(--accent);
+  border-color: var(--border);
 }
 .request-list-item > strong {
   font-size: 15px;
@@ -527,36 +527,36 @@ textarea:focus-visible {
 .request-list-item > span:not(.status-badge),
 .request-list-item small {
   font-size: 11px;
-  color: #60725a;
+  color: var(--muted-foreground);
 }
 .status-badge {
   border-radius: 5px;
   padding: 4px 7px;
   display: inline-block;
-  background: #edf1e8;
-  color: #506448;
+  background: var(--secondary);
+  color: var(--foreground);
   font-size: 10px;
   font-weight: 650;
   width: fit-content;
 }
 .status-badge.submitted,
 .status-badge.pending {
-  background: #fff2d5;
-  color: #76530f;
+  background: var(--pending-surface);
+  color: var(--pending);
 }
 .status-badge.approved {
-  background: #dcefd8;
-  color: #335b2f;
+  background: var(--secondary);
+  color: var(--foreground);
 }
 .status-badge.rejected {
-  background: #f7e9e2;
-  color: #8a4b2c;
+  background: var(--danger-surface);
+  color: var(--danger);
 }
 .status-badge.withdrawn,
 .status-badge.cancelled,
 .status-badge.superseded {
-  background: #eee;
-  color: #626c64;
+  background: var(--secondary);
+  color: var(--muted-foreground);
 }
 .detail-heading h2 {
   font-size: 23px;
@@ -570,7 +570,7 @@ textarea:focus-visible {
   margin-top: 24px;
 }
 .request-counts {
-  color: #416343;
+  color: var(--foreground);
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 10px;
@@ -581,8 +581,8 @@ textarea:focus-visible {
   margin: 18px 0;
 }
 .decision-day {
-  background: #fafbf8;
-  border: 1px solid #e3e9de;
+  background: var(--secondary);
+  border: 1px solid var(--border);
   padding: 14px;
   border-radius: 8px;
   display: flex;
@@ -604,7 +604,7 @@ textarea:focus-visible {
   min-height: 18px;
   height: 18px;
   flex-shrink: 0;
-  accent-color: #285842;
+  accent-color: var(--primary);
 }
 .decision-day .check-label {
   flex: 1;
@@ -629,7 +629,7 @@ textarea:focus-visible {
   flex-basis: 100%;
 }
 .context-section {
-  border-top: 1px solid #e2e8dc;
+  border-top: 1px solid var(--border);
   margin-top: 24px;
   padding-top: 2px;
 }
@@ -654,9 +654,9 @@ textarea:focus-visible {
   font-size: 11px;
 }
 .proposal-card {
-  border: 1px solid #d9dfcf;
+  border: 1px solid var(--border);
   border-radius: 9px;
-  background: #f7f8f1;
+  background: var(--secondary);
   padding: 18px;
   margin-bottom: 14px;
 }
@@ -677,7 +677,7 @@ textarea:focus-visible {
   margin: 4px 8px 4px 0;
 }
 .comment {
-  border-bottom: 1px solid #e7ebdf;
+  border-bottom: 1px solid var(--border);
   padding: 15px 0;
 }
 .comment strong {
@@ -685,7 +685,7 @@ textarea:focus-visible {
 }
 .comment time {
   display: block;
-  color: #66755c;
+  color: var(--muted-foreground);
   font-size: 10px;
   margin-top: 6px;
 }
@@ -706,7 +706,7 @@ textarea:focus-visible {
 }
 .empty-state {
   padding: 24px 0;
-  color: #63745b;
+  color: var(--muted-foreground);
   line-height: 1.7;
 }
 .planning-dialog {
@@ -717,14 +717,14 @@ textarea:focus-visible {
   overscroll-behavior: contain;
   width: min(760px, calc(100% - 32px));
   max-height: calc(100dvh - 48px);
-  border: 1px solid #a7b69e;
+  border: 1px solid var(--border);
   border-radius: 18px;
   padding: 28px;
-  color: #203d38;
-  box-shadow: 0 20px 90px #102b3233;
+  color: var(--foreground);
+  box-shadow: 0 20px 90px rgb(20 20 19 / 0.12);
 }
 .planning-dialog::backdrop {
-  background: #122d285e;
+  background: rgb(20 20 19 / 0.55);
 }
 .dialog-heading {
   display: flex;
@@ -772,8 +772,8 @@ textarea:focus-visible {
   align-items: center;
   gap: 10px;
   padding: 16px;
-  border: 1px solid #d9e2d2;
-  background: #f8faf4;
+  border: 1px solid var(--border);
+  background: var(--secondary);
   border-radius: 9px;
 }
 .editor-day > strong {
@@ -788,10 +788,10 @@ textarea:focus-visible {
 }
 .range-preview,
 .affected-summary {
-  border: 1px solid #d2ddc5;
+  border: 1px solid var(--border);
   padding: 16px;
   border-radius: 8px;
-  background: #f3f7ec;
+  background: var(--secondary);
   font-size: 13px;
 }
 .range-preview ul {
@@ -822,21 +822,21 @@ textarea:focus-visible {
   flex-wrap: wrap;
   gap: 8px;
   padding: 12px;
-  background: #f1f5ec;
+  background: var(--secondary);
   border-radius: 7px;
   font-size: 13px;
 }
 .planning-dialog blockquote {
   margin: 18px 0;
   padding-left: 16px;
-  border-left: 3px solid #aabd99;
+  border-left: 3px solid var(--border);
   font-size: 14px;
   line-height: 1.7;
   white-space: pre-wrap;
 }
 .dialog-actions {
   justify-content: flex-end;
-  border-top: 1px solid #dfe6d7;
+  border-top: 1px solid var(--border);
   margin-top: 24px;
   padding-top: 18px;
 }

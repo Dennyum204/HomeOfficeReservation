@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:homeoffice_api/api.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../../theme/components.dart';
 import '../planning/planning_controller.dart';
 import '../planning/planning_dates.dart';
 import '../planning/planning_repository.dart';
@@ -42,7 +43,7 @@ class WorkScreen extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(16),
           children: [
-            Text(s.workTitle, style: Theme.of(context).textTheme.headlineSmall),
+            SectionHeading(s.workTitle),
             PlanningEmployeePicker(c, work: true),
             Wrap(
               spacing: 8,

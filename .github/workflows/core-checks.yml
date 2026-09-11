@@ -15,6 +15,33 @@ env:
   HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
 
 jobs:
+  nas-preparation:
+    name: nas-preparation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          # PR checkout normally uses a synthetic merge; archive labels must identify the actual head.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Exact isolated NAS stack on Linux amd64; no remote deployment
+        run: sudo -E python3 infra/nas/verify.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ho012-nas-images-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ho012-nas-images/
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ho012-nas-runner-evidence
+          path: |
+            ho012-nas-evidence.json
+            ho012-nas-runner-metrics.txt
+          if-no-files-found: error
+          retention-days: 14
+
   backend-contracts:
     name: backend-contracts
     runs-on: ubuntu-24.04
@@ -119,7 +146,7 @@ jobs:
         working-directory: apps/mobile
       - name: Private signing path with disposable key; no APK publication or installation
         run: python3 scripts/check_android_signing.py
-      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
+      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features lib/theme test tool integration_test test_driver
         working-directory: apps/mobile
       - run: flutter analyze && flutter test
         working-directory: apps/mobile
@@ -154,6 +181,7 @@ jobs:
             sleep 1
           done
           test "$ready" = 1
+          python3 scripts/prepare_invitation_test.py --base-url http://localhost:5080 --accounts "$RUNNER_TEMP/identity/accounts.json" --output "$RUNNER_TEMP/identity/client-test.json"
       - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 35
@@ -162,9 +190,10 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
+            python3 scripts/wait_android_api.py --serial emulator-5554 --port 5080
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/notifications_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
-            cd apps/mobile && flutter drive --driver=test_driver/planning.dart --target=integration_test/planning_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
+            cd apps/mobile && flutter drive --driver=test_driver/planning.dart --target=integration_test/planning_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define=TEST_EXPIRE_PLANNING_WRITE=true --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
             cd apps/mobile && flutter drive --driver=test_driver/planning.dart --target=integration_test/work_test.dart --no-dds -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"
             adb shell cmd alarm set-timezone Europe/Lisbon
             cd apps/mobile && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/date_timezone_test.dart --no-dds -d emulator-5554 --dart-define=TEST_DEVICE_ZONE=Europe/Lisbon --dart-define=API_BASE_URL=http://10.0.2.2:5080 --dart-define-from-file="$RUNNER_TEMP/identity/client-test.json"

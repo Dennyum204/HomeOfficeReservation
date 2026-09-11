@@ -133,9 +133,30 @@ class PlanningRepository {
   });
 
   Future<MutationReceipt> execute(PlanningCommand command) async {
-    // Renew only through an idempotent read; never retry a write with a new key.
-    final member = await read(() => auth.access.getCurrentMember());
-    if (member?.memberId != command.actor) throw ApiException(401, '');
+    final generation = auth.sessionGeneration;
+    Future<void> verifyActor() async {
+      if (generation != auth.sessionGeneration) throw ApiException(401, '');
+      final member = await read(() => auth.access.getCurrentMember());
+      if (generation != auth.sessionGeneration ||
+          member?.memberId != command.actor) {
+        throw ApiException(401, '');
+      }
+    }
+
+    await verifyActor();
+    try {
+      return await _send(command);
+    } on ApiException catch (error) {
+      // A token can expire after preflight. Only an explicit server 401 permits
+      // one replay, after revalidating the same session/actor through a read.
+      // The immutable body/key are reused. Never retry 403, transport or 5xx here.
+      if (error.code != 401 || error.innerException != null) rethrow;
+      await verifyActor();
+      return _send(command);
+    }
+  }
+
+  Future<MutationReceipt> _send(PlanningCommand command) async {
     final body = jsonDecode(command.body);
     final employee = command.employee, key = command.key;
     final result = await (switch (command.operation) {

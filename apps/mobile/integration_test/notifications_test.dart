@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'session_helpers.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -110,13 +112,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(const Key('submit')));
       await tester.tap(find.byKey(const Key('submit')));
-      for (
-        var i = 0;
-        i < 40 && find.text('Terminar sessão').evaluate().isEmpty;
-        i++
-      ) {
-        await tester.pump(const Duration(milliseconds: 500));
-      }
+      await openAccountSettings(tester);
       expect(find.text('Terminar sessão'), findsOneWidget);
       final auth = tester
           .widget<AuthScreen>(find.byType(AuthScreen))
@@ -201,17 +197,15 @@ void main() {
       }
       expect(find.byKey(const Key('request-counts')), findsOneWidget);
       expect(find.text('Android notification integration'), findsOneWidget);
-      await tester.tap(find.text('Terminar sessão'));
-      // Native secure-storage cleanup can finish after animation frames settle.
-      // Wait for the observable logout result, then still require private state to be absent.
+      await signOut(tester);
+      // Platform secure-storage/push cleanup can finish after the last scheduled frame.
       for (
         var i = 0;
-        i < 100 && find.text('Entre no seu espaço').evaluate().isEmpty;
+        i < 40 && find.text('Entre no seu espaço').evaluate().isEmpty;
         i++
       ) {
-        await tester.pump(const Duration(milliseconds: 200));
+        await tester.pump(const Duration(milliseconds: 500));
       }
-      await tester.pumpAndSettle();
       expect(find.byKey(const Key('request-counts')), findsNothing);
       expect(find.text('Entre no seu espaço'), findsOneWidget);
       expect(await SecureTokenStore(ApiSettings.baseUrl).read(), isNull);

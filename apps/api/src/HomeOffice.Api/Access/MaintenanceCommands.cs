@@ -1,6 +1,7 @@
 using System.Text.Json;
-using HomeOffice.Application.Access;
+using System.Text.Json.Serialization;
 using HomeOffice.Domain.Access;
+using HomeOffice.Infrastructure.Access;
 using HomeOffice.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +11,17 @@ namespace HomeOffice.Api.Access;
 
 public sealed record ProvisionedAccount(string Email, string Password, string DisplayName);
 public sealed record DevelopmentAccounts(string OrganizationName, ProvisionedAccount Admin, ProvisionedAccount Manager, ProvisionedAccount Employee);
-public sealed record BootstrapAdmin(string OrganizationName, string Email, string DisplayName);
 
 public static class MaintenanceCommands
 {
-    public static async Task<bool> ExecuteAsync(string[] args, WebApplication app)
+    public static Task<bool> ExecuteAsync(string[] args, WebApplication app) => ExecuteAsync(args, app.Services, app.Environment);
+
+    public static async Task<bool> ExecuteAsync(string[] args, IServiceProvider services, IHostEnvironment environment)
     {
-        if (!args.Any(a => a is "--migrate" or "--provision-dev" or "--bootstrap-admin")) return false;
-        await using var scope = app.Services.CreateAsyncScope();
+        var commands = args.Where(a => a is "--migrate" or "--provision-dev" or "--bootstrap-admin" or "--bootstrap-owner" or "--enable-admin-employee").ToArray();
+        if (commands.Length == 0) return false;
+        if (commands.Length != 1) throw new InvalidOperationException("Run exactly one maintenance command at a time.");
+        await using var scope = services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<HomeOfficeDbContext>();
         if (args.Contains("--migrate"))
         {
@@ -25,18 +29,18 @@ public static class MaintenanceCommands
             Console.WriteLine("Explicit migrations applied. No accounts provisioned.");
             return true;
         }
-        app.Services.GetService<IStartupValidator>()?.Validate();
+        services.GetService<IStartupValidator>()?.Validate();
         var users = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         var dev = args.Contains("--provision-dev");
-        if (dev && !app.Environment.IsDevelopment()) throw new InvalidOperationException("Synthetic provisioning is Development-only.");
-        var flag = dev ? "--provision-dev" : "--bootstrap-admin";
+        if (dev && !environment.IsDevelopment()) throw new InvalidOperationException("Synthetic provisioning is Development-only.");
+        var flag = commands[0];
         var index = Array.IndexOf(args, flag);
         if (index + 1 >= args.Length) throw new InvalidOperationException("Supply the private provisioning JSON file path.");
         var json = await File.ReadAllTextAsync(args[index + 1]);
         var jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-        await using var transaction = await db.Database.BeginTransactionAsync();
         if (dev)
         {
+            await using var transaction = await db.Database.BeginTransactionAsync();
             var accounts = JsonSerializer.Deserialize<DevelopmentAccounts>(json, jsonOptions) ?? throw new InvalidOperationException("Invalid development accounts file.");
             var organization = await db.Organizations.SingleOrDefaultAsync(o => o.Name == accounts.OrganizationName);
             if (organization is null) { organization = new() { Name = accounts.OrganizationName }; db.Organizations.Add(organization); await db.SaveChangesAsync(); }
@@ -51,21 +55,19 @@ public static class MaintenanceCommands
         }
         else
         {
-            // Server operator only, never HTTP. Refuse to add an administrator to an existing organization.
-            var input = JsonSerializer.Deserialize<BootstrapAdmin>(json, jsonOptions) ?? throw new InvalidOperationException("Invalid bootstrap file.");
-            if (string.IsNullOrWhiteSpace(input.OrganizationName) || string.IsNullOrWhiteSpace(input.DisplayName))
-                throw new InvalidOperationException("Organization and display name are required.");
-            if (await db.Organizations.AnyAsync(o => o.Name == input.OrganizationName))
-                throw new InvalidOperationException("Organization already exists. Use its authenticated account administrator.");
-            var organization = new Organization { Name = input.OrganizationName };
-            var user = new IdentityUser { Email = input.Email, UserName = input.Email, LockoutEnabled = true };
-            Ensure(await users.CreateAsync(user));
-            db.Organizations.Add(organization);
-            db.Members.Add(new Member { OrganizationId = organization.Id, IdentityUserId = user.Id, DisplayName = input.DisplayName, IsAccountAdministrator = true });
-            await db.SaveChangesAsync();
-            await transaction.CommitAsync();
-            await scope.ServiceProvider.GetRequiredService<IAccountEmail>().SendAsync(input.Email, "activate", await users.GenerateEmailConfirmationTokenAsync(user));
-            Console.WriteLine("Initial administrator provisioned without a password. Complete activation using the configured delivery channel.");
+            var provisioner = scope.ServiceProvider.GetRequiredService<OwnerProvisioner>();
+            // New commands reject misspelled/unrecognized fields. The legacy input shape is unchanged.
+            if (flag != "--bootstrap-admin") jsonOptions.UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow;
+            OperatorReceipt receipt;
+            if (flag == "--enable-admin-employee")
+                receipt = await provisioner.EnableEmployeeAsync(JsonSerializer.Deserialize<EnableAdminEmployee>(json, jsonOptions)
+                    ?? throw new InvalidOperationException("Invalid operator file."));
+            else
+                receipt = await provisioner.BootstrapAsync(JsonSerializer.Deserialize<BootstrapAccount>(json, jsonOptions)
+                    ?? throw new InvalidOperationException("Invalid bootstrap file."), owner: flag == "--bootstrap-owner");
+            // IDs and outcome only: never print the private input, delivery address, code or password.
+            Console.WriteLine($"{receipt.Code}: organizationId={receipt.OrganizationId}; memberId={receipt.MemberId}; auditId={receipt.AuditId}");
+            if (receipt.Code == "provisioned") Console.WriteLine("Account has no password. Complete Identity activation using the configured delivery channel.");
         }
         return true;
     }

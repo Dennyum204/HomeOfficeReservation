@@ -1,5 +1,7 @@
 # ADR-013 — Preparação do piloto Web/Android
 
+> Atualização 2026-09-11: alternativa histórica não aprovada. [ADR-018](ADR-018-nas-trial.md) seleciona preparar ensaio NAS, sem instalação/medições. HO-013/014/015/016 foram entretanto integrados; lacunas abaixo descrevem a inspeção de 2026-09-10.
+
 Data: 2026-09-10. Estado: **proposta técnica implementada para ensaio; contratação e deployment por aprovar**.
 
 HO-011 foi integrado no PR #36. O piloto terá dois utilizadores, aplicação monolítica, worker no mesmo processo e PostgreSQL. As decisões anteriores de Identity, notificações e adiamento de iOS/Outlook mantêm-se.

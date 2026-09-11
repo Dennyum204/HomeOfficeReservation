@@ -21,10 +21,10 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014, HO-015 |
-| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Planeado | HO-003, HO-004 |
-| HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Planeado | HO-003, HO-007 |
-| HO-015 | Administração Web de membros e convites | v1.0 | web | Planeado | HO-011, HO-013, HO-014 |
-| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Planeado | HO-011 |
+| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
+| HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Concluído | HO-003, HO-007 |
+| HO-015 | Administração Web de membros e convites | v1.0 | web | Concluído | HO-011, HO-013, HO-014 |
+| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Concluído | HO-011, HO-015 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -365,7 +365,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/37
 
 ## HO-013 — Titular administrador e colaborador: bootstrap seguro
 
-Release: v1.0 · Área: backend · Estado: Planeado
+Release: v1.0 · Área: backend · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -383,11 +383,11 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/38
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/42
 
 ## HO-014 — Convites de acesso: estado, entrega e revogação
 
-Release: v1.0 · Área: backend · Estado: Planeado
+Release: v1.0 · Área: backend · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -406,11 +406,11 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/39
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/43
 
 ## HO-015 — Administração Web de membros e convites
 
-Release: v1.0 · Área: web · Estado: Planeado
+Release: v1.0 · Área: web · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -428,30 +428,32 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/40
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/44
 
 ## HO-016 — Tema Claude + e hierarquia visual Web/Android
 
-Release: ui-refresh · Área: fullstack · Estado: Planeado
+Release: ui-refresh · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-011
+Dependências: HO-011, HO-015
 
 Funcionalidades: FEAT-025
 
 Critérios de aceitação:
 
-- Usar como referência escolhida Claude + em https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application; inspecionar tokens e condições de utilização quando a tarefa for selecionada, sem inventar valores ou impor uma nova biblioteca de UI.
-- Web preserva a estética neutra com tema claro/escuro e preferência do sistema; modais e pedidos distinguem secções, contexto, resumo e ações com hierarquia consistente.
-- Android partilha a identidade visual com cartões simples, badges legíveis e animações discretas que respeitam redução de movimento; manter strings externalizadas.
-- Local de trabalho e estado de aprovação são representados separadamente com rótulos/ícones; não depender apenas de cor nem ocultar plano confirmado, pedido pendente ou conflito.
-- Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.
-- Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306.
+- Inspecionar tokens reais e condições de utilização do Claude + de Luis Llanes, referência escolhida no tweakcn; adaptar aos componentes existentes sem nova biblioteca de UI.
+- Web suporta claro, escuro e sistema; cartões neutros, cores semânticas consistentes e hierarquia de contexto, seleção por intervalo/dias, resumo, comentário, ações e histórico; consistência em todas as áreas incluindo Administração.
+- Android partilha tokens e componentes reutilizáveis, strings externalizadas, texto ampliado, alvos táteis adequados e animações discretas com redução de movimento.
+- Localização e aprovação têm rótulos/ícones separados; plano confirmado, proposta pendente e conflito permanecem visíveis sem depender apenas da cor.
+- Preservar funcionalidades, permissões, autenticação, leitura versus aceitação e resolução explícita; verificar percursos Web/Android com API e PostgreSQL reais e dados sintéticos.
+- Registar comparações reais antes/depois em claro/escuro desktop/viewport estreito/Android e verificar contraste, foco/teclado/semântica de acessibilidade; falhas de execução não contam como evidência concluída.
+- Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook.
+- Refinamento Android PR #45: títulos compactos dentro do scroll, sem painel de sessão persistente/AppBar; Conta e sessão em Definições, seletor contextual de colaborador preservado. Verificar sessão, logout/limpeza/troca de conta e validação automática independente, com testes e capturas claro/escuro. Web inalterada neste refinamento.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/41
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/45
 
 ## HO-101 — Lembretes e resumo semanal por email
 

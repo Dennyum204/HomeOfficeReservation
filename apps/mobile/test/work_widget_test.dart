@@ -15,7 +15,14 @@ import 'package:http/http.dart' as http;
 import 'auth_test.dart' show json;
 import 'work_fixture.dart';
 
-Widget localized(Widget child, {double scale = 1}) => MaterialApp(
+import 'package:homeoffice_mobile/theme/app_theme.dart';
+
+Widget localized(
+  Widget child, {
+  double scale = 1,
+  Brightness brightness = Brightness.light,
+}) => MaterialApp(
+  theme: appTheme(brightness),
   locale: const Locale('pt'),
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
@@ -103,9 +110,12 @@ void main() {
       },
     );
   }
-  for (final scale in [1.0, 2.0]) {
+  for (final (scale, brightness) in [
+    for (final b in Brightness.values)
+      for (final s in [1.0, 2.0]) (s, b),
+  ]) {
     testWidgets(
-      'work detail, protected editor, validation and back fit 320px at scale $scale',
+      'work detail, protected editor, validation and back fit 320px at scale $scale in $brightness',
       (t) async {
         await initializeDateFormatting('pt_PT');
         t.view.physicalSize = const Size(320, 700);
@@ -120,6 +130,7 @@ void main() {
           localized(
             Scaffold(body: WorkScreen(f.c, onRequests: () {})),
             scale: scale,
+            brightness: brightness,
           ),
         );
         await t.pumpAndSettle();

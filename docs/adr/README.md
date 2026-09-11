@@ -23,5 +23,15 @@ Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência 
 
 | [ADR-011](ADR-011-android-planning.md) | Calendário/pedidos Android, recuperação por conta e continuidade da base aprovada | HO-010 integrado pelo PR #35; quatro checks de integração verificados em HO-011 |
 
-| [ADR-012](ADR-012-core-interfaces.md) | Interfaces core, journal comum e aceitação Web/Android | HO-011 integrado pelo PR #36; merge/CI reconciliados em HO-012 |
 | [ADR-013](ADR-013-pilot-hosting.md) | Preparação de alojamento, recuperação e distribuição piloto | PR #37 draft; domínio escolhido, contratação/deployment pendentes; adenda de acesso privado |
+| [ADR-012](ADR-012-core-interfaces.md) | Interfaces core, journal comum e aceitação Web/Android | HO-011 integrado pelo PR #36; quatro checks de integração verificados em HO-013 |
+| [ADR-014](ADR-014-owner-bootstrap.md) | Bootstrap explícito do titular, extensão idempotente e auditoria de acesso | HO-013 integrado pelo PR #42; CI de integração verificada em HO-014 |
+
+ADR-013 preserva a alternativa Hetzner não aprovada; ADR-018 documenta o candidato NAS atual, ainda por instalar/medir.
+
+| [ADR-015](ADR-015-access-invitations.md) | Ciclo de convite Identity, entrega durável protegida e recuperação | HO-014; critérios/CI no PR da tarefa |
+
+- [ADR-016 — Administração Web e concorrência de acesso](ADR-016-web-administration.md) — HO-015, complementa ADR-014/015.
+- [ADR-017 — Identidade visual partilhada](ADR-017-shared-visual-theme.md) — HO-016, cores Claude + adaptadas e hierarquia Web/Android.
+
+- [ADR-018 — Ensaio NAS isolado](ADR-018-nas-trial.md) — preparação HO-012; instalação e adequação por validar.

@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using HomeOffice.Application.Access;
 using HomeOffice.Domain.Access;
 using HomeOffice.Infrastructure.Persistence;
@@ -5,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeOffice.Infrastructure.Access;
 
-public sealed class MemberDirectory(HomeOfficeDbContext db) : IMemberDirectory
+public sealed class MemberDirectory(HomeOfficeDbContext db, TimeProvider clock, InvitationService invitations) : IMemberDirectory
 {
     public Task<Member?> CurrentAsync(string identityUserId) =>
         db.Members.AsNoTracking().SingleOrDefaultAsync(m => m.IdentityUserId == identityUserId);
@@ -40,30 +43,99 @@ public sealed class MemberDirectory(HomeOfficeDbContext db) : IMemberDirectory
 
     public async Task<OperationResult> UpdateAsync(Member actor, Guid memberId, UpdateMemberRequest request)
     {
+        await using var tx = await db.Database.BeginTransactionAsync();
+        if (!await AccessChanges.LockOrganization(db, actor.OrganizationId) ||
+            await AccessChanges.Administrator(db, actor) is null) return new(false, "forbidden");
         var target = await db.Members.SingleOrDefaultAsync(x => x.Id == memberId);
+        if (target is not null) await db.Entry(target).ReloadAsync();
         if (target is null || !AccessRules.CanAdminister(actor, target)) return new(false, "forbidden");
+        var operation = Fingerprint("update", new { request.Active, request.IsEmployee, request.IsManager, request.IsAccountAdministrator });
+        var guard = await GuardCommand(actor, target, request.ExpectedAccessVersion, request.CommandId, operation);
+        if (guard is not null) return guard;
         // Account administrators cannot lock themselves out or alter their own privileges through this endpoint.
         if (actor.Id == target.Id) return new(false, "self_administration_denied");
+        if (target.Active && target.IsAccountAdministrator && !(request.Active && request.IsAccountAdministrator) &&
+            !await db.Members.AnyAsync(m => m.OrganizationId == target.OrganizationId && m.Id != target.Id && m.Active && m.IsAccountAdministrator))
+            return new(false, "last_active_administrator");
+        var before = AccessChanges.State(target);
+        if (request.Active && await db.Set<AccessInvitation>().AnyAsync(i => i.MemberId == target.Id && i.State == InvitationState.Cancelled))
+            return new(false, "invitation_cancelled");
+        if (!request.Active) await invitations.CancelPending(target, actor.Id);
         target.Active = request.Active;
         target.IsEmployee = request.IsEmployee;
         target.IsManager = request.IsManager;
         target.IsAccountAdministrator = request.IsAccountAdministrator;
+        if (before != AccessChanges.State(target))
+            AccessChanges.Record(db, clock, target, actor.Id, "access.member_updated", before, AccessChanges.State(target));
+        SaveCommand(actor, target, request.ExpectedAccessVersion, request.CommandId, operation);
         await db.SaveChangesAsync();
+        await tx.CommitAsync();
         return new(true, "updated");
     }
 
-    public async Task<OperationResult> AssignManagerAsync(Member actor, Guid employeeId, Guid managerId)
+    public async Task<OperationResult> AssignManagerAsync(Member actor, Guid employeeId, Guid? managerId,
+        long? expectedAccessVersion = null, Guid? commandId = null)
     {
+        await using var tx = await db.Database.BeginTransactionAsync();
+        if (!await AccessChanges.LockOrganization(db, actor.OrganizationId) ||
+            await AccessChanges.Administrator(db, actor) is null) return new(false, "forbidden");
         var employee = await db.Members.SingleOrDefaultAsync(x => x.Id == employeeId);
-        var manager = await db.Members.SingleOrDefaultAsync(x => x.Id == managerId);
-        if (employee is null || manager is null || !AccessRules.CanAdminister(actor, employee) ||
-            !AccessRules.CanAdminister(actor, manager)) return new(false, "forbidden");
-        if (!employee.Active || !manager.Active || !employee.IsEmployee || !manager.IsManager || employee.Id == manager.Id)
-            return new(false, "invalid_relationship");
+        if (employee is not null) await db.Entry(employee).ReloadAsync();
+        if (employee is null || !AccessRules.CanAdminister(actor, employee)) return new(false, "forbidden");
+        var operation = Fingerprint("manager", new { managerId });
+        var guard = await GuardCommand(actor, employee, expectedAccessVersion, commandId, operation);
+        if (guard is not null) return guard;
+        if (managerId is not null)
+        {
+            var manager = await db.Members.AsNoTracking().SingleOrDefaultAsync(x => x.Id == managerId);
+            if (manager is null || !AccessRules.CanAdminister(actor, manager)) return new(false, "forbidden");
+            if (!employee.Active || !manager.Active || !employee.IsEmployee || !manager.IsManager || employee.Id == manager.Id)
+                return new(false, "invalid_relationship");
+        }
         var line = await db.ReportingLines.SingleOrDefaultAsync(x => x.EmployeeId == employeeId);
-        if (line is null) db.ReportingLines.Add(new() { OrganizationId = actor.OrganizationId, EmployeeId = employeeId, ManagerId = managerId });
-        else line.ManagerId = managerId;
+        if (line is not null) await db.Entry(line).ReloadAsync();
+        var previousManager = line?.ManagerId;
+        if (managerId is null)
+        {
+            if (line is not null) db.ReportingLines.Remove(line);
+        }
+        else if (line is null) db.ReportingLines.Add(new() { OrganizationId = actor.OrganizationId, EmployeeId = employeeId, ManagerId = managerId.Value });
+        else line.ManagerId = managerId.Value;
+        if (previousManager != managerId)
+            AccessChanges.Record(db, clock, employee, actor.Id, "access.manager_assigned", new { managerId = previousManager }, new { managerId });
+        SaveCommand(actor, employee, expectedAccessVersion, commandId, operation);
         await db.SaveChangesAsync();
+        await tx.CommitAsync();
         return new(true, "assigned");
+    }
+
+    private static string Fingerprint(string operation, object input) => operation + ":" +
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(input))));
+
+    // Optional paired fields preserve older operator clients. The Web always supplies both.
+    // Replays are checked after current authority, before version/state checks; never reapply an old write.
+    private async Task<OperationResult?> GuardCommand(Member actor, Member target, long? version, Guid? id, string operation)
+    {
+        if (version is null && id is null) return null;
+        if (version is null or < 0 || id is null || id == Guid.Empty) return new(false, "invalid_command");
+        var receipt = await db.Set<InvitationCommand>().FindAsync(actor.OrganizationId, actor.Id, id.Value);
+        if (receipt is not null) return new(receipt.MemberId == target.Id && receipt.Operation == operation && receipt.ExpectedVersion == version,
+            receipt.MemberId == target.Id && receipt.Operation == operation && receipt.ExpectedVersion == version ? "already_applied" : "idempotency_conflict");
+        return target.AccessVersion == version ? null : new(false, "stale_member");
+    }
+
+    private void SaveCommand(Member actor, Member target, long? version, Guid? id, string operation)
+    {
+        if (version is null || id is null) return;
+        db.Set<InvitationCommand>().Add(new()
+        {
+            OrganizationId = actor.OrganizationId,
+            ActorId = actor.Id,
+            MemberId = target.Id,
+            CommandId = id.Value,
+            ExpectedVersion = version.Value,
+            Operation = operation,
+            CreatedAt = clock.GetUtcNow()
+        });
     }
 }

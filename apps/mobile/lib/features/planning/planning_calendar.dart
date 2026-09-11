@@ -6,6 +6,7 @@ import '../../l10n/generated/app_localizations.dart';
 import 'planning_controller.dart';
 import 'planning_dates.dart';
 import 'planning_widgets.dart';
+import '../../theme/components.dart';
 
 class PlanningCalendar extends StatelessWidget {
   const PlanningCalendar(
@@ -138,7 +139,7 @@ class PlanningCalendar extends StatelessWidget {
               final chosen = sameDay(date, c.selectedDate);
               final color = day == null
                   ? Colors.grey
-                  : locationColor(day.location, day.availability);
+                  : locationColor(context, day.location, day.availability);
               final label = [
                 dayLabel(date),
                 if (day != null)
@@ -156,16 +157,16 @@ class PlanningCalendar extends StatelessWidget {
                 excludeSemantics: true,
                 child: Material(
                   color: chosen
-                      ? const Color(0xffdcebdd)
+                      ? Theme.of(context).colorScheme.primaryContainer
                       : date.month == c.month.month
-                      ? Colors.white
-                      : const Color(0xffedf0ed),
+                      ? Theme.of(context).colorScheme.surface
+                      : Theme.of(context).colorScheme.surfaceContainerLow,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(9),
                     side: BorderSide(
                       color: chosen
-                          ? const Color(0xff264e3e)
-                          : const Color(0xffdce2db),
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.outlineVariant,
                       width: chosen ? 2 : 1,
                     ),
                   ),
@@ -203,10 +204,12 @@ class PlanningCalendar extends StatelessWidget {
                               if (day?.origin == 'WeeklyPattern')
                                 Icon(Icons.repeat, size: 12, color: color),
                               if (waiting > 0)
-                                const Icon(
+                                Icon(
                                   Icons.schedule,
                                   size: 14,
-                                  color: Color(0xff8b5700),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface,
                                 ),
                               if (onsite.isNotEmpty)
                                 Icon(
@@ -214,7 +217,9 @@ class PlanningCalendar extends StatelessWidget {
                                       ? Icons.warning_amber
                                       : Icons.push_pin_outlined,
                                   size: 14,
-                                  color: const Color(0xff653d83),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface,
                                 ),
                             ],
                           ),
@@ -228,6 +233,7 @@ class PlanningCalendar extends StatelessWidget {
           ),
         ),
         ExpansionTile(
+          key: PageStorageKey('calendar-legend-${c.employeeId}'),
           title: Text(s.planLegend),
           tilePadding: EdgeInsets.zero,
           children: [
@@ -235,22 +241,22 @@ class PlanningCalendar extends StatelessWidget {
             PlanLabel(
               s.planRemote,
               Icons.home_outlined,
-              color: const Color(0xff246142),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             PlanLabel(
               s.planOnsite,
               Icons.business_outlined,
-              color: const Color(0xff20548a),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-            PlanLabel(
-              s.planPending,
-              Icons.schedule,
-              color: const Color(0xff8b5700),
-            ),
+            PlanLabel(s.planPending, Icons.schedule, tone: BadgeTone.pending),
             PlanLabel(s.planLeave, Icons.beach_access_outlined),
             PlanLabel(s.planUnavailable, Icons.do_not_disturb_alt_outlined),
             PlanLabel(s.planRequirement, Icons.push_pin_outlined),
-            PlanLabel(s.planConflict, Icons.warning_amber),
+            PlanLabel(
+              s.planConflict,
+              Icons.warning_amber,
+              tone: BadgeTone.danger,
+            ),
           ],
         ),
         Text(s.planAgenda, style: Theme.of(context).textTheme.titleLarge),
@@ -264,6 +270,7 @@ class PlanningCalendar extends StatelessWidget {
                   locationLabel(s, selected.location, selected.availability),
                   locationIcon(selected.location, selected.availability),
                   color: locationColor(
+                    context,
                     selected.location,
                     selected.availability,
                   ),
@@ -288,7 +295,11 @@ class PlanningCalendar extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                PlanLabel(s.planPending, Icons.schedule),
+                PlanLabel(
+                  s.planPending,
+                  Icons.schedule,
+                  tone: BadgeTone.pending,
+                ),
                 Text(
                   day.day.cancel
                       ? s.planCancelled
@@ -315,8 +326,12 @@ class PlanningCalendar extends StatelessWidget {
                   requirement.state == OnsiteState.needsResolution
                       ? s.planConflict
                       : s.planRequirement,
-                  Icons.push_pin_outlined,
-                  color: const Color(0xff653d83),
+                  requirement.state == OnsiteState.needsResolution
+                      ? Icons.warning_amber
+                      : Icons.push_pin_outlined,
+                  tone: requirement.state == OnsiteState.needsResolution
+                      ? BadgeTone.danger
+                      : BadgeTone.neutral,
                 ),
                 Text(requirement.reason),
                 Text(requirement.location),

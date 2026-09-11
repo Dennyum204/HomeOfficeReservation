@@ -26,6 +26,14 @@ export interface UpdateMemberRequest {
     /**
      *
      */
+    commandId?: string | null;
+    /**
+     *
+     */
+    expectedAccessVersion?: number | null;
+    /**
+     *
+     */
     isAccountAdministrator: boolean;
     /**
      *
@@ -59,6 +67,8 @@ export function UpdateMemberRequestFromJSONTyped(json: any, ignoreDiscriminator:
     return {
 
         'active': json['active'],
+        'commandId': json['commandId'] === undefined ? undefined : json['commandId'] === null ? null : json['commandId'],
+        'expectedAccessVersion': json['expectedAccessVersion'] === undefined ? undefined : json['expectedAccessVersion'] === null ? null : json['expectedAccessVersion'],
         'isAccountAdministrator': json['isAccountAdministrator'],
         'isEmployee': json['isEmployee'],
         'isManager': json['isManager'],
@@ -77,6 +87,8 @@ export function UpdateMemberRequestToJSONTyped(value?: UpdateMemberRequest | nul
     return {
 
         'active': value['active'],
+        'commandId': value['commandId'],
+        'expectedAccessVersion': value['expectedAccessVersion'],
         'isAccountAdministrator': value['isAccountAdministrator'],
         'isEmployee': value['isEmployee'],
         'isManager': value['isManager'],

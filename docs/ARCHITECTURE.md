@@ -62,6 +62,10 @@ Quando HO-008 for selecionado, a ação explícita em Definições associa uma c
 
 ## Contratos e persistência
 
+HO-014 acrescenta `AccessInvitation` e recibos `InvitationCommand` na mesma base. Identity gera/valida códigos; Data Protection protege a intenção de entrega. Reenvio/cancelamento/aceitação partilham o lock administrativo da organização e reconsultam estado atual. O worker existente reclama entregas por lease PostgreSQL; não envia SMTP dentro da transação de criação. Lista administrativa paginada expõe estados e relação atual, sem códigos. [ADR-015](adr/ADR-015-access-invitations.md) e [guia](HO-014-INVITATIONS.md). HO-015 acrescenta a administração Web, versão de acesso e recibos de alterações administrativas; [ADR-016](adr/ADR-016-web-administration.md).
+
+HO-013 complementa Identity com comandos de operador para titular administrador/colaborador e auditoria transacional de acesso, sem HTTP novo. Escritas administrativas bloqueiam a organização e revalidam o ator dentro da transação, preservando pelo menos um administrador ativo sob concorrência. A extensão de colaboração não modifica credenciais, calendário ou relações. `AccessAudits` reutiliza a persistência/auditoria mínima, separada das versões de planeamento. [ADR-014](adr/ADR-014-owner-bootstrap.md), [procedimento e recuperação](HO-013-OWNER-BOOTSTRAP.md). Convites/administração Web são concretizados em HO-014/015; HO-012 não foi incorporada.
+
 - REST em `/api/v1`, OpenAPI gerado de forma reprodutível a partir do backend.
 - DTOs explícitos; não expor entidades EF diretamente. Clientes TypeScript/Dart gerados e versionados.
 - Datas de planeamento em ISO `YYYY-MM-DD`; instantes em ISO 8601 com offset/UTC e zona guardada separadamente quando relevante.
@@ -83,7 +87,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 - Hospedagem Linux para API/Web HTTPS e worker de notificações ativo. Callbacks Microsoft só em HO-008; webhooks públicos só em HO-009. Não usar scale-to-zero para este desenho sem separar/agendar o worker.
 - Registos estruturados com correlation ID, health/readiness e métricas de atraso/erro de sync.
 - Backups automáticos e ensaio de restauro antes do piloto com dados reais.
-- HO-012 propõe fornecedor/região/custos e distribuição mobile. Domínio escolhido: `homeoffice.ferbatech.com` em produção e `staging.homeoffice.ferbatech.com` em staging, na zona Cloudflare existente. DNS-only direto para Caddy proposto; alterações DNS/contratação/deployment ainda não autorizados, restantes registos e email preservados.
+- HO-012 avalia um ensaio isolado no NAS; [ADR-018](adr/ADR-018-nas-trial.md) substitui a proposta corrente de duas VMs, mantendo ADR-013 histórico. ferbatech.com e hostnames futuros preservados; sem DNS, HTTPS externo ou deployment nesta etapa.
 
 ## Versões e dependências
 
@@ -108,6 +112,10 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Interfaces core HO-011
 
 [ADR-012](adr/ADR-012-core-interfaces.md) estende o controller/journal Android a presenças/tarefas, conservando um colaborador autorizado e uma intenção incerta de cada vez. Gerações separadas protegem leituras/previews; input e comandos são protegidos por conta. Notificações resolvem destinos atuais de pedidos, presenças e tarefas. Não há alteração de contrato, migração ou infraestrutura. [Matriz de aceitação corrente](HO-011-CORE-ACCEPTANCE.md).
-## Alojamento piloto proposto — HO-012
+## Ensaio NAS — HO-012
 
-[ADR-013](adr/ADR-013-pilot-hosting.md) prepara Caddy + imagem API/Web/worker + PostgreSQL por ambiente, com hosts/chaves/configuração separados e recuperação para nova base. [Runbook](../infra/pilot/README.md). Preparação local/CI não é deployment externo; hostnames escolhidos, fornecedor/região/retenção e ações externas aguardam aprovação. [Proposta revista sem compra de domínio e com manutenção explícita](HO-012-PILOT.md). HO-013/014/015 são gates do acesso privado/aceitação, sem impedir decidir o alojamento agora. Nenhum serviço Microsoft ou iOS entra no gate core.
+[ADR-018](adr/ADR-018-nas-trial.md): imagem API/Web e workers no mesmo host, PostgreSQL, TLS local e captura SMTP; rede interna sem portas publicadas. Build Linux amd64 fora do NAS, limites iniciais 896 MiB, configuração/chaves privadas e restauro para nova base. [Runbook](../infra/nas/README.md). NAS não instalado/medido; a alternativa Hetzner/ADR-013 não foi aprovada. HO-013/014/015/016 integrados; gates operacionais ainda pendentes.
+
+## Identidade visual HO-016
+
+[ADR-017](adr/ADR-017-shared-visual-theme.md): tokens semânticos comuns geram CSS e cores Dart, com contraste e divergência verificados. Componentes React/CSS e Material 3 existentes continuam responsáveis pela apresentação; claro/escuro/sistema é uma preferência local. Não altera os clientes gerados, regras de negócio, autenticação ou esquema PostgreSQL. [Guia e evidência](HO-016-VISUAL-THEME.md).

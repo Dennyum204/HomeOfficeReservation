@@ -85,7 +85,7 @@ if (app.Environment.IsDevelopment())
 }
 // Deliberate client routes only: an unknown /api path must remain a real 404.
 if (Directory.Exists(app.Environment.WebRootPath))
-    foreach (var route in new[] { "/calendar", "/requests", "/onsite", "/tasks", "/notifications", "/settings" })
+    foreach (var route in new[] { "/calendar", "/requests", "/onsite", "/tasks", "/notifications", "/settings", "/administration" })
         app.MapFallbackToFile(route, "index.html").ExcludeFromDescription();
 app.Run();
 

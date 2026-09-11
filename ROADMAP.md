@@ -2,9 +2,9 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-10.
+Atualizado: 2026-09-11.
 
-Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core. Acesso privado por convite: HO-013/014/015 preparam titular e convidados; HO-016 regista tema Claude + num marco visual separado, sem gate do piloto.
+Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara ensaio NAS isolado, ainda sem instalação, medições ou alojamento escolhido. iOS e Outlook adiados, sem bloquear core.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
@@ -29,18 +29,6 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 | FEAT-007 | Notificações internas e push mobile | HO-007, HO-011 |
 | FEAT-009 | Histórico, privacidade e recuperação | HO-003, HO-004, HO-011 |
 | FEAT-010 | Férias/indisponibilidade manual para planeamento | HO-004, HO-005, HO-010 |
-
-## ui-refresh — Identidade visual Claude + — Web e Android
-
-**Quando:** Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.
-
-**Gate:** HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.
-
-**Reavaliar:** Ao selecionar o próximo trabalho visual e após feedback de utilização.
-
-| ID | Funcionalidade | Tarefas |
-|---|---|---|
-| FEAT-025 | Tema Claude + e hierarquia visual acessível Web/Android | HO-016 |
 
 ## outlook-publish — Outlook opcional: publicação unidirecional
 
@@ -122,6 +110,18 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 | ID | Funcionalidade | Tarefas |
 |---|---|---|
 | FEAT-024 | Reativação iOS com validação e distribuição próprias | HO-306 |
+
+## ui-refresh — Identidade visual Claude + — Web e Android
+
+**Quando:** HO-016 integrado pelo PR #45 em 2026-09-11; claro/escuro e regressão verificados.
+
+**Gate:** HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.
+
+**Reavaliar:** Ao selecionar o próximo trabalho visual e após feedback de utilização.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-025 | Tema Claude + e hierarquia visual acessível Web/Android | HO-016 |
 
 ## Regra de acompanhamento
 

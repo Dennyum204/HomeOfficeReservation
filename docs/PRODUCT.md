@@ -16,13 +16,9 @@ A aplicação tem calendário próprio autoritativo e funciona integralmente sem
 
 Um utilizador pode acumular papéis, mas nunca aprovar o próprio pedido. Identidades usam IDs locais estáveis do ASP.NET Core Identity associados ao MemberId; não confiar apenas no endereço de email. A associação de chefe é configurada pela aplicação, não inferida do Microsoft Graph.
 
-### Acesso privado por convite — decisão em HO-012
-
-A aplicação é usada por Fernando, pelo seu chefe e pelas pessoas que Fernando convidar para a organização. **Sem registo público.** A conta do titular acumula administrador e colaborador; o chefe é outro membro, gestor explicitamente associado ao titular. O papel administrativo não permite autoaprovação nem dispensa autorização por organização/relação. Sem autenticação não se consultam dados privados; login, ativação e recuperação continuam acessíveis.
-
-Identity já suporta criação administrativa sem password, envio de código e aceitação por ativação na Web/Android. Ainda faltam bootstrap do titular com ambos os papéis (HO-013), gestão recuperável/revogável de convites (HO-014) e administração Web (HO-015). São tarefas separadas, necessárias nas etapas de acesso real/aceitação do piloto, sem implementação no PR HO-012. [Inspeção do que existe e gates](HO-012-PRIVATE-ACCESS.md). Convites Firebase dão acesso ao APK, não à organização ou aos seus dados. HO-301 continua a tratar expansão por equipas e substituição do aprovador; convites básicos não aguardam V2.
-
 ## V1: comportamento funcional
+
+O acesso é privado, sem registo público. HO-013 permite ao operador criar explicitamente o titular como administrador e colaborador na mesma identidade ou acrescentar colaboração a um administrador ativo existente. O chefe distinto precisa de papel gestor e associação explícita; administrar não concede autoridade de aprovação. HO-014 implementa convites Identity e entrega durável; HO-015 acrescenta a [administração Web](HO-015-WEB-ADMINISTRATION.md). O piloto operacional permanece pendente em HO-012; esta entrega não autoriza convites reais.
 
 ### Calendário e dashboard
 
@@ -72,8 +68,6 @@ Identity já suporta criação administrativa sem password, envio de código e a
 - Leituras sincronizadas entre dispositivos. Push é uma tentativa de entrega, não prova de leitura.
 - Emails, resumos semanais e lembretes automáticos entram em V1.1.
 
-Emails de ativação, convites de acesso e recuperação são parte da admissão/autenticação core; a referência a V1.1 acima diz respeito às notificações de acompanhamento de negócio.
-
 ### Outlook opcional, após o core
 
 Ligação apenas em Definições, sem requisito para login, planeamento ou lançamento. O primeiro marco opcional HO-008 publica unidirecionalmente dias explícitos de localização confirmada no calendário principal do utilizador ligado: disponibilidade livre por defeito, eventos próprios e sem convites. Trabalho remoto não é ausência. Sem ligação, o calendário interno e todos os fluxos permanecem completos.
@@ -85,6 +79,8 @@ Importação de disponibilidade, delta, webhooks e reconciliação de edições 
 Registo manual para planeamento. Não substitui autorização de férias de RH. Uma indisponibilidade sobre datas confirmadas abre conflito/revisão, sem apagar silenciosamente decisões. Na V1 os períodos são dias inteiros.
 
 ## Aceitação do produto
+
+Admissão privada HO-014: só o administrador ativo convida para a sua organização. Pending/Accepted/Cancelled e estado de entrega são distintos; expiração do código Identity não apaga o convite. Reenvio invalida códigos anteriores; cancelamento é terminal. Web/Android aceitam código/password sem registo público. Interface administrativa autónoma pertence a HO-015. [Percurso e limites](HO-014-INVITATIONS.md).
 
 1. Colaborador submete cinco dias pela Web; chefe aprova três pelo mobile; ambos veem os mesmos três dias confirmados.
 2. Dois dias rejeitados não aparecem como aprovados no calendário interno; não é preciso configurar integração externa.
@@ -99,8 +95,6 @@ Registo manual para planeamento. Não substitui autorização de férias de RH. 
 
 Os critérios detalhados por entrega estão em [BACKLOG.md](BACKLOG.md).
 
-Melhoria visual futura: [HO-016 — Claude +](https://github.com/Dennyum204/HomeOfficeReservation/issues/41), Web claro/escuro com hierarquia de modais/pedidos e identidade equivalente Android. [Direção de UX](UX.md). Só planeada; preserva funcionalidades, permissões, acessibilidade e separação entre local de trabalho/estado de aprovação. Não é gate do piloto; iOS adiado.
-
 ### Concretização HO-007
 
 A caixa persistente e a leitura sincronizada funcionam em Web/Android independentemente de push. O tratamento completo dos destinos Android fica para HO-010/011; há detalhe explícito com referência e indicação da Web. O adaptador Android é FCM, com configuração opcional para desenvolvimento. Entrega real foi observada no emulador autorizado em foreground, background e cold start; reconexão/logout/troca de conta foram ensaiados contra os serviços reais. Recibo/aceitação do fornecedor não equivalem a leitura nem aprovação. Dispositivos físicos e distribuição não foram validados. [Guia e evidência datada](HO-007-NOTIFICATIONS.md).
@@ -108,3 +102,5 @@ A caixa persistente e a leitura sincronizada funcionam em Web/Android independen
 ### Concretização HO-010
 
 Calendário e pedidos Android permitem os dois papéis: decisões parciais, retirada, revisões/cancelamentos, contrapropostas e disponibilidade manual, com dados autoritativos partilhados com a Web. Notificações de pedidos abrem o detalhe atual, sem executar decisões. Presenças/tarefas completas Android e aceitação transversal restante continuam em HO-011. [Guia e evidência](HO-010-ANDROID-PLANNING.md).
+
+Identidade visual HO-016: Web/Android usam superfícies neutras e temas claro/escuro/sistema. Localização usa ícones e texto; estado de aprovação, plano confirmado, proposta e conflito são distinguíveis sem depender de cor. [Decisão e âmbito](adr/ADR-017-shared-visual-theme.md).

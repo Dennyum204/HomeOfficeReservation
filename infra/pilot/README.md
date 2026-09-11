@@ -1,4 +1,6 @@
-# Preparação operacional Web/Android
+# Preparação operacional Web/Android — alternativa VM histórica
+
+**2026-09-11: Hetzner não aprovado. Preparação corrente no [ensaio NAS](../nas/README.md), sem instalação nesta etapa.** Este runbook mantém o ensaio Production/recuperação/assinatura; não é comando de instalação no NAS. HO-013/014/015/016 entretanto integrados.
 
 **Não executar contra alojamento externo antes da aprovação em HO-012.** [Proposta/custos/gates](../../docs/HO-012-PILOT.md). Três contentores: Caddy, API/Web/worker e PostgreSQL. Sem Kubernetes, serviços Microsoft, registo público ou deployment automático. Comandos Linux na raiz do repositório, Docker Engine + Compose **2.24.4 ou posterior** (`!override` no ensaio), Python 3.10+, OpenSSL e restic **0.19.1** para backup externo. Builds usam versões fixadas no Dockerfile e locks.
 
@@ -58,13 +60,13 @@ docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/com
 docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml ps
 ```
 
-A inicialização de PostgreSQL cria apenas uma base/role. Migrações não são executadas pelo arranque normal. **Correção da preparação inicial:** o bootstrap atual cria apenas administrador; não atribui colaborador/gestor e a API recusa editar o próprio membro. Logo, não prepara hoje Fernando como administrador e colaborador na mesma conta. HO-013 resolve esta lacuna em tarefa própria; não usar uma terceira conta artificial ou SQL manual como atalho. O ensaio automatizado usa três contas sintéticas e não prova esse percurso de duas pessoas. [Auditoria, convites e gates HO-013/014/015](../../docs/HO-012-PRIVATE-ACCESS.md). Comportamento atual do comando, apenas depois de validar SMTP e com destinatário autorizado:
+A inicialização de PostgreSQL cria apenas uma base/role. Migrações não são executadas pelo arranque normal. HO-013 implementou `--bootstrap-owner` para titular administrador/colaborador; `--bootstrap-admin` continua apenas administrador, por compatibilidade. HO-014 tornou convites/entrega duráveis e HO-015 acrescentou administração Web. [Guias atuais](../../docs/HO-012-PRIVATE-ACCESS.md). Com SMTP real, executar apenas depois da autorização dos destinatários; no ensaio NAS usar Mailpit:
 
 ```sh
-docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml run --rm --no-deps app --bootstrap-admin /run/config/bootstrap.json
+docker compose --env-file /srv/homeoffice-staging/environment -f infra/pilot/compose.yaml run --rm --no-deps app --bootstrap-owner /run/config/bootstrap.json
 ```
 
-Formato atual de `bootstrap.json`: `{"organizationName":"Organização piloto","email":"admin@example.invalid","displayName":"Administrador"}` — substituir privadamente; não acrescentar campos de papéis que o comando ainda não suporta. Ativação usa o SMTP configurado; restantes membros e relação chefia/colaborador são geridos hoje pela API administrativa, sem interface de administração. Bootstrap recusa organização existente. Se SMTP falhar depois de criar o administrador, corrigir SMTP e pedir novo código de ativação pela app; não repetir criando outra organização. Produção rejeita `--provision-dev` e configuração de tempos de sessão/limites/captura de email de teste. Não enviar convites reais até cumprir os gates de acesso e obter autorização de envio.
+Formato atual de `bootstrap.json`: `{"organizationName":"Organização piloto","email":"admin@example.invalid","displayName":"Administrador"}` — substituir privadamente; não acrescentar campos de papéis que o comando ainda não suporta. Ativação usa o SMTP configurado; restantes membros e relações são geridos pela Administração Web de HO-015. O bootstrap-owner idempotente exige a mesma identidade/organização; não adiciona papéis implicitamente a identidades antigas. Se SMTP falhar depois de criar o administrador, corrigir SMTP e pedir novo código de ativação pela app; não repetir criando outra organização. Produção rejeita `--provision-dev` e configuração de tempos de sessão/limites/captura de email de teste. Não enviar convites reais até cumprir os gates de acesso e obter autorização de envio.
 
 Atualização: confirmar backup restaurável, colocar app em manutenção (`stop app`), snapshot, aplicar `migrate` com a imagem candidata e voltar a `up --wait`. `snapshot` só retoma a app se ela estava a correr ao iniciar o comando; preserva uma paragem administrativa. Comparar migrações com a imagem anterior; reverter só imagem é seguro apenas com esquema compatível. Caso contrário, restaurar para nova base, verificar, e trocar configuração durante manutenção. Nunca fazer downgrade de esquema automático. HO-012 não acrescenta migrações de negócio.
 

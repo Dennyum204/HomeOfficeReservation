@@ -4,8 +4,8 @@
     system-ui,
     -apple-system,
     sans-serif;
-  color: #203d38;
-  background: #f5f6f3;
+  color: var(--foreground);
+  background: var(--secondary);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -29,7 +29,7 @@ button:disabled {
 }
 button:focus-visible,
 a:focus-visible {
-  outline: 3px solid #b26827;
+  outline: 3px solid var(--ring);
   outline-offset: 4px;
 }
 h1,
@@ -48,9 +48,9 @@ a {
 .sidebar {
   width: 248px;
   flex-shrink: 0;
-  background: #fff;
+  background: var(--surface);
   padding: 36px 22px 28px;
-  border-right: 1px solid #e3e8e1;
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
 }
@@ -68,12 +68,12 @@ a {
   display: block;
   font-size: 9px;
   letter-spacing: 1.9px;
-  color: #6d7d72;
+  color: var(--muted-foreground);
   margin-top: 5px;
 }
 .brand-mark {
-  background: #214c3e;
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
   border-radius: 12px;
   width: 42px;
   height: 44px;
@@ -85,10 +85,10 @@ a {
   padding-right: 3px;
 }
 .brand-mark span {
-  color: #cfdfa4;
+  color: var(--foreground);
 }
 .nav-caption {
-  color: #87938c;
+  color: var(--muted-foreground);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -105,17 +105,17 @@ nav button {
   align-items: center;
   text-align: left;
   padding: 14px;
-  color: #64766c;
+  color: var(--muted-foreground);
   border-radius: 8px;
   font-size: 14px;
   gap: 14px;
 }
 nav button:hover {
-  background: #f4f6f1;
+  background: var(--secondary);
 }
 nav button[aria-current] {
-  color: #23513e;
-  background: #eaf0e5;
+  color: var(--foreground);
+  background: var(--accent);
   font-weight: 650;
 }
 .nav-icon {
@@ -136,16 +136,16 @@ nav button[aria-current] {
   padding: 80px 14px 0;
   font-size: 12px;
   line-height: 1.8;
-  color: #7b897f;
+  color: var(--muted-foreground);
 }
 .route-line {
-  color: #527258;
+  color: var(--foreground);
   font-size: 12px;
   letter-spacing: 1px;
   margin-bottom: 15px;
 }
 .route-line span {
-  color: #b1c0ad;
+  color: var(--foreground);
   margin: 0 8px;
 }
 .main-wrap {
@@ -154,7 +154,7 @@ nav button[aria-current] {
 }
 .topbar {
   min-height: 88px;
-  border-bottom: 1px solid #e3e8e1;
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -163,23 +163,23 @@ nav button[aria-current] {
   gap: 16px;
 }
 .breadcrumb {
-  color: #859187;
+  color: var(--muted-foreground);
   margin-left: 10px;
 }
 .stage {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #d9dfd4;
+  border: 1px solid var(--border);
   padding: 8px 13px;
   border-radius: 30px;
-  color: #68785e;
+  color: var(--muted-foreground);
   font-size: 11px;
 }
 .stage span {
   width: 6px;
   height: 6px;
-  background: #8b9b61;
+  background: var(--secondary);
   border-radius: 50%;
 }
 main {
@@ -193,7 +193,7 @@ main:focus {
 .eyebrow {
   font-size: 10px;
   letter-spacing: 1.8px;
-  color: #6d806b;
+  color: var(--muted-foreground);
   font-weight: 650;
   margin-bottom: 17px;
 }
@@ -206,7 +206,7 @@ main:focus {
 }
 .intro > p:last-child {
   max-width: 570px;
-  color: #768379;
+  color: var(--muted-foreground);
   font-size: 14px;
   line-height: 1.9;
   margin-bottom: 36px;
@@ -219,8 +219,8 @@ main:focus {
 .feature-card,
 .connection-card,
 .location-card {
-  background: #fff;
-  border: 1px solid #e0e6dc;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
 }
 .feature-card {
@@ -235,7 +235,7 @@ main:focus {
   line-height: 1.25;
 }
 .feature-description {
-  color: #718174;
+  color: var(--muted-foreground);
   line-height: 1.8;
   font-size: 13px;
   max-width: 380px;
@@ -261,8 +261,8 @@ main:focus {
   font-weight: 600;
 }
 .connection-icon {
-  color: #466747;
-  border: 1px solid #e0e6dc;
+  color: var(--foreground);
+  border: 1px solid var(--border);
   border-radius: 9px;
   padding: 3px 9px;
   font-size: 23px;
@@ -277,35 +277,35 @@ main:focus {
 .status-dot {
   width: 7px;
   height: 7px;
-  background: #88a28c;
+  background: var(--secondary);
   flex-shrink: 0;
   border-radius: 50%;
 }
 .error .status-dot {
-  background: #a9542e;
+  background: var(--danger);
 }
 .error {
-  color: #884523;
+  color: var(--danger);
 }
 dl {
   font-size: 11px;
   margin: 0 0 22px;
 }
 dt {
-  color: #829080;
+  color: var(--muted-foreground);
   margin-top: 13px;
 }
 dd {
   margin: 5px 0 0;
-  color: #455c4c;
+  color: var(--foreground);
   overflow-wrap: anywhere;
   line-height: 1.5;
 }
 .connection-button {
   width: 100%;
-  color: #476045;
-  background: #f5f7f2;
-  border: 1px solid #e1e6db;
+  color: var(--foreground);
+  background: var(--secondary);
+  border: 1px solid var(--border);
   padding: 11px 12px;
   border-radius: 7px;
   text-align: left;
@@ -314,14 +314,14 @@ dd {
   justify-content: space-between;
 }
 .connection-button:hover {
-  background: #eaf0e3;
+  background: var(--secondary);
 }
 .connection-button span {
   font-size: 16px;
 }
 .location-card {
-  background: #edf1e7;
-  border-color: #e0e6d6;
+  background: var(--secondary);
+  border-color: var(--border);
 }
 .location-card h2 {
   font-size: 20px;
@@ -337,27 +337,27 @@ dd {
   margin: 12px 0;
 }
 .country-symbol {
-  background: #d8e2ce;
+  background: var(--secondary);
   width: 25px;
   height: 25px;
   border-radius: 50%;
   text-align: center;
   font-size: 18px;
-  color: #496c42;
+  color: var(--foreground);
 }
 .swiss {
-  background: #e2e4da;
-  color: #5c6961;
+  background: var(--secondary);
+  color: var(--foreground);
 }
 .muted {
   font-size: 12px;
   line-height: 1.7;
-  color: #70806e;
+  color: var(--muted-foreground);
   margin-bottom: 0;
 }
 .location-card .muted {
   font-size: 11px;
-  border-top: 1px solid #dbe2d2;
+  border-top: 1px solid var(--border);
   padding-top: 16px;
   margin-top: 20px;
 }
@@ -367,13 +367,13 @@ dd {
   overflow: hidden;
   border-radius: 12px;
   margin: 30px 0;
-  background: #f4f5ed;
+  background: var(--secondary);
 }
 .sun {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #e7c586;
+  background: var(--secondary);
   position: absolute;
   left: 23%;
   top: 20px;
@@ -383,7 +383,7 @@ dd {
   width: 75%;
   height: 160px;
   border-radius: 50% 60% 0 0;
-  background: #b7c3a2;
+  background: var(--secondary);
   bottom: -100px;
   left: -10%;
   transform: rotate(-12deg);
@@ -391,7 +391,7 @@ dd {
 .hill-front {
   left: -30%;
   bottom: -120px;
-  background: #8ca58a;
+  background: var(--secondary);
   width: 120%;
 }
 .mountain {
@@ -402,7 +402,7 @@ dd {
   height: 0;
   border-left: 60px solid transparent;
   border-right: 60px solid transparent;
-  border-bottom: 100px solid #b3c0b6;
+  border-bottom: 100px solid var(--border);
 }
 .mountain::after {
   content: "";
@@ -411,12 +411,12 @@ dd {
   left: -19px;
   border-left: 19px solid transparent;
   border-right: 19px solid transparent;
-  border-bottom: 32px solid #f9faf5;
+  border-bottom: 32px solid var(--border);
 }
 .mountain-back {
   right: -6%;
   bottom: 30px;
-  border-bottom-color: #d1d8c7;
+  border-bottom-color: var(--border);
   transform: scale(0.9);
 }
 .house {
@@ -425,7 +425,7 @@ dd {
   bottom: 36px;
   width: 60px;
   height: 44px;
-  background: #fdfaf0;
+  background: var(--secondary);
 }
 .roof {
   position: absolute;
@@ -433,12 +433,12 @@ dd {
   left: -9px;
   border-left: 39px solid transparent;
   border-right: 39px solid transparent;
-  border-bottom: 28px solid #a7835d;
+  border-bottom: 28px solid var(--border);
 }
 .window {
   width: 10px;
   height: 11px;
-  background: #a3b5ac;
+  background: var(--secondary);
   position: absolute;
   left: 10px;
   top: 13px;
@@ -446,7 +446,7 @@ dd {
 .door {
   height: 25px;
   width: 14px;
-  background: #bfbaa3;
+  background: var(--secondary);
   position: absolute;
   right: 10px;
   bottom: 0;
@@ -457,7 +457,7 @@ dd {
   font-weight: 650;
   letter-spacing: 2px;
   bottom: 12px;
-  color: #4c6852;
+  color: var(--foreground);
 }
 .place-pt {
   left: 29%;
@@ -466,7 +466,7 @@ dd {
   right: 26%;
 }
 .illustration-line {
-  border-bottom: 1px dashed #6f877466;
+  border-bottom: 1px dashed rgb(20 20 19 / 0.55);
   width: 24%;
   position: absolute;
   left: 42%;
@@ -476,11 +476,11 @@ dd {
   display: flex;
   gap: 13px;
   padding-top: 23px;
-  border-top: 1px solid #edf0e8;
+  border-top: 1px solid var(--border);
 }
 .unfinished-icon {
   font-size: 26px;
-  color: #a1997b;
+  color: var(--foreground);
 }
 .unfinished h3 {
   font-size: 13px;
@@ -489,13 +489,13 @@ dd {
 }
 .unfinished p {
   font-size: 12px;
-  color: #7e877b;
+  color: var(--muted-foreground);
   line-height: 1.75;
   margin: 0;
 }
 .scope-note {
   font-size: 11px;
-  color: #85907f;
+  color: var(--muted-foreground);
   display: flex;
   gap: 9px;
   margin: 22px 0 0;
@@ -511,14 +511,14 @@ footer {
   display: flex;
   justify-content: space-between;
   font-size: 10px;
-  color: #8a9487;
+  color: var(--muted-foreground);
 }
 .skip-link {
   position: fixed;
   top: -100px;
   z-index: 10;
   padding: 12px;
-  background: white;
+  background: var(--surface);
 }
 .skip-link:focus {
   top: 5px;
@@ -599,7 +599,7 @@ footer {
   .sidebar {
     width: 100%;
     border-right: 0;
-    border-bottom: 1px solid #e3e8e1;
+    border-bottom: 1px solid var(--border);
     padding: 20px 16px 12px;
   }
   .brand {
@@ -679,14 +679,14 @@ footer {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #f4f5ef;
+  background: var(--secondary);
 }
 .auth-card {
   width: min(100%, 460px);
   padding: clamp(24px, 5vw, 40px);
-  border: 1px solid #dce3d7;
+  border: 1px solid var(--border);
   border-radius: 24px;
-  background: white;
+  background: var(--surface);
 }
 .auth-card h1 {
   font-size: 2rem;
@@ -707,7 +707,7 @@ footer {
   width: 100%;
   min-width: 0;
   padding: 12px;
-  border: 1px solid #81927e;
+  border: 1px solid var(--input);
   border-radius: 8px;
   font: inherit;
 }
@@ -718,15 +718,15 @@ footer {
 .account-bar button {
   min-height: 44px;
   padding: 8px 14px;
-  border: 1px solid #a4b29c;
+  border: 1px solid var(--input);
   border-radius: 8px;
-  background: white;
-  color: #244b39;
+  background: var(--surface);
+  color: var(--foreground);
   cursor: pointer;
 }
 .auth-card .primary {
-  background: #264e3e;
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 .auth-card button:disabled,
 .account-bar button:disabled {
@@ -740,7 +740,7 @@ footer {
 }
 .auth-message {
   padding: 12px;
-  background: #f4f2e5;
+  background: var(--pending-surface);
   border-radius: 8px;
 }
 .account-bar {
@@ -749,8 +749,8 @@ footer {
   gap: 12px;
   align-items: center;
   padding: 12px 24px;
-  background: white;
-  border-bottom: 1px solid #dce3d7;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
 }
 .account-bar div {
   flex: 1;
@@ -759,5 +759,5 @@ footer {
 .account-bar span {
   display: block;
   font-size: 0.85rem;
-  color: #52634c;
+  color: var(--muted-foreground);
 }

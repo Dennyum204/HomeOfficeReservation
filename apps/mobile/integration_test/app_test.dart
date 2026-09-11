@@ -1,6 +1,8 @@
 import 'dart:developer' show Service;
 import 'dart:io' show Platform, stdout;
 
+import 'session_helpers.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:homeoffice_mobile/main.dart' as app;
@@ -67,13 +69,7 @@ Future<void> main() async {
 
     Future<void> login(String address, String secret) async {
       await submitCredentials(address, secret);
-      for (
-        var i = 0;
-        i < 30 && find.text('Terminar sessão').evaluate().isEmpty;
-        i++
-      ) {
-        await tester.pump(const Duration(milliseconds: 500));
-      }
+      await openAccountSettings(tester);
     }
 
     await submitCredentials('absent@test.example', 'Deliberately-wrong9!');
@@ -94,8 +90,6 @@ Future<void> main() async {
     await login(email, password);
     expect(find.text('Terminar sessão'), findsOneWidget);
     // Connectivity diagnostics live in Settings; the calendar has its own scroll view.
-    await tester.tap(find.text('Definições'));
-    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Ligação ao serviço'));
     for (
       var i = 0;
@@ -111,14 +105,18 @@ Future<void> main() async {
     await tester.pumpAndSettle();
     app.main();
     await tester.pumpAndSettle();
-    for (
-      var i = 0;
-      i < 30 && find.text('Terminar sessão').evaluate().isEmpty;
-      i++
-    ) {
-      await tester.pump(const Duration(milliseconds: 500));
-    }
+    await openAccountSettings(tester);
     expect(find.text('Terminar sessão'), findsOneWidget);
+    await tester.ensureVisible(find.text('Verificar sessão'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Verificar sessão'));
+    await tester.pumpAndSettle();
+    await waitForWorkspace(tester);
+    expect(await SecureTokenStore(ApiSettings.baseUrl).read(), isNotNull);
+    // Automatic validation must work on Calendar, without mounting the session actions.
+    await tester.tap(find.byIcon(Icons.calendar_month_outlined));
+    await tester.pumpAndSettle();
+    expect(find.text('Verificar sessão'), findsNothing);
     // The server used by this test has Development-only access=5s / refresh=30s.
     // Android's foreground inbox renews an active session. Pause its lifecycle to exercise real idle expiry.
     if (Platform.isAndroid) {
@@ -128,7 +126,11 @@ Future<void> main() async {
     if (Platform.isAndroid) {
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     }
-    await tester.tap(find.text('Verificar sessão'));
+    if (!Platform.isAndroid) {
+      await openAccountSettings(tester);
+      await tester.ensureVisible(find.text('Verificar sessão'));
+      await tester.tap(find.text('Verificar sessão'));
+    }
     await tester.pumpAndSettle();
     for (
       var i = 0;
@@ -150,26 +152,141 @@ Future<void> main() async {
       const String.fromEnvironment('TEST_MANAGER_EMAIL'),
       const String.fromEnvironment('TEST_MANAGER_PASSWORD'),
     );
-    // The calendar also names the selected employee; assert the authenticated
-    // identity header rather than assuming the name appears only once on screen.
+    // Settings identifies the signed-in manager, independently of the selected employee.
     expect(
       tester
           .widget<Text>(find.byKey(const Key('authenticated-member-name')))
           .data,
       'Chefia de teste',
     );
-    await tester.tap(find.text('Terminar sessão'));
-    // Frame settling alone does not await the native secure-storage operation.
+    await signOut(tester);
     for (
       var i = 0;
-      i < 100 && find.text('Entre no seu espaço').evaluate().isEmpty;
+      i < 40 && find.text('Entre no seu espaço').evaluate().isEmpty;
       i++
     ) {
-      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 500));
     }
-    await tester.pumpAndSettle();
     expect(find.text('Entre no seu espaço'), findsOneWidget);
     expect(find.text('Chefia de teste'), findsNothing);
+    expect(await SecureTokenStore(ApiSettings.baseUrl).read() == null, isTrue);
+  });
+
+  testWidgets('invited account accepts a captured Identity code on Android', (
+    tester,
+  ) async {
+    const email = String.fromEnvironment('TEST_INVITE_EMAIL');
+    const code = String.fromEnvironment('TEST_INVITE_CODE');
+    const password = String.fromEnvironment('TEST_INVITE_PASSWORD');
+    expect(
+      email.isNotEmpty && code.isNotEmpty && password.isNotEmpty,
+      isTrue,
+      reason: 'Prepare the private invitation fixture; native acceptance must not be skipped.',
+    );
+    await SecureTokenStore(ApiSettings.baseUrl).clear();
+    app.main();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ainda não ativei a conta'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Já tenho um código'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('email')), email);
+    await tester.enterText(find.byKey(const Key('code')), code);
+    await tester.enterText(find.byKey(const Key('password')), password);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('submit')));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+              .widget<TextFormField>(find.byKey(const Key('email')))
+              .controller!
+              .text ==
+          email,
+      isTrue,
+      reason: 'The accepted invitation email must remain in the login form.',
+    );
+    expect(
+      tester
+              .widget<TextFormField>(find.byKey(const Key('password')))
+              .controller!
+              .text ==
+          password,
+      isTrue,
+      reason: 'The login password must remain after keyboard dismissal.',
+    );
+    await tester.tap(find.byKey(const Key('submit')));
+    await tester.pumpAndSettle();
+    for (
+      var i = 0;
+      i < 40 &&
+          find
+              .text('Palavra-passe definida. Pode iniciar sessão.')
+              .evaluate()
+              .isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    expect(
+      find.text('Palavra-passe definida. Pode iniciar sessão.'),
+      findsOneWidget,
+    );
+    expect(find.text('Entre no seu espaço'), findsOneWidget);
+    expect(find.byKey(const Key('code')), findsNothing);
+    // Completion changes the native password field from newPassword to password
+    // and clears it. Settle that transition before sending the next IME edit.
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('password')));
+    await tester.tap(find.byKey(const Key('password')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('password')), password);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('submit')));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+              .widget<TextFormField>(find.byKey(const Key('email')))
+              .controller!
+              .text ==
+          email,
+      isTrue,
+      reason: 'The accepted invitation email must remain in the login form.',
+    );
+    expect(
+      tester
+              .widget<TextFormField>(find.byKey(const Key('password')))
+              .controller!
+              .text ==
+          password,
+      isTrue,
+      reason: 'The login password must remain after keyboard dismissal.',
+    );
+    await tester.tap(find.byKey(const Key('submit')));
+    await tester.pumpAndSettle();
+    await openAccountSettings(tester);
+    expect(
+      find.byKey(const Key('authenticated-member-name')),
+      findsOneWidget,
+      reason:
+          'Auth status: ${tester.widget<AuthScreen>(find.byType(AuthScreen)).controller.message.name}',
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('authenticated-member-name')))
+          .data,
+      'Convite Android sintético',
+    );
+    await signOut(tester);
+    for (
+      var i = 0;
+      i < 40 && find.text('Entre no seu espaço').evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    expect(find.text('Entre no seu espaço'), findsOneWidget);
     expect(await SecureTokenStore(ApiSettings.baseUrl).read() == null, isTrue);
   });
 }

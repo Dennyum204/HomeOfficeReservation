@@ -137,3 +137,8 @@ key-*.xml
 *.aab
 signing.properties
 ho012-*-evidence.json
+# HO-012 NAS preparation outputs: never commit archives, actual configuration or runner receipts.
+/ho012-nas-images/
+/ho012-nas-evidence.json
+/ho012-nas-runner-metrics.txt
+**/.ho012-nas-trial

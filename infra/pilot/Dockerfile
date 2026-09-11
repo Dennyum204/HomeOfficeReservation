@@ -1,4 +1,4 @@
-# SDK versions match the repository pins. Locks are mandatory; build outside the small VPS.
+# SDK versions match the repository pins. Locks are mandatory; build outside the NAS/VM.
 FROM node:24.20.0-bookworm-slim AS web
 WORKDIR /src
 COPY .npmrc ./

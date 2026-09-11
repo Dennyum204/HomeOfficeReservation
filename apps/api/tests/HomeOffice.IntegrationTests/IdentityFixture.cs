@@ -30,8 +30,17 @@ public sealed class TestClock : TimeProvider
 
 public sealed class CapturedEmail : IAccountEmail
 {
+    private int sentCount;
+    public int SentCount => sentCount;
+    public bool FailDelivery { get; set; }
     public Dictionary<string, (string Purpose, string Code)> Messages { get; } = [];
-    public Task SendAsync(string email, string purpose, string code) { Messages[email] = (purpose, code); return Task.CompletedTask; }
+    public Task SendAsync(string email, string purpose, string code)
+    {
+        if (FailDelivery) throw new IOException("Synthetic delivery unavailable.");
+        Messages[email] = (purpose, code);
+        Interlocked.Increment(ref sentCount);
+        return Task.CompletedTask;
+    }
 }
 
 public sealed class IdentityFixture : IAsyncDisposable
@@ -48,7 +57,7 @@ public sealed class IdentityFixture : IAsyncDisposable
     private string connection = "";
     private string databaseName = "ho003_test_" + Guid.NewGuid().ToString("N");
 
-    public async Task InitializeAsync(bool production = false, int requestLimit = 1000, bool shortCodes = false)
+    public async Task InitializeAsync(bool production = false, int requestLimit = 1000, bool shortCodes = false, int? smtpPort = null)
     {
         var source = Environment.GetEnvironmentVariable("HO_TEST_DATABASE");
         Assert.False(string.IsNullOrWhiteSpace(source), "HO_TEST_DATABASE must point to real disposable PostgreSQL; never skip.");
@@ -78,7 +87,9 @@ public sealed class IdentityFixture : IAsyncDisposable
                 ["DataProtection:KeyDirectory"] = Path.Combine(DirectoryPath, "keys"),
                 ["DataProtection:CertificatePath"] = certificatePath,
                 ["DataProtection:CertificatePassword"] = Password,
-                ["Email:Host"] = "smtp.example.invalid",
+                ["Email:Transport"] = smtpPort is null ? "Capture" : "LocalSmtp",
+                ["Email:Host"] = smtpPort is null ? "smtp.example.invalid" : "127.0.0.1",
+                ["Email:Port"] = (smtpPort ?? 587).ToString(),
                 ["Email:From"] = "test@example.invalid",
                 ["Email:Username"] = "test",
                 ["Email:Password"] = Password,
@@ -99,7 +110,7 @@ public sealed class IdentityFixture : IAsyncDisposable
                 services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(DirectoryPath, "keys")))
                     .ProtectKeysWithCertificate(X509CertificateLoader.LoadPkcs12FromFile(certificatePath, Password));
                 services.RemoveAll<TimeProvider>(); services.AddSingleton<TimeProvider>(Clock);
-                services.RemoveAll<IAccountEmail>(); services.AddSingleton<IAccountEmail>(Email);
+                if (smtpPort is null) { services.RemoveAll<IAccountEmail>(); services.AddSingleton<IAccountEmail>(Email); }
                 services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, o => o.TimeProvider = Clock);
                 if (shortCodes) services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromMilliseconds(10));
             });

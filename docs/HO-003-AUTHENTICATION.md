@@ -2,6 +2,8 @@
 
 Implementação de 2026-09-09, issue [#4](https://github.com/Dennyum204/HomeOfficeReservation/issues/4). Concretiza ADR-004; [ADR-005](adr/ADR-005-identity-implementation.md) preserva os detalhes e limites decididos. Calendário, aprovações, tarefas e notificações continuam fora deste âmbito. Nenhuma conta Microsoft, consentimento ou validação Graph faz parte deste setup.
 
+Continuidade em 2026-09-11: [HO-014](HO-014-INVITATIONS.md) acrescenta estados de convite, reenvio/cancelamento e entrega durável ao provisionamento abaixo. Um recibo de criação não confirma entrega. O código expira em uma hora, mas o convite permanece pendente; cancelamento é terminal. Para usar um código recebido, escolher **Ainda não ativei a conta → Já tenho um código**, sem pedir outra emissão. A administração consulta estados e chefia pela API; a interface administrativa continua HO-015. Os comandos históricos abaixo não devem ser usados para recriar contas/bases já utilizadas; preparar uma instância separada para ensaios.
+
 ## Testar neste Windows, com o ambiente já preparado
 
 Na raiz do repositório, PowerShell:
@@ -72,6 +74,8 @@ Em Development, as mensagens são JSON privados no diretório `email` impresso p
 As três contas sintéticas de setup já estão ativadas exclusivamente pelo comando Development. Para ensaiar ativação completa, provisionar uma quarta conta pelo administrador conforme abaixo. Nenhuma password segue por email. Produção usa MailKit **4.17.0**, SMTP com **STARTTLS obrigatório**, autenticação e validação de certificado normal; não há fallback para captura local. Entrega por um fornecedor real/domínio próprio e recuperação no piloto permanecem validação operacional posterior, **não realizadas nesta entrega**.
 
 ## Administração controlada
+
+Extensão HO-013: [procedimento de titular com dois papéis](HO-013-OWNER-BOOTSTRAP.md). O comando abaixo conserva o comportamento original de administrador apenas; `--bootstrap-owner` é a escolha explícita para titular novo, e `--enable-admin-employee` acrescenta colaboração ao administrador existente sem tocar em credenciais/dados. Migração aditiva de auditoria e exclusão mútua por organização protegem alterações administrativas concorrentes. A API continua a proibir autoedição de papéis e autoaprovação. A interface administrativa é HO-015; não confundir este provisionamento com o ciclo de convites HO-014.
 
 Não há registo público ou bootstrap HTTP. Para uma organização nova fora de Development, o operador copia o [exemplo de bootstrap](../scripts/bootstrap-admin.example.json) para fora do repositório e prepara um JSON privado com `organizationName`, `email` e `displayName`, aplica migrações e executa `dotnet run --project apps/api/src/HomeOffice.Api -c Release --no-build -- --bootstrap-admin /caminho/privado/admin.json`. Exige configuração de produção válida, recusa organização existente e envia ativação; não recebe password inicial. Não usar `--provision-dev` em produção.
 

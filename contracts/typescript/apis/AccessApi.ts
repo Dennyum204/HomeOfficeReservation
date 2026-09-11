@@ -14,6 +14,16 @@
 
 import * as runtime from '../runtime';
 import {
+    type InvitationChangeRequest,
+    InvitationChangeRequestFromJSON,
+    InvitationChangeRequestToJSON,
+} from '../models/InvitationChangeRequest';
+import {
+    type InvitationPage,
+    InvitationPageFromJSON,
+    InvitationPageToJSON,
+} from '../models/InvitationPage';
+import {
     type MemberList,
     MemberListFromJSON,
     MemberListToJSON,
@@ -55,6 +65,17 @@ export interface AssignManagerRequest {
     setManagerRequest: SetManagerRequest;
 }
 
+export interface CancelInvitationRequest {
+    /**
+     *
+     */
+    memberId: string;
+    /**
+     *
+     */
+    invitationChangeRequest: InvitationChangeRequest;
+}
+
 export interface CheckManagementAccessRequest {
     /**
      *
@@ -69,11 +90,33 @@ export interface GetMemberRequest {
     memberId: string;
 }
 
+export interface ListInvitationsRequest {
+    /**
+     *
+     */
+    after?: string;
+    /**
+     *
+     */
+    limit?: number;
+}
+
 export interface ProvisionMemberOperationRequest {
     /**
      *
      */
     provisionMemberRequest: ProvisionMemberRequest;
+}
+
+export interface ResendInvitationRequest {
+    /**
+     *
+     */
+    memberId: string;
+    /**
+     *
+     */
+    invitationChangeRequest: InvitationChangeRequest;
 }
 
 export interface UpdateMemberOperationRequest {
@@ -142,6 +185,58 @@ export class AccessApi extends runtime.BaseAPI {
      */
     async assignManager(requestParameters: AssignManagerRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.assignManagerRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for cancelInvitation without sending the request
+     */
+    async cancelInvitationRequestOpts(requestParameters: CancelInvitationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['memberId'] == null) {
+            throw new runtime.RequiredError(
+                'memberId',
+                'Required parameter "memberId" was null or undefined when calling cancelInvitation().'
+            );
+        }
+
+        if (requestParameters['invitationChangeRequest'] == null) {
+            throw new runtime.RequiredError(
+                'invitationChangeRequest',
+                'Required parameter "invitationChangeRequest" was null or undefined when calling cancelInvitation().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/admin/members/{memberId}/invitation/cancel`;
+        urlPath = urlPath.replace('{memberId}', encodeURIComponent(String(requestParameters['memberId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InvitationChangeRequestToJSON(requestParameters['invitationChangeRequest']),
+        };
+    }
+
+    /**
+     */
+    async cancelInvitationRaw(requestParameters: CancelInvitationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.cancelInvitationRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async cancelInvitation(requestParameters: CancelInvitationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.cancelInvitationRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -268,6 +363,49 @@ export class AccessApi extends runtime.BaseAPI {
     }
 
     /**
+     * Creates request options for listInvitations without sending the request
+     */
+    async listInvitationsRequestOpts(requestParameters: ListInvitationsRequest): Promise<runtime.RequestOpts> {
+        const queryParameters: any = {};
+
+        if (requestParameters['after'] != null) {
+            queryParameters['after'] = requestParameters['after'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/admin/invitations`;
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async listInvitationsRaw(requestParameters: ListInvitationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InvitationPage>> {
+        const requestOptions = await this.listInvitationsRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InvitationPageFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async listInvitations(requestParameters: ListInvitationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InvitationPage> {
+        const response = await this.listInvitationsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Creates request options for listMembers without sending the request
      */
     async listMembersRequestOpts(): Promise<runtime.RequestOpts> {
@@ -332,6 +470,7 @@ export class AccessApi extends runtime.BaseAPI {
     }
 
     /**
+     * Create an admitted member and durable invitation. Repeating the identical normalized request by the same administrator returns success without creating or resending.
      */
     async provisionMemberRaw(requestParameters: ProvisionMemberOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const requestOptions = await this.provisionMemberRequestOpts(requestParameters);
@@ -341,9 +480,62 @@ export class AccessApi extends runtime.BaseAPI {
     }
 
     /**
+     * Create an admitted member and durable invitation. Repeating the identical normalized request by the same administrator returns success without creating or resending.
      */
     async provisionMember(requestParameters: ProvisionMemberOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.provisionMemberRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Creates request options for resendInvitation without sending the request
+     */
+    async resendInvitationRequestOpts(requestParameters: ResendInvitationRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['memberId'] == null) {
+            throw new runtime.RequiredError(
+                'memberId',
+                'Required parameter "memberId" was null or undefined when calling resendInvitation().'
+            );
+        }
+
+        if (requestParameters['invitationChangeRequest'] == null) {
+            throw new runtime.RequiredError(
+                'invitationChangeRequest',
+                'Required parameter "invitationChangeRequest" was null or undefined when calling resendInvitation().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/admin/members/{memberId}/invitation/resend`;
+        urlPath = urlPath.replace('{memberId}', encodeURIComponent(String(requestParameters['memberId'])));
+
+        return {
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InvitationChangeRequestToJSON(requestParameters['invitationChangeRequest']),
+        };
+    }
+
+    /**
+     */
+    async resendInvitationRaw(requestParameters: ResendInvitationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const requestOptions = await this.resendInvitationRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async resendInvitation(requestParameters: ResendInvitationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.resendInvitationRaw(requestParameters, initOverrides);
     }
 
     /**

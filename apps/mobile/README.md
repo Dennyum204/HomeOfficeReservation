@@ -1,5 +1,9 @@
 # Flutter Android — iOS adiado
 
+HO-016 aplica a identidade Claude + com claro/escuro/sistema em **Definições → Aparência**. [Guia, capturas e comandos de revisão](../../docs/HO-016-VISUAL-THEME.md). `lib/theme` é verificado pelo formatter; cores geradas a partir de `design/tokens.json`, sem editar o Dart gerado.
+
+HO-014: aceitar um convite em «Ainda não ativei a conta → Já tenho um código», com email, código Identity recebido e password escolhida. [Guia e preparação do teste nativo](../../docs/HO-014-INVITATIONS.md). Antes de executar `integration_test/app_test.dart`, preparar também o convite sintético com `scripts/prepare_invitation_test.py`; os campos TEST_INVITE_* ficam apenas no input privado de teste. O entrypoint normal não contém credenciais. Administração de convites permanece HO-015 (Web).
+
 **Alvo atual: Android.** Em HO-005 o responsável adiou iOS. As configurações/comandos iOS abaixo são referência preservada, sem execução/debug nos trabalhos core. Reativação em HO-306, sem data; não é requisito de setup ou release.
 
 Calendário e pedidos Android PT-PT para colaboradores e chefias, com mês/agenda, rascunhos, decisões parciais, revisões/contrapropostas e recuperação protegida. [Guia HO-010 e percurso com duas contas](../../docs/HO-010-ANDROID-PLANNING.md). HO-011 completa presenças/tarefas, confirmação por revisão, resolução e histórico; [matriz e percurso cruzado](../../docs/HO-011-CORE-ACCEPTANCE.md). Ligação real ao endpoint de metadados mantida. Login, ativação/recuperação, restauro, refresh limitado e logout próprios. Sem dados fictícios de calendário, aprovação, push ou Microsoft. [Setup Identity e credenciais privadas](../../docs/HO-003-AUTHENTICATION.md). Strings ARB em `lib/l10n/app_pt.arb`; `flutter pub get`/`flutter gen-l10n` geram código ignorado. Separação entre vista, repository e cliente Dart gerado, sem regras de negócio duplicadas.
@@ -41,7 +45,7 @@ Dentro de `apps/mobile`:
 
 ```sh
 flutter pub get --enforce-lockfile
-dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
+dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features lib/theme test tool integration_test test_driver
 flutter analyze
 flutter test
 dart run tool/smoke_api.dart http://localhost:5080
@@ -72,7 +76,9 @@ HO-003 acrescenta `flutter_secure_storage` 11.0.0: refresh por origem API em arm
 
 ## Caixa e push Android HO-007
 
-Caixa real: páginas de 20, badge, filtros, leitura/não lida e detalhe autorizado. HO-010 liga notificações de pedidos/decisões ao pedido atual autorizado; HO-011 abre também presenças/tarefas atuais, sem referências técnicas ou fallback Web. Polling de 15 s pausa em background; só leituras idempotentes repetem uma vez após refresh Identity. O teste de expiração Android passa agora por background para não confundir atividade da caixa com sessão inativa; a lógica iOS anterior não foi alterada nem executada.
+Caixa real: páginas de 20, badge, filtros, leitura/não lida e detalhe autorizado. HO-010 liga notificações de pedidos/decisões ao pedido atual autorizado; HO-011 abre também presenças/tarefas atuais, sem referências técnicas ou fallback Web. Polling de 15 s pausa em background; as leituras idempotentes repetem uma vez após refresh Identity. O teste de expiração Android passa por background para não confundir atividade da caixa com sessão inativa; iOS não foi executado.
+
+Correção HO-015: o planeamento recupera uma única vez uma escrita recusada explicitamente com 401 após preflight, revalidando a mesma sessão/ator e reutilizando corpo/chave. Nunca repete automaticamente 403, timeout, transporte ou 5xx. No ensaio nativo com access=5s/refresh=30s, `--dart-define=TEST_EXPIRE_PLANNING_WRITE=true` atrasa a primeira escrita seis segundos e exige rejeição real 401 seguida de sucesso; a CI ativa este teste adicional. Não usar esse define com a app normal nem com tokens de duração maior. [Evidência e limites](../../docs/HO-015-WEB-ADMINISTRATION.md).
 
 FCM está desativado por defeito; [configuração privada, limites e evidência externa](../../docs/HO-007-NOTIFICATIONS.md). FirebaseAdmin/FlutterFire com versões fixadas; sem Firebase Auth, sem configuração real em Git. Só pedir permissão na ação de Definições. Recusa mantém a caixa. Registo expira após 24 h sem renovação; abrir diariamente. Logout offline mostra quando não foi possível confirmar remoção; IDs pendentes em armazenamento seguro, sem conservar credenciais da conta anterior. Entrega/abertura foreground/background/cold start e reconexão/troca de conta foram verificadas no emulador API 37.
 
@@ -90,7 +96,7 @@ Prova submissão gerada por colaborador, consumo real pelo worker, inbox da chef
 
 ## Planeamento Android HO-010
 
-Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submissão, filtros/paginação, retirada só de pendentes, decisões parciais e revisões. A localização confirmada nunca desaparece enquanto a alteração está pendente. Indisponibilidade manual usa o mesmo processo. O seletor de colaborador é autorizado pela API e o nome ativo permanece na barra durante scroll.
+Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submissão, filtros/paginação, retirada só de pendentes, decisões parciais e revisões. A localização confirmada nunca desaparece enquanto a alteração está pendente. Indisponibilidade manual usa o mesmo processo. O seletor de colaborador é autorizado pela API. No refinamento HO-016, o título e o colaborador selecionado integram o conteúdo com scroll, sem barra fixa.
 
 `features/planning` separa vistas/controller/repository; só o cliente gerado serializa contratos. Input e envelopes de recuperação são cifrados por origem e conta via secure storage. Logout explícito elimina-os; expiração conserva input protegido para a mesma conta. Uma resposta de transporte perdida exige recuperar a chave/corpo originais. A retoma atualiza leituras, sem fila offline. [ADR-011](../../docs/adr/ADR-011-android-planning.md).
 
@@ -104,3 +110,9 @@ Presenças/tarefas partilham colaborador, sessão e journal de escrita com o cal
 # Preparação de distribuição privada HO-012
 
 Package preservado: `dev.homeoffice.homeoffice_mobile`. `HO_ANDROID_SIGNING_PROPERTIES` aponta para properties e keystore absolutos **fora do repositório**; configuração ausente gera release unsigned, nunca assinatura debug automática. [Chave, HTTPS, Firebase, build e atualização](../../infra/pilot/README.md). O ensaio `python scripts/check_android_signing.py` usa uma chave descartável e não instala/distribui o APK. Piloto físico e FCM do futuro alojamento permanecem por validar. Não desinstalar a app existente para contornar assinatura diferente.
+
+## Cabeçalhos e sessão HO-016
+
+Calendário, Pedidos, Presenças/tarefas, Notificações e Definições começam com um título que acompanha o scroll. A identidade autenticada, email, organização, papéis e ações **Verificar sessão / Terminar sessão** estão apenas em **Definições → Conta e sessão**. O colaborador selecionado continua explícito nas áreas de planeamento, com o seletor da chefia. A validação ao retomar a aplicação, renovação, limpeza de dados privados/push e regras de acesso não dependem de abrir Definições.
+
+O teste widget `test/workspace_session_test.dart` percorre todos os separadores em claro/escuro a 320 px e texto 100%/200%, áreas seguras, scroll, verificação manual, logout, limpeza do rascunho e troca de conta, seguida de recusa de sessão na retoma do Calendário. Usa HTTP e armazenamento de plataforma simulados. Os testes nativos partilham `integration_test/session_helpers.dart` para alcançar as ações pela interface. [Capturas e ensaio real](../../docs/HO-016-VISUAL-THEME.md).

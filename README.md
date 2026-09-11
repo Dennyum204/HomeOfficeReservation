@@ -1,6 +1,9 @@
 # HomeOfficeReservation
 
-**HO-012 em preparação, sem deployment:** [proposta de alojamento e piloto](docs/HO-012-PILOT.md), [build/backup/restauro/Android privado](infra/pilot/README.md). Aprovação, SMTP real, distribuição física e aceitação continuam pendentes; PR draft, sem lançamento V1.
+**HO-012 retomada — ensaio NAS em preparação, ainda sem instalação:** [stack isolada e comandos](infra/nas/README.md), [proposta atual](docs/HO-012-PILOT.md). DS218+ é candidato por medir; Hetzner não aprovado. PR #37 draft, sem lançamento V1.
+**HO-016 — Identidade visual Web/Android:** tema Claude + adaptado, claro/escuro/sistema, secções de formulário e estados separados por rótulos e ícones. [Tema, contraste e revisão visual](docs/HO-016-VISUAL-THEME.md). Sem alteração de API, dados ou permissões.
+
+**HO-015 — Administração Web:** membros, convites, estado de entrega, papéis e chefias com confirmação e recuperação de respostas perdidas. [Guia e teste isolado](docs/HO-015-WEB-ADMINISTRATION.md). O titular mantém a sua conta de colaborador; o chefe associado decide os pedidos.
 
 Calendário próprio para planear trabalho remoto em Portugal e presencial na Suíça, com pedidos, aprovações, presenças obrigatórias, tarefas e notificações. **Core V1 completo sem conta Microsoft ou Outlook.**
 
@@ -15,6 +18,10 @@ Stack: ASP.NET Core/.NET 10, EF Core/PostgreSQL, React/TypeScript Web e Flutter 
 **HO-010 disponibiliza calendário e pedidos Android para os dois papéis:** mês/agenda, rascunhos, aprovação parcial, retirada, revisões, contrapropostas e disponibilidade manual. Recuperação explícita de envios incertos e input protegido por conta. [Utilização, testes e passagem Web → Android](docs/HO-010-ANDROID-PLANNING.md).
 
 **HO-011 completa presenças/tarefas Android e navegação de notificações:** leitura por revisão, resolução explícita, atribuição/progresso e histórico, com input e recuperação protegidos. A Web distingue pedidos próprios de exigências da chefia e abre o detalhe antes da lista em ecrãs estreitos. [Matriz corrente, comandos e percurso com duas contas](docs/HO-011-CORE-ACCEPTANCE.md). Sem nova API/migração nem deployment.
+
+**HO-013 acrescenta bootstrap explícito do titular com os papéis de administrador e colaborador**, na mesma Identity, e extensão idempotente de um administrador existente pelo operador. [Comandos, migração, recuperação e exemplo sintético](docs/HO-013-OWNER-BOOTSTRAP.md). O chefe distinto continua a exigir relação explícita; autoaprovação e autoedição de papéis pela API são recusadas.
+
+**HO-014 acrescenta convites recuperáveis:** estados administrativos, validade separada do convite, reenvio/cancelamento, entrega durável protegida e recuperação de respostas perdidas. [Migração, endpoints e teste sintético](docs/HO-014-INVITATIONS.md). Web/Android aceitam o código Identity no ecrã existente, incluindo «Já tenho um código». Interface administrativa continua para HO-015; SMTP externo e piloto continuam dependentes da preparação operacional HO-012.
 
 ## Outlook opcional
 
@@ -91,8 +98,6 @@ O workflow documental permite `outlook-probe-tests` apenas manualmente com `run_
 
 [Issues com IDs estáveis](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [milestones core/opcionais](https://github.com/Dennyum204/HomeOfficeReservation/milestones). URLs reais e histórico de mudanças de âmbito no backlog canónico. Repositório público; segredos, configuração privada e dados de calendário ficam fora do Git. Lockfiles, migrações e exemplos seguros devem ser versionados quando existirem.
 
-Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. HO-012 continua no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), com a [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13).
+Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. HO-013/014/015/016 integrados com [evidência de merge/CI](docs/HO-012-INTEGRATION.md). HO-012 continua no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), issue #13 aberta.
 
-Domínio existente na Cloudflare: **ferbatech.com**. Produção `homeoffice.ferbatech.com`; staging `staging.homeoffice.ferbatech.com`. [Proposta](docs/HO-012-PILOT.md): duas VMs Hetzner isoladas, backups e Storage Box, **€17,38/mês antes de impostos**, sem compra/transferência ou reserva de domínio. Fornecedor/região/retenção, contratação, DNS, deployment e distribuição continuam por aprovar; restantes registos DNS/email serão preservados.
-
-Acesso privado por convite: o titular será administrador e colaborador, com outro membro como chefe associado; nunca autoaprovação. Já existe provisionamento administrativo e ativação Identity, mas faltam bootstrap com os dois papéis, gestão do ciclo de convites e interface administrativa: [inspeção e tarefas HO-013/014/015](docs/HO-012-PRIVATE-ACCESS.md). Convites Firebase para APK não concedem acesso à aplicação. [HO-016 — Claude +](https://github.com/Dennyum204/HomeOfficeReservation/issues/41) regista apenas a próxima melhoria visual Web/Android; iOS adiado. Esta atualização só altera documentação/tracking.
+Domínio existente **ferbatech.com**, nomes futuros homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Nenhum DNS/email alterado, domínio comprado ou alojamento contratado. NAS apenas candidato; conectividade Cloudflare reportada não prova instalação/desempenho. [Acesso privado já implementado e gates operacionais restantes](docs/HO-012-PRIVATE-ACCESS.md). Convites Firebase não concedem acesso à aplicação. Dados/emuladores privados preservados; iOS/Outlook adiados.
