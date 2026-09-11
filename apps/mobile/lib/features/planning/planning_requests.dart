@@ -31,10 +31,6 @@ class PlanningRequests extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          s.planRequestsTitle,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
         if (c.own)
           FilledButton.icon(
             key: const Key('planning-new-request'),

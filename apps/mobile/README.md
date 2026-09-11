@@ -96,7 +96,7 @@ Prova submissão gerada por colaborador, consumo real pelo worker, inbox da chef
 
 ## Planeamento Android HO-010
 
-Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submissão, filtros/paginação, retirada só de pendentes, decisões parciais e revisões. A localização confirmada nunca desaparece enquanto a alteração está pendente. Indisponibilidade manual usa o mesmo processo. O seletor de colaborador é autorizado pela API e o nome ativo permanece na barra durante scroll.
+Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submissão, filtros/paginação, retirada só de pendentes, decisões parciais e revisões. A localização confirmada nunca desaparece enquanto a alteração está pendente. Indisponibilidade manual usa o mesmo processo. O seletor de colaborador é autorizado pela API. No refinamento HO-016, o título e o colaborador selecionado integram o conteúdo com scroll, sem barra fixa.
 
 `features/planning` separa vistas/controller/repository; só o cliente gerado serializa contratos. Input e envelopes de recuperação são cifrados por origem e conta via secure storage. Logout explícito elimina-os; expiração conserva input protegido para a mesma conta. Uma resposta de transporte perdida exige recuperar a chave/corpo originais. A retoma atualiza leituras, sem fila offline. [ADR-011](../../docs/adr/ADR-011-android-planning.md).
 
@@ -107,3 +107,9 @@ Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submiss�
 Presenças/tarefas partilham colaborador, sessão e journal de escrita com o calendário. Formulários usam DTOs gerados, preview atual, versões esperadas e confirmação explícita; falhas conservam input protegido. O calendário abre o detalhe da presença e a resolução reutiliza propostas/aceitação/decisão. A caixa distingue abrir, ler e confirmar presença.
 
 `integration_test/work_test.dart` percorre os novos workflows com API/PG reais sem Firebase. `cross_platform_test.dart` alterna com o browser, usando estado de ensaio privado. `work_push_live_test.dart` é externo ao core e requer configuração real, permissão explícita no dispositivo de teste e contas sintéticas. Comandos, limites e evidência no [guia HO-011](../../docs/HO-011-CORE-ACCEPTANCE.md). Restaurar sempre o entrypoint normal depois de testes com contas privadas.
+
+## Cabeçalhos e sessão HO-016
+
+Calendário, Pedidos, Presenças/tarefas, Notificações e Definições começam com um título que acompanha o scroll. A identidade autenticada, email, organização, papéis e ações **Verificar sessão / Terminar sessão** estão apenas em **Definições → Conta e sessão**. O colaborador selecionado continua explícito nas áreas de planeamento, com o seletor da chefia. A validação ao retomar a aplicação, renovação, limpeza de dados privados/push e regras de acesso não dependem de abrir Definições.
+
+O teste widget `test/workspace_session_test.dart` percorre todos os separadores em claro/escuro a 320 px e texto 100%/200%, áreas seguras, scroll, verificação manual, logout, limpeza do rascunho e troca de conta, seguida de recusa de sessão na retoma do Calendário. Usa HTTP e armazenamento de plataforma simulados. Os testes nativos partilham `integration_test/session_helpers.dart` para alcançar as ações pela interface. [Capturas e ensaio real](../../docs/HO-016-VISUAL-THEME.md).

@@ -9,7 +9,7 @@ Future<void> main() => integrationDriver(
     if (shots.isEmpty) throw StateError('No visual evidence returned');
     for (final shot in shots) {
       final name = shot['screenshotName'] as String;
-      if (!RegExp(r'^ho016-(before|after)-(light|dark)-[a-z-]+$')
+      if (!RegExp(r'^ho016-(before|after|header)-(light|dark)-[a-z-]+$')
           .hasMatch(name)) {
         throw StateError('Unexpected visual evidence name');
       }

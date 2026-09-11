@@ -448,6 +448,7 @@ Critérios de aceitação:
 - Preservar funcionalidades, permissões, autenticação, leitura versus aceitação e resolução explícita; verificar percursos Web/Android com API e PostgreSQL reais e dados sintéticos.
 - Registar comparações reais antes/depois em claro/escuro desktop/viewport estreito/Android e verificar contraste, foco/teclado/semântica de acessibilidade; falhas de execução não contam como evidência concluída.
 - Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook.
+- Refinamento Android PR #45: títulos compactos dentro do scroll, sem painel de sessão persistente/AppBar; Conta e sessão em Definições, seletor contextual de colaborador preservado. Verificar sessão, logout/limpeza/troca de conta e validação automática independente, com testes e capturas claro/escuro. Web inalterada neste refinamento.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/41
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../../theme/components.dart';
 import 'planning_controller.dart';
 import 'planning_calendar.dart';
 import 'planning_editor_view.dart';
@@ -50,13 +51,8 @@ class PlanningScreen extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(16),
           children: [
-            Text(
-              c.manager ? s.planManagerTitle : s.planTitle,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 12),
+            SectionHeading(requests ? s.requests : s.calendar),
             PlanningEmployeePicker(c),
-            const SizedBox(height: 12),
             PlanningNotice(c),
             if (c.initialized && c.employees.isEmpty) Text(s.planNoEmployees),
             if (review != null)

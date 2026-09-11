@@ -1135,12 +1135,13 @@
         "Localização e aprovação têm rótulos/ícones separados; plano confirmado, proposta pendente e conflito permanecem visíveis sem depender apenas da cor.",
         "Preservar funcionalidades, permissões, autenticação, leitura versus aceitação e resolução explícita; verificar percursos Web/Android com API e PostgreSQL reais e dados sintéticos.",
         "Registar comparações reais antes/depois em claro/escuro desktop/viewport estreito/Android e verificar contraste, foco/teclado/semântica de acessibilidade; falhas de execução não contam como evidência concluída.",
-        "Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook."
+        "Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook.",
+        "Refinamento Android PR #45: títulos compactos dentro do scroll, sem painel de sessão persistente/AppBar; Conta e sessão em Definições, seletor contextual de colaborador preservado. Verificar sessão, logout/limpeza/troca de conta e validação automática independente, com testes e capturas claro/escuro. Web inalterada neste refinamento."
       ],
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/45"
       ],
-      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft. PR #45 aberto; entrega para revisão humana apenas após os quatro checks do head final verdes e sem conflitos. 51 testes Flutter passaram; aplicação normal de revisão sem credenciais compiladas. HO-016 permanece review até integração humana.",
+      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft. PR #45 aberto; entrega para revisão humana apenas após os quatro checks do head final verdes e sem conflitos. 51 testes Flutter passaram; aplicação normal de revisão sem credenciais compiladas. HO-016 permanece review até integração humana. Refinamento Android: 52 testes locais, análise/format e ensaio nativo com 26 capturas adicionais passaram; scroll por conta, identidade em Definições e seletor da chefia preservados. As 84 capturas iniciais ficam como histórico. Quatro checks remotos devem ser novamente verificados no head final; issue permanece aberta até merge humano.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41",
       "scope_history": [
         {
@@ -1158,6 +1159,11 @@
             "Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.",
             "Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306."
           ]
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Revisão visual do responsável pede títulos Android no scroll e conta/sessão em Definições; continuação do mesmo PR #45, sem mudar Web.",
+          "source_commit": "75fae2d631205e50a47876ab9a0e763d9b760a21"
         }
       ]
     },

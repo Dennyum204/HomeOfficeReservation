@@ -4,6 +4,20 @@ import 'theme_tokens.dart';
 
 enum BadgeTone { neutral, pending, danger, information }
 
+/// Place inside the section's scroll view, never in a persistent app bar.
+class SectionHeading extends StatelessWidget {
+  const SectionHeading(this.title, {super.key});
+  final String title;
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Semantics(
+      header: true,
+      child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+    ),
+  );
+}
+
 class StateBadge extends StatelessWidget {
   const StateBadge(
     this.label,

@@ -70,6 +70,7 @@
   "authManager": "Gestor",
   "authAdmin": "Administrador de contas",
   "authCheck": "Verificar sessão",
+  "authAccountSession": "Conta e sessão",
   "authLogout": "Terminar sessão",
   "authBack": "Voltar ao início de sessão",
   "authActivateLink": "Ainda não ativei a conta",

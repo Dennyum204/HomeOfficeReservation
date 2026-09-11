@@ -7,6 +7,7 @@ import '../../config/api_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../workspace/workspace_repository.dart';
 import '../workspace/workspace_screen.dart';
+import '../../theme/components.dart';
 import 'auth_controller.dart';
 import '../notifications/inbox_controller.dart';
 import '../notifications/notification_repository.dart';
@@ -281,6 +282,8 @@ class _AccountWorkspace extends StatefulWidget {
 class _AccountWorkspaceState extends State<_AccountWorkspace>
     with WidgetsBindingObserver {
   final workspaceKey = GlobalKey<WorkspaceScreenState>();
+  // The account-keyed workspace owns its scroll positions as well as its data.
+  final pageStorage = PageStorageBucket();
   late final planning = PlanningController(
     PlanningRepository(widget.controller),
     SecurePlanningStore(ApiSettings.baseUrl),
@@ -358,57 +361,57 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
     final c = widget.controller;
     final member = c.member!;
     final s = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        SafeArea(
-          bottom: false,
-          child: Material(
-            color: Theme.of(context).colorScheme.surface,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+    return PageStorage(
+      bucket: pageStorage,
+      child: WorkspaceScreen(
+        key: workspaceKey,
+        repository: repository,
+        inbox: inbox,
+        push: push,
+        planning: planning,
+        accountSection: FormSection(
+          title: s.authAccountSession,
+          description: s.workAccount,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                member.displayName,
+                key: const Key('authenticated-member-name'),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(member.email),
+              const SizedBox(height: 8),
+              Text(member.organizationName),
+              Text(
+                [
+                  if (member.isEmployee) s.authEmployee,
+                  if (member.isManager) s.authManager,
+                  if (member.isAccountAdministrator) s.authAdmin,
+                ].join(' · '),
+              ),
+              const SizedBox(height: 12),
+              if (c.busy) LinearProgressIndicator(semanticsLabel: s.authWait),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
                 children: [
-                  Text(
-                    s.workAccount,
-                    style: Theme.of(context).textTheme.labelSmall,
+                  OutlinedButton.icon(
+                    onPressed: c.busy ? null : c.check,
+                    icon: const Icon(Icons.verified_user_outlined),
+                    label: Text(s.authCheck),
                   ),
-                  Text(
-                    member.displayName,
-                    key: const Key('authenticated-member-name'),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '${member.organizationName} · ${[if (member.isEmployee) s.authEmployee, if (member.isManager) s.authManager, if (member.isAccountAdministrator) s.authAdmin].join(' · ')}',
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      TextButton(
-                        onPressed: c.busy ? null : c.check,
-                        child: Text(s.authCheck),
-                      ),
-                      TextButton(
-                        onPressed: c.logout,
-                        child: Text(s.authLogout),
-                      ),
-                    ],
+                  TextButton.icon(
+                    onPressed: c.logout,
+                    icon: const Icon(Icons.logout),
+                    label: Text(s.authLogout),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
         ),
-        Expanded(
-          child: WorkspaceScreen(
-            key: workspaceKey,
-            repository: repository,
-            inbox: inbox,
-            push: push,
-            planning: planning,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

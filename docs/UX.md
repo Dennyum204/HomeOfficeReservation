@@ -65,7 +65,7 @@ Notificações é um separador real Web/Android: badge, filtros, páginas, leitu
 
 ## Concretização Android HO-010
 
-Mês compacto e agenda selecionada, rótulos/ícones, padrão e aprovações separados de pendentes e presenças. Nome do colaborador ativo permanece na barra superior. Pedido de dias de trabalho é distinto de uma obrigação presencial; esta última é apenas consultada neste item, com tratamento Web até HO-011.
+Mês compacto e agenda selecionada, rótulos/ícones, padrão e aprovações separados de pendentes e presenças. HO-010 apresentava o colaborador na barra superior; o refinamento HO-016 abaixo substitui essa apresentação por contexto no conteúdo com scroll. Pedido de dias de trabalho é distinto de uma obrigação presencial; esta última é apenas consultada neste item, com tratamento Web até HO-011.
 
 Formulários revêm o intervalo antes de o adicionar e confirmam a intenção antes de enviar. A chefia seleciona só o subconjunto pretendido; o colaborador retira pendentes sem cancelar aprovados. Cancelamento aprovado exige revisão e decisão final. Voltar no Android fecha confirmação/editor/detalhe; input local continua protegido até logout explícito. Erros de rede, versão e resultado incerto têm ações distintas. [Percurso e evidência](HO-010-ANDROID-PLANNING.md).
 
@@ -78,3 +78,5 @@ Um conflito explica que o plano aprovado permanece e quem atua a seguir. Confirm
 ## Concretização HO-016
 
 Tema neutro Claude + adaptado com preferência claro/escuro/sistema. Web conserva componentes e reorganiza o editor em contexto, método de datas, resumo, comentário e ações; pedidos distinguem resumo, decisões por dia, ações pertinentes e histórico. Android usa ThemeData, cartões e badges comuns, preservando navegação, texto ampliado e ações existentes. Foco visível, semântica e movimento reduzido fazem parte da verificação. [Referência, licença, testes e comparações](HO-016-VISUAL-THEME.md).
+
+Refinamento Android pedido na revisão do PR #45: cada separador começa com um título compacto dentro do seu scroll, sem painel de sessão persistente nem AppBar fixa/flutuante. **Colaborador selecionado** acompanha apenas calendário, pedidos e presenças/tarefas; a chefia conserva o seletor. **Definições → Conta e sessão** identifica a pessoa autenticada, email, organização e papéis, com Verificar sessão e Terminar sessão. A validação automática ao retomar a aplicação permanece independente de Definições. A navegação inferior e as áreas seguras mantêm-se; a troca de conta começa com novas posições de scroll. A Web não muda neste refinamento.

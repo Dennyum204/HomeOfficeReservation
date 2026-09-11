@@ -31,3 +31,9 @@ O ensaio real Android encontrou uma colisão pré-existente de PageStorage entre
 Fontes oficiais consultadas em 2026-09-11: [WCAG 2.2 — contraste](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html), [padrão de diálogo modal WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), [acessibilidade Flutter](https://docs.flutter.dev/ui/accessibility). Texto normal exige 4,5:1; texto grande e indicadores de controlo/foco têm verificações próprias. Testes automáticos e inspeção visual não equivalem a uma certificação integral de acessibilidade.
 
 O [guia HO-016](../HO-016-VISUAL-THEME.md) distingue capturas reais, testes com HTTP simulado e limitações. ADR-007/011/012/016 mantêm as decisões funcionais; este ADR substitui apenas as propostas de cor anteriores de UX. iOS e Outlook continuam adiados.
+
+## Refinamento da revisão Android — 2026-09-11
+
+Por pedido do responsável no PR #45, retiram-se o painel de conta persistente e a AppBar. Títulos compactos pertencem às listas com scroll; o seletor de colaborador permanece nas áreas pertinentes. Conta autenticada, papéis e ações de sessão ficam em Definições → Conta e sessão. Os observadores de ciclo de vida e controladores conservam validação automática, renovação e cleanup. Um PageStorageBucket por identidade limita as posições de scroll à sessão visual dessa conta, evitando que o login seguinte herde a posição da anterior; as posições continuam preservadas entre separadores da mesma conta.
+
+Fontes oficiais consultadas em 2026-09-11: [PageStorage](https://api.flutter.dev/flutter/widgets/PageStorage-class.html) e [SafeArea](https://api.flutter.dev/flutter/widgets/SafeArea-class.html). Não há alteração de API, armazenamento de credenciais, regras de negócio ou Web. A decisão anterior mantém-se como histórico; esta secção substitui apenas a colocação do cabeçalho e da conta no Android.

@@ -11,6 +11,7 @@ import '../planning/planning_controller.dart';
 import '../planning/planning_screen.dart';
 import '../work/work_screen.dart';
 import '../../theme/appearance.dart';
+import '../../theme/components.dart';
 
 class WorkspaceScreen extends StatefulWidget {
   const WorkspaceScreen({
@@ -19,11 +20,13 @@ class WorkspaceScreen extends StatefulWidget {
     this.inbox,
     this.push,
     this.planning,
+    this.accountSection,
   });
   final WorkspaceRepository? repository;
   final InboxController? inbox;
   final PushCoordinator? push;
   final PlanningController? planning;
+  final Widget? accountSection;
   @override
   State<WorkspaceScreen> createState() => WorkspaceScreenState();
 }
@@ -169,47 +172,6 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
     ];
     final wide = MediaQuery.sizeOf(context).width >= 700;
     return Scaffold(
-      primary: widget.planning == null,
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Icon(
-              Icons.holiday_village_outlined,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: widget.planning != null && _section < 3
-                  ? ListenableBuilder(
-                      listenable: widget.planning!,
-                      builder: (context, _) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            labels[_section],
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          if (widget.planning!.employee != null)
-                            Text(
-                              widget.planning!.employee!.displayName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                        ],
-                      ),
-                    )
-                  : Text(
-                      s.appName,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: wide
           ? null
           : NavigationBar(
@@ -226,121 +188,266 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                 ),
               ),
             ),
-      body: Row(
-        children: [
-          if (wide)
-            NavigationRail(
-              extended: true,
-              selectedIndex: _section,
-              onDestinationSelected: selectSection,
-              destinations: List.generate(
-                labels.length,
-                (i) => NavigationRailDestination(
-                  icon: navIcon(i, icons[i]),
-                  label: Text(labels[i]),
+      body: SafeArea(
+        bottom: wide,
+        child: Row(
+          children: [
+            if (wide)
+              NavigationRail(
+                extended: true,
+                selectedIndex: _section,
+                onDestinationSelected: selectSection,
+                destinations: List.generate(
+                  labels.length,
+                  (i) => NavigationRailDestination(
+                    icon: navIcon(i, icons[i]),
+                    label: Text(labels[i]),
+                  ),
                 ),
               ),
-            ),
-          Expanded(
-            child: (_section == 0 || _section == 1) && widget.planning != null
-                ? PlanningScreen(
-                    controller: widget.planning!,
-                    requests: _section == 1,
-                    onRequests: () => selectSection(1),
-                    onRequirement: (id) async {
-                      await widget.planning!.openWork(
-                        WorkContext.requirement,
-                        id,
-                      );
-                      if (mounted && widget.planning!.active) selectSection(2);
-                    },
-                    onNewRequirement: () async {
-                      final c = widget.planning!;
-                      await c.selectWorkKind(WorkContext.requirement);
-                      if (!mounted || !c.active) return;
-                      await c.editWork(creating: true);
-                      if (mounted && c.active) selectSection(2);
-                    },
-                  )
-                : _section == 2 && widget.planning != null
-                ? WorkScreen(
-                    widget.planning!,
-                    onRequests: () => selectSection(1),
-                  )
-                : _section == 3 && widget.inbox != null
-                ? NotificationScreen(
-                    controller: widget.inbox!,
-                    onOpen: openNotification,
-                  )
-                : SingleChildScrollView(
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 800),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (_section == 4 && widget.push != null)
-                                PushSettings(controller: widget.push!),
-                              if (widget.planning != null) ...[
-                                const AppearancePicker(),
-                                const SizedBox(height: 24),
-                                Text(
-                                  s.settingsTitle,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall,
-                                ),
-                                Text(s.workSettings),
-                                Text(s.workSettingsHint),
-                                Text(s.workOutlookLater),
-                              ] else ...[
-                                Text(
-                                  s.countries,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    letterSpacing: 2,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+            Expanded(
+              child: (_section == 0 || _section == 1) && widget.planning != null
+                  ? PlanningScreen(
+                      controller: widget.planning!,
+                      requests: _section == 1,
+                      onRequests: () => selectSection(1),
+                      onRequirement: (id) async {
+                        await widget.planning!.openWork(
+                          WorkContext.requirement,
+                          id,
+                        );
+                        if (mounted && widget.planning!.active) {
+                          selectSection(2);
+                        }
+                      },
+                      onNewRequirement: () async {
+                        final c = widget.planning!;
+                        await c.selectWorkKind(WorkContext.requirement);
+                        if (!mounted || !c.active) return;
+                        await c.editWork(creating: true);
+                        if (mounted && c.active) selectSection(2);
+                      },
+                    )
+                  : _section == 2 && widget.planning != null
+                  ? WorkScreen(
+                      widget.planning!,
+                      onRequests: () => selectSection(1),
+                    )
+                  : _section == 3 && widget.inbox != null
+                  ? NotificationScreen(
+                      controller: widget.inbox!,
+                      onOpen: openNotification,
+                    )
+                  : SingleChildScrollView(
+                      key: PageStorageKey('workspace-$_section'),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 800),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SectionHeading(labels[_section]),
+                                if (_section == 4 &&
+                                    widget.accountSection != null)
+                                  widget.accountSection!,
+                                if (_section == 4 && widget.push != null)
+                                  PushSettings(controller: widget.push!),
+                                if (widget.planning != null) ...[
+                                  const AppearancePicker(),
+                                  const SizedBox(height: 24),
+                                  Text(s.workSettings),
+                                  Text(s.workSettingsHint),
+                                  Text(s.workOutlookLater),
+                                ] else ...[
+                                  Text(
+                                    s.countries,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      letterSpacing: 2,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  s.welcome,
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    height: 1.2,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -1,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface,
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    s.welcome,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      height: 1.2,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  s.introduction,
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                    height: 1.65,
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    s.introduction,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                      height: 1.65,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                Chip(
-                                  label: Text(
-                                    s.foundation,
-                                    style: const TextStyle(fontSize: 11),
+                                  const SizedBox(height: 16),
+                                  Chip(
+                                    label: Text(
+                                      s.foundation,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
+                                    avatar: const Icon(
+                                      Icons.construction,
+                                      size: 14,
+                                    ),
                                   ),
-                                  avatar: const Icon(
-                                    Icons.construction,
-                                    size: 14,
+                                  const SizedBox(height: 24),
+                                  Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(24),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            labels[_section].toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              letterSpacing: 1.5,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 14),
+                                          Text(
+                                            titles[_section],
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              height: 1.25,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 14),
+                                          Text(
+                                            descriptions[_section],
+                                            style: TextStyle(
+                                              height: 1.65,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 24),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 24,
+                                              horizontal: 16,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .surfaceContainerLow,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.cottage_outlined,
+                                                        size: 42,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Text(
+                                                        s.remote,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.more_horiz,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .landscape_outlined,
+                                                        size: 42,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Text(
+                                                        s.onsite,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 24),
+                                          const Divider(),
+                                          const SizedBox(height: 12),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.schedule,
+                                                size: 18,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                s.inPreparation,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            pending[_section],
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              height: 1.7,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 24),
+                                ],
+                                const SizedBox(height: 20),
                                 Card(
                                   child: Padding(
                                     padding: const EdgeInsets.all(24),
@@ -349,267 +456,125 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          labels[_section].toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            letterSpacing: 1.5,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurfaceVariant,
+                                          s.connectionTitle,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        const SizedBox(height: 14),
-                                        Text(
-                                          titles[_section],
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            height: 1.25,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 14),
-                                        Text(
-                                          descriptions[_section],
-                                          style: TextStyle(
-                                            height: 1.65,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 24),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 24,
-                                            horizontal: 16,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .surfaceContainerLow,
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.cottage_outlined,
-                                                      size: 42,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurfaceVariant,
+                                        const SizedBox(height: 16),
+                                        if (_connection == null)
+                                          Text(s.configurationError)
+                                        else
+                                          FutureBuilder<WorkspaceInfo?>(
+                                            future: _connection,
+                                            builder: (context, snapshot) {
+                                              final loading =
+                                                  snapshot.connectionState !=
+                                                  ConnectionState.done;
+                                              final data = loading
+                                                  ? null
+                                                  : snapshot.data;
+                                              final failed =
+                                                  !loading &&
+                                                  (snapshot.hasError ||
+                                                      data == null);
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Semantics(
+                                                    liveRegion: true,
+                                                    child: Text(
+                                                      loading
+                                                          ? s.connecting
+                                                          : failed
+                                                          ? s.offline
+                                                          : s.connected,
+                                                      key: const Key(
+                                                        'connection-state',
+                                                      ),
                                                     ),
+                                                  ),
+                                                  if (failed) ...[
                                                     const SizedBox(height: 8),
+                                                    Text(s.offlineHelp),
+                                                  ],
+                                                  if (data != null) ...[
+                                                    const SizedBox(height: 16),
                                                     Text(
-                                                      s.remote,
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                      s.received,
+                                                      style: const TextStyle(
+                                                        fontSize: 11,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      DateFormat.yMd('pt_PT')
+                                                          .add_Hms()
+                                                          .format(
+                                                            data.serverTimeUtc
+                                                                .toLocal(),
+                                                          ),
+                                                    ),
+                                                    const SizedBox(height: 12),
+                                                    Text(
+                                                      s.timeZones,
+                                                      style: const TextStyle(
+                                                        fontSize: 11,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      data.planningTimeZones
+                                                          .join(' · '),
                                                       style: const TextStyle(
                                                         fontSize: 12,
                                                       ),
                                                     ),
                                                   ],
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.more_horiz,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurfaceVariant,
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.landscape_outlined,
-                                                      size: 42,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurfaceVariant,
+                                                  const SizedBox(height: 16),
+                                                  OutlinedButton.icon(
+                                                    onPressed: loading
+                                                        ? null
+                                                        : () => setState(() {
+                                                            _connection =
+                                                                _loadConnection();
+                                                          }),
+                                                    icon: const Icon(
+                                                      Icons.refresh,
+                                                      size: 18,
                                                     ),
-                                                    const SizedBox(height: 8),
-                                                    Text(
-                                                      s.onsite,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                      ),
+                                                    label: Text(
+                                                      failed
+                                                          ? s.retry
+                                                          : s.refresh,
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
-                                        ),
-                                        const SizedBox(height: 24),
-                                        const Divider(),
-                                        const SizedBox(height: 12),
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.schedule,
-                                              size: 18,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              s.inPreparation,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          pending[_section],
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            height: 1.7,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              ],
-                              const SizedBox(height: 20),
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(24),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        s.connectionTitle,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      if (_connection == null)
-                                        Text(s.configurationError)
-                                      else
-                                        FutureBuilder<WorkspaceInfo?>(
-                                          future: _connection,
-                                          builder: (context, snapshot) {
-                                            final loading =
-                                                snapshot.connectionState !=
-                                                ConnectionState.done;
-                                            final data = loading
-                                                ? null
-                                                : snapshot.data;
-                                            final failed =
-                                                !loading &&
-                                                (snapshot.hasError ||
-                                                    data == null);
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Semantics(
-                                                  liveRegion: true,
-                                                  child: Text(
-                                                    loading
-                                                        ? s.connecting
-                                                        : failed
-                                                        ? s.offline
-                                                        : s.connected,
-                                                    key: const Key(
-                                                      'connection-state',
-                                                    ),
-                                                  ),
-                                                ),
-                                                if (failed) ...[
-                                                  const SizedBox(height: 8),
-                                                  Text(s.offlineHelp),
-                                                ],
-                                                if (data != null) ...[
-                                                  const SizedBox(height: 16),
-                                                  Text(
-                                                    s.received,
-                                                    style: const TextStyle(
-                                                      fontSize: 11,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    DateFormat.yMd('pt_PT')
-                                                        .add_Hms()
-                                                        .format(
-                                                          data.serverTimeUtc
-                                                              .toLocal(),
-                                                        ),
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  Text(
-                                                    s.timeZones,
-                                                    style: const TextStyle(
-                                                      fontSize: 11,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    data.planningTimeZones.join(
-                                                      ' · ',
-                                                    ),
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                                const SizedBox(height: 16),
-                                                OutlinedButton.icon(
-                                                  onPressed: loading
-                                                      ? null
-                                                      : () => setState(() {
-                                                          _connection =
-                                                              _loadConnection();
-                                                        }),
-                                                  icon: const Icon(
-                                                    Icons.refresh,
-                                                    size: 18,
-                                                  ),
-                                                  label: Text(
-                                                    failed
-                                                        ? s.retry
-                                                        : s.refresh,
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                    ],
+                                const SizedBox(height: 24),
+                                Text(
+                                  s.independent,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
-                              Text(
-                                s.independent,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
