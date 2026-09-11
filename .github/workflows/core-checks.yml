@@ -109,7 +109,7 @@ jobs:
         working-directory: contracts/dart
       - run: flutter pub get --enforce-lockfile
         working-directory: apps/mobile
-      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
+      - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features lib/theme test tool integration_test test_driver
         working-directory: apps/mobile
       - run: flutter analyze && flutter test
         working-directory: apps/mobile

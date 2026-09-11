@@ -3,6 +3,7 @@ import 'package:homeoffice_api/api.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 import 'planning_controller.dart';
+import '../../theme/components.dart';
 
 String locationLabel(
   AppLocalizations s,
@@ -27,12 +28,13 @@ IconData locationIcon(WorkLocation location, Availability? availability) =>
     : location == WorkLocation.officeSwitzerland
     ? Icons.business_outlined
     : Icons.horizontal_rule;
-Color locationColor(WorkLocation location, Availability? availability) =>
-    availability != Availability.working
-    ? const Color(0xff52616b)
-    : location == WorkLocation.remotePortugal
-    ? const Color(0xff246142)
-    : const Color(0xff20548a);
+Color locationColor(
+  BuildContext context,
+  WorkLocation location,
+  Availability? availability,
+) => availability != Availability.working
+    ? Theme.of(context).colorScheme.onSurfaceVariant
+    : Theme.of(context).colorScheme.onSurface;
 String decisionLabel(AppLocalizations s, DayDecision value) => switch (value) {
   DayDecision.pending => s.planPending,
   DayDecision.approved => s.planApproved,
@@ -135,24 +137,17 @@ class PlanLabel extends StatelessWidget {
     this.text,
     this.icon, {
     super.key,
-    this.color = const Color(0xff264e3e),
+    this.color,
+    this.tone = BadgeTone.neutral,
   });
   final String text;
   final IconData icon;
-  final Color color;
+  final Color? color;
+  final BadgeTone tone;
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 3),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 18, color: color),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Text(text, style: TextStyle(color: color)),
-        ),
-      ],
-    ),
+    child: StateBadge(text, icon, tone: tone, color: color),
   );
 }
 

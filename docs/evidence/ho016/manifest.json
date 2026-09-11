@@ -1,0 +1,511 @@
+{
+  "date": "2026-09-11",
+  "before_commit": "dcda6e2cceef570b3f8ab6dc5d5905d6af6212ec",
+  "data": "Synthetic HO-016 isolated API/PostgreSQL; no credentials or authentication form captured.",
+  "captures": [
+    {
+      "file": "after-android-dark-calendar.png",
+      "sha256": "b0428c471142d4da8e404764e5a25c1ebb6bd4611a65f6589a186128e9d1cbd4",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-dark-editor.png",
+      "sha256": "7bcd471a3e69c7752823a0781641cc55e0aeaa942e2d396f0304e6b12ecf2e33",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-dark-notifications.png",
+      "sha256": "783a119c5158accfd8b577bde321ffc3e0b272e93aca1b83c5a1fd2ceb4da161",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-dark-onsite.png",
+      "sha256": "90d0003a1bc1c8ebe3f5d47dfa67558afb530a56ad2261d958d983e9a9d39080",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-dark-request.png",
+      "sha256": "743241c5fdd62ed90791fa01a3ca297578c450faae41ca62ef9c9d7c4528de2f",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-dark-settings.png",
+      "sha256": "a322163078da2411c4868f867e5b415fa47256217a21fa2cee9143c5a51a3cfe",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-dark-task.png",
+      "sha256": "1b369f790f95e4b1ce31ee2365d64ba1393c1e4145c43c72264117faf418d333",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-calendar.png",
+      "sha256": "e60dcc6a42d1a51fa82b36306072bdf2324ae1805bcf12356b449f320d73eb0d",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-editor.png",
+      "sha256": "a3184e6d3354ddb65380ae9742289aec21506d8530e6c877299b8ef69066dafd",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-notifications.png",
+      "sha256": "7454a429dc7c5ec5826484017d4f1f1ed83596773cb6f591bf2b2b550aecb494",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-onsite.png",
+      "sha256": "e6e0ead244c1919dd12fd9da91f8c3120b5ff6a0baff23fdb29ab4a2da44e52d",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-request.png",
+      "sha256": "dcb011356901085747e808639cb18f4d996c527b6cdebe6a0c1089faac1a9928",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-settings.png",
+      "sha256": "556832516233c089bd083be7d1db47b4b4774534d1a695396f58feeb6c1246ba",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-android-light-task.png",
+      "sha256": "9d67605fdb932fcf616d2cf7d5d70f48cd266806d5ff2547140486a297845241",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "after-web-desktop-dark-administration.png",
+      "sha256": "09c8125497c9093a4318f215b7c488dc84a9abe71c923aa0e73ca20977c95a0b",
+      "width": 1440,
+      "height": 1789
+    },
+    {
+      "file": "after-web-desktop-dark-calendar.png",
+      "sha256": "0e7d47f854961248153a51f608a4e48790aa47279268d09dfc04294aad4c6275",
+      "width": 1440,
+      "height": 1678
+    },
+    {
+      "file": "after-web-desktop-dark-editor.png",
+      "sha256": "e472e6d13ec5d51b5033e687049efc2088b304cf1375f2e2dff31169f40874e5",
+      "width": 1440,
+      "height": 2168
+    },
+    {
+      "file": "after-web-desktop-dark-notifications.png",
+      "sha256": "57b370cb2ae9701209b8c5f6f0f369a1250231fa319e0a1a9cf1ed46d70234ef",
+      "width": 1440,
+      "height": 1167
+    },
+    {
+      "file": "after-web-desktop-dark-onsite.png",
+      "sha256": "8b9f4efa4fb1a17a53de1d5b004604eac159145e57d6f16904a7d49b952d0d62",
+      "width": 1440,
+      "height": 1167
+    },
+    {
+      "file": "after-web-desktop-dark-request.png",
+      "sha256": "4e9eb831685cd4750dc9a1797ffd8c7170815b136e60cf0cd4f579602ebca163",
+      "width": 1440,
+      "height": 2172
+    },
+    {
+      "file": "after-web-desktop-dark-settings.png",
+      "sha256": "46b38f1bc6841783b69137c476a3fc0be03f595cd3728ec35505910dcb8d69a1",
+      "width": 1440,
+      "height": 1854
+    },
+    {
+      "file": "after-web-desktop-dark-tasks.png",
+      "sha256": "b1a6c96d3351fcba5a0447e00eefb27e4bd734c5bf9547bb66052d676fcd0173",
+      "width": 1440,
+      "height": 1167
+    },
+    {
+      "file": "after-web-desktop-light-administration.png",
+      "sha256": "06ca20f47179e8b88f90e8ccba39f1f3dc2b6fc9bbe08e1b7edde6c698b94154",
+      "width": 1440,
+      "height": 1789
+    },
+    {
+      "file": "after-web-desktop-light-calendar.png",
+      "sha256": "d4f7da6c4dff52265e5c77188ebf2d11848668b7d239b056ea00b573cec3cd2e",
+      "width": 1440,
+      "height": 1678
+    },
+    {
+      "file": "after-web-desktop-light-editor.png",
+      "sha256": "48d0607582f66e2e4e4f64d66360cf5b868c095f48d1c9456f3b6b1d4fb4b303",
+      "width": 1440,
+      "height": 2168
+    },
+    {
+      "file": "after-web-desktop-light-notifications.png",
+      "sha256": "5f607635e234475e9cc15a204019baabcddd2af11e24cdbdaa039d169919f5e1",
+      "width": 1440,
+      "height": 1167
+    },
+    {
+      "file": "after-web-desktop-light-onsite.png",
+      "sha256": "3de2c3a2405b46d2f1f5c0d557163ffbf0ccaa873ef7051836f3180764452c7a",
+      "width": 1440,
+      "height": 1167
+    },
+    {
+      "file": "after-web-desktop-light-request.png",
+      "sha256": "f6dba33431ebbb2f102fc9ee6fc1ebd9e6d37c63857d1554037605ef6652e557",
+      "width": 1440,
+      "height": 2168
+    },
+    {
+      "file": "after-web-desktop-light-settings.png",
+      "sha256": "8e0ff18d14f3edf1e5e605dbef713acfeeb1d83c2951d51d0b1e1ae1910ad5bf",
+      "width": 1440,
+      "height": 1854
+    },
+    {
+      "file": "after-web-desktop-light-tasks.png",
+      "sha256": "192dda7221a1a31ce2a9bdbb7a54a23d3e6868d69720d0bf7206919e679bdd3a",
+      "width": 1440,
+      "height": 1167
+    },
+    {
+      "file": "after-web-narrow-dark-administration.png",
+      "sha256": "bd60debde2d0687bbd99c8f334adedd3819ea2a6aca4e2fdb43c7c8281242e0c",
+      "width": 390,
+      "height": 2272
+    },
+    {
+      "file": "after-web-narrow-dark-calendar.png",
+      "sha256": "d3c8854a20f90d20ec8a574d6056c6588d4ac9660c16a3fa14bf52a36e061ada",
+      "width": 390,
+      "height": 3162
+    },
+    {
+      "file": "after-web-narrow-dark-editor.png",
+      "sha256": "1b9e08fc8144dd2aca52866aa6d4ebde49a6fea8064f4eda53e3881236d38289",
+      "width": 390,
+      "height": 3325
+    },
+    {
+      "file": "after-web-narrow-dark-notifications.png",
+      "sha256": "040d22a25bfda91e56ac19fcf2a65c0a19f608fd6f2247eef7e7021521f2ed4d",
+      "width": 390,
+      "height": 1181
+    },
+    {
+      "file": "after-web-narrow-dark-onsite.png",
+      "sha256": "774901d893f560e8da99e8993a297d789fa4c377526f9b7b5ceb9c1292787ccd",
+      "width": 390,
+      "height": 1912
+    },
+    {
+      "file": "after-web-narrow-dark-request.png",
+      "sha256": "91af0cc5f7dac0c58b85cc65d9bb8b361b4de487303d375f6dc5fc453faccc97",
+      "width": 390,
+      "height": 3329
+    },
+    {
+      "file": "after-web-narrow-dark-settings.png",
+      "sha256": "46acd30f86e821920c264a79bd9d5f89a3a647e53e30ab23338fba4ac8168150",
+      "width": 390,
+      "height": 2655
+    },
+    {
+      "file": "after-web-narrow-dark-tasks.png",
+      "sha256": "bed32a42de9d299909e584223384a0eee14dc75e58015eaec86a9ec7e7087137",
+      "width": 390,
+      "height": 1828
+    },
+    {
+      "file": "after-web-narrow-light-administration.png",
+      "sha256": "e3efe3783b13194f3638d2846cc9488b62cbd4092e49f030255d0eb9d08044e3",
+      "width": 390,
+      "height": 2272
+    },
+    {
+      "file": "after-web-narrow-light-calendar.png",
+      "sha256": "bba98e2dd57d4ff71c2b41d4f9f50c3008a9ed9c047f001ba654f23d76e91aec",
+      "width": 390,
+      "height": 3162
+    },
+    {
+      "file": "after-web-narrow-light-editor.png",
+      "sha256": "48048fe394af74154502ab719f2ae5c07dae6ca2738c6fcc49c49da1e6d426b2",
+      "width": 390,
+      "height": 3325
+    },
+    {
+      "file": "after-web-narrow-light-notifications.png",
+      "sha256": "39554ad9d701c43c6e0bfafe7fce2bc0299017028c72e30da939fdacb776cc2e",
+      "width": 390,
+      "height": 1181
+    },
+    {
+      "file": "after-web-narrow-light-onsite.png",
+      "sha256": "bdacdf56b14238266b780c3dec5657fbdb513add0fef9215146d120b3b1a7381",
+      "width": 390,
+      "height": 1912
+    },
+    {
+      "file": "after-web-narrow-light-request.png",
+      "sha256": "f1d268f952f0ced2d57ee733bb9238f8a35d6e1ba3da3909dee9316774819827",
+      "width": 390,
+      "height": 3329
+    },
+    {
+      "file": "after-web-narrow-light-settings.png",
+      "sha256": "00e33689b0632933777dc446d8929b9e747269815fcfc35d91eb6436b77281b9",
+      "width": 390,
+      "height": 2655
+    },
+    {
+      "file": "after-web-narrow-light-tasks.png",
+      "sha256": "46ff1ae965ee4e2624b06f80697145d505b77620ffa442bfd04d8f7652b97597",
+      "width": 390,
+      "height": 1828
+    },
+    {
+      "file": "before-android-dark-calendar.png",
+      "sha256": "5a1c4584a20ff81984796da3716c51b981d7d57fd65fd886be98a419b432ba67",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "before-android-dark-request.png",
+      "sha256": "f1bd9fc7c66e63c11522bc28680eed354e816886e19ad9d8fd8561963c3e44e8",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "before-android-dark-settings.png",
+      "sha256": "f7b67655eae235e450aed1d2c2ddb1c6ce1bf19f8e119ff69eee1288fe3775b5",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "before-android-light-calendar.png",
+      "sha256": "5a1c4584a20ff81984796da3716c51b981d7d57fd65fd886be98a419b432ba67",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "before-android-light-request.png",
+      "sha256": "f1bd9fc7c66e63c11522bc28680eed354e816886e19ad9d8fd8561963c3e44e8",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "before-android-light-settings.png",
+      "sha256": "851c28ac6f4ef769500342988f0bc9b2e4ad031703701971a6104b462c0e1fb5",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "before-web-desktop-dark-administration.png",
+      "sha256": "3a69667677587ae90644f27662ba25b1cd85fbfb7cf095551bc4fe678621650f",
+      "width": 1440,
+      "height": 1704
+    },
+    {
+      "file": "before-web-desktop-dark-calendar.png",
+      "sha256": "e99eb7253f7e7fecf45e1d04d91fee52f25c8d123a133158b07bec2f75e3504c",
+      "width": 1440,
+      "height": 1614
+    },
+    {
+      "file": "before-web-desktop-dark-editor.png",
+      "sha256": "8e92741599e81fe12dac732f0977bb4611760fbdcedb10e1c85089b96384126d",
+      "width": 1440,
+      "height": 1835
+    },
+    {
+      "file": "before-web-desktop-dark-notifications.png",
+      "sha256": "d63dd6bb291b89c7cb597587a9457729532de4af5c4b4faf7fb3342fce79be90",
+      "width": 1440,
+      "height": 1162
+    },
+    {
+      "file": "before-web-desktop-dark-onsite.png",
+      "sha256": "1837619749a8629dffac8ab1a3ee3c08df315eefeee0d4b5647639fda0c89ab7",
+      "width": 1440,
+      "height": 1162
+    },
+    {
+      "file": "before-web-desktop-dark-request.png",
+      "sha256": "05cc8e67b7378b1b832ba2486a3093668c3c7f4ab770085d51e589b643fb5690",
+      "width": 1440,
+      "height": 1868
+    },
+    {
+      "file": "before-web-desktop-dark-settings.png",
+      "sha256": "5bde9ff0d3c12cb67a5afa3a2cc9b3a36cc2e7f35dc582659ca3ce19b2a24a7e",
+      "width": 1440,
+      "height": 1513
+    },
+    {
+      "file": "before-web-desktop-dark-tasks.png",
+      "sha256": "bd3ca1df2b31e663714dcbd4eb03960579962691f1873718ccc2c3770f290450",
+      "width": 1440,
+      "height": 1162
+    },
+    {
+      "file": "before-web-desktop-light-administration.png",
+      "sha256": "3a69667677587ae90644f27662ba25b1cd85fbfb7cf095551bc4fe678621650f",
+      "width": 1440,
+      "height": 1704
+    },
+    {
+      "file": "before-web-desktop-light-calendar.png",
+      "sha256": "e99eb7253f7e7fecf45e1d04d91fee52f25c8d123a133158b07bec2f75e3504c",
+      "width": 1440,
+      "height": 1614
+    },
+    {
+      "file": "before-web-desktop-light-editor.png",
+      "sha256": "8e92741599e81fe12dac732f0977bb4611760fbdcedb10e1c85089b96384126d",
+      "width": 1440,
+      "height": 1835
+    },
+    {
+      "file": "before-web-desktop-light-notifications.png",
+      "sha256": "d63dd6bb291b89c7cb597587a9457729532de4af5c4b4faf7fb3342fce79be90",
+      "width": 1440,
+      "height": 1162
+    },
+    {
+      "file": "before-web-desktop-light-onsite.png",
+      "sha256": "1837619749a8629dffac8ab1a3ee3c08df315eefeee0d4b5647639fda0c89ab7",
+      "width": 1440,
+      "height": 1162
+    },
+    {
+      "file": "before-web-desktop-light-request.png",
+      "sha256": "9ed29d38cc42af59a0d68c70e2b2eb8e95ec5f1eed86fab2d3b3e1c660f3739a",
+      "width": 1440,
+      "height": 1835
+    },
+    {
+      "file": "before-web-desktop-light-settings.png",
+      "sha256": "94f105848ae60bf39eef0a4817dbcbeddef501290c90f5bd6376e524d69178b0",
+      "width": 1440,
+      "height": 1513
+    },
+    {
+      "file": "before-web-desktop-light-tasks.png",
+      "sha256": "bd3ca1df2b31e663714dcbd4eb03960579962691f1873718ccc2c3770f290450",
+      "width": 1440,
+      "height": 1162
+    },
+    {
+      "file": "before-web-narrow-dark-administration.png",
+      "sha256": "5f9f9a77efe0089fdeb958703983cc8358b37ad8953c831dd71929071011c3ef",
+      "width": 390,
+      "height": 2151
+    },
+    {
+      "file": "before-web-narrow-dark-calendar.png",
+      "sha256": "59c8e6845f96b0c821c2a731f6eadabb5dc9b62169023bc98b6d1216d5406aaf",
+      "width": 390,
+      "height": 2960
+    },
+    {
+      "file": "before-web-narrow-dark-editor.png",
+      "sha256": "c9ee6a217a8b8cbca59870a57ef436753bba2b9f380ed8a96e5ce412764a0237",
+      "width": 390,
+      "height": 2842
+    },
+    {
+      "file": "before-web-narrow-dark-notifications.png",
+      "sha256": "f7eba8e6e2ddfbe8ff5624622442d3a5c7a2e7f27f237b434709fa3ec8b5b665",
+      "width": 390,
+      "height": 1638
+    },
+    {
+      "file": "before-web-narrow-dark-onsite.png",
+      "sha256": "db00391bab24430bd1ea5a97b2ec3d0c6fb01c0f9f3186a3caeca9ae04895deb",
+      "width": 390,
+      "height": 1800
+    },
+    {
+      "file": "before-web-narrow-dark-request.png",
+      "sha256": "eb11c433dd86ed65ab997db2769a14489999b6db20c829000fb9548f4c1c613a",
+      "width": 390,
+      "height": 2842
+    },
+    {
+      "file": "before-web-narrow-dark-settings.png",
+      "sha256": "cb58f53f68ce1f0a425097417a85ab784a3cd48b730dfe5545e9878f97858858",
+      "width": 390,
+      "height": 2209
+    },
+    {
+      "file": "before-web-narrow-dark-tasks.png",
+      "sha256": "c7cea47051fdf0755a45024c0412be5bc988c9bf9fb18036b89c02cfb431848c",
+      "width": 390,
+      "height": 1720
+    },
+    {
+      "file": "before-web-narrow-light-administration.png",
+      "sha256": "5f9f9a77efe0089fdeb958703983cc8358b37ad8953c831dd71929071011c3ef",
+      "width": 390,
+      "height": 2151
+    },
+    {
+      "file": "before-web-narrow-light-calendar.png",
+      "sha256": "59c8e6845f96b0c821c2a731f6eadabb5dc9b62169023bc98b6d1216d5406aaf",
+      "width": 390,
+      "height": 2960
+    },
+    {
+      "file": "before-web-narrow-light-editor.png",
+      "sha256": "c9ee6a217a8b8cbca59870a57ef436753bba2b9f380ed8a96e5ce412764a0237",
+      "width": 390,
+      "height": 2842
+    },
+    {
+      "file": "before-web-narrow-light-notifications.png",
+      "sha256": "f7eba8e6e2ddfbe8ff5624622442d3a5c7a2e7f27f237b434709fa3ec8b5b665",
+      "width": 390,
+      "height": 1638
+    },
+    {
+      "file": "before-web-narrow-light-onsite.png",
+      "sha256": "db00391bab24430bd1ea5a97b2ec3d0c6fb01c0f9f3186a3caeca9ae04895deb",
+      "width": 390,
+      "height": 1800
+    },
+    {
+      "file": "before-web-narrow-light-request.png",
+      "sha256": "eb11c433dd86ed65ab997db2769a14489999b6db20c829000fb9548f4c1c613a",
+      "width": 390,
+      "height": 2842
+    },
+    {
+      "file": "before-web-narrow-light-settings.png",
+      "sha256": "22c31fb564452427d05eae353a957e6b3a9c09b021656f98fdd67c38e88b2b0d",
+      "width": 390,
+      "height": 2209
+    },
+    {
+      "file": "before-web-narrow-light-tasks.png",
+      "sha256": "c7cea47051fdf0755a45024c0412be5bc988c9bf9fb18036b89c02cfb431848c",
+      "width": 390,
+      "height": 1720
+    }
+  ]
+}

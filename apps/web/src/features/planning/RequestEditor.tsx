@@ -7,6 +7,7 @@ import {
   type Availability,
 } from "../../../../../contracts/typescript";
 import { p } from "../../i18n/planning.pt-PT";
+import { appearance as v } from "../../i18n/appearance.pt-PT";
 import { EDITOR_KEY } from "../auth/session";
 import { planningApi, sessionFailure } from "./api";
 import { dateKey, dateValue, dayLabel, todayInZone } from "./dates";
@@ -40,6 +41,7 @@ export function RequestEditor({
   const [from, setFrom] = useState(todayInZone());
   const [to, setTo] = useState(todayInZone());
   const [single, setSingle] = useState(todayInZone());
+  const [dateMode, setDateMode] = useState<"range" | "single">("range");
   const [weekends, setWeekends] = useState(false);
   const [preview, setPreview] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -154,214 +156,254 @@ export function RequestEditor({
         }}
       >
         <fieldset disabled={locked || loading} className="editor-fields">
-          <legend>{p.chooseDates}</legend>
-          <div className="form-row">
-            <label>
-              {p.workLocation}
-              <select
-                value={location}
-                disabled={availability !== "Working"}
-                onChange={(e) => setLocation(e.target.value as WorkLocation)}
-              >
-                <option value="RemotePortugal">
-                  {p.location.RemotePortugal}
-                </option>
-                <option value="OfficeSwitzerland">
-                  {p.location.OfficeSwitzerland}
-                </option>
-              </select>
-            </label>
-            <label>
-              {p.availabilityLabel}
-              <select
-                value={availability}
-                onChange={(e) =>
-                  setAvailability(e.target.value as Availability)
-                }
-              >
-                {Object.entries(p.availability).map(([value, label]) => (
-                  <option value={value} key={value}>
-                    {label}
+          <legend className="sr-only">{p.chooseDates}</legend>
+          <fieldset className="editor-section">
+            <legend>{v.context}</legend>
+            <p className="muted">{v.contextHint}</p>
+            <div className="form-row">
+              <label>
+                {p.workLocation}
+                <select
+                  value={location}
+                  disabled={availability !== "Working"}
+                  onChange={(e) => setLocation(e.target.value as WorkLocation)}
+                >
+                  <option value="RemotePortugal">
+                    {p.location.RemotePortugal}
                   </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="form-row">
-            <label>
-              {p.from}
-              <input
-                type="date"
-                value={from}
-                onChange={(e) => {
-                  setFrom(e.target.value);
-                  setPreview([]);
-                }}
-              />
-            </label>
-            <label>
-              {p.to}
-              <input
-                type="date"
-                value={to}
-                onChange={(e) => {
-                  setTo(e.target.value);
-                  setPreview([]);
-                }}
-              />
-            </label>
-          </div>
-          <div className="button-row">
-            <label className="check-label">
-              <input
-                type="checkbox"
-                checked={weekends}
-                onChange={(e) => {
-                  setWeekends(e.target.checked);
-                  setPreview([]);
-                }}
-              />
-              {p.includeWeekends}
-            </label>
-            <button
-              type="button"
-              disabled={!from || !to}
-              onClick={() => {
-                void previewRange();
-              }}
-            >
-              {p.addRange}
-            </button>
-          </div>
-          {preview.length > 0 && (
-            <div className="range-preview">
-              <strong>
-                {p.included} · {preview.length} {p.days}
-              </strong>
-              <ul>
-                {preview.map((date) => (
-                  <li key={date}>{dayLabel(date)}</li>
-                ))}
-              </ul>
-              <button type="button" onClick={() => add(preview)}>
-                {p.addIncluded}
+                  <option value="OfficeSwitzerland">
+                    {p.location.OfficeSwitzerland}
+                  </option>
+                </select>
+              </label>
+              <label>
+                {p.availabilityLabel}
+                <select
+                  value={availability}
+                  onChange={(e) =>
+                    setAvailability(e.target.value as Availability)
+                  }
+                >
+                  {Object.entries(p.availability).map(([value, label]) => (
+                    <option value={value} key={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </fieldset>
+          <fieldset className="editor-section">
+            <legend>{v.selection}</legend>
+            <div className="date-method" role="group" aria-label={v.mode}>
+              <button
+                type="button"
+                aria-pressed={dateMode === "range"}
+                onClick={() => setDateMode("range")}
+              >
+                {v.range}
+              </button>
+              <button
+                type="button"
+                aria-pressed={dateMode === "single"}
+                onClick={() => setDateMode("single")}
+              >
+                {v.single}
               </button>
             </div>
-          )}
-          <div className="form-row">
-            <label>
-              {p.date}
-              <input
-                type="date"
-                value={single}
-                onChange={(e) => setSingle(e.target.value)}
-              />
-            </label>
-            <button
-              type="button"
-              disabled={!single}
-              onClick={() => add([single])}
-            >
-              {p.addDate}
-            </button>
-          </div>
-          <h3>
-            {p.selectedDates} · {days.length} {p.days}
-          </h3>
-          {days.length === 0 && <p className="muted">{p.emptyDates}</p>}
-          <div className="editor-days">
-            {days.map((day, index) => (
-              <div className="editor-day" key={dateKey(day.localDate)}>
-                <strong>{dayLabel(dateKey(day.localDate))}</strong>
-                <label>
-                  <span className="sr-only">
-                    {p.availabilityLabel} {dayLabel(dateKey(day.localDate))}
-                  </span>
-                  <select
-                    aria-label={`${p.availabilityLabel} ${dateKey(day.localDate)}`}
-                    disabled={day.cancel}
-                    value={day.availability}
-                    onChange={(e) => {
-                      const next = e.target.value as Availability;
-                      update(index, {
-                        availability: next,
-                        location:
-                          next === "Working" ? "RemotePortugal" : "Unplanned",
-                      });
-                    }}
-                  >
-                    {Object.entries(p.availability).map(([value, label]) => (
-                      <option value={value} key={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {day.availability === "Working" && !day.cancel && (
+            <p className="muted">
+              {dateMode === "range" ? v.rangeHint : v.singleHint}
+            </p>
+            {dateMode === "range" ? (
+              <>
+                <div className="form-row">
                   <label>
-                    <span className="sr-only">
-                      {p.workLocation} {dayLabel(dateKey(day.localDate))}
-                    </span>
-                    <select
-                      aria-label={`${p.workLocation} ${dateKey(day.localDate)}`}
-                      value={day.location}
-                      onChange={(e) =>
-                        update(index, {
-                          location: e.target.value as WorkLocation,
-                        })
-                      }
-                    >
-                      <option value="RemotePortugal">
-                        {p.location.RemotePortugal}
-                      </option>
-                      <option value="OfficeSwitzerland">
-                        {p.location.OfficeSwitzerland}
-                      </option>
-                    </select>
+                    {p.from}
+                    <input
+                      type="date"
+                      value={from}
+                      onChange={(e) => {
+                        setFrom(e.target.value);
+                        setPreview([]);
+                      }}
+                    />
                   </label>
-                )}
-                {day.baseDayId && (
+                  <label>
+                    {p.to}
+                    <input
+                      type="date"
+                      value={to}
+                      onChange={(e) => {
+                        setTo(e.target.value);
+                        setPreview([]);
+                      }}
+                    />
+                  </label>
+                </div>
+                <div className="button-row">
                   <label className="check-label">
                     <input
                       type="checkbox"
-                      checked={day.cancel ?? false}
-                      onChange={(e) =>
-                        update(index, {
-                          cancel: e.target.checked,
-                          availability: "Working",
-                          location: e.target.checked
-                            ? "Unplanned"
-                            : "RemotePortugal",
-                        })
-                      }
+                      checked={weekends}
+                      onChange={(e) => {
+                        setWeekends(e.target.checked);
+                        setPreview([]);
+                      }}
                     />
-                    {p.cancelDay}
+                    {p.includeWeekends}
                   </label>
+                  <button
+                    type="button"
+                    disabled={!from || !to}
+                    onClick={() => {
+                      void previewRange();
+                    }}
+                  >
+                    {p.addRange}
+                  </button>
+                </div>
+                {preview.length > 0 && (
+                  <div className="range-preview">
+                    <strong>
+                      {p.included} · {preview.length} {p.days}
+                    </strong>
+                    <ul>
+                      {preview.map((date) => (
+                        <li key={date}>{dayLabel(date)}</li>
+                      ))}
+                    </ul>
+                    <button type="button" onClick={() => add(preview)}>
+                      {p.addIncluded}
+                    </button>
+                  </div>
                 )}
+              </>
+            ) : (
+              <div className="form-row">
+                <label>
+                  {p.date}
+                  <input
+                    type="date"
+                    value={single}
+                    onChange={(e) => setSingle(e.target.value)}
+                  />
+                </label>
                 <button
                   type="button"
-                  className="text-button"
-                  aria-label={`${p.removeDate} ${dateKey(day.localDate)}`}
-                  onClick={() =>
-                    setDays((current) => current.filter((_, i) => i !== index))
-                  }
+                  disabled={!single}
+                  onClick={() => add([single])}
                 >
-                  × {p.removeDate}
+                  {p.addDate}
                 </button>
               </div>
-            ))}
-          </div>
-          <p className="muted">{p.manualHint}</p>
-          <label>
-            {editor.mode === "proposal" ? p.reason : p.note}
-            <textarea
-              maxLength={editor.mode === "proposal" ? 1000 : 2000}
-              required={editor.mode === "proposal"}
-              rows={3}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
-          </label>
+            )}
+          </fieldset>
+          <fieldset className="editor-section">
+            <legend>{v.summary}</legend>
+            <p className="muted">{v.summaryHint}</p>
+            <h3>
+              {p.selectedDates} · {days.length} {p.days}
+            </h3>
+            {days.length === 0 && <p className="muted">{p.emptyDates}</p>}
+            <div className="editor-days">
+              {days.map((day, index) => (
+                <div className="editor-day" key={dateKey(day.localDate)}>
+                  <strong>{dayLabel(dateKey(day.localDate))}</strong>
+                  <label>
+                    <span className="sr-only">
+                      {p.availabilityLabel} {dayLabel(dateKey(day.localDate))}
+                    </span>
+                    <select
+                      aria-label={`${p.availabilityLabel} ${dateKey(day.localDate)}`}
+                      disabled={day.cancel}
+                      value={day.availability}
+                      onChange={(e) => {
+                        const next = e.target.value as Availability;
+                        update(index, {
+                          availability: next,
+                          location:
+                            next === "Working" ? "RemotePortugal" : "Unplanned",
+                        });
+                      }}
+                    >
+                      {Object.entries(p.availability).map(([value, label]) => (
+                        <option value={value} key={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  {day.availability === "Working" && !day.cancel && (
+                    <label>
+                      <span className="sr-only">
+                        {p.workLocation} {dayLabel(dateKey(day.localDate))}
+                      </span>
+                      <select
+                        aria-label={`${p.workLocation} ${dateKey(day.localDate)}`}
+                        value={day.location}
+                        onChange={(e) =>
+                          update(index, {
+                            location: e.target.value as WorkLocation,
+                          })
+                        }
+                      >
+                        <option value="RemotePortugal">
+                          {p.location.RemotePortugal}
+                        </option>
+                        <option value="OfficeSwitzerland">
+                          {p.location.OfficeSwitzerland}
+                        </option>
+                      </select>
+                    </label>
+                  )}
+                  {day.baseDayId && (
+                    <label className="check-label">
+                      <input
+                        type="checkbox"
+                        checked={day.cancel ?? false}
+                        onChange={(e) =>
+                          update(index, {
+                            cancel: e.target.checked,
+                            availability: "Working",
+                            location: e.target.checked
+                              ? "Unplanned"
+                              : "RemotePortugal",
+                          })
+                        }
+                      />
+                      {p.cancelDay}
+                    </label>
+                  )}
+                  <button
+                    type="button"
+                    className="text-button"
+                    aria-label={`${p.removeDate} ${dateKey(day.localDate)}`}
+                    onClick={() =>
+                      setDays((current) =>
+                        current.filter((_, i) => i !== index),
+                      )
+                    }
+                  >
+                    × {p.removeDate}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset className="editor-section">
+            <legend>{v.comment}</legend>
+            <p className="muted">{p.manualHint}</p>
+            <label>
+              {editor.mode === "proposal" ? p.reason : p.note}
+              <textarea
+                maxLength={editor.mode === "proposal" ? 1000 : 2000}
+                required={editor.mode === "proposal"}
+                rows={3}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </label>
+          </fieldset>
         </fieldset>
         {error && (
           <p role="alert" className="notice error">

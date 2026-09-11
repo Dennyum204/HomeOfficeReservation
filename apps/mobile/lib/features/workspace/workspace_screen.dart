@@ -10,6 +10,7 @@ import '../notifications/notification_screen.dart';
 import '../planning/planning_controller.dart';
 import '../planning/planning_screen.dart';
 import '../work/work_screen.dart';
+import '../../theme/appearance.dart';
 
 class WorkspaceScreen extends StatefulWidget {
   const WorkspaceScreen({
@@ -172,9 +173,9 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.holiday_village_outlined,
-              color: Color(0xff264e3e),
+              color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -283,6 +284,8 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                               if (_section == 4 && widget.push != null)
                                 PushSettings(controller: widget.push!),
                               if (widget.planning != null) ...[
+                                const AppearancePicker(),
+                                const SizedBox(height: 24),
                                 Text(
                                   s.settingsTitle,
                                   style: Theme.of(context)
@@ -295,28 +298,34 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                               ] else ...[
                                 Text(
                                   s.countries,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 10,
                                     letterSpacing: 2,
-                                    color: Color(0xff6d806b),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   s.welcome,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 30,
                                     height: 1.2,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: -1,
-                                    color: Color(0xff203d38),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface,
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   s.introduction,
-                                  style: const TextStyle(
-                                    color: Color(0xff637268),
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                     height: 1.65,
                                   ),
                                 ),
@@ -341,27 +350,33 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                       children: [
                                         Text(
                                           labels[_section].toUpperCase(),
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 10,
                                             letterSpacing: 1.5,
-                                            color: Color(0xff6d806b),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                         ),
                                         const SizedBox(height: 14),
                                         Text(
                                           titles[_section],
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 25,
                                             height: 1.25,
-                                            color: Color(0xff203d38),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
                                           ),
                                         ),
                                         const SizedBox(height: 14),
                                         Text(
                                           descriptions[_section],
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             height: 1.65,
-                                            color: Color(0xff637268),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                         ),
                                         const SizedBox(height: 24),
@@ -371,7 +386,9 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                             horizontal: 16,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xffedf1e7),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surfaceContainerLow,
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
@@ -381,10 +398,12 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                               Expanded(
                                                 child: Column(
                                                   children: [
-                                                    const Icon(
+                                                    Icon(
                                                       Icons.cottage_outlined,
                                                       size: 42,
-                                                      color: Color(0xff68805e),
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurfaceVariant,
                                                     ),
                                                     const SizedBox(height: 8),
                                                     Text(
@@ -398,17 +417,21 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                                   ],
                                                 ),
                                               ),
-                                              const Icon(
+                                              Icon(
                                                 Icons.more_horiz,
-                                                color: Color(0xff98a88f),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
                                               ),
                                               Expanded(
                                                 child: Column(
                                                   children: [
-                                                    const Icon(
+                                                    Icon(
                                                       Icons.landscape_outlined,
                                                       size: 42,
-                                                      color: Color(0xff68805e),
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurfaceVariant,
                                                     ),
                                                     const SizedBox(height: 8),
                                                     Text(
@@ -446,10 +469,12 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                         const SizedBox(height: 8),
                                         Text(
                                           pending[_section],
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 12,
                                             height: 1.7,
-                                            color: Color(0xff637268),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                           ),
                                         ),
                                       ],
@@ -570,9 +595,11 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                               const SizedBox(height: 24),
                               Text(
                                 s.independent,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Color(0xff637268),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                 ),
                               ),
                             ],

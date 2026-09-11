@@ -102,3 +102,5 @@ A caixa persistente e a leitura sincronizada funcionam em Web/Android independen
 ### Concretização HO-010
 
 Calendário e pedidos Android permitem os dois papéis: decisões parciais, retirada, revisões/cancelamentos, contrapropostas e disponibilidade manual, com dados autoritativos partilhados com a Web. Notificações de pedidos abrem o detalhe atual, sem executar decisões. Presenças/tarefas completas Android e aceitação transversal restante continuam em HO-011. [Guia e evidência](HO-010-ANDROID-PLANNING.md).
+
+Identidade visual HO-016: Web/Android usam superfícies neutras e temas claro/escuro/sistema. Localização usa ícones e texto; estado de aprovação, plano confirmado, proposta e conflito são distinguíveis sem depender de cor. [Decisão e âmbito](adr/ADR-017-shared-visual-theme.md).

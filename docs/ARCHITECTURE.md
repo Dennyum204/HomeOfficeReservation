@@ -110,3 +110,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Interfaces core HO-011
 
 [ADR-012](adr/ADR-012-core-interfaces.md) estende o controller/journal Android a presenças/tarefas, conservando um colaborador autorizado e uma intenção incerta de cada vez. Gerações separadas protegem leituras/previews; input e comandos são protegidos por conta. Notificações resolvem destinos atuais de pedidos, presenças e tarefas. Não há alteração de contrato, migração ou infraestrutura. [Matriz de aceitação corrente](HO-011-CORE-ACCEPTANCE.md).
+
+## Identidade visual HO-016
+
+[ADR-017](adr/ADR-017-shared-visual-theme.md): tokens semânticos comuns geram CSS e cores Dart, com contraste e divergência verificados. Componentes React/CSS e Material 3 existentes continuam responsáveis pela apresentação; claro/escuro/sistema é uma preferência local. Não altera os clientes gerados, regras de negócio, autenticação ou esquema PostgreSQL. [Guia e evidência](HO-016-VISUAL-THEME.md).

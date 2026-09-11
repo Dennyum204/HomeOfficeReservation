@@ -1,5 +1,7 @@
 import { AdminWorkspace } from "./features/admin/AdminWorkspace";
 import { a } from "./i18n/admin.pt-PT";
+import { Appearance, AppearanceProvider } from "./theme/Appearance";
+import { AppIcon } from "./theme/AppIcon";
 import { useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { p } from "./i18n/planning.pt-PT";
@@ -17,24 +19,27 @@ import {
 } from "./features/planning/PlanningWorkspace";
 import "./features/planning/planning.css";
 import "./features/planning/work.css";
+import "./theme/theme.css";
 
 export function App() {
   return (
-    <AuthGate>
-      <WorkspaceShell />
-    </AuthGate>
+    <AppearanceProvider>
+      <AuthGate>
+        <WorkspaceShell />
+      </AuthGate>
+    </AppearanceProvider>
   );
 }
 type ShellSection = PlanningSection | "notifications" | "administration";
-const icons: Record<ShellSection, string> = {
-  administration: "♧",
-  calendar: "▦",
-  requests: "↗",
-  onsite: "▣",
-  tasks: "☑",
-  notifications: "🔔",
-  settings: "⚙",
-};
+const sections: ShellSection[] = [
+  "calendar",
+  "requests",
+  "onsite",
+  "tasks",
+  "notifications",
+  "settings",
+  "administration",
+];
 export function WorkspaceShell() {
   const [section, setSection] = useState<ShellSection>("calendar");
   const [launch, setLaunch] = useState<{
@@ -78,7 +83,7 @@ export function WorkspaceShell() {
         </a>
         <p className="nav-caption">{s.workspace}</p>
         <nav aria-label={s.navigation}>
-          {(Object.keys(icons) as ShellSection[])
+          {sections
             .filter(
               (key) =>
                 key !== "administration" ||
@@ -91,7 +96,7 @@ export function WorkspaceShell() {
                 onClick={() => setSection(key)}
               >
                 <span className="nav-icon" aria-hidden="true">
-                  {icons[key]}
+                  <AppIcon name={key} />
                 </span>
                 {label(key)}
                 {key === "notifications" && (
@@ -119,6 +124,7 @@ export function WorkspaceShell() {
             <span className="breadcrumb"> / {label(section)}</span>
           </span>
           <span className="stage">{s.locations}</span>
+          <Appearance compact />
         </header>
         <main id="content" tabIndex={-1}>
           <div className="intro">
@@ -174,6 +180,7 @@ export function WorkspaceShell() {
           )}
           {section === "settings" && (
             <div className="settings-connection">
+              <Appearance />
               <ConnectionCard />
             </div>
           )}

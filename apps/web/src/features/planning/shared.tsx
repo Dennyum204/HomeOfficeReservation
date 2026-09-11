@@ -79,29 +79,56 @@ export function DayChip({
 }) {
   return (
     <span
-      className={`day-chip ${pattern ? "pattern" : pending ? "pending" : availability && availability !== "Working" ? "away" : location === "RemotePortugal" ? "remote" : "office"}`}
+      className={`day-chip ${pattern ? "pattern" : pending && !plain ? "pending" : availability && availability !== "Working" ? "away" : location === "RemotePortugal" ? "remote" : "office"}`}
     >
-      <span aria-hidden="true">
-        {pending
-          ? "◷"
-          : `${pattern ? "· " : plain ? "" : "✓ "}${locationIcon(location, availability)}`}
+      <span className="chip-location">
+        <span aria-hidden="true">{locationIcon(location, availability)}</span>
+        <span className="chip-text">
+          {cancel
+            ? p.cancellation
+            : compact
+              ? availability && availability !== "Working"
+                ? p.availability[availability]
+                : p.locationShort[location]
+              : locationLabel(location, availability)}
+        </span>
       </span>
-      <span className="chip-text">
-        {cancel
-          ? p.cancellation
-          : compact
-            ? availability && availability !== "Working"
-              ? p.availability[availability]
-              : p.locationShort[location]
-            : locationLabel(location, availability)}
-        {plain || compact
-          ? ""
-          : pattern
-            ? ` · ${p.pattern}`
-            : pending
-              ? ` · ${p.pending}`
-              : ` · ${p.confirmed}`}
-      </span>
+      {!plain && (
+        <span
+          className="chip-state"
+          aria-label={pattern ? p.pattern : pending ? p.pending : p.confirmed}
+        >
+          <span aria-hidden="true">{pattern ? "↻" : pending ? "◷" : "✓"}</span>
+          {!compact &&
+            (pattern ? p.pattern : pending ? p.pending : p.confirmed)}
+        </span>
+      )}
+    </span>
+  );
+}
+
+export function StatusBadge({
+  state,
+  children,
+}: {
+  state: string;
+  children: ReactNode;
+}) {
+  const icon = ["Approved", "Closed", "Done", "Accepted"].includes(state)
+    ? "✓"
+    : ["Pending", "Submitted", "Open", "InProgress"].includes(state)
+      ? "◷"
+      : state === "NeedsResolution"
+        ? "!"
+        : ["Rejected", "Cancelled"].includes(state)
+          ? "×"
+          : state === "Draft"
+            ? "✎"
+            : "·";
+  return (
+    <span className={`status-badge ${state.toLowerCase()}`}>
+      <span aria-hidden="true">{icon}</span>
+      {children}
     </span>
   );
 }

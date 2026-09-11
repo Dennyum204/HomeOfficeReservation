@@ -23,7 +23,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014 |
 | HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
 | HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Concluído | HO-003, HO-007 |
-| HO-015 | Administração Web de membros e convites | v1.0 | web | Em revisão | HO-011, HO-013, HO-014 |
+| HO-015 | Administração Web de membros e convites | v1.0 | web | Concluído | HO-011, HO-013, HO-014 |
+| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Em curso | HO-011, HO-015 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -408,7 +409,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/43
 
 ## HO-015 — Administração Web de membros e convites
 
-Release: v1.0 · Área: web · Estado: Em revisão
+Release: v1.0 · Área: web · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -427,6 +428,30 @@ Critérios de aceitação:
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/40
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/44
+
+## HO-016 — Tema Claude + e hierarquia visual Web/Android
+
+Release: ui-refresh · Área: fullstack · Estado: Em curso
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-011, HO-015
+
+Funcionalidades: FEAT-025
+
+Critérios de aceitação:
+
+- Inspecionar tokens reais e condições de utilização do Claude + de Luis Llanes, referência escolhida no tweakcn; adaptar aos componentes existentes sem nova biblioteca de UI.
+- Web suporta claro, escuro e sistema; cartões neutros, cores semânticas consistentes e hierarquia de contexto, seleção por intervalo/dias, resumo, comentário, ações e histórico; consistência em todas as áreas incluindo Administração.
+- Android partilha tokens e componentes reutilizáveis, strings externalizadas, texto ampliado, alvos táteis adequados e animações discretas com redução de movimento.
+- Localização e aprovação têm rótulos/ícones separados; plano confirmado, proposta pendente e conflito permanecem visíveis sem depender apenas da cor.
+- Preservar funcionalidades, permissões, autenticação, leitura versus aceitação e resolução explícita; verificar percursos Web/Android com API e PostgreSQL reais e dados sintéticos.
+- Registar comparações reais antes/depois em claro/escuro desktop/viewport estreito/Android e verificar contraste, foco/teclado/semântica de acessibilidade; falhas de execução não contam como evidência concluída.
+- Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/41
+
+PR: ainda não criado.
 
 ## HO-101 — Lembretes e resumo semanal por email
 

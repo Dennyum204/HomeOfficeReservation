@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../planning/planning_dates.dart';
 import '../planning/planning_widgets.dart';
+import '../../theme/components.dart';
 
 String onsiteLabel(AppLocalizations s, OnsiteState value) => switch (value) {
   OnsiteState.active => s.workActive,
@@ -50,7 +51,15 @@ class WorkConflicts extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PlanLabel(onsiteLabel(s, preview.result), Icons.push_pin_outlined),
+          PlanLabel(
+            onsiteLabel(s, preview.result),
+            preview.result == OnsiteState.needsResolution
+                ? Icons.warning_amber
+                : Icons.push_pin_outlined,
+            tone: preview.result == OnsiteState.needsResolution
+                ? BadgeTone.danger
+                : BadgeTone.neutral,
+          ),
           Text(
             preview.result == OnsiteState.needsResolution
                 ? s.workConflict

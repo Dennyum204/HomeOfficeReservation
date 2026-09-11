@@ -1,5 +1,7 @@
 # Flutter Android — iOS adiado
 
+HO-016 aplica a identidade Claude + com claro/escuro/sistema em **Definições → Aparência**. [Guia, capturas e comandos de revisão](../../docs/HO-016-VISUAL-THEME.md). `lib/theme` é verificado pelo formatter; cores geradas a partir de `design/tokens.json`, sem editar o Dart gerado.
+
 HO-014: aceitar um convite em «Ainda não ativei a conta → Já tenho um código», com email, código Identity recebido e password escolhida. [Guia e preparação do teste nativo](../../docs/HO-014-INVITATIONS.md). Antes de executar `integration_test/app_test.dart`, preparar também o convite sintético com `scripts/prepare_invitation_test.py`; os campos TEST_INVITE_* ficam apenas no input privado de teste. O entrypoint normal não contém credenciais. Administração de convites permanece HO-015 (Web).
 
 **Alvo atual: Android.** Em HO-005 o responsável adiou iOS. As configurações/comandos iOS abaixo são referência preservada, sem execução/debug nos trabalhos core. Reativação em HO-306, sem data; não é requisito de setup ou release.
@@ -43,7 +45,7 @@ Dentro de `apps/mobile`:
 
 ```sh
 flutter pub get --enforce-lockfile
-dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features test tool integration_test test_driver
+dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features lib/theme test tool integration_test test_driver
 flutter analyze
 flutter test
 dart run tool/smoke_api.dart http://localhost:5080

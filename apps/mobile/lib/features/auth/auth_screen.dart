@@ -363,7 +363,7 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
         SafeArea(
           bottom: false,
           child: Material(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(

@@ -8,6 +8,19 @@ import 'planning_dates.dart';
 import 'planning_editor.dart';
 import 'planning_repository.dart';
 import 'planning_widgets.dart';
+import '../../theme/components.dart';
+
+IconData decisionIcon(DayDecision value) => switch (value) {
+  DayDecision.pending => Icons.schedule,
+  DayDecision.approved => Icons.check,
+  DayDecision.rejected || DayDecision.cancelled => Icons.close,
+  _ => Icons.history,
+};
+BadgeTone decisionTone(DayDecision value) => value == DayDecision.pending
+    ? BadgeTone.pending
+    : value == DayDecision.rejected
+    ? BadgeTone.danger
+    : BadgeTone.neutral;
 
 class PlanningRequests extends StatelessWidget {
   const PlanningRequests(this.controller, {super.key});
@@ -62,9 +75,21 @@ class PlanningRequests extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                StateBadge(
+                  requestLabel(s, request.state),
+                  request.state == RequestState.draft
+                      ? Icons.edit_outlined
+                      : request.state == RequestState.submitted
+                      ? Icons.schedule
+                      : Icons.check,
+                  tone: request.state == RequestState.submitted
+                      ? BadgeTone.pending
+                      : BadgeTone.neutral,
+                ),
+                const SizedBox(height: 10),
                 Text(
-                  '${requestLabel(s, request.state)} · ${s.planRevision} ${request.revision}',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  '${s.planRevision} ${request.revision}',
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
                 if (request.days.isNotEmpty)
                   Text(
@@ -198,6 +223,12 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
   Widget build(BuildContext context) {
     final s = AppLocalizations.of(context)!, request = c.detail!;
     final submitted = request.state == RequestState.submitted;
+    final hasPending =
+        submitted && request.days.any((d) => d.decision == DayDecision.pending);
+    final hasApproved =
+        request.state != RequestState.draft &&
+        request.days.any((d) => d.decision == DayDecision.approved);
+    final selectable = (c.own || c.manager) && (hasPending || hasApproved);
     final onlyPending =
         c.chosen.isNotEmpty &&
         c.chosen.every((d) => d.decision == DayDecision.pending);
@@ -216,25 +247,32 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
           icon: const Icon(Icons.arrow_back),
           label: Text(s.planBack),
         ),
-        Text(s.planDetails, style: Theme.of(context).textTheme.headlineSmall),
-        Text(
-          '${requestLabel(s, request.state)} · ${s.planRevision} ${request.revision}',
+        FormSection(
+          title: s.planDetails,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '${requestLabel(s, request.state)} · ${s.planRevision} ${request.revision}',
+              ),
+              Text(requestCounts(s, request), key: const Key('request-counts')),
+              if (request.note.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Text(request.note, key: const Key('request-note')),
+                ),
+              if (request.parentRevisionId != null) ...[
+                Text(s.planRevisionHint),
+                TextButton(
+                  onPressed: c.opening
+                      ? null
+                      : () => c.openRequest(request.parentRevisionId!),
+                  child: Text(s.planPreviousRevision),
+                ),
+              ],
+            ],
+          ),
         ),
-        Text(requestCounts(s, request), key: const Key('request-counts')),
-        if (request.note.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(request.note, key: const Key('request-note')),
-          ),
-        if (request.parentRevisionId != null) ...[
-          Text(s.planRevisionHint),
-          TextButton(
-            onPressed: c.opening
-                ? null
-                : () => c.openRequest(request.parentRevisionId!),
-            child: Text(s.planPreviousRevision),
-          ),
-        ],
         TextButton.icon(
           onPressed: c.opening
               ? null
@@ -242,50 +280,83 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
           icon: const Icon(Icons.refresh),
           label: Text(s.refresh),
         ),
-        Text(s.planHistory, style: Theme.of(context).textTheme.titleLarge),
-        Text(s.planSelectionHint),
-        Wrap(
-          spacing: 8,
-          children: [
-            TextButton(
-              onPressed: c.locked
-                  ? null
-                  : () {
-                      c.selectedDays = request.days
-                          .where((d) => d.decision == DayDecision.pending)
-                          .map((d) => d.id)
-                          .toSet();
-                      c.inputChanged();
-                    },
-              child: Text(s.planSelectPending),
-            ),
-            TextButton(
-              onPressed: c.locked
-                  ? null
-                  : () {
-                      c.selectedDays = {};
-                      c.inputChanged();
-                    },
-              child: Text(s.planClearSelection),
-            ),
-          ],
+        Semantics(
+          header: true,
+          child: Text(
+            s.visualDecisions,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
+        if (selectable) Text(s.planSelectionHint),
+        if (selectable)
+          Wrap(
+            spacing: 8,
+            children: [
+              if (hasPending)
+                TextButton(
+                  onPressed: c.locked
+                      ? null
+                      : () {
+                          c.selectedDays = request.days
+                              .where((d) => d.decision == DayDecision.pending)
+                              .map((d) => d.id)
+                              .toSet();
+                          c.inputChanged();
+                        },
+                  child: Text(s.planSelectPending),
+                ),
+              TextButton(
+                onPressed: c.locked
+                    ? null
+                    : () {
+                        c.selectedDays = {};
+                        c.inputChanged();
+                      },
+                child: Text(s.planClearSelection),
+              ),
+            ],
+          ),
         for (final day in request.days)
           PlanCard(
             key: Key('requested-${dateKey(day.localDate)}'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CheckboxListTile(
-                  key: Key('select-${dateKey(day.localDate)}'),
-                  contentPadding: EdgeInsets.zero,
-                  value: c.selectedDays.contains(day.id),
-                  title: Text(dayLabel(day.localDate)),
-                  subtitle: Text(decisionLabel(s, day.decision)),
-                  onChanged: c.locked || request.state == RequestState.draft
-                      ? null
-                      : (value) => c.selectRequestedDay(day.id, value!),
+                if (selectable &&
+                    [
+                      DayDecision.pending,
+                      DayDecision.approved,
+                    ].contains(day.decision))
+                  CheckboxListTile(
+                    key: Key('select-${dateKey(day.localDate)}'),
+                    contentPadding: EdgeInsets.zero,
+                    value: c.selectedDays.contains(day.id),
+                    title: Text(dayLabel(day.localDate)),
+                    onChanged: c.locked || request.state == RequestState.draft
+                        ? null
+                        : (value) => c.selectRequestedDay(day.id, value!),
+                  ),
+                if (!selectable ||
+                    ![
+                      DayDecision.pending,
+                      DayDecision.approved,
+                    ].contains(day.decision))
+                  Text(
+                    dayLabel(day.localDate),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                StateBadge(
+                  request.state == RequestState.draft
+                      ? s.planDraft
+                      : decisionLabel(s, day.decision),
+                  request.state == RequestState.draft
+                      ? Icons.edit_outlined
+                      : decisionIcon(day.decision),
+                  tone: request.state == RequestState.draft
+                      ? BadgeTone.neutral
+                      : decisionTone(day.decision),
                 ),
+                const SizedBox(height: 8),
                 PlanLabel(
                   day.cancel
                       ? s.planCancelled
@@ -305,6 +376,15 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
               ],
             ),
           ),
+        const SizedBox(height: 16),
+        Semantics(
+          header: true,
+          child: Text(
+            s.visualActions,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        const SizedBox(height: 12),
         if (c.own && request.state == RequestState.draft)
           Wrap(
             spacing: 8,
@@ -324,7 +404,7 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
               ),
             ],
           ),
-        if (c.own && submitted) ...[
+        if (c.own && hasPending) ...[
           Text(s.planWithdrawHint),
           OutlinedButton(
             key: const Key('request-withdraw'),
@@ -334,7 +414,7 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
             child: Text(s.planWithdraw),
           ),
         ],
-        if (c.own && request.state != RequestState.draft) ...[
+        if (c.own && selectable) ...[
           Text(s.planRevisionHint),
           Wrap(
             spacing: 8,
@@ -347,53 +427,57 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
                     : null,
                 child: Text(s.planChange),
               ),
-              OutlinedButton(
-                key: const Key('request-cancel'),
-                onPressed:
-                    c.canWrite &&
-                        c.chosen.isNotEmpty &&
-                        c.chosen.every(
-                          (d) => d.decision == DayDecision.approved,
-                        )
-                    ? () => c.editRequest(EditorMode.revision, cancel: true)
-                    : null,
-                child: Text(s.planCancelDays),
-              ),
+              if (hasApproved)
+                OutlinedButton(
+                  key: const Key('request-cancel'),
+                  onPressed:
+                      c.canWrite &&
+                          c.chosen.isNotEmpty &&
+                          c.chosen.every(
+                            (d) => d.decision == DayDecision.approved,
+                          )
+                      ? () => c.editRequest(EditorMode.revision, cancel: true)
+                      : null,
+                  child: Text(s.planCancelDays),
+                ),
             ],
           ),
         ],
-        if (c.manager) ...[
-          TextFormField(
-            key: ValueKey('decision-reason-${request.id}'),
-            maxLength: 1000,
-            initialValue: c.reasons[request.id],
-            minLines: 2,
-            maxLines: 5,
-            enabled: !c.locked,
-            decoration: InputDecoration(labelText: s.planReason),
-            onChanged: (value) {
-              c.reasons[request.id] = value;
-              c.inputChanged();
-            },
-          ),
+        if (c.manager && selectable) ...[
+          if (hasPending)
+            TextFormField(
+              key: ValueKey('decision-reason-${request.id}'),
+              maxLength: 1000,
+              initialValue: c.reasons[request.id],
+              minLines: 2,
+              maxLines: 5,
+              enabled: !c.locked,
+              decoration: InputDecoration(labelText: s.planReason),
+              onChanged: (value) {
+                c.reasons[request.id] = value;
+                c.inputChanged();
+              },
+            ),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              FilledButton(
-                key: const Key('request-approve'),
-                onPressed: c.canWrite && submitted && onlyPending
-                    ? () => action('approve')
-                    : null,
-                child: Text(s.planApprove),
-              ),
-              OutlinedButton(
-                key: const Key('request-reject'),
-                onPressed: c.canWrite && submitted && onlyPending
-                    ? () => action('reject')
-                    : null,
-                child: Text(s.planReject),
-              ),
+              if (hasPending)
+                FilledButton(
+                  key: const Key('request-approve'),
+                  onPressed: c.canWrite && submitted && onlyPending
+                      ? () => action('approve')
+                      : null,
+                  child: Text(s.planApprove),
+                ),
+              if (hasPending)
+                OutlinedButton(
+                  key: const Key('request-reject'),
+                  onPressed: c.canWrite && submitted && onlyPending
+                      ? () => action('reject')
+                      : null,
+                  child: Text(s.planReject),
+                ),
               OutlinedButton(
                 key: const Key('request-propose'),
                 onPressed: c.canWrite && changeable
@@ -406,6 +490,15 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
         ],
         if (error != null) Semantics(liveRegion: true, child: Text(error!)),
         const SizedBox(height: 24),
+        const Divider(),
+        Semantics(
+          header: true,
+          child: Text(
+            s.visualHistory,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        const SizedBox(height: 16),
         Text(s.planProposals, style: Theme.of(context).textTheme.titleLarge),
         Text(s.planProposalHint),
         for (final proposal in c.proposals?.items ?? <ProposalView>[])

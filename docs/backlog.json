@@ -74,6 +74,15 @@
       "status": "parked",
       "reason": "Responsável adiou iOS em HO-005.",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/7"
+    },
+    {
+      "id": "ui-refresh",
+      "title": "Identidade visual Claude + — Web e Android",
+      "timing": "Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.",
+      "gate": "HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.",
+      "review_trigger": "Ao selecionar o próximo trabalho visual e após feedback de utilização.",
+      "status": "planned",
+      "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/8"
     }
   ],
   "features": [
@@ -221,6 +230,12 @@
       "release": "ios-reactivation",
       "status": "parked",
       "reason": "Direção Web/Android em HO-005; sem data."
+    },
+    {
+      "id": "FEAT-025",
+      "title": "Tema Claude + e hierarquia visual acessível Web/Android",
+      "release": "ui-refresh",
+      "status": "planned"
     }
   ],
   "work_items": [
@@ -1054,7 +1069,7 @@
       "title": "Administração Web de membros e convites",
       "release": "v1.0",
       "area": "web",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011",
@@ -1074,13 +1089,73 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/44"
       ],
-      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks.",
+      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks. HO-016 verificou merge humano #44 e os quatro checks de integração verdes no commit dcda6e2; trabalho concluído.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
       "scope_history": [
         {
           "date": "2026-09-11",
           "reason": "Implementação HO-015 selecionada pelo responsável após teste manual e merge HO-014; apenas este registo trazido do PR #37.",
           "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6"
+        }
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/44",
+        "merged_at": "2026-09-11T11:00:36Z",
+        "merge_commit": "dcda6e2cceef570b3f8ab6dc5d5905d6af6212ec",
+        "verified_in": "origin/main after fetch on 2026-09-11",
+        "documentation_run": "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34591956785",
+        "core_run": "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34591956766",
+        "checks": [
+          "project-docs",
+          "backend-contracts",
+          "web",
+          "flutter-android"
+        ],
+        "manual_test": "Responsável confirmou teste HO-015 com sucesso antes do merge humano."
+      }
+    },
+    {
+      "id": "HO-016",
+      "title": "Tema Claude + e hierarquia visual Web/Android",
+      "release": "ui-refresh",
+      "area": "fullstack",
+      "status": "in_progress",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-011",
+        "HO-015"
+      ],
+      "features": [
+        "FEAT-025"
+      ],
+      "acceptance": [
+        "Inspecionar tokens reais e condições de utilização do Claude + de Luis Llanes, referência escolhida no tweakcn; adaptar aos componentes existentes sem nova biblioteca de UI.",
+        "Web suporta claro, escuro e sistema; cartões neutros, cores semânticas consistentes e hierarquia de contexto, seleção por intervalo/dias, resumo, comentário, ações e histórico; consistência em todas as áreas incluindo Administração.",
+        "Android partilha tokens e componentes reutilizáveis, strings externalizadas, texto ampliado, alvos táteis adequados e animações discretas com redução de movimento.",
+        "Localização e aprovação têm rótulos/ícones separados; plano confirmado, proposta pendente e conflito permanecem visíveis sem depender apenas da cor.",
+        "Preservar funcionalidades, permissões, autenticação, leitura versus aceitação e resolução explícita; verificar percursos Web/Android com API e PostgreSQL reais e dados sintéticos.",
+        "Registar comparações reais antes/depois em claro/escuro desktop/viewport estreito/Android e verificar contraste, foco/teclado/semântica de acessibilidade; falhas de execução não contam como evidência concluída.",
+        "Deixar ambiente de revisão isolado com credenciais privadas; quatro checks verdes no head final e sem conflitos para retirar draft. Sem merge, auto-merge, deployment, DNS, contratação, emails reais, distribuição, iOS ou Outlook."
+      ],
+      "pr_urls": [],
+      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou implementação HO-016 após merge HO-015; importado apenas este item, funcionalidade e marco do PR #37, que permanece draft.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6",
+          "previous_depends_on": [
+            "HO-011"
+          ],
+          "previous_acceptance": [
+            "Usar como referência escolhida Claude + em https://tweakcn.com/themes/cmdght103000n04lh3e2ae93r?p=application; inspecionar tokens e condições de utilização quando a tarefa for selecionada, sem inventar valores ou impor uma nova biblioteca de UI.",
+            "Web preserva a estética neutra com tema claro/escuro e preferência do sistema; modais e pedidos distinguem secções, contexto, resumo e ações com hierarquia consistente.",
+            "Android partilha a identidade visual com cartões simples, badges legíveis e animações discretas que respeitam redução de movimento; manter strings externalizadas.",
+            "Local de trabalho e estado de aprovação são representados separadamente com rótulos/ícones; não depender apenas de cor nem ocultar plano confirmado, pedido pendente ou conflito.",
+            "Preservar funcionalidades, permissões e dados: verificar jornadas core em ambas as plataformas, contraste, foco/teclado, leitor de ecrã, alvos táteis e texto ampliado, em claro e escuro.",
+            "Registar comparação visual com dados sintéticos e executar checks pertinentes quando implementado. Nenhuma implementação nesta atualização HO-012; iOS continua adiado para HO-306."
+          ]
         }
       ]
     },

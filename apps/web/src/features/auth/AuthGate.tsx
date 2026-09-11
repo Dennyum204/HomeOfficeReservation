@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { MemberProfile } from "../../../../../contracts/typescript";
 import { strings as s } from "../../i18n/pt-PT";
+import { Appearance } from "../../theme/Appearance";
 import { accessApi, authApi, csrf, statusOf } from "./api";
 import {
   clearPlanningSession,
@@ -191,6 +192,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   return (
     <main className="auth-page">
       <section className="auth-card">
+        <Appearance compact />
         <p className="eyebrow">HOME OFFICE · PORTUGAL / SUÍÇA</p>
         <h1>{s.auth.titles[mode]}</h1>
         <p>{s.auth.intro}</p>
