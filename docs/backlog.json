@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "HomeOfficeReservation",
   "updated_at": "2026-09-11",
-  "planning_note": "Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara ensaio Raspberry Pi Linux ARM64 nativo, sem instalação/medição no dispositivo. SSH automático recusado; inventário posterior ao Docker pendente. NAS e Hetzner históricos. iOS/Outlook adiados.",
+  "planning_note": "Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara Pi ARM64; SSH/inventário obtidos, mas cgroup de memória desativado bloqueia instalação. Android CI em diagnóstico. NAS/Hetzner históricos; iOS/Outlook adiados.",
   "releases": [
     {
       "id": "v1.0",
@@ -993,7 +993,7 @@
           "reason": "Responsável selecionou Raspberry Pi 5 de 4 GB, Debian 13 aarch64, como alvo do ensaio isolado. NAS fica inalterado e histórico. Preparação/CI ARM64 autorizadas, instalação ainda sujeita a revisão. Critérios finais HO-012 preservados."
         }
       ],
-      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados: docs/HO-012-INTEGRATION.md. Alvo atual Pi 5/4 GB com Debian 13 aarch64, alimentação 27 W, caixa/ventoinha e microSD High Endurance; responsável reportou 3,7 GiB disponíveis antes do Docker, 50 GB livres, hello-world arm64v8 e Compose 5.5.1. SSH automático respondeu Permission denied; Engine/workloads/cgroups/margem depois do Docker e forwarding por verificar. infra/pi prepara quatro contentores ARM64 nativos, 1472 MiB/3 CPU propostos, rede interna sem portas, SMTP capturado, volumes e Data Protection privados, backup/restauro novo. CI pi-preparation compila fora do dispositivo, verifica todas as imagens ARM64 e ensaia fluxos; não prova capacidade/desempenho do Pi. NAS/AMD64 e Hetzner preservados como históricos. Nenhuma instalação, alteração NAS/router/DNS, Cloudflare, email real, APK ou contratação. Instalação autorizada, medições/restauro no Pi e restantes gates de alojamento/recuperação externa/HTTPS/SMTP/distribuição/piloto pendentes."
+      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados: docs/HO-012-INTEGRATION.md. Alvo atual Pi 5/4 GB com Debian 13 aarch64, alimentação 27 W, caixa/ventoinha e microSD High Endurance; responsável reportou 3,7 GiB disponíveis antes do Docker, 50 GB livres, hello-world arm64v8 e Compose 5.5.1. SSH automático respondeu Permission denied; Engine/workloads/cgroups/margem depois do Docker e forwarding por verificar. infra/pi prepara quatro contentores ARM64 nativos, 1472 MiB/3 CPU propostos, rede interna sem portas, SMTP capturado, volumes e Data Protection privados, backup/restauro novo. CI pi-preparation compila fora do dispositivo, verifica todas as imagens ARM64 e ensaia fluxos; não prova capacidade/desempenho do Pi. NAS/AMD64 e Hetzner preservados como históricos. Nenhuma instalação, alteração NAS/router/DNS, Cloudflare, email real, APK ou contratação. Instalação autorizada, medições/restauro no Pi e restantes gates de alojamento/recuperação externa/HTTPS/SMTP/distribuição/piloto pendentes. Inventário Pi 2026-09-11: SSH confirmado; leituras sudo do responsável: Engine 29.8.0 ARM64, Compose 5.5.1, sem contentores/volumes, Memory=false/Swap=false/CFS=true. SSH direto confirma cgroup_disable=memory e ausência de memory V2: arranque bloqueado. Proposta de ativação/reinício por aprovar separadamente. RAM disponível ~3,57 GiB, disco ~49,6 GiB; sem medição da aplicação. Docs HO-012-PI-INVENTORY e HO-012-ANDROID-CI registam resultados e diagnóstico sem enfraquecer checks."
     },
     {
       "id": "HO-013",

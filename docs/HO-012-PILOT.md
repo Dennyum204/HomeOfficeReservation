@@ -6,7 +6,7 @@ Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOffic
 
 O responsável confirmou por comandos Pi 5 de 4 GB, Debian 13 Trixie aarch64, alimentação oficial 27 W, caixa com ventoinha, microSD High Endurance de 64 GB com 50 GB livres, 3,7 GiB de RAM disponíveis antes do Docker e swap zero. Reportou instalação Docker pelo repositório oficial Debian, hello-world arm64v8 bem-sucedido e Compose 5.5.1.
 
-A tentativa SSH automática em dennyum@192.168.1.105 alcançou o servidor, mas recebeu Permission denied (publickey,password). Não executámos comandos no Pi; versão Engine, workloads, limites/cgroups, memória pós-Docker, redes e forwarding continuam por verificar. Não pedir passwords em chat. Preparação no PC/CI prossegue sem esse acesso.
+SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. **Memory=false/Swap=false**: memory V2 ausente e cgroup_disable=memory ativo. Ativação do controlador/reinício por rever e autorizar separadamente; não retirar limites. Nenhum boot alterado ou HomeOffice instalado. [Inventário](HO-012-PI-INVENTORY.md), [diagnóstico Android](HO-012-ANDROID-CI.md).
 
 O NAS fica inalterado. [Preparação NAS histórica](history/HO-012-PILOT-NAS-20260911.md), [inventário anterior](HO-012-NAS-INVENTORY.md), [ADR-018](adr/ADR-018-nas-trial.md) e scripts AMD64 preservados. As capturas posteriores mostraram DSM Healthy apesar das leituras md0/md1; discrepância não resolvida nem reparada. Não é dependência de instalar no Pi. Hetzner permanece alternativa histórica não aprovada. Nenhum arquivo AMD64 é transferível para este ensaio ARM64.
 
@@ -26,6 +26,6 @@ Custos incrementais contratados: €0. Sem compra de domínio; ferbatech.com exi
 
 [Hetzner histórico](history/HO-012-PILOT-20260910.md): estimativa anterior €17,38/mês antes de impostos, sem domínio; não é cotação atual ou proposta aprovada. Não criar VMs ou instalar no NAS em paralelo.
 
-HO-013/014/015/016 integrados com [merge/CI verificados](HO-012-INTEGRATION.md). Faltam inventário/acesso e ensaio real no Pi, decisão final de alojamento, isolamento staging/produção, recuperação externa, HTTPS externo, SMTP real autorizado, alertas, assinatura/distribuição e aceitação física/piloto. [Acesso privado](HO-012-PRIVATE-ACCESS.md) continua a exigir configuração/aceitação no destino. Não encerrar HO-012 por passar CI ARM64.
+HO-013/014/015/016 integrados com [merge/CI verificados](HO-012-INTEGRATION.md). Faltam resolver memory V2, autorizar instalação e executar ensaio real no Pi, decisão final de alojamento, isolamento staging/produção, recuperação externa, HTTPS externo, SMTP real autorizado, alertas, assinatura/distribuição e aceitação física/piloto. [Acesso privado](HO-012-PRIVATE-ACCESS.md) continua a exigir configuração/aceitação no destino. Não encerrar HO-012 por passar CI ARM64.
 
 Sem instalação nesta etapa, alteração de NAS/router/DNS, publicação Cloudflare, email real, APK, contratação, release, merge ou auto-merge. iOS/Outlook adiados.

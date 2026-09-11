@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-11.
 
-Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara ensaio Raspberry Pi Linux ARM64 nativo, sem instalação/medição no dispositivo. SSH automático recusado; inventário posterior ao Docker pendente. NAS e Hetzner históricos. iOS/Outlook adiados.
+Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara Pi ARM64; SSH/inventário obtidos, mas cgroup de memória desativado bloqueia instalação. Android CI em diagnóstico. NAS/Hetzner históricos; iOS/Outlook adiados.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 

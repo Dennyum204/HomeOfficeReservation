@@ -182,6 +182,8 @@ jobs:
           done
           test "$ready" = 1
           python3 scripts/prepare_invitation_test.py --base-url http://localhost:5080 --accounts "$RUNNER_TEMP/identity/accounts.json" --output "$RUNNER_TEMP/identity/client-test.json"
+      - name: Observe Android transport and host resources without changing test behavior
+        run: python3 scripts/android_ci_diagnostics.py --start
       - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 35
@@ -204,4 +206,11 @@ jobs:
         with:
           name: android-planning-evidence
           path: apps/mobile/test-results/*.png
+          retention-days: 14
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: android-transport-diagnostics
+          path: ${{ runner.temp }}/android-transport.jsonl
+          if-no-files-found: warn
           retention-days: 14

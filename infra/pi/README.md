@@ -4,7 +4,7 @@ Preparação autorizada; **HomeOffice ainda não instalado no Pi**. [Proposta](.
 
 ## Evidência e acesso
 
-O responsável reportou Pi 5/4 GB, Debian 13 Trixie aarch64, alimentação oficial 27 W, caixa/ventoinha, microSD High Endurance 64 GB, 50 GB livres e 3,7 GiB disponíveis antes do Docker, swap zero. Docker instalado pelo repositório oficial Debian; hello-world arm64v8 passou e Compose 5.5.1. O SSH em dennyum@192.168.1.105 respondeu Permission denied em modo BatchMode: host alcançável, sem autenticação automática. Não houve comandos ou alterações no Pi.
+SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. **Memory=false/Swap=false**: memory V2 ausente e cgroup_disable=memory ativo. Ativação do controlador/reinício por rever e autorizar separadamente; não retirar limites. Nenhum boot alterado ou HomeOffice instalado. [Inventário atualizado](../../docs/HO-012-PI-INVENTORY.md).
 
 Numa sessão SSH autorizada, executar [inventory.sh](inventory.sh) com sudo para as leituras Docker/sshd. O script só recolhe metadados: versão Engine, workloads/volumes/redes, armazenamento, memória/swap/pressão, temperatura quando disponível e limites. Confirmar a configuração sshd também com o contexto do utilizador se existirem regras Match. Não partilhar passwords ou logs integrais.
 
@@ -12,7 +12,7 @@ Numa sessão SSH autorizada, executar [inventory.sh](inventory.sh) com sudo para
 ssh dennyum@192.168.1.105
 ```
 
-Introduzir a password apenas no terminal. Autenticação por chave local pode ser preparada separadamente; não conceder sudo sem password nem alterar forwarding nesta etapa. Se qualquer leitura falhar, fica por verificar. São necessários, antes de instalar: Linux ARM64 nativo no host/Engine; Compose plugin; memory/swap/CFS suportados; pelo menos 2 GiB MemAvailable estável e 8 GiB livres; rede sem colisão e SSH direct-tcpip permitido. A ausência de acesso não impede build/test fora do Pi.
+A chave dedicada funciona; password sudo apenas no terminal quando necessária; não conceder sudo sem password nem alterar forwarding nesta etapa. Se qualquer leitura falhar, fica por verificar. São necessários, antes de instalar: Linux ARM64 nativo no host/Engine; Compose plugin; memory/swap/CFS suportados; pelo menos 2 GiB MemAvailable estável e 8 GiB livres; rede sem colisão e SSH direct-tcpip permitido. A ausência de acesso não impede build/test fora do Pi.
 
 ## Recursos exatos propostos
 
@@ -52,7 +52,7 @@ RUN é o run verde efetivo do commit. O arquivo privado é separado do artifact 
 
 ## Instalação proposta — NÃO executar antes da revisão/autorização
 
-Só após inventário, revisão dos recursos acima e autorização, criar o diretório novo no Pi:
+Só após corrigir/verificar memory/swap/CFS, repetir inventário, rever recursos e autorizar a instalação, criar o diretório novo no Pi:
 
 ```sh
 umask 077
