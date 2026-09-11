@@ -22,7 +22,15 @@ export interface SetManagerRequest {
     /**
      *
      */
-    managerId: string;
+    commandId?: string | null;
+    /**
+     *
+     */
+    expectedAccessVersion?: number | null;
+    /**
+     *
+     */
+    managerId: string | null;
 }
 
 /**
@@ -43,6 +51,8 @@ export function SetManagerRequestFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
 
+        'commandId': json['commandId'] === undefined ? undefined : json['commandId'] === null ? null : json['commandId'],
+        'expectedAccessVersion': json['expectedAccessVersion'] === undefined ? undefined : json['expectedAccessVersion'] === null ? null : json['expectedAccessVersion'],
         'managerId': json['managerId'],
     };
 }
@@ -58,6 +68,8 @@ export function SetManagerRequestToJSONTyped(value?: SetManagerRequest | null, i
 
     return {
 
+        'commandId': value['commandId'],
+        'expectedAccessVersion': value['expectedAccessVersion'],
         'managerId': value['managerId'],
     };
 }

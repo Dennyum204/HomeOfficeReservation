@@ -23,6 +23,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014 |
 | HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
 | HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Em revisão | HO-003, HO-007 |
+| HO-015 | Administração Web de membros e convites | v1.0 | web | Em curso | HO-011, HO-013, HO-014 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -404,6 +405,28 @@ Critérios de aceitação:
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/39
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/43
+
+## HO-015 — Administração Web de membros e convites
+
+Release: v1.0 · Área: web · Estado: Em curso
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-011, HO-013, HO-014
+
+Funcionalidades: FEAT-001
+
+Critérios de aceitação:
+
+- Interface Web responsiva exclusiva do administrador ativo permite listar membros e estado de convite/ativação, convidar, reenviar, cancelar e tratar falhas com os contratos gerados.
+- Consultar e alterar papéis/estado dos outros membros e a associação gestor-colaborador, mostrando o chefe atual e confirmação das operações sensíveis; a API continua autoritativa.
+- Titular administrador e colaborador usa a mesma conta para gerir a organização e submeter os seus pedidos; chefe associado decide. Não há edição privilegiada do próprio papel, autoaprovação ou acesso anónimo aos dados.
+- Estados de carregamento, vazio, erro, autorização, conflito e envio incerto são explícitos; teclado, foco, leitores de ecrã e viewport estreito funcionam. Não apresentar envio SMTP como convite aceite.
+- Percurso com PostgreSQL e contas sintéticas demonstra titular, chefe e pessoa adicional convidada, aceitação Web/Android, associação correta, suspensão/cancelamento e negações. Administração nativa Android fica fora desta tarefa; o administrador pode usar a Web responsiva.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/40
+
+PR: ainda não criado.
 
 ## HO-101 — Lembretes e resumo semanal por email
 

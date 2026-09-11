@@ -1028,7 +1028,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
       ],
-      "notes": "Implementado em PR #43; prontidão exige quatro checks verdes no último SHA e sem conflitos, com recibo final no PR. Identity, convite/entrega duráveis, recibos, limites, revogação, lista com chefia e aceitação Web/Android. Local: 66 PG + 4 API, 13 Web unitários + 24 browser; Flutter análise + 37 testes e aceitação/login/logout no emulador contra API/PG reais; 178 ficheiros gerados sem drift. Falha Android de consulta em segundo plano reproduzida/corrigida com regressões de erro antes de Definições e depois de dispose. SMTP loopback real (451/ack perdido), sem entrega externa. Guia HO-014/ADR-015; administração Web HO-015 e operacional HO-012 continuam separados.",
+      "notes": "PR #43 integrado e teste manual HO-014 aprovado. Reconciliação da integração Android ainda explícita no STATUS; implementação de convites disponível na base. Histórico e critérios preservados.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
       "scope_history": [
         {
@@ -1036,6 +1036,49 @@
           "reason": "Implementação autorizada em branch própria após merge humano HO-013; não incorpora PR operacional #37.",
           "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6",
           "previous_notes": "Já existe POST administrativo, envio SMTP e aceitação por código. Esta tarefa cobre gestão do ciclo e recuperação que faltam; não é um novo fornecedor de identidade. Convites Firebase só dão acesso ao APK."
+        }
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/43",
+        "merged_at": "2026-09-11T07:56:17Z",
+        "merge_commit": "e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735019",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735065"
+        ],
+        "note": "Merge e ancestralidade confirmados. Teste manual aprovado pelo responsável. Primeira integração Android falhou no encerramento assíncrono de push; repetição da mesma base em curso e correção preventiva/regressões no HO-015. Não declarar primeira execução totalmente verde."
+      }
+    },
+    {
+      "id": "HO-015",
+      "title": "Administração Web de membros e convites",
+      "release": "v1.0",
+      "area": "web",
+      "status": "in_progress",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-011",
+        "HO-013",
+        "HO-014"
+      ],
+      "features": [
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Interface Web responsiva exclusiva do administrador ativo permite listar membros e estado de convite/ativação, convidar, reenviar, cancelar e tratar falhas com os contratos gerados.",
+        "Consultar e alterar papéis/estado dos outros membros e a associação gestor-colaborador, mostrando o chefe atual e confirmação das operações sensíveis; a API continua autoritativa.",
+        "Titular administrador e colaborador usa a mesma conta para gerir a organização e submeter os seus pedidos; chefe associado decide. Não há edição privilegiada do próprio papel, autoaprovação ou acesso anónimo aos dados.",
+        "Estados de carregamento, vazio, erro, autorização, conflito e envio incerto são explícitos; teclado, foco, leitores de ecrã e viewport estreito funcionam. Não apresentar envio SMTP como convite aceite.",
+        "Percurso com PostgreSQL e contas sintéticas demonstra titular, chefe e pessoa adicional convidada, aceitação Web/Android, associação correta, suspensão/cancelamento e negações. Administração nativa Android fica fora desta tarefa; o administrador pode usar a Web responsiva."
+      ],
+      "pr_urls": [],
+      "notes": "Necessária antes de Fernando gerir autonomamente convidados reais. Não iniciar módulo administrativo dentro do PR #37. Não exige nova infraestrutura de identidade nem gestão de várias empresas.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Implementação HO-015 selecionada pelo responsável após teste manual e merge HO-014; apenas este registo trazido do PR #37.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6"
         }
       ]
     },

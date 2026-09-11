@@ -210,7 +210,7 @@ public sealed class InvitationService(HomeOfficeDbContext db, UserManager<Identi
                 line?.ManagerId, valid, user.EmailConfirmed, i?.State.ToString() ?? (user.EmailConfirmed ? "Accepted" : "Pending"),
                 i?.Version ?? 0, i?.DeliveryState.ToString() ?? "Unknown", i?.Attempts ?? 0, i?.LastError,
                 i?.CodeExpiresAt, i?.DeliveredAt, i?.AcceptedAt, i?.CancelledAt,
-                m.Active && !user.EmailConfirmed && i?.State != InvitationState.Cancelled ? i is null ? clock.GetUtcNow() : AvailableAt(i) : null);
+                m.Active && !user.EmailConfirmed && i?.State != InvitationState.Cancelled ? i is null ? clock.GetUtcNow() : AvailableAt(i) : null, m.AccessVersion);
         }).ToArray();
         return new(profiles, members.Length > limit ? ids[^1] : null);
     }

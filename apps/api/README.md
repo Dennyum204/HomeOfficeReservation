@@ -79,3 +79,7 @@ Contratos e drift: [contracts](../../contracts/README.md). CLI EF Core 10.0.11 f
 ## Notificações HO-007
 
 [Guia e recuperação](../../docs/HO-007-NOTIFICATIONS.md), [ADR-009](../../docs/adr/ADR-009-durable-notifications.md) e [configuração segura](notifications.example.json). Migração aditiva `20260909202903_DurableNotifications`; backup antes de aplicar, sem reprovisionar contas. Worker no mesmo host e fornecedor Disabled por defeito: sem credenciais Firebase no core. Falhas permanentes, leases e contadores por organização estão no guia. Logs não devem expor endereços push ou payloads de calendário.
+
+## Administração Web HO-015
+
+Migração `20260911080127_WebAdministrationConcurrency` acrescenta a versão de acesso e alarga recibos existentes. PUT de membros/chefia aceita `expectedAccessVersion` + `commandId` emparelhados, sempre fornecidos pela Web; null em managerId remove a relação. [Compatibilidade, testes e recuperação](../../docs/HO-015-WEB-ADMINISTRATION.md).

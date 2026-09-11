@@ -24,7 +24,7 @@ internal static class InvitationModel
         {
             e.ToTable("InvitationCommands");
             e.HasKey(x => new { x.OrganizationId, x.ActorId, x.CommandId });
-            e.Property(x => x.Operation).HasMaxLength(20);
+            e.Property(x => x.Operation).HasMaxLength(80);
             e.HasOne<Member>().WithMany().HasForeignKey(x => new { x.OrganizationId, x.MemberId })
                 .HasPrincipalKey(x => new { x.OrganizationId, x.Id }).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<Member>().WithMany().HasForeignKey(x => new { x.OrganizationId, x.ActorId })

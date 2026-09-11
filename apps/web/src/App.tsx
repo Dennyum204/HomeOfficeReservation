@@ -1,3 +1,5 @@
+import { AdminWorkspace } from "./features/admin/AdminWorkspace";
+import { a } from "./i18n/admin.pt-PT";
 import { useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { p } from "./i18n/planning.pt-PT";
@@ -23,8 +25,9 @@ export function App() {
     </AuthGate>
   );
 }
-type ShellSection = PlanningSection | "notifications";
+type ShellSection = PlanningSection | "notifications" | "administration";
 const icons: Record<ShellSection, string> = {
+  administration: "♧",
   calendar: "▦",
   requests: "↗",
   onsite: "▣",
@@ -41,11 +44,13 @@ export function WorkspaceShell() {
   const inbox = useNotificationPolling();
   const member = useMember();
   const label = (key: ShellSection) =>
-    key === "notifications"
-      ? n.title
-      : key === "onsite" || key === "tasks"
-        ? w[key]
-        : p[key];
+    key === "administration"
+      ? a.title
+      : key === "notifications"
+        ? n.title
+        : key === "onsite" || key === "tasks"
+          ? w[key]
+          : p[key];
   function openNotification(destination: NotificationDestination) {
     setLaunch((old) => ({ key: (old?.key ?? 0) + 1, destination }));
     setSection(
@@ -73,26 +78,32 @@ export function WorkspaceShell() {
         </a>
         <p className="nav-caption">{s.workspace}</p>
         <nav aria-label={s.navigation}>
-          {(Object.keys(icons) as ShellSection[]).map((key) => (
-            <button
-              key={key}
-              aria-current={section === key ? "page" : undefined}
-              onClick={() => setSection(key)}
-            >
-              <span className="nav-icon" aria-hidden="true">
-                {icons[key]}
-              </span>
-              {label(key)}
-              {key === "notifications" && (
-                <span className="notification-badge" aria-label={n.unread}>
-                  {inbox.count}
+          {(Object.keys(icons) as ShellSection[])
+            .filter(
+              (key) =>
+                key !== "administration" ||
+                (member?.active && member.isAccountAdministrator),
+            )
+            .map((key) => (
+              <button
+                key={key}
+                aria-current={section === key ? "page" : undefined}
+                onClick={() => setSection(key)}
+              >
+                <span className="nav-icon" aria-hidden="true">
+                  {icons[key]}
                 </span>
-              )}
-              <span className="nav-arrow" aria-hidden="true">
-                ›
-              </span>
-            </button>
-          ))}
+                {label(key)}
+                {key === "notifications" && (
+                  <span className="notification-badge" aria-label={n.unread}>
+                    {inbox.count}
+                  </span>
+                )}
+                <span className="nav-arrow" aria-hidden="true">
+                  ›
+                </span>
+              </button>
+            ))}
         </nav>
         <div className="sidebar-note">
           <div aria-hidden="true" className="route-line">
@@ -113,36 +124,47 @@ export function WorkspaceShell() {
           <div className="intro">
             <p className="eyebrow">{s.brandCaption}</p>
             <h1>
-              {section === "notifications"
-                ? n.title
-                : section === "calendar"
-                  ? p.title
-                  : section === "requests"
-                    ? p.requests
-                    : section === "onsite" || section === "tasks"
-                      ? w[section]
-                      : p.settingsTitle}
+              {section === "administration"
+                ? a.title
+                : section === "notifications"
+                  ? n.title
+                  : section === "calendar"
+                    ? p.title
+                    : section === "requests"
+                      ? p.requests
+                      : section === "onsite" || section === "tasks"
+                        ? w[section]
+                        : p.settingsTitle}
             </h1>
             <p>
-              {section === "notifications"
-                ? n.intro
-                : section === "onsite"
-                  ? w.onsiteIntro
-                  : section === "tasks"
-                    ? w.taskIntro
-                    : member?.isManager
-                      ? p.teamIntro
-                      : p.intro}
+              {section === "administration"
+                ? a.intro
+                : section === "notifications"
+                  ? n.intro
+                  : section === "onsite"
+                    ? w.onsiteIntro
+                    : section === "tasks"
+                      ? w.taskIntro
+                      : member?.isManager
+                        ? p.teamIntro
+                        : p.intro}
             </p>
           </div>
-          <div hidden={section === "notifications"}>
+          <div
+            hidden={section === "notifications" || section === "administration"}
+          >
             <PlanningWorkspace
               key={launch?.key ?? 0}
               initialDestination={launch?.destination}
-              section={section === "notifications" ? "calendar" : section}
+              section={
+                section === "notifications" || section === "administration"
+                  ? "calendar"
+                  : section
+              }
               onSection={setSection}
             />
           </div>
+          {section === "administration" && <AdminWorkspace />}
           {section === "notifications" && (
             <NotificationCentre
               tick={inbox.tick}

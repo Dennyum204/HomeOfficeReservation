@@ -1,0 +1,162 @@
+.admin-workspace {
+  min-width: 0;
+}
+.admin-workspace button {
+  border: 1px solid #b9c8bb;
+  border-radius: 8px;
+  color: #244c3c;
+  background: white;
+  padding: 9px 13px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.admin-workspace button:hover:not(:disabled) {
+  background: #eaf1e9;
+  border-color: #5d8069;
+}
+.admin-workspace button.primary {
+  color: white;
+  background: #285842;
+  border-color: #285842;
+}
+.admin-workspace button.primary:hover:not(:disabled) {
+  background: #173e2d;
+}
+.admin-workspace input:not([type="checkbox"]),
+.admin-workspace select {
+  width: 100%;
+  border: 1px solid #b9c8bb;
+  border-radius: 7px;
+  padding: 10px;
+  min-height: 44px;
+  font: inherit;
+  background: white;
+  color: #203d38;
+}
+.admin-check input {
+  accent-color: #285842;
+}
+.admin-toolbar,
+.admin-actions,
+.admin-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.admin-toolbar {
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.admin-search {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 36rem;
+  margin-bottom: 1.25rem;
+}
+.admin-layout {
+  display: flex;
+  align-items: start;
+  gap: 1.25rem;
+}
+.admin-list {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 1rem;
+}
+.admin-card,
+.admin-detail {
+  border: 1px solid var(--line, #deded6);
+  border-radius: 16px;
+  background: var(--surface, #fff);
+  padding: 1.25rem;
+  overflow-wrap: anywhere;
+}
+.admin-detail {
+  flex: 1.2;
+  min-width: 0;
+}
+.admin-card h3 {
+  margin-top: 0;
+}
+.admin-card small {
+  font-weight: normal;
+}
+.admin-badges span,
+.admin-badge {
+  display: inline-block;
+  background: #f0f2ec;
+  color: #34473b;
+  border: 1px solid #d5ddd1;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+.admin-notice {
+  padding: 1rem;
+  background: #f7f2e7;
+  border-left: 3px solid #8a6b2b;
+  overflow-wrap: anywhere;
+}
+.admin-form {
+  display: grid;
+  gap: 1.25rem;
+}
+.admin-form fieldset {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: 1px solid #deded6;
+  border-radius: 8px;
+}
+.admin-form legend {
+  font-weight: 600;
+  padding: 0 0.4rem;
+}
+.admin-form label {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.admin-form label.admin-check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.admin-check input {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+}
+.admin-form input,
+.admin-form select,
+.admin-search input {
+  max-width: 100%;
+  min-width: 0;
+}
+.admin-form section + section {
+  border-top: 1px solid #deded6;
+  padding-top: 1rem;
+}
+.admin-workspace button,
+.admin-form button {
+  min-height: 44px;
+}
+@media (max-width: 760px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  .admin-list,
+  .admin-detail {
+    width: 100%;
+  }
+  .admin-toolbar {
+    align-items: stretch;
+  }
+  .admin-actions {
+    align-items: stretch;
+  }
+  .admin-actions button {
+    flex: 1;
+  }
+}

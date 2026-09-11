@@ -29,3 +29,5 @@ Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência 
 ADR-013 está reservado à proposta operacional no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37); não foi importado para esta entrega.
 
 | [ADR-015](ADR-015-access-invitations.md) | Ciclo de convite Identity, entrega durável protegida e recuperação | HO-014; critérios/CI no PR da tarefa |
+
+- [ADR-016 — Administração Web e concorrência de acesso](ADR-016-web-administration.md) — HO-015, complementa ADR-014/015.

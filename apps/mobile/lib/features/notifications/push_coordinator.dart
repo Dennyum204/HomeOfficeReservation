@@ -164,6 +164,15 @@ class PushCoordinator extends ChangeNotifier {
         });
       }
       await _removePending();
+      if (!_current(epoch)) return;
+      // A device without Firebase configuration cannot register push. Do not start
+      // another HTTP request during/after logout just to discover that fact.
+      if (!gateway.configured) {
+        enabled = false;
+        status = PushStatus.unavailable;
+        _notify();
+        return;
+      }
       final capabilities = await auth.readAuthenticated(
         () => api.getNotificationCapabilities(),
       );

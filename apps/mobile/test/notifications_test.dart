@@ -64,6 +64,50 @@ class FakeGateway implements PushGateway {
 }
 
 void main() {
+  test('disposed push initialization never starts a new capabilities request after storage cleanup', () async {
+    var requests = 0;
+    final auth = fixture.controller(fixture.MemoryStore(), (_) async {
+      requests++;
+      return fixture.json({'provider': 'Fcm'});
+    })..member = fixtureMember();
+    final stored = Completer<String?>();
+    final push = PushCoordinator(
+      auth,
+      FakeGateway(),
+      DelayedBinding(stored),
+      onOpen: (_) {},
+      onForeground: (_) {},
+    );
+    final initializing = push.initialize();
+    push.dispose();
+    stored.complete(null);
+    await initializing;
+    expect(requests, 0);
+    auth.dispose();
+  });
+  test(
+    'unconfigured device does not query push capabilities or report enabled',
+    () async {
+      var requests = 0;
+      final auth = fixture.controller(fixture.MemoryStore(), (_) async {
+        requests++;
+        return fixture.json({'provider': 'Fcm'});
+      })..member = fixtureMember();
+      final push = PushCoordinator(
+        auth,
+        UnconfiguredGateway(),
+        BindingStore(),
+        onOpen: (_) {},
+        onForeground: (_) {},
+      );
+      await push.initialize();
+      expect(requests, 0);
+      expect(push.status, PushStatus.unavailable);
+      expect(push.enabled, isFalse);
+      push.dispose();
+      auth.dispose();
+    },
+  );
   test(
     'simulated registration failure can be retried without disabling consent',
     () async {
@@ -318,4 +362,16 @@ class DelayedRepository extends NotificationRepository {
   final Completer<int> pending;
   @override
   Future<int> count() => pending.future;
+}
+
+class DelayedBinding extends BindingStore {
+  DelayedBinding(this.pending);
+  final Completer<String?> pending;
+  @override
+  Future<String?> read() => pending.future;
+}
+
+class UnconfiguredGateway extends FakeGateway {
+  @override
+  bool get configured => false;
 }

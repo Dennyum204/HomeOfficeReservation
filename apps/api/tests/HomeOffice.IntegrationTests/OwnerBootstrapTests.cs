@@ -194,6 +194,7 @@ public sealed class OwnerBootstrapTests
         Assert.Equal(dataBefore, await PlanningFingerprint(f));
         Assert.Equal(emailCount, f.Email.SentCount);
         memberBefore.IsEmployee = true;
+        memberBefore.AccessVersion++; // The audited role change advances optimistic access state once.
         Assert.Equal(JsonSerializer.Serialize(memberBefore), JsonSerializer.Serialize(await Find(f, "employee@test.example")));
         Assert.Equal(1, await Db(f, db => db.Set<AccessAudit>().CountAsync(a => a.Action == "access.admin_employee_enabled")));
         var profile = await Read<MemberProfile>(await browser.GetAsync("/api/v1/me"));

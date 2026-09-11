@@ -26,6 +26,10 @@ export interface InvitationProfile {
     /**
      *
      */
+    accessVersion: number;
+    /**
+     *
+     */
     active: boolean;
     /**
      *
@@ -106,6 +110,7 @@ export interface InvitationProfile {
  */
 export function instanceOfInvitationProfile(value: object): value is InvitationProfile {
     if (!('acceptedAt' in value) || value['acceptedAt'] === undefined) return false;
+    if (!('accessVersion' in value) || value['accessVersion'] === undefined) return false;
     if (!('active' in value) || value['active'] === undefined) return false;
     if (!('cancelledAt' in value) || value['cancelledAt'] === undefined) return false;
     if (!('codeExpiresAt' in value) || value['codeExpiresAt'] === undefined) return false;
@@ -139,6 +144,7 @@ export function InvitationProfileFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
 
         'acceptedAt': (json['acceptedAt'] == null ? null : parseDateTime(json['acceptedAt'])),
+        'accessVersion': json['accessVersion'],
         'active': json['active'],
         'cancelledAt': (json['cancelledAt'] == null ? null : parseDateTime(json['cancelledAt'])),
         'codeExpiresAt': (json['codeExpiresAt'] == null ? null : parseDateTime(json['codeExpiresAt'])),
@@ -173,6 +179,7 @@ export function InvitationProfileToJSONTyped(value?: InvitationProfile | null, i
     return {
 
         'acceptedAt': value['acceptedAt'] == null ? value['acceptedAt'] : serializeDateTime(value['acceptedAt']),
+        'accessVersion': value['accessVersion'],
         'active': value['active'],
         'cancelledAt': value['cancelledAt'] == null ? value['cancelledAt'] : serializeDateTime(value['cancelledAt']),
         'codeExpiresAt': value['codeExpiresAt'] == null ? value['codeExpiresAt'] : serializeDateTime(value['codeExpiresAt']),
