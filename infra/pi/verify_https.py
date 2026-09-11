@@ -66,7 +66,7 @@ def client_tests(folder, trusted):
     request('/api/v1/me', expected=401)
     for path in ['/health/live', '/health/ready', '/openapi/v1.json', '/metrics']:
         request(path, expected=404)
-    request('/api/v1/auth/register', {}, expected=405)
+    request('/api/v1/auth/register', {}, expected=404)
     credentials = json.loads((private / 'CREDENCIAIS.json').read_text(encoding='utf-8'))
     request('/api/v1/auth/web/login', credentials['owner'], expected=400)
     request('/api/v1/auth/web/login', credentials['owner'], csrf=True, expected=204)

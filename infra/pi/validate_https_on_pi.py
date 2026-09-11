@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import hashlib
 import subprocess
 from prepare_https import CONNECTOR_IMAGE
 from verify_https import verify
@@ -23,6 +24,9 @@ def main(expected_image):
         raise RuntimeError('Existing trial marker mismatch.')
     if (ROOT / 'private/https').exists():
         raise RuntimeError('HTTPS preparation already exists: inspect before repeating; no overwrite.')
+    memory = dict(line.split(':', 1) for line in Path('/proc/meminfo').read_text().splitlines())
+    if int(memory['MemAvailable'].split()[0]) < 2 * 1024 * 1024:
+        raise RuntimeError('Less than 2 GiB available; postpone this trial.')
     def run(args):
         result = subprocess.run(args, cwd=ROOT, capture_output=True, timeout=300)
         if result.returncode:
@@ -51,6 +55,8 @@ def main(expected_image):
     import shutil
     for name in ['compose.yaml', 'Caddyfile']:
         shutil.copy2(ROOT / name, backup / name)
+        with (backup / 'SHA256SUMS').open('a', encoding='utf-8', newline='\n') as sums:
+            sums.write(hashlib.sha256((backup / name).read_bytes()).hexdigest() + '  ./' + name + '\n')
     evidence = verify(ROOT)
     run(['sh', 'trial.sh', 'health'])
     evidence['source'] = 'Pi private origin; simulated connector, no Cloudflare connection'

@@ -147,3 +147,7 @@ ho012-*-evidence.json
 /ho012-pi-images/
 /ho012-pi-runner-metrics.txt
 **/.ho012-pi-trial
+
+# Real Tunnel credentials and staged private origin configuration.
+tunnel-token
+**/private/https/
