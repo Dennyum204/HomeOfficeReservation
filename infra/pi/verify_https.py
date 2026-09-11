@@ -14,6 +14,7 @@ import socket
 import ssl
 import subprocess
 import time
+import traceback
 
 from prepare_https import HOST, CONNECTOR_IMAGE, prepare_https
 
@@ -106,6 +107,13 @@ def verify(folder):
     def command(args):
         result = subprocess.run(args, cwd=folder, capture_output=True, timeout=180)
         if result.returncode:
+            if args[0] == 'nsenter':
+                # Child emits only allowlisted, sanitised failure metadata, never payloads/tokens.
+                try:
+                    detail = json.loads(result.stdout)
+                except (ValueError, UnicodeError):
+                    detail = {'error': 'client_process_failed_before_sanitized_receipt'}
+                raise RuntimeError('Origin client failed: ' + json.dumps(detail))
             raise RuntimeError('HTTPS validation command failed (' + args[0] + '); no secret output printed')
         return result.stdout
 
@@ -168,4 +176,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if not args.client:
         parser.error('Use the guarded CI/Pi wrapper; direct apply is not exposed.')
-    print(json.dumps(client_tests(args.client, trusted=True)))
+    try:
+        print(json.dumps(client_tests(args.client, trusted=True)))
+    except Exception as error:
+        detail = {'error': type(error).__name__,
+                  'lines': [frame.lineno for frame in traceback.extract_tb(error.__traceback__)]}
+        if isinstance(error, RuntimeError):
+            detail['check'] = str(error)  # All RuntimeErrors above exclude bodies/credentials.
+        print(json.dumps(detail))
+        raise SystemExit(1) from None

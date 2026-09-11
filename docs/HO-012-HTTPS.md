@@ -4,7 +4,7 @@
 
 ## Estado observado e limite da autorização
 
-Plugin Cloudflare autorizado: zona **ferbatech.com ativa**; não existiam registos exatos `homeoffice.ferbatech.com` nem `*.ferbatech.com`. O túnel `nas-connectivity-test` estava down e não foi alterado. Preparado um túnel remoto separado **homeoffice-pi**, UUID **cc5b6025-b9fc-4d54-9854-5ed3aee17cad**, sem conector, sem rotas privadas e apenas resposta 404. Nenhum token foi obtido ou impresso. Nenhum DNS/hostname publicado.
+Plugin Cloudflare autorizado: zona **ferbatech.com ativa**; não existiam registos exatos `homeoffice.ferbatech.com` nem `*.ferbatech.com`. O túnel `nas-connectivity-test` estava down e não foi alterado. Preparado um túnel remoto separado **homeoffice-pi**, UUID **cc5b6025-b9fc-4d54-9854-5ed3aee17cad**, sem conector, sem rotas privadas e apenas resposta 404. Nenhum token foi obtido ou impresso. Nenhum DNS/hostname publicado. Certificado Universal ativo para apex/*.ferbatech.com (expiração observada 2026-12-07); cobre homeoffice.ferbatech.com, mas não cobre automaticamente staging.homeoffice.ferbatech.com. Não publicar staging nesta etapa. Inventário: SSL full, Always Use HTTPS off, Browser Integrity Check on, security medium, cache aggressive; sem Page Rules ou rulesets de zona personalizados nas fases pretendidas.
 
 SSH Pi confirmado nesta etapa: ~3284 MiB disponíveis, 48 GiB livres e 1 MiB de zram ocupado. sudo não interativo expirou; as leituras Docker protegidas e a validação temporária da origem no Pi exigem interação no terminal. O ensaio anterior continua disponível e inalterado. Não atribuir ao Pi os resultados do runner ARM64.
 
@@ -53,7 +53,7 @@ sudo docker compose -p homeoffice-pi-trial -f compose.yaml -f private/https/comp
 {"type":"CNAME","name":"homeoffice.ferbatech.com","content":"cc5b6025-b9fc-4d54-9854-5ed3aee17cad.cfargotunnel.com","proxied":true,"ttl":1}
 ```
 
-Inspecionar colisões novamente antes de criar; não substituir outro registo. `staging.homeoffice.ferbatech.com`, apex/MX/TXT e túnel NAS ficam intactos. Preparar HTTPS-only para este hostname, nunca uma alteração global da zona sem revisão. A opção e regra exatas dependem do inventário de regras/certificados, ainda pendente. Nenhum contrato ou serviço pago necessário para a preparação.
+Inspecionar colisões novamente antes de criar; não substituir outro registo. `staging.homeoffice.ferbatech.com`, apex/MX/TXT e túnel NAS ficam intactos. Preparar HTTPS-only para este hostname, nunca uma alteração global da zona sem revisão. As regras exatas estão em [cloudflare-publication.json](../infra/pi/cloudflare-publication.json): redirect 308 HTTP→HTTPS apenas neste hostname, cache bypass no hostname e SSL strict; Browser Integrity Check desativado apenas em /api/ para clientes nativos. Não desativar WAF/DDoS nem alterar opções globais. Reconsultar regras e acrescentar por ref estável, sem substituir listas existentes; guardar IDs criados para recuperação. As permissões de escrita destas fases e eventuais desafios a clientes legítimos permanecem por validar na publicação. Não publicar caso os gates HTTPS/cache falhem. Nenhum contrato ou serviço pago necessário para a preparação.
 
 6. Validar certificado público/cadeia/hostname, HTTP→HTTPS antes de login, ausência de cache de respostas privadas, Web cookie/CSRF/logout, Android bearer, isolamento e endpoints privados. Medir conector e reinício sem PC. Esses testes são **externos pendentes**; Mailpit continua capturado, não convidar pessoas reais.
 
@@ -85,3 +85,5 @@ Remover somente o CNAME criado, identificado pelo seu ID e conteúdo exatos, se 
 - Piloto e aceitação final core, com critérios/riscos revistos. iOS/Outlook adiados. Sem merge/release enquanto incompleto.
 
 Fontes oficiais consultadas em 2026-09-12: [token-file](https://developers.cloudflare.com/tunnel/reference/run-parameters/), [TLS da origem](https://developers.cloudflare.com/learning-paths/clientless-access/connect-private-applications/best-practices/), [cloudflared 2026.9.1](https://github.com/cloudflare/cloudflared/releases/tag/2026.9.1), [Caddy proxies](https://caddyserver.com/docs/caddyfile/options#trusted-proxies), [headers Caddy](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers), [ASP.NET forwarded headers](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-10.0).
+
+Fontes complementares: [redirect API](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/create-api/), [cache rules API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/), [configuration rules](https://developers.cloudflare.com/rules/configuration-rules/settings/). Propostas locais, nenhuma regra aplicada.
