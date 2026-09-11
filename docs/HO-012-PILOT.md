@@ -1,51 +1,31 @@
-# HO-012 — Candidato NAS e preparação do piloto
+# HO-012 — Ensaio Raspberry Pi ARM64 e preparação do piloto
 
-Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **HomeOffice não foi instalado nem medido no NAS; o inventário identifica condições por resolver.** Hetzner não foi aprovado. [Runbook do ensaio](../infra/nas/README.md), [ADR-018](adr/ADR-018-nas-trial.md).
+Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **Pi selecionado para ensaio isolado, não aprovado como produção.** Instalação HomeOffice por autorizar, executar e medir. [Stack/recursos/comandos](../infra/pi/README.md), [ADR-019](adr/ADR-019-pi-arm64-trial.md).
 
-## Evidência disponível
+## Evidência e mudança de alvo
 
-O [inventário SSH direto de 2026-09-11](HO-012-NAS-INVENTORY.md) confirma DS218+, Celeron J3355 x86_64, DSM 7.1.1-42962 Update 9, kernel 4.4.180+, Engine 20.10.3 e Compose 1.28.5. O responsável efetuou a atualização DSM antes da inspeção. Não guardar passwords no Git.
+O responsável confirmou por comandos Pi 5 de 4 GB, Debian 13 Trixie aarch64, alimentação oficial 27 W, caixa com ventoinha, microSD High Endurance de 64 GB com 50 GB livres, 3,7 GiB de RAM disponíveis antes do Docker e swap zero. Reportou instalação Docker pelo repositório oficial Debian, hello-world arm64v8 bem-sucedido e Compose 5.5.1.
 
-`docker pull cloudflare/cloudflared:latest` funcionou por SSH e `nas-connectivity-test` apresentou «Tunnel connected successfully». Teste terminado, sem hostname/rotas, serviços publicados ou alterações ao router. **Prova apenas conectividade, não compatibilidade/desempenho HomeOffice.** Não repetir nem publicar rotas nesta etapa.
+A tentativa SSH automática em dennyum@192.168.1.105 alcançou o servidor, mas recebeu Permission denied (publickey,password). Não executámos comandos no Pi; versão Engine, workloads, limites/cgroups, memória pós-Docker, redes e forwarding continuam por verificar. Não pedir passwords em chat. Preparação no PC/CI prossegue sem esse acesso.
 
-A tentativa SSH inicial tinha terminado em timeout; o acesso posterior autorizado funcionou e permitiu concluir leituras. Bloqueios concretos: Engine abaixo do piso do script, quotas CFS indisponíveis no kernel, encaminhamento SSH desativado e RAM disponível aproximadamente 1048 MiB, abaixo da margem inicial. Arrays de sistema/swap degradados exigem esclarecimento, embora RAID1 de dados esteja saudável e SMART global tenha passado. Não houve reparação/instalação. Docker Desktop local continua sem motor Linux; builds/ensaios usam o runner, sem provar comportamento neste NAS.
+O NAS fica inalterado. [Preparação NAS histórica](history/HO-012-PILOT-NAS-20260911.md), [inventário anterior](HO-012-NAS-INVENTORY.md), [ADR-018](adr/ADR-018-nas-trial.md) e scripts AMD64 preservados. As capturas posteriores mostraram DSM Healthy apesar das leituras md0/md1; discrepância não resolvida nem reparada. Não é dependência de instalar no Pi. Hetzner permanece alternativa histórica não aprovada. Nenhum arquivo AMD64 é transferível para este ensaio ARM64.
 
-## Stack concreta para revisão
+## Proposta concreta
 
-| Recurso novo: projeto homeoffice-nas-trial | Limite inicial | Função |
-|---|---|---|
-| app: imagem Linux amd64 do commit | 512 MiB / 0,75 CPU | React, API Identity e workers duráveis no mesmo processo |
-| database: PostgreSQL 18.6 | 256 MiB / 0,50 CPU | Base/role próprias; pool API 10, máximo 20 ligações, shared_buffers 64 MiB |
-| edge: Caddy 2.11.4 | 64 MiB / 0,15 CPU | HTTPS local, sem ACME ou DNS público |
-| mailpit: 1.31.1 | 64 MiB / 0,20 CPU | SMTP STARTTLS autenticado, captura até 100 emails, sem relay |
-| Rede bridge interna | 10.78.16.0/24, sujeita ao inventário | Sem portas publicadas nem saída; SSH encaminha para edge/mailpit |
-| Volumes Docker próprios | homeoffice-nas-trial_database e homeoffice-nas-trial_mail | PostgreSQL e email sintético |
-| Diretório privado novo | Volume/caminho por escolher após inventário | Configuração, credenciais sintéticas, PFX/key ring, TLS, backups e medições |
+Projeto homeoffice-pi-trial, novo diretório /home/dennyum/ho012-pi-trial sujeito ao inventário. API/React/worker no mesmo contentor (768 MiB/1,5 CPU), PostgreSQL (512 MiB/1 CPU), Caddy TLS local (64 MiB/0,25 CPU) e Mailpit SMTP capturado (128 MiB/0,25 CPU). Total 1472 MiB/3 CPU, sem swap adicional por contentor, logs limitados e sem reinício automático. Limites propostos face aos 3,7 GiB reportados; confirmar pelo menos 2 GiB disponíveis estáveis e 8 GiB livres antes de iniciar.
 
-896 MiB é a soma dos limites, não previsão do consumo. Restam nominalmente 1152 MiB dos 2 GiB para DSM/kernel/Docker/serviços existentes e margem; a memória realmente disponível observada é menor. A proposta limita swap dos contentores a zero e CPU total a 1,6 dos dois núcleos, mas **essas quotas CPU não são suportadas no kernel observado**. Não desativar OOM/seccomp nem trocar quotas por prioridades sem rever e validar a proposta. Limites insuficientes devem produzir falha observável, não aumento automático nem reinícios infinitos.
+Rede interna própria 10.78.17.0/24, sujeita a verificar colisões. Nenhuma porta publicada no Pi: SSH do PC encaminha loopback 18443 para edge:443 e 18025 para Mailpit:8025. Sem DNS, router, rede host ou Cloudflare. Só contas sintéticas, sem relay SMTP ou push real. Volumes de DB/mail próprios, key ring persistente protegido por PFX separado de TLS e configuração externa ao Git. Não se modifica a app/emulador habitual.
 
-Imagens compiladas/exportadas fora do NAS, com SHA do código, IDs/digests e SHA-256. Transferência SSH; configuração privada gerada separadamente no PC, nunca no artifact. Não se cria VM, túnel, DNS, registry público, infraestrutura de monitorização, FCM ou serviço Microsoft.
+Builds nativos fora do Pi em ubuntu-24.04-arm, sem emulação. pi-preparation verifica ARM64 nas seis bases/dependências fixadas, executa o perfil exato, valida migração/ativação/convites/chefia/aprovação/worker, reinício, backup/restauro autenticado novo e publica apenas imagens runtime/manifesto/hash e evidência sanitizada. Os quatro checks core permanecem. Teste/medição no runner não prova desempenho da microSD ou do Pi.
 
-## Pré-condições e critérios
+## Aceitação e operação por validar
 
-Inventário de leitura antes da instalação: Docker/Compose/kernel/arquitetura, cgroups/limites, espaço/memória/swap/carga, rede e serviços existentes. Compose 2.x preferível; ficheiro 2.4 permite avaliar o Compose 1.28.5 legado sem extensões recentes. Script recusa Engine anterior a 20.10.10 devido a seccomp/clone3; mesmo acima disso kernel/libseccomp do fabricante podem bloquear Noble/Bookworm. Não atualizar DSM, substituir Engine nem usar seccomp=unconfined como atalho.
+Após autorização de instalação: inventário/baseline, saúde com e sem DB, dois utilizadores, convites capturados, plano/decisão/inbox, reinício e recuperação completa para base nova preservando sessões e chaves. Medir RAM/CPU/latência, swap/OOM e temperatura/throttling durante dez minutos de utilização e pelo menos trinta minutos depois. Metas propostas p95 leitura <=1 s e escrita <=2 s após aquecimento; sem OOM, pressão crescente ou degradação de serviços anteriores. Não são resultados nem SLA. Depois será necessário ensaio prolongado antes de considerar produção.
 
-Margens propostas para iniciar: MemAvailable estável de pelo menos 1100 MiB, 8 GiB livres no volume escolhido (reavaliar perante o tamanho real de archive/imagens/DB/duas cópias), limites efetivos e rede sem colisão. São condições do ensaio, não requisitos universais ou garantia de capacidade. Se faltarem, reavaliar antes de instalar.
+Custos incrementais contratados: €0. Sem compra de domínio; ferbatech.com existente, homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com apenas nomes futuros. Energia, desgaste/substituição de microSD, cópia externa e impostos/serviços futuros ainda não quantificados. Operador mantém atualizações, capacidade/temperatura, filas, backups e restauros. Cópia na mesma microSD não protege contra perda do suporte; proteção cifrada independente e RPO/RTO antes de dados reais. Não há alta disponibilidade.
 
-Medir baseline, 10 min com duas sessões e pelo menos 30 min de observação; depois ensaio prolongado antes de produção. Metas propostas: sem OOM/restarts inesperados, sem degradação dos serviços DSM ou swap crescente; p95 de leituras autenticadas até 1 s após aquecimento e escritas até 2 s. Não são resultados nem SLA. Verificar convites capturados, titular/chefia, pedido/aprovação, worker, saúde com e sem DB, reinício, backup/restauro novo e persistência. [Procedimentos](../infra/nas/README.md).
+[Hetzner histórico](history/HO-012-PILOT-20260910.md): estimativa anterior €17,38/mês antes de impostos, sem domínio; não é cotação atual ou proposta aprovada. Não criar VMs ou instalar no NAS em paralelo.
 
-## Custos e manutenção
+HO-013/014/015/016 integrados com [merge/CI verificados](HO-012-INTEGRATION.md). Faltam inventário/acesso e ensaio real no Pi, decisão final de alojamento, isolamento staging/produção, recuperação externa, HTTPS externo, SMTP real autorizado, alertas, assinatura/distribuição e aceitação física/piloto. [Acesso privado](HO-012-PRIVATE-ACCESS.md) continua a exigir configuração/aceitação no destino. Não encerrar HO-012 por passar CI ARM64.
 
-Custo incremental contratado nesta preparação: **€0**; sem compra, transferência ou reserva para domínio. Eletricidade incremental, armazenamento/discos, UPS, cópia externa e impostos/serviços futuros ainda desconhecidos. NAS sempre ligado não equivale a energia gratuita ou alta disponibilidade.
-
-O operador vigia disco, RAM/swap/OOM, filas e backups; planeia atualizações compatíveis, testa restauros e mantém chaves/passwords fora do NAS. Não existe HA. Backup no mesmo NAS recupera erros lógicos, mas não perda do equipamento, avaria conjunta, furto ou ransomware. Proteção externa cifrada e RPO/RTO serão decididos antes de dados reais.
-
-Alternativa histórica: duas Hetzner CX23 com IPv4/backups/Storage Box, estimativa então consultada **€17,38/mês antes de impostos**, sem domínio. **Não aprovada; não é cotação atual ou contratação automática.** Inventário/manutenção/fontes no [histórico de 2026-09-10](history/HO-012-PILOT-20260910.md) e ADR-013. Não criar duas VMs em paralelo com o ensaio NAS.
-
-## Gates em aberto
-
-HO-013/014/015/016 têm merges humanos e [evidência de integração](HO-012-INTEGRATION.md). Bootstrap, convites e administração deixaram de ser lacunas de implementação; [configuração/aceitação no ambiente final](HO-012-PRIVATE-ACCESS.md) continuam necessárias.
-
-Inventário concluído; faltam resolver os pontos de armazenamento, compatibilidade, acesso e margem identificados no recibo, aprovar/executar o ensaio e medir/restaurar nesse hardware, decidir alojamento/residência/retenção, proteção externa, HTTPS externo, SMTP real autorizado, alertas, assinatura/distribuição e aceitação física. Um único Staging sintético não comprova staging/produção isolados no alojamento final.
-
-Domínio existente **ferbatech.com**: homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Preservar DNS/email/NS/router/DSM. HTTPS externo e Cloudflare só depois do ensaio local. Sem deployment, email real, APK, release/tag, merge ou auto-merge nesta etapa. HO-012 incompleta/draft.
+Sem instalação nesta etapa, alteração de NAS/router/DNS, publicação Cloudflare, email real, APK, contratação, release, merge ou auto-merge. iOS/Outlook adiados.

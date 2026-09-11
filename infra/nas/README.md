@@ -1,5 +1,7 @@
 # HO-012 — Ensaio NAS pronto para revisão, ainda não instalado
 
+**Histórico preservado:** o responsável mudou o ensaio para o [Raspberry Pi ARM64](../pi/README.md). Não executar esta preparação AMD64 no Pi; NAS permanece inalterado.
+
 [Proposta atual](../../docs/HO-012-PILOT.md), [decisão](../../docs/adr/ADR-018-nas-trial.md), [acesso implementado](../../docs/HO-012-PRIVATE-ACCESS.md). Estes comandos são o plano concreto para a próxima etapa autorizada. **Não executar start/load/bootstrap no NAS antes da revisão do inventário e da aprovação da instalação.** Nenhum comando modifica DSM, router, DNS ou Cloudflare.
 
 **Inventário direto concluído em 2026-09-11:** [resultados e condições por resolver](../../docs/HO-012-NAS-INVENTORY.md). Engine 20.10.3, sem quotas CPU CFS, encaminhamento SSH desativado, RAM abaixo da margem proposta e arrays de sistema/swap degradados. Os comandos de instalação abaixo permanecem uma proposta, não uma sequência atualmente executável no host. Nenhuma proteção foi retirada e HomeOffice continua por instalar.

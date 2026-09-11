@@ -15,9 +15,9 @@ env:
   HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
 
 jobs:
-  nas-preparation:
-    name: nas-preparation
-    runs-on: ubuntu-24.04
+  pi-preparation:
+    name: pi-preparation
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -25,20 +25,20 @@ jobs:
           persist-credentials: false
           # PR checkout normally uses a synthetic merge; archive labels must identify the actual head.
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - name: Exact isolated NAS stack on Linux amd64; no remote deployment
-        run: sudo -E python3 infra/nas/verify.py
+      - name: Native ARM64 build and exact isolated Pi stack; no emulation or deployment
+        run: sudo -E python3 infra/pi/verify.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ho012-nas-images-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ho012-nas-images/
+          name: ho012-pi-images-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ho012-pi-images/
           if-no-files-found: error
           retention-days: 7
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ho012-nas-runner-evidence
+          name: ho012-pi-runner-evidence
           path: |
-            ho012-nas-evidence.json
-            ho012-nas-runner-metrics.txt
+            ho012-pi-evidence.json
+            ho012-pi-runner-metrics.txt
           if-no-files-found: error
           retention-days: 14
 

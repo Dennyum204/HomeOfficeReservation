@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "HomeOfficeReservation",
   "updated_at": "2026-09-11",
-  "planning_note": "Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012: inventário SSH NAS concluído, instalação bloqueada por condições de armazenamento, runtime/quotas, acesso e margem de RAM; aplicação não instalada/medida nem alojamento escolhido. iOS e Outlook adiados, sem bloquear core.",
+  "planning_note": "Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara ensaio Raspberry Pi Linux ARM64 nativo, sem instalação/medição no dispositivo. SSH automático recusado; inventário posterior ao Docker pendente. NAS e Hetzner históricos. iOS/Outlook adiados.",
   "releases": [
     {
       "id": "v1.0",
@@ -987,9 +987,13 @@
         {
           "date": "2026-09-11",
           "reason": "Responsável selecionou preparar ensaio NAS isolado antes de escolher alojamento; Hetzner não aprovado. Instalação é próximo passo, sem mudar critérios finais de piloto/distribuição. HO-013/014/015/016 entretanto integrados."
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou Raspberry Pi 5 de 4 GB, Debian 13 aarch64, como alvo do ensaio isolado. NAS fica inalterado e histórico. Preparação/CI ARM64 autorizadas, instalação ainda sujeita a revisão. Critérios finais HO-012 preservados."
         }
       ],
-      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados com merge/CI verificados; ver docs/HO-012-INTEGRATION.md. Inventário SSH NAS concluído em 2026-09-11: docs/HO-012-NAS-INVENTORY.md. DSM 7.1.1 Update 9, Engine 20.10.3, Compose 1.28.5; quotas CFS indisponíveis, encaminhamento SSH desativado e aproximadamente 1048 MiB disponíveis no baseline curto. Dados RAID1 saudáveis; arrays de sistema/swap degradados por esclarecer, SMART global passou. Sem reparação/configuração alterada. Instalação bloqueada até rever armazenamento, compatibilidade, acesso e margem; aplicação nunca instalada/medida no NAS. Preparação isolada Linux amd64, quatro contentores/896 MiB propostos, zero portas publicadas, SMTP capturado, volumes/chaves privados, backup/restauro novo. Artefactos/CI Linux não equivalem a NAS ou produção. Hetzner histórico não aprovado; decisão de alojamento, HTTPS externo, SMTP real, recuperação externa, distribuição/piloto pendentes. Sem deployment, DNS, DSM, router, emails reais, APK ou contratação por Codex nesta etapa."
+      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados: docs/HO-012-INTEGRATION.md. Alvo atual Pi 5/4 GB com Debian 13 aarch64, alimentação 27 W, caixa/ventoinha e microSD High Endurance; responsável reportou 3,7 GiB disponíveis antes do Docker, 50 GB livres, hello-world arm64v8 e Compose 5.5.1. SSH automático respondeu Permission denied; Engine/workloads/cgroups/margem depois do Docker e forwarding por verificar. infra/pi prepara quatro contentores ARM64 nativos, 1472 MiB/3 CPU propostos, rede interna sem portas, SMTP capturado, volumes e Data Protection privados, backup/restauro novo. CI pi-preparation compila fora do dispositivo, verifica todas as imagens ARM64 e ensaia fluxos; não prova capacidade/desempenho do Pi. NAS/AMD64 e Hetzner preservados como históricos. Nenhuma instalação, alteração NAS/router/DNS, Cloudflare, email real, APK ou contratação. Instalação autorizada, medições/restauro no Pi e restantes gates de alojamento/recuperação externa/HTTPS/SMTP/distribuição/piloto pendentes."
     },
     {
       "id": "HO-013",

@@ -87,7 +87,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 - Hospedagem Linux para API/Web HTTPS e worker de notificações ativo. Callbacks Microsoft só em HO-008; webhooks públicos só em HO-009. Não usar scale-to-zero para este desenho sem separar/agendar o worker.
 - Registos estruturados com correlation ID, health/readiness e métricas de atraso/erro de sync.
 - Backups automáticos e ensaio de restauro antes do piloto com dados reais.
-- HO-012 avalia um ensaio isolado no NAS; [ADR-018](adr/ADR-018-nas-trial.md) substitui a proposta corrente de duas VMs, mantendo ADR-013 histórico. ferbatech.com e hostnames futuros preservados; sem DNS, HTTPS externo ou deployment nesta etapa.
+- HO-012 prepara um ensaio Raspberry Pi ARM64; [ADR-019](adr/ADR-019-pi-arm64-trial.md) substitui o alvo NAS, mantendo ADR-013/018 históricos. ferbatech.com e hostnames futuros preservados; sem DNS, HTTPS externo ou deployment nesta etapa.
 
 ## Versões e dependências
 
@@ -112,9 +112,9 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Interfaces core HO-011
 
 [ADR-012](adr/ADR-012-core-interfaces.md) estende o controller/journal Android a presenças/tarefas, conservando um colaborador autorizado e uma intenção incerta de cada vez. Gerações separadas protegem leituras/previews; input e comandos são protegidos por conta. Notificações resolvem destinos atuais de pedidos, presenças e tarefas. Não há alteração de contrato, migração ou infraestrutura. [Matriz de aceitação corrente](HO-011-CORE-ACCEPTANCE.md).
-## Ensaio NAS — HO-012
+## Ensaio Raspberry Pi ARM64 — HO-012
 
-[ADR-018](adr/ADR-018-nas-trial.md): imagem API/Web e workers no mesmo host, PostgreSQL, TLS local e captura SMTP; rede interna sem portas publicadas. Build Linux amd64 fora do NAS, limites iniciais 896 MiB, configuração/chaves privadas e restauro para nova base. [Runbook](../infra/nas/README.md). NAS não instalado/medido; a alternativa Hetzner/ADR-013 não foi aprovada. HO-013/014/015/016 integrados; gates operacionais ainda pendentes.
+[ADR-019](adr/ADR-019-pi-arm64-trial.md): API/Web/worker no mesmo processo, PostgreSQL, TLS local e captura SMTP. Rede interna sem portas publicadas; acesso SSH privado sujeito a inventário. Build/test nativos Linux ARM64 fora do Pi, imagens próprias por commit, limites propostos de 1472 MiB, configuração/key ring/PFX privados e restauro para base nova. [Runbook](../infra/pi/README.md). Pi não instalado/medido; NAS e Hetzner preservados como histórico, sem alterações nem contratação. HO-013/014/015/016 integrados; gates operacionais pendentes.
 
 ## Identidade visual HO-016
 

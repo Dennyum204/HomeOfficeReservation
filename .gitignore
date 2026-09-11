@@ -142,3 +142,8 @@ ho012-*-evidence.json
 /ho012-nas-evidence.json
 /ho012-nas-runner-metrics.txt
 **/.ho012-nas-trial
+
+# Isolated Pi ARM64 outputs and private trial markers.
+/ho012-pi-images/
+/ho012-pi-runner-metrics.txt
+**/.ho012-pi-trial
