@@ -903,7 +903,8 @@
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011",
-        "HO-013"
+        "HO-013",
+        "HO-014"
       ],
       "features": [],
       "acceptance": [
@@ -955,14 +956,14 @@
           ]
         }
       ],
-      "notes": "Incompleta; PR #37 continua draft na branch ops/ho-012-pilot-preparation, preservada. Alojamento aguarda decisão; sem contratação/DNS/deployment/emails reais/distribuição. Domínio existente ferbatech.com, homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Convites HO-014 (#39) e administração Web HO-015 (#40) continuam gates do piloto conforme PR #37; tema HO-016 (#41) separado. Apenas HO-013 importada para esta branch."
+      "notes": "Incompleta; PR #37 continua draft na branch ops/ho-012-pilot-preparation, preservada. Alojamento aguarda decisão; sem contratação/DNS/deployment/emails reais/distribuição. Domínio existente ferbatech.com, homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Convites HO-014 (#39) e administração Web HO-015 (#40) continuam gates do piloto conforme PR #37; tema HO-016 (#41) separado. Apenas HO-013 importada para esta branch. HO-014 passa a tracking nesta branch; HO-015/016 ainda no PR #37. NAS: só conectividade de túnel reportada, sem instalação/medição ou alojamento pago."
     },
     {
       "id": "HO-013",
       "title": "Titular administrador e colaborador: bootstrap seguro",
       "release": "v1.0",
       "area": "backend",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003",
@@ -981,7 +982,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/42"
       ],
-      "notes": "Bootstrap explícito e extensão idempotente de colaborador, com auditoria transacional; antigo bootstrap preservado. Guia docs/HO-013-OWNER-BOOTSTRAP.md e ADR-014. HO-014/015/016 continuam no PR #37 e issues #39/#40/#41, sem implementação aqui. PR #42: resultados/SHA final dos quatro checks registados no PR; só retirar draft após todos verdes e ausência de conflitos. Issue aberta até merge humano. Local: 55 PG + 4 API, 13 Web unitários + 22 browser, 34 Flutter, contrato sem drift (172 ficheiros).",
+      "notes": "HO-013 integrado pelo PR #42, merge f62408eaab4bd47bdf039d53b210a7798fc76dc3, com quatro checks de integração verificados em HO-014 (Android retry 2). Bootstrap legado/titular, extensão idempotente e dados/credenciais preservados. Teste manual aprovado pelo responsável. Convites HO-014 selecionados separadamente; HO-015/016 e preparação HO-012 mantêm âmbito próprio.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38",
       "scope_history": [
         {
@@ -989,6 +990,52 @@
           "reason": "Implementação HO-013 autorizada explicitamente em PR separado, sem incorporar a preparação operacional PR #37.",
           "previous_notes": "Lacuna identificada por leitura de MaintenanceCommands/MemberDirectory em HO-012: bootstrap atual cria apenas IsAccountAdministrator e a API recusa editar o próprio membro. Implementação futura em PR próprio; não reabre nem invalida a entrega histórica HO-003.",
           "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6"
+        }
+      ],
+      "completion_evidence": {
+        "pr_url": "https://github.com/Dennyum204/HomeOfficeReservation/pull/42",
+        "merged_at": "2026-09-10T22:49:40Z",
+        "merge_commit": "f62408eaab4bd47bdf039d53b210a7798fc76dc3",
+        "integration_ci": [
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34539320219",
+          "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34539320227"
+        ],
+        "note": "Merge/ancestralidade confirmados; project-docs, backend-contracts, web e flutter-android passaram no merge f62408e. Android passou no retry 2 do mesmo SHA após a primeira tentativa falhar numa asserção prematura do logout; HO-014 corrige a espera sem remover asserts. Teste manual do responsável também aprovado."
+      }
+    },
+    {
+      "id": "HO-014",
+      "title": "Convites de acesso: estado, entrega e revogação",
+      "release": "v1.0",
+      "area": "backend",
+      "status": "review",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-003",
+        "HO-007"
+      ],
+      "features": [
+        "FEAT-001"
+      ],
+      "acceptance": [
+        "Reutilizar ASP.NET Core Identity e a criação administrativa existente; apenas administrador ativo convida para a sua organização e atribui papéis permitidos. Pedir ativação anonimamente nunca cria conta.",
+        "Expor ao administrador estado mínimo de ativação/convite e resultado de envio, sem códigos/tokens, distinguindo pendente, aceite, cancelado/desativado e falha de entrega. Separar validade do código Identity da permanência do convite.",
+        "Reenvio e cancelamento explícitos, com limites e auditoria: códigos expirados, consumidos ou revogados não ativam a conta. Não criar protocolo criptográfico próprio nem permitir recuperar convite cancelado pelo endpoint anónimo.",
+        "Recuperar falhas SMTP e respostas incertas após criação da conta sem duplicar membro/email nem perder o convite. Implementar entrega recuperável com a infraestrutura durável existente quando necessária; não guardar códigos em texto simples em filas, logs ou tracking.",
+        "Administração consegue consultar a associação gestor-colaborador atual e estados necessários à UI dentro da organização; contratos OpenAPI e clientes gerados mantêm uma fonte única.",
+        "Aceitação funciona nos ecrãs Web e Android existentes com código Identity e definição de password; testar envio simulado, validade, reenvio, cancelamento, repetição, falha SMTP, conta desativada, isolamento e impossibilidade de autoaprovação. SMTP externo real continua gate operacional HO-012, não dependência para implementar/testar esta tarefa."
+      ],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
+      ],
+      "notes": "Implementado em PR #43; prontidão exige quatro checks verdes no último SHA e sem conflitos, com recibo final no PR. Identity, convite/entrega duráveis, recibos, limites, revogação, lista com chefia e aceitação Web/Android. Local: 66 PG + 4 API, 13 Web unitários + 24 browser; Flutter análise + 37 testes e aceitação/login/logout no emulador contra API/PG reais; 178 ficheiros gerados sem drift. Falha Android de consulta em segundo plano reproduzida/corrigida com regressões de erro antes de Definições e depois de dispose. SMTP loopback real (451/ack perdido), sem entrega externa. Guia HO-014/ADR-015; administração Web HO-015 e operacional HO-012 continuam separados.",
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
+      "scope_history": [
+        {
+          "date": "2026-09-11",
+          "reason": "Implementação autorizada em branch própria após merge humano HO-013; não incorpora PR operacional #37.",
+          "source_commit": "600238d6d65131cf981b5313b19547bc66f39cb6",
+          "previous_notes": "Já existe POST administrativo, envio SMTP e aceitação por código. Esta tarefa cobre gestão do ciclo e recuperação que faltam; não é um novo fornecedor de identidade. Convites Firebase só dão acesso ao APK."
         }
       ]
     },

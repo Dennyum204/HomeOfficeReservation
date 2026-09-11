@@ -203,6 +203,14 @@ void main() {
       expect(find.text('Android notification integration'), findsOneWidget);
       await tester.tap(find.text('Terminar sessão'));
       await tester.pumpAndSettle();
+      // Platform secure-storage/push cleanup can finish after the last scheduled frame.
+      for (
+        var i = 0;
+        i < 40 && find.text('Entre no seu espaço').evaluate().isEmpty;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 500));
+      }
       expect(find.byKey(const Key('request-counts')), findsNothing);
       expect(find.text('Entre no seu espaço'), findsOneWidget);
       // No Firebase credentials/provider are used. This proves native inbox/API/worker connectivity only.

@@ -11,7 +11,7 @@ public sealed record EnableAdminEmployee(Guid OrganizationId, Guid MemberId, str
 public sealed record OperatorReceipt(string Code, Guid OrganizationId, Guid MemberId, Guid? AuditId);
 
 // Only the server maintenance dispatcher calls this service. It is deliberately not an HTTP endpoint.
-public sealed class OwnerProvisioner(HomeOfficeDbContext db, UserManager<IdentityUser> users, IAccountEmail email, TimeProvider clock)
+public sealed class OwnerProvisioner(HomeOfficeDbContext db, UserManager<IdentityUser> users, InvitationService invitations, InvitationDelivery delivery, TimeProvider clock)
 {
     public async Task<OperatorReceipt> BootstrapAsync(BootstrapAccount input, bool owner)
     {
@@ -55,10 +55,11 @@ public sealed class OwnerProvisioner(HomeOfficeDbContext db, UserManager<Identit
         db.Members.Add(member);
         var created = AccessChanges.Record(db, clock, member, null,
             owner ? "access.owner_bootstrapped" : "access.admin_bootstrapped", null, AccessChanges.State(member));
+        await invitations.Create(member, user, null);
         await db.SaveChangesAsync();
         await tx.CommitAsync();
-        // Existing Identity activation delivery, after commit. Replays never resend; no invitation lifecycle added.
-        await email.SendAsync(input.Email, "activate", await users.GenerateEmailConfirmationTokenAsync(user));
+        // One best-effort attempt after commit; durable failure is recoverable even if the CLI exits.
+        await delivery.TryNow(member.Id);
         return new("provisioned", organization.Id, member.Id, created.Id);
     }
 

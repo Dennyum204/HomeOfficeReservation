@@ -248,6 +248,13 @@ class _AuthScreenState extends State<AuthScreen> with WidgetsBindingObserver {
                               onPressed: c.busy ? null : () => _switch('login'),
                               child: Text(s.authBack),
                             ),
+                          if (_mode == 'activation')
+                            TextButton(
+                              onPressed: c.busy
+                                  ? null
+                                  : () => _switch('activate'),
+                              child: Text(s.authHaveCode),
+                            ),
                           const SizedBox(height: 12),
                           Text(s.authControlled),
                         ],

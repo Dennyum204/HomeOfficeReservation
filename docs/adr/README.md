@@ -24,6 +24,8 @@ Novos ADRs incluem contexto, decisão, alternativas, consequências, evidência 
 | [ADR-011](ADR-011-android-planning.md) | Calendário/pedidos Android, recuperação por conta e continuidade da base aprovada | HO-010 integrado pelo PR #35; quatro checks de integração verificados em HO-011 |
 
 | [ADR-012](ADR-012-core-interfaces.md) | Interfaces core, journal comum e aceitação Web/Android | HO-011 integrado pelo PR #36; quatro checks de integração verificados em HO-013 |
-| [ADR-014](ADR-014-owner-bootstrap.md) | Bootstrap explícito do titular, extensão idempotente e auditoria de acesso | HO-013; revisão/merge pendentes |
+| [ADR-014](ADR-014-owner-bootstrap.md) | Bootstrap explícito do titular, extensão idempotente e auditoria de acesso | HO-013 integrado pelo PR #42; CI de integração verificada em HO-014 |
 
 ADR-013 está reservado à proposta operacional no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37); não foi importado para esta entrega.
+
+| [ADR-015](ADR-015-access-invitations.md) | Ciclo de convite Identity, entrega durável protegida e recuperação | HO-014; critérios/CI no PR da tarefa |

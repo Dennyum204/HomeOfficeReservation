@@ -12,7 +12,12 @@ public sealed class AccountEmail(IConfiguration config, IHostEnvironment environ
 {
     public async Task SendAsync(string email, string purpose, string code)
     {
-        if (environment.IsDevelopment() || environment.IsEnvironment("Testing"))
+        var development = environment.IsDevelopment() || environment.IsEnvironment("Testing");
+        var localSmtp = config["Email:Transport"] == "LocalSmtp";
+        if (localSmtp && (!development || !System.Net.IPAddress.TryParse(config["Email:Host"], out var address) ||
+            !System.Net.IPAddress.IsLoopback(address) || !(email.EndsWith(".example", StringComparison.OrdinalIgnoreCase) || email.EndsWith(".invalid", StringComparison.OrdinalIgnoreCase))))
+            throw new EmailDeliveryException();
+        if (development && !localSmtp)
         {
             var folder = config["Email:CaptureDirectory"] ?? Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HomeOfficeReservation", "email");
@@ -35,10 +40,12 @@ public sealed class AccountEmail(IConfiguration config, IHostEnvironment environ
                 Text = $"Na aplicação HomeOffice, escolha {(purpose == "activate" ? "Ativar conta" : "Repor palavra-passe")} e introduza este código:\n\n{code}\n\nSe não solicitou esta operação, ignore esta mensagem."
             };
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
-            await smtp.ConnectAsync(config["Email:Host"]!, config.GetValue("Email:Port", 587), SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(config["Email:Username"]!, config["Email:Password"]!);
-            await smtp.SendAsync(message);
-            await smtp.DisconnectAsync(true);
+            smtp.Timeout = 10000;
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            await smtp.ConnectAsync(config["Email:Host"]!, config.GetValue("Email:Port", 587), localSmtp ? SecureSocketOptions.None : SecureSocketOptions.StartTls, timeout.Token);
+            if (!localSmtp) await smtp.AuthenticateAsync(config["Email:Username"]!, config["Email:Password"]!, timeout.Token);
+            await smtp.SendAsync(message, timeout.Token);
+            await smtp.DisconnectAsync(true, timeout.Token);
         }
         catch (Exception)
         {

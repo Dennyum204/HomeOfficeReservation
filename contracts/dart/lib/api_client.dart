@@ -225,6 +225,12 @@ class ApiClient {
           return EffectiveDay.fromJson(value);
         case 'EmailRequest':
           return EmailRequest.fromJson(value);
+        case 'InvitationChangeRequest':
+          return InvitationChangeRequest.fromJson(value);
+        case 'InvitationPage':
+          return InvitationPage.fromJson(value);
+        case 'InvitationProfile':
+          return InvitationProfile.fromJson(value);
         case 'MemberList':
           return MemberList.fromJson(value);
         case 'MemberProfile':

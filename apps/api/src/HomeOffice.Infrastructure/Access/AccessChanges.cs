@@ -28,14 +28,14 @@ internal static class AccessChanges
     }
 
     internal static AccessAudit Record(HomeOfficeDbContext db, TimeProvider clock, Member member,
-        Guid? actor, string action, object? before, object? after, string reason = "")
+        Guid? actor, string action, object? before, object? after, string reason = "", string? source = null)
     {
         var audit = new AccessAudit
         {
             OrganizationId = member.OrganizationId,
             MemberId = member.Id,
             ActorMemberId = actor,
-            Source = actor is null ? "operator" : "administrator",
+            Source = source ?? (actor is null ? "operator" : "administrator"),
             Action = action,
             Reason = reason,
             CreatedAt = clock.GetUtcNow(),

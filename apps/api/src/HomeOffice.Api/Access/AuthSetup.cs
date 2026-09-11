@@ -60,6 +60,8 @@ public static class AuthSetup
         services.AddScoped<IMemberDirectory, MemberDirectory>();
         services.AddScoped<AccountProvisioner>();
         services.AddScoped<OwnerProvisioner>();
+        services.AddScoped<InvitationService>();
+        services.AddScoped<InvitationDelivery>();
         services.AddScoped<IAccountEmail, AccountEmail>();
         services.AddRateLimiter(options =>
         {

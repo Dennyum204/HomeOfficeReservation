@@ -1,5 +1,7 @@
 # Web React/TypeScript
 
+HO-014 mantém o ecrã de ativação e acrescenta «Já tenho um código» para aceitar o email recebido sem gerar outro. [Guia de convites, estado e limites](../../docs/HO-014-INVITATIONS.md). A administração Web de convites/membros continua para HO-015; os endpoints existentes não são uma UI entregue.
+
 Calendário próprio mês/semana e Pedidos em PT-PT, com rascunhos, revisão de datas, aprovação/rejeição parcial, retirada, revisões/cancelamentos e contrapropostas. Plano confirmado e alterações pendentes são camadas distintas. HO-006 acrescenta Presenças/Tarefas com preview, leitura por revisão, resolução explícita e progresso autorizado. [Percurso HO-006](../../docs/HO-006-ONSITE-TASKS.md). HO-007 acrescenta notificações; Outlook continua futuro. [Percurso de teste HO-005](../../docs/HO-005-WEB.md). Login, ativação, recuperação, logout e sessão autenticada funcionam com cookies Identity. Sem aprovações fictícias ou dependência Microsoft. [Preparar contas e obter credenciais privadas](../../docs/HO-003-AUTHENTICATION.md).
 
 Node **24.20.0**, npm **11.19.0**, React **19.2.8**, TypeScript **6.0.3**, Vite **8.2.2**. Versões exatas em package.json/package-lock.json; TypeScript 6 foi escolhido pela compatibilidade declarada com typescript-eslint.

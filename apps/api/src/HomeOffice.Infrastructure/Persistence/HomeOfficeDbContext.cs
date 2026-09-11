@@ -19,6 +19,7 @@ public sealed class HomeOfficeDbContext(DbContextOptions<HomeOfficeDbContext> op
         Planning.PlanningModel.Configure(builder);
         Planning.OnsiteModel.Configure(builder);
         Notifications.NotificationModel.Configure(builder);
+        Access.InvitationModel.Configure(builder);
         builder.Entity<Organization>().Property(x => x.Name).HasMaxLength(120);
         builder.Entity<Organization>().HasIndex(x => x.Name).IsUnique();
         builder.Entity<Member>(entity =>
@@ -51,7 +52,7 @@ public sealed class HomeOfficeDbContext(DbContextOptions<HomeOfficeDbContext> op
             entity.HasOne<Member>().WithMany().HasForeignKey(x => new { x.OrganizationId, x.ActorMemberId })
                 .HasPrincipalKey(x => new { x.OrganizationId, x.Id }).OnDelete(DeleteBehavior.Restrict);
             entity.ToTable("AccessAudits", table => table.HasCheckConstraint("CK_AccessAudit_Source",
-                "(\"Source\" = 'operator' AND \"ActorMemberId\" IS NULL) OR (\"Source\" = 'administrator' AND \"ActorMemberId\" IS NOT NULL)"));
+                "(\"Source\" IN ('operator', 'anonymous', 'worker') AND \"ActorMemberId\" IS NULL) OR (\"Source\" = 'administrator' AND \"ActorMemberId\" IS NOT NULL)"));
         });
     }
 }

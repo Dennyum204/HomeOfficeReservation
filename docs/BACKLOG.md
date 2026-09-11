@@ -20,8 +20,9 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
-| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013 |
-| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Em revisão | HO-003, HO-004 |
+| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014 |
+| HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
+| HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Em revisão | HO-003, HO-007 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -342,7 +343,7 @@ Release: v1.0 · Área: operations · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-011, HO-013
+Dependências: HO-011, HO-013, HO-014
 
 Funcionalidades: Preparação/fundação da release.
 
@@ -361,7 +362,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/37
 
 ## HO-013 — Titular administrador e colaborador: bootstrap seguro
 
-Release: v1.0 · Área: backend · Estado: Em revisão
+Release: v1.0 · Área: backend · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -380,6 +381,29 @@ Critérios de aceitação:
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/38
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/42
+
+## HO-014 — Convites de acesso: estado, entrega e revogação
+
+Release: v1.0 · Área: backend · Estado: Em revisão
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-003, HO-007
+
+Funcionalidades: FEAT-001
+
+Critérios de aceitação:
+
+- Reutilizar ASP.NET Core Identity e a criação administrativa existente; apenas administrador ativo convida para a sua organização e atribui papéis permitidos. Pedir ativação anonimamente nunca cria conta.
+- Expor ao administrador estado mínimo de ativação/convite e resultado de envio, sem códigos/tokens, distinguindo pendente, aceite, cancelado/desativado e falha de entrega. Separar validade do código Identity da permanência do convite.
+- Reenvio e cancelamento explícitos, com limites e auditoria: códigos expirados, consumidos ou revogados não ativam a conta. Não criar protocolo criptográfico próprio nem permitir recuperar convite cancelado pelo endpoint anónimo.
+- Recuperar falhas SMTP e respostas incertas após criação da conta sem duplicar membro/email nem perder o convite. Implementar entrega recuperável com a infraestrutura durável existente quando necessária; não guardar códigos em texto simples em filas, logs ou tracking.
+- Administração consegue consultar a associação gestor-colaborador atual e estados necessários à UI dentro da organização; contratos OpenAPI e clientes gerados mantêm uma fonte única.
+- Aceitação funciona nos ecrãs Web e Android existentes com código Identity e definição de password; testar envio simulado, validade, reenvio, cancelamento, repetição, falha SMTP, conta desativada, isolamento e impossibilidade de autoaprovação. SMTP externo real continua gate operacional HO-012, não dependência para implementar/testar esta tarefa.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/39
+
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/43
 
 ## HO-101 — Lembretes e resumo semanal por email
 

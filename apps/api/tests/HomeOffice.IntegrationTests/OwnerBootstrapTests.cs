@@ -121,7 +121,8 @@ public sealed class OwnerBootstrapTests
     {
         await using var f = new IdentityFixture(); await f.InitializeAsync();
         f.Email.FailDelivery = true;
-        await Assert.ThrowsAsync<IOException>(() => Command(f, "--bootstrap-owner", Owner));
+        await Command(f, "--bootstrap-owner", Owner);
+        Assert.Equal("delivery_failed", await Db(f, db => db.Set<AccessInvitation>().Select(i => i.LastError).SingleAsync()));
         var owner = await Find(f, Owner.Email);
         var identityBefore = await IdentityFingerprint(f, owner.Id);
         f.Email.FailDelivery = false;
@@ -130,6 +131,7 @@ public sealed class OwnerBootstrapTests
         Assert.Equal(identityBefore, await IdentityFingerprint(f, owner.Id));
         Assert.Equal(1, await Db(f, db => db.Set<AccessAudit>().CountAsync(a => a.Action == "access.owner_bootstrapped")));
         using var anon = f.Client();
+        f.Clock.Advance(TimeSpan.FromMinutes(1)); // HO-014 persists resend cooldown, including anonymous requests.
         Assert.Equal(HttpStatusCode.Accepted, (await anon.PostAsJsonAsync("/api/v1/auth/activation/request", new { email = Owner.Email })).StatusCode);
         await Activate(f, Owner.Email);
         Assert.Equal(HttpStatusCode.NoContent, (await f.WebLogin(anon, "owner-ho013")).StatusCode);

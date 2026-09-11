@@ -46,6 +46,7 @@ export const strings = {
     logout: "Terminar sessão",
     back: "Voltar ao início de sessão",
     activateLink: "Ainda não ativei a conta",
+    haveCode: "Já tenho um código",
     recoverLink: "Esqueci-me da palavra-passe",
   },
   brand: "HomeOffice",

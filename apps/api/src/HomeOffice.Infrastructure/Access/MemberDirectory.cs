@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeOffice.Infrastructure.Access;
 
-public sealed class MemberDirectory(HomeOfficeDbContext db, TimeProvider clock) : IMemberDirectory
+public sealed class MemberDirectory(HomeOfficeDbContext db, TimeProvider clock, InvitationService invitations) : IMemberDirectory
 {
     public Task<Member?> CurrentAsync(string identityUserId) =>
         db.Members.AsNoTracking().SingleOrDefaultAsync(m => m.IdentityUserId == identityUserId);
@@ -52,6 +52,9 @@ public sealed class MemberDirectory(HomeOfficeDbContext db, TimeProvider clock) 
             !await db.Members.AnyAsync(m => m.OrganizationId == target.OrganizationId && m.Id != target.Id && m.Active && m.IsAccountAdministrator))
             return new(false, "last_active_administrator");
         var before = AccessChanges.State(target);
+        if (request.Active && await db.Set<AccessInvitation>().AnyAsync(i => i.MemberId == target.Id && i.State == InvitationState.Cancelled))
+            return new(false, "invitation_cancelled");
+        if (!request.Active) await invitations.CancelPending(target, actor.Id);
         target.Active = request.Active;
         target.IsEmployee = request.IsEmployee;
         target.IsManager = request.IsManager;
