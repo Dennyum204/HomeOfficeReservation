@@ -1074,7 +1074,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/44"
       ],
-      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado.",
+      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
       "scope_history": [
         {
