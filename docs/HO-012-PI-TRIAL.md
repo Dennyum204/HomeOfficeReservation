@@ -1,5 +1,7 @@
 # HO-012 — Ensaio real isolado no Raspberry Pi
 
+Adenda 2026-09-12: o responsável aceitou manualmente submissão pelo titular, aprovação pelo chefe e resultado no calendário/notificação. Aceitação parcial, sem lançamento V1. [Preparação HTTPS Cloudflare](HO-012-HTTPS.md), sem publicação autorizada; histórico abaixo preservado.
+
 2026-09-11. Instalação e testes autorizados explicitamente pelo responsável. [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), HO-012 aberta; não é aprovação de produção.
 
 ## Revisão, isolamento e preparação

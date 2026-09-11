@@ -1,5 +1,7 @@
 # HO-012 — Ensaio Raspberry Pi ARM64 e preparação do piloto
 
+Adenda 2026-09-12: o responsável aceitou manualmente submissão pelo titular, aprovação pelo chefe e resultado no calendário/notificação. Aceitação parcial, sem lançamento V1. [Preparação HTTPS Cloudflare](HO-012-HTTPS.md), sem publicação autorizada; histórico abaixo preservado.
+
 Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). **Pi selecionado para ensaio isolado, não aprovado como produção.** Instalação isolada autorizada/executada; [ensaio real](HO-012-PI-TRIAL.md) com migração, dois utilizadores, recuperação e medição inicial. [Stack/recursos/comandos](../infra/pi/README.md), [ADR-019](adr/ADR-019-pi-arm64-trial.md).
 
 ## Evidência e mudança de alvo

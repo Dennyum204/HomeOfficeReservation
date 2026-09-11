@@ -1,6 +1,6 @@
 # HomeOfficeReservation
 
-**HO-012 — ensaio Raspberry Pi ARM64 instalado e em validação:** [stack e comandos para revisão](infra/pi/README.md), [proposta atual](docs/HO-012-PILOT.md). NAS preservado como histórico; [Ensaio isolado real e medições iniciais](docs/HO-012-PI-TRIAL.md); revisão manual pendente. PR #37 draft, sem lançamento V1.
+**HO-012 — ensaio Raspberry Pi ARM64 instalado e em validação:** [stack e comandos para revisão](infra/pi/README.md), [proposta atual](docs/HO-012-PILOT.md). NAS preservado como histórico; [Ensaio isolado real e medições iniciais](docs/HO-012-PI-TRIAL.md); aceitação manual parcial confirmada (submissão, aprovação, calendário e notificação). [Preparação HTTPS Cloudflare](docs/HO-012-HTTPS.md), sem publicação autorizada. PR #37 draft, sem lançamento V1.
 **HO-016 — Identidade visual Web/Android:** tema Claude + adaptado, claro/escuro/sistema, secções de formulário e estados separados por rótulos e ícones. [Tema, contraste e revisão visual](docs/HO-016-VISUAL-THEME.md). Sem alteração de API, dados ou permissões.
 
 **HO-015 — Administração Web:** membros, convites, estado de entrega, papéis e chefias com confirmação e recuperação de respostas perdidas. [Guia e teste isolado](docs/HO-015-WEB-ADMINISTRATION.md). O titular mantém a sua conta de colaborador; o chefe associado decide os pedidos.

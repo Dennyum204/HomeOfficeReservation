@@ -36,4 +36,5 @@ ADR-013 preserva a alternativa Hetzner não aprovada; ADR-018 preserva o candida
 
 - [ADR-018 — Ensaio NAS isolado](ADR-018-nas-trial.md) — preparação HO-012; instalação e adequação por validar.
 
-- [ADR-019 — Ensaio Raspberry Pi ARM64](ADR-019-pi-arm64-trial.md) — substitui o alvo NAS, sem aprovar instalação ou produção.
+- [ADR-019 — Ensaio Raspberry Pi ARM64](ADR-019-pi-arm64-trial.md) — substitui o alvo NAS; instalação posterior documentada, sem aprovação de produção.
+- [ADR-020 — Origem Pi por Cloudflare Tunnel](ADR-020-pi-cloudflare-origin.md) — preparação HTTPS; publicação depende de autorização final.

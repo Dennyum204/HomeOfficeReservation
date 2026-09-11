@@ -2,9 +2,9 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-11.
+Atualizado: 2026-09-12.
 
-Core autónomo Web/Android; HO-013/014/015/016 integrados. HO-012 prepara Pi ARM64; SSH/inventário obtidos, mas cgroup de memória desativado bloqueia instalação. Android CI em diagnóstico. NAS/Hetzner históricos; iOS/Outlook adiados.
+Core Web/Android integrado. HO-012: Pi instalado, teste manual de submissão/aprovação/calendário/notificação aceite parcialmente; HTTPS Cloudflare em preparação, sem publicação. SMTP real, backups externos automatizados, monitorização, Android físico/distribuição e aceitação final pendentes. NAS/Hetzner históricos; iOS/Outlook adiados.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 

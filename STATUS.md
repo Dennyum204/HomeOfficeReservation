@@ -1,6 +1,6 @@
 # Estado do projeto
 
-Atualizado: 2026-09-11.
+Atualizado: 2026-09-12.
 
 HO-000 a HO-007, HO-010/011 e **HO-013/014/015/016 integrados**. Merges humanos #42–#45, ancestralidade e quatro checks de integração: [evidência](docs/HO-012-INTEGRATION.md). [Histórico](docs/history/HO-012-resume-before-reconciliation.md).
 
@@ -12,4 +12,4 @@ Perfil isolado preparado: quatro contentores ARM64, 1472 MiB/3 CPU propostos, re
 
 NAS permanece inalterado e histórico: [inventário SSH](docs/HO-012-NAS-INVENTORY.md), [proposta anterior](docs/history/HO-012-PILOT-NAS-20260911.md). Capturas posteriores mostram DSM Healthy; discrepância com partições de sistema/swap não resolvida. Não é gate do Pi. Preparação AMD64 preservada, sem reutilizar imagens/dados no ARM64. Hetzner não aprovado. ferbatech.com existente, DNS/email preservados; nada contratado.
 
-Próximo passo: revisão manual da Web no Pi pelo responsável. Medição inicial de 602 s e recuperação concluídas; recibo no PR regista a observação adicional. Faltam decisão de alojamento, recuperação externa, HTTPS/SMTP reais, alertas, assinatura/distribuição e aceitação piloto. Dados, contas, configuração privada e emuladores habituais preservados. Sem publicação externa ou alteração NAS/router/DNS, Cloudflare, email real, APK, merge/auto-merge/release. iOS e Outlook adiados.
+Aceitação manual parcial: titular submete, chefe aprova, calendário e notificação atualizados. [Preparação HTTPS](docs/HO-012-HTTPS.md): túnel Pi separado apenas 404, sem conector ou DNS/hostname publicado. Validação no Pi exige sudo interativo; testes CI não são validação externa. Medição inicial de 602 s e recuperação concluídas; recibo no PR regista a observação adicional. Faltam decisão de alojamento, recuperação externa, HTTPS/SMTP reais, alertas, assinatura/distribuição e aceitação piloto. Dados, contas, configuração privada e emuladores habituais preservados. Sem publicação externa ou alteração NAS/router/DNS, email real, APK, merge/auto-merge/release. iOS e Outlook adiados.
