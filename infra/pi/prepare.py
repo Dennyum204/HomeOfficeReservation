@@ -66,14 +66,14 @@ def prepare(destination, image):
     for path in private.iterdir():
         path.chmod(0o700 if path.is_dir() else 0o600)
     for name in ['compose.yaml', 'Caddyfile', 'trial.sh', 'inventory.sh']:
-        shutil.copyfile(Path(__file__).with_name(name), destination / name)
-    shutil.copyfile(ROOT / 'infra/pilot/init-database.sh', destination / 'init-database.sh')
+        (destination / name).write_text(Path(__file__).with_name(name).read_text(encoding='utf-8'), encoding='utf-8', newline='\n')
+    (destination / 'init-database.sh').write_text((ROOT / 'infra/pilot/init-database.sh').read_text(encoding='utf-8'), encoding='utf-8', newline='\n')
     tag = image.split(':')[1]
     (destination / '.env').write_text('HO_TRIAL_ID=' + uuid.uuid4().hex + '\nHO_IMAGE=' + image + '\n' +
         'HO_DATABASE_IMAGE=homeoffice-pi-postgres:' + tag + '\n' +
         'HO_EDGE_IMAGE=homeoffice-pi-caddy:' + tag + '\n' +
-        'HO_MAIL_IMAGE=homeoffice-pi-mailpit:' + tag + '\n', encoding='utf-8')
-    (destination / '.ho012-pi-trial').write_text('homeoffice-pi-trial\n', encoding='utf-8')
+        'HO_MAIL_IMAGE=homeoffice-pi-mailpit:' + tag + '\n', encoding='utf-8', newline='\n')
+    (destination / '.ho012-pi-trial').write_text('homeoffice-pi-trial\n', encoding='utf-8', newline='\n')
     return destination
 
 

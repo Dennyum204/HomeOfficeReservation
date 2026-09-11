@@ -25,6 +25,8 @@ jobs:
           persist-credentials: false
           # PR checkout normally uses a synthetic merge; archive labels must identify the actual head.
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Windows bundle newline regression
+        run: python3 -m unittest discover -s infra/pi -p test_prepare.py -v
       - name: Native ARM64 build and exact isolated Pi stack; no emulation or deployment
         run: sudo -E python3 infra/pi/verify.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

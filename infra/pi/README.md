@@ -48,7 +48,7 @@ tar -cf "$bundle/trial-private.tar" -C "$bundle/trial" .
 Get-FileHash "$bundle/trial-private.tar" -Algorithm SHA256
 ```
 
-RUN é o run verde efetivo do commit. O arquivo privado é separado do artifact público. Proteger o diretório novo com ACL apenas do operador/SYSTEM/Administrators no Windows; não alterar ACL de diretórios existentes. Passwords sintéticas propostas ficam em **trial/private/CREDENCIAIS.json**. Não representam contas criadas nem ativação realizada. Certificados TLS e Data Protection usam chaves distintas; não substituir PFX/key ring ao renovar TLS.
+RUN é o run verde efetivo do commit. O arquivo privado é separado do artifact público. O gerador força UTF-8 sem BOM e LF também em .env, no marcador e nos scripts copiados: CRLF do checkout Windows não pode chegar ao shell Linux. Proteger o diretório novo com ACL apenas do operador/SYSTEM/Administrators no Windows; não alterar ACL de diretórios existentes. Passwords sintéticas propostas ficam em **trial/private/CREDENCIAIS.json**. Não representam contas criadas nem ativação realizada. Certificados TLS e Data Protection usam chaves distintas; não substituir PFX/key ring ao renovar TLS.
 
 ## Instalação proposta — NÃO executar antes da revisão/autorização
 
