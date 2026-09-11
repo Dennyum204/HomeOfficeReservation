@@ -6,7 +6,7 @@
 
 Plugin Cloudflare autorizado: zona **ferbatech.com ativa**; não existiam registos exatos `homeoffice.ferbatech.com` nem `*.ferbatech.com`. O túnel `nas-connectivity-test` estava down e não foi alterado. Preparado um túnel remoto separado **homeoffice-pi**, UUID **cc5b6025-b9fc-4d54-9854-5ed3aee17cad**, sem conector, sem rotas privadas e apenas resposta 404. Nenhum token foi obtido ou impresso. Nenhum DNS/hostname publicado. Certificado Universal ativo para apex/*.ferbatech.com (expiração observada 2026-12-07); cobre homeoffice.ferbatech.com, mas não cobre automaticamente staging.homeoffice.ferbatech.com. Não publicar staging nesta etapa. Inventário: SSL full, Always Use HTTPS off, Browser Integrity Check on, security medium, cache aggressive; sem Page Rules, rotas Workers ou rulesets de zona personalizados nas fases pretendidas. Access devolveu not_enabled; não foi ativado e não é necessário para Identity.
 
-SSH Pi confirmado nesta etapa: ~3284 MiB disponíveis, 48 GiB livres e 1 MiB de zram ocupado. sudo não interativo expirou; as leituras Docker protegidas e a validação temporária da origem no Pi exigem interação no terminal. O ensaio anterior continua disponível e inalterado. Não atribuir ao Pi os resultados do runner ARM64.
+SSH Pi confirmado nesta etapa: ~3284 MiB disponíveis, 48 GiB livres e 1 MiB de zram ocupado. A interação sudo posterior permitiu concluir a validação privada no Pi; a aplicação regressou à configuração local original. A primeira tentativa foi recusada antes do backup/troca de configuração por uma comparação incorreta de identificadores Docker (detalhe abaixo). Não atribuir ao Pi os resultados do runner ARM64.
 
 ## Configuração concreta para revisão
 
@@ -14,7 +14,7 @@ Manter `/home/dennyum/ho012-pi-trial`, projeto `homeoffice-pi-trial`, base, volu
 
 | Alteração proposta no Pi | Valor |
 |---|---|
-| Quinto serviço | cloudflared 2026.9.1, Linux ARM64 nativo, imagem comparada com ID verificado em CI |
+| Quinto serviço | cloudflared 2026.9.1, Linux ARM64 nativo, referência imutável e RepoDigests verificados contra a CI, mais OS/arquitetura |
 | Limites adicionais | 128 MiB RAM, 128 MiB memory+swap (zero swap), 0,25 CPU, 64 PIDs |
 | Total dos cinco serviços | 1600 MiB / 3,25 CPU; margem medida anteriormente >3 GiB, medir novamente com conector real |
 | Reinício | `unless-stopped` nos cinco serviços; sem auto-update de imagens |
@@ -61,7 +61,7 @@ Inspecionar colisões novamente antes de criar; não substituir outro registo. `
 
 [verify_https.py](../infra/pi/verify_https.py) testa origem TLS real/Caddy/API/PostgreSQL com cliente num namespace de rede simulando o conector, sem token ou saída Cloudflare. Verifica CLI/ingress ARM64 offline, configuração efetiva, login/logout cookie/CSRF, login/refresh bearer, negação anónima, ausência de registo, endpoints privados e rate limit imune a XFF forjado. Repõe os mounts/configuração originais no finally. CI executa-o após backup/restauro do ensaio descartável; não executa esse harness destrutivo no Pi.
 
-[validate_https_on_pi.py](../infra/pi/validate_https_on_pi.py) é o wrapper separado do Pi: recusa pasta HTTPS existente/colisões, compara imagem com ID da CI, faz novo backup antes da troca temporária e restaura acesso local. Exige sudo interativo. O backup é local ao Pi; copiar de forma cifrada para o PC antes da publicação. A cópia manual anterior permanece protegida e não equivale a backup externo automatizado.
+[validate_https_on_pi.py](../infra/pi/validate_https_on_pi.py) é o wrapper separado do Pi: recusa pasta HTTPS existente/colisões, compara o digest de repositório fixado e Linux ARM64 com a evidência da CI, faz novo backup antes da troca temporária e restaura acesso local. Exige sudo interativo. O backup é local ao Pi; copiar de forma cifrada para o PC antes da publicação. A cópia manual anterior permanece protegida e não equivale a backup externo automatizado.
 
 Em caso de falha durante o teste privado ou para regressar ao acesso SSH:
 
@@ -89,3 +89,15 @@ Fontes oficiais consultadas em 2026-09-12: [token-file](https://developers.cloud
 Fontes complementares: [redirect API](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/create-api/), [cache rules API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/), [configuration rules](https://developers.cloudflare.com/rules/configuration-rules/settings/). Propostas locais, nenhuma regra aplicada.
 
 Diagnóstico inicial da nova CI: o teste esperava 405 num POST de registo inexistente; a API respondeu corretamente 404. Expectativa corrigida para verificar o contrato real, sem mapear registo nem enfraquecer autorização/CSRF.
+
+## Validação no Pi e correção de identidade Docker — 2026-09-12
+
+No Pi, Docker 29/containerd devolveu `Id=sha256:b269e8abd07a5bf6f3f4be65d5050b2174eca89c56a0241a8ff32a16aec454e4`; no armazenamento clássico da CI, Id era o digest de configuração `sha256:275625bde2cb95151140b12af359f6e744dca5a45cbd357a8566a8438c853e51`. **RepoDigests era idêntico nos dois**, Linux ARM64. Não era uma imagem AMD64 nem houve prova de conteúdo diferente. A recusa inicial preservou a stack e ocorreu antes do backup/troca da origem.
+
+A referência agora é `cloudflare/cloudflared@sha256:b269e8abd07a5bf6f3f4be65d5050b2174eca89c56a0241a8ff32a16aec454e4`. Pull por digest e validação do RepoDigest completo + OS/ARM64, sem aceitar apenas um Id coincidente. Testes cobrem os dois formatos e recusam digest ausente/diferente, repositório diferente, Windows e AMD64. A CI exporta também uma tag de transporte do conector; a execução continua fixada pelo digest do fornecedor.
+
+Com a autorização sudo existente, o ensaio privado foi executado autonomamente no Pi: novo backup DB/config/PFX/keys e compose/Caddy originais; CLI ARM64/ingress offline; TLS privado CA/SNI; Secure/HttpOnly/SameSite; CSRF/login/logout; bearer/refresh; leitura anónima 401; registo/health/openapi/metrics indisponíveis; headers falsificados recusados e rate limit preservado. Conector simulado num namespace isolado, **sem conexão Cloudflare ou token**, sem teste Android físico. Acesso localhost restaurado e saúde confirmada no fim.
+
+Backup novo `20260911T235340Z-71752` no diretório privado de backups do ensaio. Cópia independente AES-256-GCM no diretório privado do PC, decriptação e todos os hashes internos verificados (incluindo SQL, PFX/key ring, configuração e routing originais). Backup manual, não automatizado. Configuração real, recibo e chave de cópia apenas locais; tokens/códigos/passwords não publicados. Não é necessário repetir o script de validação já concluído.
+
+Fontes: [Docker containerd store](https://docs.docker.com/engine/storage/containerd/), [implementação oficial de inspect](https://github.com/moby/moby/blob/master/daemon/containerd/image_inspect.go), [referências imutáveis por digest](https://docs.docker.com/engine/containers/run/#image-digests). Consultadas em 2026-09-12. O próximo gate é autorização explícita para publicar o hostname e validar o percurso externo; não ocorreu nesta correção.

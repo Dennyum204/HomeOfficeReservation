@@ -45,7 +45,9 @@ def main():
     subprocess.run(['docker', 'build', '--platform', 'linux/arm64', '-f', 'infra/pilot/Dockerfile', '-t', image, '.'], cwd=ROOT, check=True)
     images = [image]
     subprocess.run(['docker', 'pull', '--platform', 'linux/arm64', CONNECTOR_IMAGE], check=True)
-    images.append(CONNECTOR_IMAGE)
+    connector_export = 'homeoffice-pi-cloudflared:ho012-' + sha
+    subprocess.run(['docker', 'tag', CONNECTOR_IMAGE, connector_export], check=True)
+    images.append(connector_export)
     for name, upstream in [('postgres', 'postgres:18.6-bookworm'), ('caddy', 'caddy:2.11.4-alpine'), ('mailpit', 'axllent/mailpit:v1.31.1')]:
         tag = 'homeoffice-pi-' + name + ':ho012-' + sha
         subprocess.run(['docker', 'pull', '--platform', 'linux/arm64', upstream], check=True)

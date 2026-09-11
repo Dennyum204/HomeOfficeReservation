@@ -11,7 +11,7 @@ from pathlib import Path
 import platform
 import hashlib
 import subprocess
-from prepare_https import CONNECTOR_IMAGE
+from prepare_https import CONNECTOR_IMAGE, CONNECTOR_DIGEST, validate_connector
 from verify_https import verify
 
 ROOT = Path('/home/dennyum/ho012-pi-trial')
@@ -43,8 +43,9 @@ def main(expected_image):
     run(['sh', 'trial.sh', 'health'])  # Existing four services, same labelled resources.
     run(['docker', 'pull', '--platform', 'linux/arm64', CONNECTOR_IMAGE])
     meta = json.loads(run(['docker', 'image', 'inspect', CONNECTOR_IMAGE]))[0]
-    if meta['Architecture'] != 'arm64' or meta['Id'] != expected_image:
-        raise RuntimeError('Connector does not match verified ARM64 CI image; refusing changes.')
+    if expected_image != CONNECTOR_DIGEST:
+        raise RuntimeError('Expected registry digest must match the reviewed pin; refusing changes.')
+    validate_connector(meta)
     before = set((ROOT / 'private/backups').iterdir())
     run(['sh', 'trial.sh', 'backup'])
     backups = set((ROOT / 'private/backups').iterdir()) - before
@@ -69,8 +70,8 @@ def main(expected_image):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--image-id', required=True)
+    parser.add_argument('--image-digest', required=True)
     args = parser.parse_args()
-    if len(args.image_id) != 71 or not args.image_id.startswith('sha256:'):
-        parser.error('Use the verified ARM64 image ID from CI, not a mutable tag.')
-    main(args.image_id)
+    if args.image_digest != CONNECTOR_DIGEST:
+        parser.error('Use the reviewed registry digest, not docker inspect Id or a mutable tag.')
+    main(args.image_digest)

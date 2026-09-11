@@ -16,7 +16,7 @@ import subprocess
 import time
 import traceback
 
-from prepare_https import HOST, CONNECTOR_IMAGE, prepare_https
+from prepare_https import HOST, CONNECTOR_IMAGE, prepare_https, validate_connector
 
 
 class OriginConnection(http.client.HTTPSConnection):
@@ -118,7 +118,7 @@ def verify(folder):
         return result.stdout
 
     meta = json.loads(command(['docker', 'image', 'inspect', CONNECTOR_IMAGE]))[0]
-    assert meta['Architecture'] == 'arm64' and meta['Os'] == 'linux'
+    validate_connector(meta)
     command(['docker', 'run', '--rm', '--network', 'none', CONNECTOR_IMAGE, '--version'])
     command(['docker', 'run', '--rm', '--network', 'none', '--user', '0:0',
              '-v', str(target) + ':/check:ro', CONNECTOR_IMAGE,

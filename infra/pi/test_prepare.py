@@ -5,11 +5,24 @@ import unittest
 from unittest.mock import patch
 
 from prepare import prepare
-from prepare_https import prepare_https
+from prepare_https import prepare_https, validate_connector, CONNECTOR_IMAGE, CONNECTOR_DIGEST
 import json
 
 
 class PrepareTests(unittest.TestCase):
+    def test_registry_identity_across_classic_and_containerd_stores(self):
+        for image_id in ['sha256:' + 'a' * 64, CONNECTOR_DIGEST]:
+            validate_connector({'Id': image_id, 'Architecture': 'arm64', 'Os': 'linux',
+                                'RepoDigests': [CONNECTOR_IMAGE]})
+        valid = {'Id': CONNECTOR_DIGEST, 'Architecture': 'arm64', 'Os': 'linux',
+                 'RepoDigests': [CONNECTOR_IMAGE]}
+        for replacement in [{'RepoDigests': []}, {'RepoDigests': None},
+                            {'RepoDigests': ['other/repository@' + CONNECTOR_DIGEST]},
+                            {'RepoDigests': ['cloudflare/cloudflared@sha256:' + '0' * 64]},
+                            {'Architecture': 'amd64'}, {'Os': 'windows'}]:
+            with self.subTest(replacement=replacement), self.assertRaises(RuntimeError):
+                validate_connector({**valid, **replacement})
+
     def test_windows_default_newlines_do_not_contaminate_linux_bundle(self):
         original_write = Path.write_text
 

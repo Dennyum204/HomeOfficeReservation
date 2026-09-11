@@ -8,7 +8,17 @@ from pathlib import Path
 import subprocess
 
 HOST = 'homeoffice.ferbatech.com'
-CONNECTOR_IMAGE = 'cloudflare/cloudflared:2026.9.1'
+# 2026.9.1 registry digest already exercised by native ARM64 CI. Image inspect Id
+# differs between classic/containerd stores; RepoDigests is the portable identity.
+CONNECTOR_DIGEST = 'sha256:b269e8abd07a5bf6f3f4be65d5050b2174eca89c56a0241a8ff32a16aec454e4'
+CONNECTOR_IMAGE = 'cloudflare/cloudflared@' + CONNECTOR_DIGEST
+
+
+def validate_connector(meta):
+    if meta.get('Architecture') != 'arm64' or meta.get('Os') != 'linux':
+        raise RuntimeError('Connector must be native Linux ARM64; refusing changes.')
+    if CONNECTOR_IMAGE not in (meta.get('RepoDigests') or []):
+        raise RuntimeError('Connector registry digest differs from verified CI; refusing changes.')
 
 
 def prepare_https(trial):
