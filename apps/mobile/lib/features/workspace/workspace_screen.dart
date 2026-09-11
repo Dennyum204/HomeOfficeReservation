@@ -105,11 +105,21 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
           ),
         )
       : Icon(icon);
-  late Future<WorkspaceInfo>? _connection;
+  late Future<WorkspaceInfo?>? _connection;
+  Future<WorkspaceInfo?> _loadConnection() async {
+    try {
+      return await widget.repository!.load();
+    } catch (_) {
+      // Settings may not be mounted yet, or logout may close this repository.
+      // Capture failure immediately; null renders offline and retains retry.
+      return null;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _connection = widget.repository?.load();
+    _connection = widget.repository == null ? null : _loadConnection();
   }
 
   @override
@@ -465,7 +475,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                       if (_connection == null)
                                         Text(s.configurationError)
                                       else
-                                        FutureBuilder<WorkspaceInfo>(
+                                        FutureBuilder<WorkspaceInfo?>(
                                           future: _connection,
                                           builder: (context, snapshot) {
                                             final loading =
@@ -474,6 +484,10 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                             final data = loading
                                                 ? null
                                                 : snapshot.data;
+                                            final failed =
+                                                !loading &&
+                                                (snapshot.hasError ||
+                                                    data == null);
                                             return Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -483,7 +497,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                                   child: Text(
                                                     loading
                                                         ? s.connecting
-                                                        : snapshot.hasError
+                                                        : failed
                                                         ? s.offline
                                                         : s.connected,
                                                     key: const Key(
@@ -491,8 +505,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                if (snapshot.hasError &&
-                                                    !loading) ...[
+                                                if (failed) ...[
                                                   const SizedBox(height: 8),
                                                   Text(s.offlineHelp),
                                                 ],
@@ -533,16 +546,15 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                                   onPressed: loading
                                                       ? null
                                                       : () => setState(() {
-                                                          _connection = widget
-                                                              .repository!
-                                                              .load();
+                                                          _connection =
+                                                              _loadConnection();
                                                         }),
                                                   icon: const Icon(
                                                     Icons.refresh,
                                                     size: 18,
                                                   ),
                                                   label: Text(
-                                                    snapshot.hasError
+                                                    failed
                                                         ? s.retry
                                                         : s.refresh,
                                                   ),

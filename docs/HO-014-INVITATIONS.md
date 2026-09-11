@@ -93,6 +93,8 @@ O helper é loopback-only, cria uma conta sintética única e **não a ativa**. 
 
 `wait_android_api.py` exige HTTP 200 Healthy através de `10.0.2.2`, além da verificação anterior no host: boot completo não garante que a rede do emulador já esteja pronta. Retenta apenas esta leitura por prazo limitado e falha se continuar indisponível; não dispensa testes nativos nem repete mutations. O teste do formulário com HTTP simulado e o ensaio nativo são evidências distintas. No nativo, aguardar o foco/teclado após a transição de definição de password para login evita que uma atualização tardia de IME sobreponha o texto introduzido pelo teste.
 
+A CI revelou também um Future de metadados sem consumidor enquanto Definições não estava montado. Fechar o cliente no logout podia completar esse pedido com erro não tratado. O resultado agora é capturado imediatamente, incluindo após dispose; falha renderiza offline e permite retry, nunca «Serviço ligado». `workspace_connection_test.dart` reproduziu os dois casos antes da correção e verifica recuperação sem perder sessão/calendário. Os testes de ligação real continuam a exigir dados válidos da API.
+
 ## Recuperação, limitações e operação futura
 
 Corrigir SMTP/worker e aguardar retry, ou reenviar explicitamente se Failed/expirado. Não apagar conta para recuperar uma entrega. Sent é aceitação pelo adaptador, não prova de leitura; Captured/SMTP local não prova SMTP externo. Uma resposta SMTP perdida pode causar email duplicado com o **mesmo** código. O código fica cifrado apenas até envio confirmado/falha terminal/aceitação/cancelamento. Não há códigos em filas de planeamento, logs ou tracking.
