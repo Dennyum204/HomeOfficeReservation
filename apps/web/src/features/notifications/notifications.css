@@ -1,6 +1,6 @@
 .notification-centre {
-  background: white;
-  border: 1px solid var(--line, #dce4d6);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 24px;
 }
@@ -20,23 +20,23 @@
 .notification-centre select {
   min-height: 44px;
   padding: 10px 14px;
-  border: 1px solid #8a9c82;
+  border: 1px solid var(--input);
   border-radius: 8px;
-  background: white;
-  color: #264e3e;
+  background: var(--surface);
+  color: var(--primary);
   font: inherit;
 }
 .notification-centre button:not(:disabled) {
   cursor: pointer;
 }
 .notification-centre button:hover:not(:disabled) {
-  background: #edf1e7;
+  background: var(--secondary);
 }
 .notification-centre button:disabled {
   opacity: 0.5;
 }
 .notification-centre :focus-visible {
-  outline: 3px solid #52763a;
+  outline: 3px solid var(--ring);
   outline-offset: 3px;
 }
 .notification-list {
@@ -49,12 +49,12 @@
   justify-content: space-between;
   gap: 20px;
   padding: 20px 12px;
-  border-bottom: 1px solid #dce4d6;
+  border-bottom: 1px solid var(--border);
   border-left: 4px solid transparent;
 }
 .notification-list li.unread {
-  border-left-color: #2e624c;
-  background: #f3f7ee;
+  border-left-color: var(--border);
+  background: var(--accent);
 }
 .notification-list h2 {
   font-size: 1.08rem;
@@ -66,14 +66,14 @@
 }
 .notification-state {
   font-weight: 700;
-  color: #2e624c;
+  color: var(--foreground);
 }
 .notification-actions {
   justify-content: flex-start;
 }
 .notification-badge {
-  background: #264e3e;
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
   border-radius: 20px;
   padding: 3px 7px;
   font-size: 0.75rem;

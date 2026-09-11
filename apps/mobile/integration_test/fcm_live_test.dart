@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'session_helpers.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,8 +55,7 @@ void main() {
       }
 
       Future<void> settings() async {
-        await tester.tap(find.byIcon(Icons.settings_outlined));
-        await tester.pumpAndSettle();
+        await openAccountSettings(tester);
       }
 
       Future<void> login(String email, String password) async {
@@ -64,6 +65,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.byKey(const Key('submit')));
         await tester.tap(find.byKey(const Key('submit')));
+        await openAccountSettings(tester);
         await waitFor('Terminar sessão');
       }
 
@@ -82,6 +84,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 500));
       }
       if (auth().member == null) await login(employeeEmail, employeePassword);
+      await settings();
       await waitFor('Terminar sessão');
       expect(
         auth().member!.isEmployee,

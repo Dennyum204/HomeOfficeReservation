@@ -31,3 +31,4 @@ ADR-013 está reservado à proposta operacional no [PR draft #37](https://github
 | [ADR-015](ADR-015-access-invitations.md) | Ciclo de convite Identity, entrega durável protegida e recuperação | HO-014; critérios/CI no PR da tarefa |
 
 - [ADR-016 — Administração Web e concorrência de acesso](ADR-016-web-administration.md) — HO-015, complementa ADR-014/015.
+- [ADR-017 — Identidade visual partilhada](ADR-017-shared-visual-theme.md) — HO-016, cores Claude + adaptadas e hierarquia Web/Android.

@@ -5,6 +5,7 @@ import 'package:homeoffice_api/api.dart';
 import 'package:intl/intl.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../../theme/components.dart';
 import 'inbox_controller.dart';
 import 'push_coordinator.dart';
 
@@ -58,12 +59,10 @@ class NotificationScreen extends StatelessWidget {
         ],
       );
       return ListView(
+        key: const PageStorageKey('notifications'),
         padding: const EdgeInsets.all(20),
         children: [
-          Text(
-            s.notificationsTitle,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          SectionHeading(s.notifications),
           Text(s.notificationReadOnly),
           if (c.loading || c.busy) const LinearProgressIndicator(),
           if (c.error)

@@ -70,6 +70,7 @@
   "authManager": "Gestor",
   "authAdmin": "Administrador de contas",
   "authCheck": "Verificar sessão",
+  "authAccountSession": "Conta e sessão",
   "authLogout": "Terminar sessão",
   "authBack": "Voltar ao início de sessão",
   "authActivateLink": "Ainda não ativei a conta",
@@ -316,5 +317,19 @@
   "workOutlookLater": "A ligação opcional ao Outlook pertence a uma fase posterior. O planeamento da aplicação funciona de forma independente.",
   "workEmployee": "Colaborador selecionado",
   "workFilter": "Filtrar por estado",
-  "workNavigation": "Presenças/tarefas"
+  "workNavigation": "Presenças/tarefas",
+  "appearanceTitle": "Aparência",
+  "appearanceDescription": "Escolha como prefere ver o seu espaço de trabalho neste dispositivo.",
+  "appearanceLabel": "Tema da interface",
+  "appearanceSystem": "Sistema",
+  "appearanceLight": "Claro",
+  "appearanceDark": "Escuro",
+  "appearanceStorage": "A preferência será usada nesta sessão. Não foi possível guardá-la neste dispositivo.",
+  "visualContext": "Contexto e localização",
+  "visualDates": "Seleção de datas",
+  "visualSummary": "Resumo dos dias",
+  "visualComment": "Comentário e contexto",
+  "visualActions": "Ações disponíveis",
+  "visualDecisions": "Decisões por dia",
+  "visualHistory": "Histórico e contexto"
 }

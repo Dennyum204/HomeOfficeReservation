@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'session_helpers.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:homeoffice_api/api.dart';
@@ -108,7 +110,7 @@ Future<void> ready(WidgetTester t) => until(
 Future<void> login(WidgetTester t, {bool manager = false}) async {
   final auth = t.widget<AuthScreen>(find.byType(AuthScreen)).controller;
   await until(t, () => !auth.busy, 'session restoration');
-  if (auth.member != null) await tap(t, find.text('Terminar sessão'));
+  if (auth.member != null) await signOut(t);
   await until(
     t,
     () => find.byKey(const Key('email')).evaluate().isNotEmpty,

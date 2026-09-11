@@ -2,39 +2,39 @@
   min-width: 0;
 }
 .admin-workspace button {
-  border: 1px solid #b9c8bb;
+  border: 1px solid var(--input);
   border-radius: 8px;
-  color: #244c3c;
-  background: white;
+  color: var(--foreground);
+  background: var(--surface);
   padding: 9px 13px;
   font-size: 13px;
   line-height: 1.35;
 }
 .admin-workspace button:hover:not(:disabled) {
-  background: #eaf1e9;
-  border-color: #5d8069;
+  background: var(--secondary);
+  border-color: var(--border);
 }
 .admin-workspace button.primary {
-  color: white;
-  background: #285842;
-  border-color: #285842;
+  color: var(--primary-foreground);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 .admin-workspace button.primary:hover:not(:disabled) {
-  background: #173e2d;
+  background: var(--primary);
 }
 .admin-workspace input:not([type="checkbox"]),
 .admin-workspace select {
   width: 100%;
-  border: 1px solid #b9c8bb;
+  border: 1px solid var(--input);
   border-radius: 7px;
   padding: 10px;
   min-height: 44px;
   font: inherit;
-  background: white;
-  color: #203d38;
+  background: var(--surface);
+  color: var(--foreground);
 }
 .admin-check input {
-  accent-color: #285842;
+  accent-color: var(--primary);
 }
 .admin-toolbar,
 .admin-actions,
@@ -67,9 +67,9 @@
 }
 .admin-card,
 .admin-detail {
-  border: 1px solid var(--line, #deded6);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  background: var(--surface, #fff);
+  background: var(--surface);
   padding: 1.25rem;
   overflow-wrap: anywhere;
 }
@@ -86,17 +86,17 @@
 .admin-badges span,
 .admin-badge {
   display: inline-block;
-  background: #f0f2ec;
-  color: #34473b;
-  border: 1px solid #d5ddd1;
+  background: var(--secondary);
+  color: var(--foreground);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.25rem 0.5rem;
   font-size: 0.85rem;
 }
 .admin-notice {
   padding: 1rem;
-  background: #f7f2e7;
-  border-left: 3px solid #8a6b2b;
+  background: var(--pending-surface);
+  border-left: 3px solid var(--pending);
   overflow-wrap: anywhere;
 }
 .admin-form {
@@ -106,7 +106,7 @@
 .admin-form fieldset {
   margin: 0 0 1rem;
   padding: 1rem;
-  border: 1px solid #deded6;
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 .admin-form legend {
@@ -135,7 +135,7 @@
   min-width: 0;
 }
 .admin-form section + section {
-  border-top: 1px solid #deded6;
+  border-top: 1px solid var(--border);
   padding-top: 1rem;
 }
 .admin-workspace button,

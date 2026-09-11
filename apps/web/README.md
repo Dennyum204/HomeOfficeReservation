@@ -1,6 +1,6 @@
 # Web React/TypeScript
 
-HO-015 acrescenta **Administração** para administradores ativos: membros, convites, entrega, papéis e chefias. [Utilização, recuperação e teste](../../docs/HO-015-WEB-ADMINISTRATION.md). Os ecrãs de aceitação Identity Web/Android de HO-014 mantêm-se. Tema global HO-016 adiado.
+HO-015 acrescenta **Administração** para administradores ativos: membros, convites, entrega, papéis e chefias. [Utilização, recuperação e teste](../../docs/HO-015-WEB-ADMINISTRATION.md). Os ecrãs de aceitação Identity Web/Android de HO-014 mantêm-se. HO-016 aplica [Claude + e hierarquia visual](../../docs/HO-016-VISUAL-THEME.md), com claro/escuro/sistema no topo e em Definições.
 
 Calendário próprio mês/semana e Pedidos em PT-PT, com rascunhos, revisão de datas, aprovação/rejeição parcial, retirada, revisões/cancelamentos e contrapropostas. Plano confirmado e alterações pendentes são camadas distintas. HO-006 acrescenta Presenças/Tarefas com preview, leitura por revisão, resolução explícita e progresso autorizado. [Percurso HO-006](../../docs/HO-006-ONSITE-TASKS.md). HO-007 acrescenta notificações; Outlook continua futuro. [Percurso de teste HO-005](../../docs/HO-005-WEB.md). Login, ativação, recuperação, logout e sessão autenticada funcionam com cookies Identity. Sem aprovações fictícias ou dependência Microsoft. [Preparar contas e obter credenciais privadas](../../docs/HO-003-AUTHENTICATION.md).
 

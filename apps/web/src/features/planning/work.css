@@ -18,8 +18,8 @@
 }
 .work-detail {
   padding: 24px;
-  background: #fff;
-  border: 1px solid #dce4e8;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 18px;
 }
 .work-detail h2,
@@ -32,8 +32,8 @@
   gap: 14px;
   margin-block: 24px;
   padding: 20px;
-  background: #f5f8fa;
-  border: 1px solid #dce4e8;
+  background: var(--secondary);
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 .work-form label,
@@ -60,8 +60,8 @@
   max-height: 320px;
   overflow: auto;
   padding: 16px;
-  border-left: 3px solid #8666ae;
-  background: #f4effa;
+  border-left: 3px solid var(--border);
+  background: var(--secondary);
 }
 .conflict-preview ul {
   padding-left: 18px;
@@ -75,13 +75,13 @@
 .status-badge.needsresolution,
 .onsite-chip.conflict,
 .notice.conflict {
-  background: #fff0dc;
-  color: #784205;
+  background: var(--pending-surface);
+  color: var(--pending);
 }
 .status-badge.active,
 .onsite-chip {
-  background: #eee7f7;
-  color: #583a7a;
+  background: var(--secondary);
+  color: var(--foreground);
 }
 .onsite-chip {
   display: block;
@@ -91,26 +91,26 @@
   margin-top: 5px;
 }
 .status-badge.inprogress {
-  background: #e0edf7;
-  color: #225c82;
+  background: var(--info-surface);
+  color: var(--info);
 }
 .status-badge.done {
-  background: #e1f2e8;
-  color: #22593a;
+  background: var(--secondary);
+  color: var(--foreground);
 }
 .status-badge.todo {
-  background: #f0f2f4;
-  color: #536172;
+  background: var(--secondary);
+  color: var(--muted-foreground);
 }
 .onsite-day-detail {
-  border-top: 1px solid #dce4e8;
+  border-top: 1px solid var(--border);
   padding-top: 12px;
   margin-top: 18px;
 }
 .work-history {
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid #dce4e8;
+  border-top: 1px solid var(--border);
 }
 .work-history ol {
   padding-left: 22px;
@@ -120,7 +120,7 @@
 }
 .work-history time {
   font-size: 0.8rem;
-  color: #536172;
+  color: var(--muted-foreground);
 }
 .work-history form {
   display: grid;

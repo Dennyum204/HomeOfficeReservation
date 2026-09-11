@@ -111,6 +111,18 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 |---|---|---|
 | FEAT-024 | Reativação iOS com validação e distribuição próprias | HO-306 |
 
+## ui-refresh — Identidade visual Claude + — Web e Android
+
+**Quando:** Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.
+
+**Gate:** HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.
+
+**Reavaliar:** Ao selecionar o próximo trabalho visual e após feedback de utilização.
+
+| ID | Funcionalidade | Tarefas |
+|---|---|---|
+| FEAT-025 | Tema Claude + e hierarquia visual acessível Web/Android | HO-016 |
+
 ## Regra de acompanhamento
 
 Rever tarefas abertas no fecho de cada PR, o plano da release semanalmente durante o desenvolvimento e as funcionalidades futuras no marco indicado. Estes são rituais do projeto; não foi criado um lembrete automático fora da aplicação.

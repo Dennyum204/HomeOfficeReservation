@@ -19,15 +19,15 @@ Ambas as plataformas suportam os dois papéis. O chefe consegue aprovar um subco
 
 | Informação | Representação proposta |
 |---|---|
-| Presencial confirmado | Azul + ícone de edifício + texto |
-| Home office aprovado | Verde + ícone de casa + Portugal |
+| Presencial confirmado | Superfície neutra + edifício + Suíça; confirmação separada |
+| Home office aprovado | Superfície neutra + casa + Portugal; confirmação separada |
 | Pedido pendente | Contorno/padrão âmbar + relógio |
-| Presença necessária | Etiqueta roxa com motivo |
+| Presença necessária | Ícone de presença + rótulo + motivo; conflito em aviso separado |
 | Férias/indisponível | Cinzento + rótulo explícito |
 | Conflito | Ícone e aviso persistente sobre o plano existente |
 | Padrão base | Apresentação discreta com indicação “Padrão” |
 
-Cores são propostas, sujeitas a contraste e teste. Não dependem de cor para comunicar estado. Uma presença em conflito não pinta por cima do remoto aprovado: o detalhe mostra os dois e a ação de resolução.
+Cores concretizadas em HO-016/ADR-017, substituindo as propostas históricas verde/azul/roxo. Não dependem de cor para comunicar estado. Uma presença em conflito não pinta por cima do remoto aprovado: o detalhe mostra os dois e a ação de resolução.
 
 ## Fluxos principais
 
@@ -65,7 +65,7 @@ Notificações é um separador real Web/Android: badge, filtros, páginas, leitu
 
 ## Concretização Android HO-010
 
-Mês compacto e agenda selecionada, rótulos/ícones, padrão e aprovações separados de pendentes e presenças. Nome do colaborador ativo permanece na barra superior. Pedido de dias de trabalho é distinto de uma obrigação presencial; esta última é apenas consultada neste item, com tratamento Web até HO-011.
+Mês compacto e agenda selecionada, rótulos/ícones, padrão e aprovações separados de pendentes e presenças. HO-010 apresentava o colaborador na barra superior; o refinamento HO-016 abaixo substitui essa apresentação por contexto no conteúdo com scroll. Pedido de dias de trabalho é distinto de uma obrigação presencial; esta última é apenas consultada neste item, com tratamento Web até HO-011.
 
 Formulários revêm o intervalo antes de o adicionar e confirmam a intenção antes de enviar. A chefia seleciona só o subconjunto pretendido; o colaborador retira pendentes sem cancelar aprovados. Cancelamento aprovado exige revisão e decisão final. Voltar no Android fecha confirmação/editor/detalhe; input local continua protegido até logout explícito. Erros de rede, versão e resultado incerto têm ações distintas. [Percurso e evidência](HO-010-ANDROID-PLANNING.md).
 
@@ -74,3 +74,9 @@ Formulários revêm o intervalo antes de o adicionar e confirmam a intenção an
 Os planos de interface Android dos parágrafos históricos acima são concretizados neste item: Presenças/tarefas tem listas, filtros, detalhes, edição autorizada e histórico. **Conta com sessão iniciada** e **Colaborador selecionado** são distintos. **Pedir os meus dias de trabalho** cria um pedido próprio; **Exigir presença do colaborador** é uma ação da chefia.
 
 Um conflito explica que o plano aprovado permanece e quem atua a seguir. Confirmar leitura não aceita uma contraproposta; aceitar não é a decisão final. Calendário e notificações abrem o detalhe atual. A Web estreita coloca o detalhe antes da lista e move/devolve foco; Android usa voltar/scroll/formulários com texto escalável. [Ensaios, capturas e percurso](HO-011-CORE-ACCEPTANCE.md).
+
+## Concretização HO-016
+
+Tema neutro Claude + adaptado com preferência claro/escuro/sistema. Web conserva componentes e reorganiza o editor em contexto, método de datas, resumo, comentário e ações; pedidos distinguem resumo, decisões por dia, ações pertinentes e histórico. Android usa ThemeData, cartões e badges comuns, preservando navegação, texto ampliado e ações existentes. Foco visível, semântica e movimento reduzido fazem parte da verificação. [Referência, licença, testes e comparações](HO-016-VISUAL-THEME.md).
+
+Refinamento Android pedido na revisão do PR #45: cada separador começa com um título compacto dentro do seu scroll, sem painel de sessão persistente nem AppBar fixa/flutuante. **Colaborador selecionado** acompanha apenas calendário, pedidos e presenças/tarefas; a chefia conserva o seletor. **Definições → Conta e sessão** identifica a pessoa autenticada, email, organização e papéis, com Verificar sessão e Terminar sessão. A validação automática ao retomar a aplicação permanece independente de Definições. A navegação inferior e as áreas seguras mantêm-se; a troca de conta começa com novas posições de scroll. A Web não muda neste refinamento.

@@ -1,0 +1,168 @@
+{
+  "date": "2026-09-11",
+  "previous_head": "75fae2d631205e50a47876ab9a0e763d9b760a21",
+  "source": "integration_test/visual_theme_test.dart, VISUAL_STAGE=header; exit 0, real isolated API/PostgreSQL",
+  "privacy": "Only synthetic identities; no credentials, activation forms or tokens captured.",
+  "limitations": [
+    "Notifications had only 29.714 logical pixels of overflow. Its position moved by this amount; no capture is labelled notifications-scrolled. Full heading disappearance on long inbox content is verified by the widget fixture.",
+    "No live FCM, physical device, iOS or Web recapture in this refinement."
+  ],
+  "captures": [
+    {
+      "file": "dark-calendar-scrolled.png",
+      "sha256": "e4553189554a96284b31299cea0e3d286e2ee599b07f3169f95977b0578694d3",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-calendar.png",
+      "sha256": "c0f1e16ef9a349838a798bc3cb99e47108ae61dcc22a7ae447957da196ab8967",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-editor.png",
+      "sha256": "18bf339cf37cd3dd989f39f28a3543bdf986468c3319d89bfa5fd4cf72666ae8",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-manager-calendar.png",
+      "sha256": "d3e290d0691a0c6f399f782faee8876afaa64186be97ce630290683c5096d336",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-manager-settings.png",
+      "sha256": "53df40b7dab0716645f5dd02e8e640a2fd51fae0b138318fa48935c6c1eabc97",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-notifications.png",
+      "sha256": "fc61a385d366ba61a1286ba052314ff05e7ddbb82f6041155a1bdb6c680adc07",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-onsite-scrolled.png",
+      "sha256": "ee6ca422e3ebf970479f28a4b43d99855a18654b4b86ff260365a1fcf8b81d33",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-onsite.png",
+      "sha256": "25481083c256d1cd6e1b72e169d0ba544a24722206c732c0825f910bc158886e",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-request-scrolled.png",
+      "sha256": "650d62d76f2462f7ccef96086ae9a82a09abc8799234b1ec1636838cffcb79db",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-request.png",
+      "sha256": "0135e3a80da5b93efb1aa3803d500062ef5fd73ef0d1fc7b8fd20a3dabba142f",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-settings-scrolled.png",
+      "sha256": "c894c4070178a2b140343992242c53a8f7c46094d447bfb0d3618166f302bd66",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-settings.png",
+      "sha256": "aa5cda349b2cec9d679c7f647d795f8a3054e7858ac431ba791cc820412af966",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "dark-task.png",
+      "sha256": "e5edb605582ef3d88f7cf3ee55089d1fbca7a8197a5b60ffcea936cf3b296103",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-calendar-scrolled.png",
+      "sha256": "9c1781af4d657abc2fd6e1f8ba6a7290c5f21bbd5b98bec7601ecc8b054faf5c",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-calendar.png",
+      "sha256": "d129e83ed1dfad672c0288936f4b099627fedf9f93e134ab6d8cf0c095054db7",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-editor.png",
+      "sha256": "8bafb6eb724bea1b2021a9d7b307fa87f5e98bf2f28a54498c1b5e15fa329b64",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-manager-calendar.png",
+      "sha256": "66c1b5e71b143978b9cbeeaad6c335b64d9c9f975f40216d4153776c78e9b70e",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-manager-settings.png",
+      "sha256": "f8ecdccc9ab7061462522b8311ee87b36a3f29b5a552e658b7afaca3e1bab5f8",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-notifications.png",
+      "sha256": "b016d4dad9797b769dcdb8fc6a2a393430763332c13407bf4fe14213b6e04bf1",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-onsite-scrolled.png",
+      "sha256": "c4b0f38e89a2fd3cefab9a316b139c66b7998f1b2df0e27e172b01894c3c0b11",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-onsite.png",
+      "sha256": "4cf02cf95a399cce6e7f36432401fe9e5e7e80c90610e508079d86b00fb2bcde",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-request-scrolled.png",
+      "sha256": "ce2cc755f171cc1e565a4bb0a0cd4bd8e643db894dd2c6a1324518b29e976b8c",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-request.png",
+      "sha256": "0c15a51d2d6f20909cbd1733eb894dd9c4736b8e886cabdee2f1309e37ebf981",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-settings-scrolled.png",
+      "sha256": "aeb4cb2a515f1cb81c5567701eb235fc2ae9e8e53a2101db1c9549c46b76373e",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-settings.png",
+      "sha256": "51a54f219000f5318357def85ec2095962e53cf07c37dd76fe5fb33619f2c559",
+      "width": 720,
+      "height": 1600
+    },
+    {
+      "file": "light-task.png",
+      "sha256": "f7409a6c58ea85dba82853a13f704ff4357856e8daece5798ecb25f15d7832ca",
+      "width": 720,
+      "height": 1600
+    }
+  ]
+}

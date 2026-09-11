@@ -7,6 +7,7 @@ import 'planning_dates.dart';
 import 'planning_editor.dart';
 import 'planning_repository.dart';
 import 'planning_widgets.dart';
+import '../../theme/components.dart';
 
 class PlanningEditorView extends StatefulWidget {
   const PlanningEditorView(this.controller, {super.key});
@@ -191,234 +192,274 @@ class _PlanningEditorViewState extends State<PlanningEditorView> {
             ),
         ],
         const SizedBox(height: 12),
-        DropdownButtonFormField<Availability>(
-          initialValue: availability,
-          isExpanded: true,
-          decoration: InputDecoration(labelText: s.planAvailabilityLabel),
-          items: Availability.values
-              .map(
-                (value) => DropdownMenuItem(
-                  value: value,
-                  child: Text(
-                    value == Availability.working
-                        ? s.planWorking
-                        : value == Availability.leave
-                        ? s.planLeave
-                        : s.planUnavailable,
-                  ),
-                ),
-              )
-              .toList(),
-          onChanged: disabled
-              ? null
-              : (value) => setState(() => availability = value!),
-        ),
-        if (availability != Availability.working) Text(s.planManualHint),
-        const SizedBox(height: 12),
-        DropdownButtonFormField<WorkLocation>(
-          initialValue: location,
-          isExpanded: true,
-          decoration: InputDecoration(labelText: s.planLocation),
-          items: [WorkLocation.remotePortugal, WorkLocation.officeSwitzerland]
-              .map(
-                (value) => DropdownMenuItem(
-                  value: value,
-                  child: Text(locationLabel(s, value, Availability.working)),
-                ),
-              )
-              .toList(),
-          onChanged: disabled || availability != Availability.working
-              ? null
-              : (value) => setState(() => location = value!),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            OutlinedButton.icon(
-              key: const Key('editor-single'),
-              onPressed: disabled ? null : single,
-              icon: const Icon(Icons.add),
-              label: Text(s.planSingle),
-            ),
-            OutlinedButton.icon(
-              key: const Key('editor-range'),
-              onPressed: disabled ? null : chooseRange,
-              icon: const Icon(Icons.date_range),
-              label: Text(s.planRange),
-            ),
-          ],
-        ),
-        CheckboxListTile(
-          contentPadding: EdgeInsets.zero,
-          value: weekends,
-          title: Text(s.planWeekends),
-          onChanged: disabled
-              ? null
-              : (value) => setState(() {
-                  weekends = value!;
-                  preview = null;
-                  previewGeneration++;
-                }),
-        ),
-        if (range != null) ...[
-          Text('${dayLabel(range!.start)} → ${dayLabel(range!.end)}'),
-          TextButton(
-            key: const Key('editor-preview'),
-            onPressed: disabled ? null : previewRange,
-            child: Text(s.planPreview),
+        FormSection(
+          title: s.visualContext,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DropdownButtonFormField<Availability>(
+                initialValue: availability,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: s.planAvailabilityLabel),
+                items: Availability.values
+                    .map(
+                      (value) => DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value == Availability.working
+                              ? s.planWorking
+                              : value == Availability.leave
+                              ? s.planLeave
+                              : s.planUnavailable,
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: disabled
+                    ? null
+                    : (value) => setState(() => availability = value!),
+              ),
+              if (availability != Availability.working) Text(s.planManualHint),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<WorkLocation>(
+                initialValue: location,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: s.planLocation),
+                items:
+                    [
+                          WorkLocation.remotePortugal,
+                          WorkLocation.officeSwitzerland,
+                        ]
+                        .map(
+                          (value) => DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              locationLabel(s, value, Availability.working),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                onChanged: disabled || availability != Availability.working
+                    ? null
+                    : (value) => setState(() => location = value!),
+              ),
+            ],
           ),
-        ],
-        if (previewing) const LinearProgressIndicator(),
-        if (preview != null)
-          PlanCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('${s.planIncluded}: ${preview!.length}'),
-                for (final date in preview!) Text(dayLabel(date)),
-                FilledButton.tonal(
-                  key: const Key('editor-add-preview'),
-                  onPressed: disabled || preview!.isEmpty
-                      ? null
-                      : () => addDates(preview!),
-                  child: Text(s.planAddPreview),
+        ),
+        FormSection(
+          title: s.visualDates,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OutlinedButton.icon(
+                    key: const Key('editor-single'),
+                    onPressed: disabled ? null : single,
+                    icon: const Icon(Icons.add),
+                    label: Text(s.planSingle),
+                  ),
+                  OutlinedButton.icon(
+                    key: const Key('editor-range'),
+                    onPressed: disabled ? null : chooseRange,
+                    icon: const Icon(Icons.date_range),
+                    label: Text(s.planRange),
+                  ),
+                ],
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                value: weekends,
+                title: Text(s.planWeekends),
+                onChanged: disabled
+                    ? null
+                    : (value) => setState(() {
+                        weekends = value!;
+                        preview = null;
+                        previewGeneration++;
+                      }),
+              ),
+              if (range != null) ...[
+                Text('${dayLabel(range!.start)} → ${dayLabel(range!.end)}'),
+                TextButton(
+                  key: const Key('editor-preview'),
+                  onPressed: disabled ? null : previewRange,
+                  child: Text(s.planPreview),
                 ),
               ],
-            ),
+              if (previewing) const LinearProgressIndicator(),
+              if (preview != null)
+                PlanCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text('${s.planIncluded}: ${preview!.length}'),
+                      for (final date in preview!) Text(dayLabel(date)),
+                      FilledButton.tonal(
+                        key: const Key('editor-add-preview'),
+                        onPressed: disabled || preview!.isEmpty
+                            ? null
+                            : () => addDates(preview!),
+                        child: Text(s.planAddPreview),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
-        const Divider(),
-        Text(
-          '${s.planIncluded}: ${e.days.length}',
-          key: const Key('editor-day-count'),
-          style: Theme.of(context).textTheme.titleMedium,
         ),
-        for (var i = 0; i < e.days.length; i++)
-          PlanCard(
-            key: ValueKey(dateKey(e.days[i].localDate)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: Text(dayLabel(e.days[i].localDate))),
-                    IconButton(
-                      tooltip: s.planRemoveDate,
-                      key: Key('remove-${dateKey(e.days[i].localDate)}'),
-                      onPressed: disabled
-                          ? null
-                          : () {
-                              e.days = e.days.toList()..removeAt(i);
-                              c.inputChanged();
-                            },
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-                DropdownButtonFormField<Availability>(
-                  key: ValueKey(
-                    '${dateKey(e.days[i].localDate)}-${e.days[i].availability}-${e.days[i].cancel}',
-                  ),
-                  initialValue: e.days[i].availability,
-                  isExpanded: true,
-                  decoration: InputDecoration(
-                    labelText: s.planAvailabilityLabel,
-                  ),
-                  items: Availability.values
-                      .map(
-                        (value) => DropdownMenuItem(
-                          value: value,
-                          child: Text(
-                            value == Availability.working
-                                ? s.planWorking
-                                : value == Availability.leave
-                                ? s.planLeave
-                                : s.planUnavailable,
+        FormSection(
+          title: s.visualSummary,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '${s.planIncluded}: ${e.days.length}',
+                key: const Key('editor-day-count'),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              for (var i = 0; i < e.days.length; i++)
+                PlanCard(
+                  key: ValueKey(dateKey(e.days[i].localDate)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(child: Text(dayLabel(e.days[i].localDate))),
+                          IconButton(
+                            tooltip: s.planRemoveDate,
+                            key: Key('remove-${dateKey(e.days[i].localDate)}'),
+                            onPressed: disabled
+                                ? null
+                                : () {
+                                    e.days = e.days.toList()..removeAt(i);
+                                    c.inputChanged();
+                                  },
+                            icon: const Icon(Icons.close),
                           ),
+                        ],
+                      ),
+                      DropdownButtonFormField<Availability>(
+                        key: ValueKey(
+                          '${dateKey(e.days[i].localDate)}-${e.days[i].availability}-${e.days[i].cancel}',
                         ),
-                      )
-                      .toList(),
-                  onChanged: disabled || e.days[i].cancel
-                      ? null
-                      : (value) => updateDay(
-                          i,
-                          e.days[i].copyWith(
-                            availability: value,
-                            location: value == Availability.working
-                                ? WorkLocation.remotePortugal
-                                : WorkLocation.unplanned,
-                          ),
+                        initialValue: e.days[i].availability,
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          labelText: s.planAvailabilityLabel,
                         ),
-                ),
-                if (e.days[i].availability == Availability.working &&
-                    !e.days[i].cancel)
-                  DropdownButtonFormField<WorkLocation>(
-                    key: ValueKey(
-                      '${dateKey(e.days[i].localDate)}-${e.days[i].location}',
-                    ),
-                    initialValue: e.days[i].location == WorkLocation.unplanned
-                        ? WorkLocation.remotePortugal
-                        : e.days[i].location,
-                    isExpanded: true,
-                    decoration: InputDecoration(labelText: s.planLocation),
-                    items:
-                        [
-                              WorkLocation.remotePortugal,
-                              WorkLocation.officeSwitzerland,
-                            ]
+                        items: Availability.values
                             .map(
                               (value) => DropdownMenuItem(
                                 value: value,
                                 child: Text(
-                                  locationLabel(s, value, Availability.working),
+                                  value == Availability.working
+                                      ? s.planWorking
+                                      : value == Availability.leave
+                                      ? s.planLeave
+                                      : s.planUnavailable,
                                 ),
                               ),
                             )
                             .toList(),
-                    onChanged: disabled
-                        ? null
-                        : (value) =>
-                              updateDay(i, e.days[i].copyWith(location: value)),
-                  ),
-                if (e.days[i].baseDayId != null)
-                  CheckboxListTile(
-                    contentPadding: EdgeInsets.zero,
-                    value: e.days[i].cancel,
-                    title: Text(s.planCancelled),
-                    onChanged: disabled
-                        ? null
-                        : (value) => updateDay(
-                            i,
-                            e.days[i].copyWith(
-                              cancel: value,
-                              location: value!
-                                  ? WorkLocation.unplanned
-                                  : WorkLocation.remotePortugal,
-                              availability: Availability.working,
-                            ),
+                        onChanged: disabled || e.days[i].cancel
+                            ? null
+                            : (value) => updateDay(
+                                i,
+                                e.days[i].copyWith(
+                                  availability: value,
+                                  location: value == Availability.working
+                                      ? WorkLocation.remotePortugal
+                                      : WorkLocation.unplanned,
+                                ),
+                              ),
+                      ),
+                      if (e.days[i].availability == Availability.working &&
+                          !e.days[i].cancel)
+                        DropdownButtonFormField<WorkLocation>(
+                          key: ValueKey(
+                            '${dateKey(e.days[i].localDate)}-${e.days[i].location}',
                           ),
+                          initialValue:
+                              e.days[i].location == WorkLocation.unplanned
+                              ? WorkLocation.remotePortugal
+                              : e.days[i].location,
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            labelText: s.planLocation,
+                          ),
+                          items:
+                              [
+                                    WorkLocation.remotePortugal,
+                                    WorkLocation.officeSwitzerland,
+                                  ]
+                                  .map(
+                                    (value) => DropdownMenuItem(
+                                      value: value,
+                                      child: Text(
+                                        locationLabel(
+                                          s,
+                                          value,
+                                          Availability.working,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged: disabled
+                              ? null
+                              : (value) => updateDay(
+                                  i,
+                                  e.days[i].copyWith(location: value),
+                                ),
+                        ),
+                      if (e.days[i].baseDayId != null)
+                        CheckboxListTile(
+                          contentPadding: EdgeInsets.zero,
+                          value: e.days[i].cancel,
+                          title: Text(s.planCancelled),
+                          onChanged: disabled
+                              ? null
+                              : (value) => updateDay(
+                                  i,
+                                  e.days[i].copyWith(
+                                    cancel: value,
+                                    location: value!
+                                        ? WorkLocation.unplanned
+                                        : WorkLocation.remotePortugal,
+                                    availability: Availability.working,
+                                  ),
+                                ),
+                        ),
+                    ],
                   ),
-              ],
+                ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+        FormSection(
+          title: s.visualComment,
+          child: TextFormField(
+            key: const Key('editor-note'),
+            maxLength: e.mode == EditorMode.proposal ? 1000 : 2000,
+            initialValue: e.note,
+            minLines: 2,
+            maxLines: 6,
+            enabled: !disabled,
+            decoration: InputDecoration(
+              labelText: e.mode == EditorMode.proposal
+                  ? s.planReason
+                  : s.planNote,
             ),
+            onChanged: (value) {
+              e.note = value;
+              c.inputChanged();
+            },
           ),
-        const SizedBox(height: 12),
-        TextFormField(
-          key: const Key('editor-note'),
-          maxLength: e.mode == EditorMode.proposal ? 1000 : 2000,
-          initialValue: e.note,
-          minLines: 2,
-          maxLines: 6,
-          enabled: !disabled,
-          decoration: InputDecoration(
-            labelText: e.mode == EditorMode.proposal
-                ? s.planReason
-                : s.planNote,
-          ),
-          onChanged: (value) {
-            e.note = value;
-            c.inputChanged();
-          },
         ),
         if (error != null) Semantics(liveRegion: true, child: Text(error!)),
         const SizedBox(height: 16),

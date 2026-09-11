@@ -8,6 +8,8 @@ import 'features/auth/token_store.dart';
 import 'features/workspace/workspace_repository.dart';
 import 'features/workspace/workspace_screen.dart';
 import 'l10n/generated/app_localizations.dart';
+import 'theme/app_theme.dart';
+import 'theme/appearance.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,38 +25,69 @@ void main() {
   runApp(HomeOfficeApp(repository: null, auth: auth));
 }
 
-class HomeOfficeApp extends StatelessWidget {
-  const HomeOfficeApp({super.key, required this.repository, this.auth});
+class HomeOfficeApp extends StatefulWidget {
+  const HomeOfficeApp({
+    super.key,
+    required this.repository,
+    this.auth,
+    this.appearance,
+  });
   final WorkspaceRepository? repository;
   final AuthController? auth;
+  final AppearanceController? appearance;
+  @override
+  State<HomeOfficeApp> createState() => _HomeOfficeAppState();
+}
+
+class _HomeOfficeAppState extends State<HomeOfficeApp>
+    with WidgetsBindingObserver {
+  late final AppearanceController appearance;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    appearance = widget.appearance ?? AppearanceController();
+    if (widget.appearance == null) appearance.restore();
+  }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
-    locale: const Locale('pt', 'PT'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    theme: ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff264e3e)),
-      scaffoldBackgroundColor: const Color(0xfff5f6f3),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-      ),
-      cardTheme: CardThemeData(
-        color: Colors.white,
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xffe0e6dc)),
-        ),
+  void didChangeAccessibilityFeatures() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    if (widget.appearance == null) appearance.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: appearance,
+    builder: (context, _) => AppearanceScope(
+      controller: appearance,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+        locale: const Locale('pt', 'PT'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: appTheme(Brightness.light),
+        darkTheme: appTheme(Brightness.dark),
+        themeMode: appearance.mode,
+        themeAnimationDuration:
+            WidgetsBinding
+                .instance
+                .platformDispatcher
+                .accessibilityFeatures
+                .disableAnimations
+            ? Duration.zero
+            : const Duration(milliseconds: 180),
+        home: widget.auth == null
+            ? WorkspaceScreen(repository: widget.repository)
+            : AuthScreen(controller: widget.auth!),
       ),
     ),
-    home: auth == null
-        ? WorkspaceScreen(repository: repository)
-        : AuthScreen(controller: auth!),
   );
 }
