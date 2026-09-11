@@ -15,3 +15,5 @@ O harness de CI executa migração, ativação, convites, aprovação, worker, r
 Adenda 2026-09-11: [inventário](../HO-012-PI-INVENTORY.md) confirma SSH/Docker ARM64, mas controlador memory desativado. Manter limites e recusa do preflight. Ativação/reinício do host ficam para decisão separada; nenhuma instalação por esta adenda.
 
 Adenda posterior 2026-09-11: alteração mínima e um reinício autorizados concluídos; Docker confirma memória/swap/CFS e memory V2 está ativo. [Evidência e recuperação](../HO-012-PI-INVENTORY.md). Preservar o bloqueio inicial como histórico; instalação e medições da aplicação continuam pendentes.
+
+Adenda posterior: instalação isolada autorizada e executada; [ensaio real, recuperação e limites da medição](../HO-012-PI-TRIAL.md). Os estados anteriores permanecem como histórico. Sem aprovação de produção.

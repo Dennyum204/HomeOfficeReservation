@@ -1,10 +1,10 @@
 # HO-012 — Ensaio Raspberry Pi ARM64 para revisão
 
-Preparação autorizada; **HomeOffice ainda não instalado no Pi**. [Proposta](../../docs/HO-012-PILOT.md), [ADR-019](../../docs/adr/ADR-019-pi-arm64-trial.md). NAS/AMD64 preservado em [infra/nas](../nas/README.md); não reutilizar os seus arquivos, volumes ou credenciais.
+Instalação isolada autorizada e executada: [evidência real](../../docs/HO-012-PI-TRIAL.md). Não repetir a criação/extração sobre o ensaio existente. [Proposta](../../docs/HO-012-PILOT.md), [ADR-019](../../docs/adr/ADR-019-pi-arm64-trial.md). NAS/AMD64 preservado em [infra/nas](../nas/README.md); não reutilizar os seus arquivos, volumes ou credenciais.
 
 ## Evidência e acesso
 
-SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. Após alteração mínima de arranque e um reinício autorizados, **Memory=true/Swap=true/CFS=true** confirmados pelo Docker; controlador memory V2 disponível. O kernel processou o disable herdado do DTB e depois o enable explícito, conforme suportado pelo fornecedor. Original preservado. Suporte não equivale a teste de aplicação ou de imposição dos limites. HomeOffice não instalado. [Inventário atualizado](../../docs/HO-012-PI-INVENTORY.md).
+SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. Após alteração mínima de arranque e um reinício autorizados, **Memory=true/Swap=true/CFS=true** confirmados pelo Docker; controlador memory V2 disponível. O kernel processou o disable herdado do DTB e depois o enable explícito, conforme suportado pelo fornecedor. Original preservado. Suporte não equivale a teste de aplicação ou de imposição dos limites. HomeOffice entretanto instalado e testado no perfil isolado; ver evidência real acima. [Inventário atualizado](../../docs/HO-012-PI-INVENTORY.md).
 
 Numa sessão SSH autorizada, executar [inventory.sh](inventory.sh) com sudo para as leituras Docker/sshd. O script só recolhe metadados: versão Engine, workloads/volumes/redes, armazenamento, memória/swap/pressão, temperatura quando disponível e limites. Confirmar a configuração sshd também com o contexto do utilizador se existirem regras Match. Não partilhar passwords ou logs integrais.
 

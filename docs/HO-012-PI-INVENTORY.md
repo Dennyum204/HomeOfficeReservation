@@ -58,3 +58,5 @@ sudo cp -- /boot/firmware/cmdline.txt.ho012-memory-20260911.original /boot/firmw
 ```
 
 Esta evidência confirma suporte do kernel/daemon para memória e swap; não mede imposição de limites num contentor, consumo, desempenho ou recuperação de HomeOffice. Instalação continua pendente de revisão/autorização separada. NAS inalterado; PR #37 draft e HO-012 aberta.
+
+Adenda posterior: instalação isolada autorizada e executada; [ensaio real, recuperação e limites da medição](HO-012-PI-TRIAL.md). Os estados anteriores permanecem como histórico. Sem aprovação de produção.
