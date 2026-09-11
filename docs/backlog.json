@@ -1008,7 +1008,7 @@
       "title": "Convites de acesso: estado, entrega e revogação",
       "release": "v1.0",
       "area": "backend",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-003",
@@ -1028,7 +1028,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
       ],
-      "notes": "PR #43 integrado e teste manual HO-014 aprovado. Reconciliação da integração Android ainda explícita no STATUS; implementação de convites disponível na base. Histórico e critérios preservados.",
+      "notes": "PR #43 integrado em main, teste manual aprovado pelo responsável e integração remota confirmada. Primeira falha Android e repetição verde da mesma base preservadas na evidência; SMTP externo continua gate operacional HO-012.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
       "scope_history": [
         {
@@ -1046,7 +1046,7 @@
           "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735019",
           "https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735065"
         ],
-        "note": "Merge e ancestralidade confirmados. Teste manual aprovado pelo responsável. Primeira integração Android falhou no encerramento assíncrono de push; repetição da mesma base em curso e correção preventiva/regressões no HO-015. Não declarar primeira execução totalmente verde."
+        "note": "Merge e ancestralidade confirmados em origin/main. Teste manual aprovado pelo responsável. Documentação e backend/Web verdes; Android falhou inicialmente no encerramento assíncrono de push. Uma repetição do job (attempt 2) passou no mesmo SHA e terminou em 2026-09-11T08:41:01Z. A primeira execução não é contabilizada como verde. HO-015 acrescenta guarda de ciclo de vida e regressões preventivas."
       }
     },
     {
@@ -1054,7 +1054,7 @@
       "title": "Administração Web de membros e convites",
       "release": "v1.0",
       "area": "web",
-      "status": "in_progress",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011",
@@ -1071,8 +1071,10 @@
         "Estados de carregamento, vazio, erro, autorização, conflito e envio incerto são explícitos; teclado, foco, leitores de ecrã e viewport estreito funcionam. Não apresentar envio SMTP como convite aceite.",
         "Percurso com PostgreSQL e contas sintéticas demonstra titular, chefe e pessoa adicional convidada, aceitação Web/Android, associação correta, suspensão/cancelamento e negações. Administração nativa Android fica fora desta tarefa; o administrador pode usar a Web responsiva."
       ],
-      "pr_urls": [],
-      "notes": "Necessária antes de Fernando gerir autonomamente convidados reais. Não iniciar módulo administrativo dentro do PR #37. Não exige nova infraestrutura de identidade nem gestão de várias empresas.",
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/44"
+      ],
+      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
       "scope_history": [
         {

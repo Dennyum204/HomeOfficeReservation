@@ -143,7 +143,7 @@ function Administration({ actorId }: { actorId: string }) {
       )}
       {command.journal && (
         <div role="alert" className="admin-notice">
-          <p>{a.uncertain}</p>
+          <p>{command.busy ? a.busy : a.uncertain}</p>
           <p>{command.journal.label}</p>
           <button
             disabled={command.busy}

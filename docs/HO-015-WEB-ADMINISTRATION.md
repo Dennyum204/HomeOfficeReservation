@@ -1,6 +1,6 @@
 # HO-015 — Administração Web de membros e convites
 
-Data: 2026-09-11. [Issue #40](https://github.com/Dennyum204/HomeOfficeReservation/issues/40). Web responsiva; administração nativa Android e tema Claude+ continuam HO-016/âmbitos futuros. Não há deployment nem convites reais autorizados.
+Data: 2026-09-11. [Issue #40](https://github.com/Dennyum204/HomeOfficeReservation/issues/40), [PR #44](https://github.com/Dennyum204/HomeOfficeReservation/pull/44). Web responsiva; administração nativa Android fica para âmbito futuro e o tema Claude+ continua HO-016. Não há deployment nem convites reais autorizados.
 
 ## Utilização
 
@@ -57,9 +57,15 @@ npm --prefix apps/web run test:e2e
 
 `HO_TEST_DATABASE` e `HO_DEV_ACCOUNTS` são entradas privadas; usar PostgreSQL isolado e os guias existentes. O ambiente manual fornecido neste computador tem base/portas/chaves/AVD próprios. Endereços, credenciais sintéticas e códigos ficam no guia local indicado na entrega, fora do Git. Não reprovisionar nem limpar os ambientes habituais.
 
+Resultados locais em 2026-09-11: 69 testes de integração PostgreSQL e 4 testes API passaram; contratos coincidem (178 ficheiros), validador documental e configuração nativa passaram. Web: format/typecheck/lint/build, 13 testes unitários, 4 percursos de autenticação e 30 E2E desktop/estreito passaram. Flutter: análise, 39 testes e compilação debug da aplicação normal passaram. Os quatro checks remotos do commit entregue são verificados e ligados no PR, sem inferir resultados remotos destes ensaios locais.
+
+No ambiente manual separado, o titular convidou chefe e colaborador pela UI, associou ambos e submeteu um pedido. O colaborador aceitou pela Web; o chefe aceitou e aprovou no Android; a Web confirmou um dia aprovado e zero pendentes. SMTP loopback recusou inicialmente um convite com 451 e o worker recuperou a entrega após retirada da falha, sem duplicar a conta. Não houve envio externo. A falha SMTP foi induzida no capturador local, com transporte e persistência reais.
+
+Limitação do artefacto Android: as asserções de ativação/decisão/logout passaram no dispositivo, mas o driver histórico recusou o nome da captura HO-015 depois dos testes (`Unexpected screenshot name`); o comando completo não é contabilizado como bem-sucedido. Uma repetição auxiliar só de leitura/exportação foi bloqueada pela revisão automática do ambiente. A confirmação Web da decisão foi guardada separadamente. A aplicação normal, compilada sem credenciais de teste, foi reinstalada apenas no AVD HO015_Manual, preservando dados. Este problema do exportador não valida nem invalida CI remota, que mantém os seus percursos nativos completos.
+
 ## Integração anterior e limites
 
-PR #43 integrado em main no commit `e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9`, merge humano em 2026-09-11T07:56:17Z, com teste manual HO-014 aprovado pelo responsável. A primeira [integração core](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735065) passou backend/Web mas falhou Android: SocketException após terminar o teste de autenticação, numa consulta de capacidades push em encerramento. A [documentação](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735019) passou. A repetição do job na mesma base fica documentada separadamente; não apaga a falha inicial.
+PR #43 integrado em main no commit `e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9`, merge humano em 2026-09-11T07:56:17Z, com teste manual HO-014 aprovado pelo responsável. A primeira [integração core](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735065) passou backend/Web mas falhou Android: SocketException após terminar o teste de autenticação, numa consulta de capacidades push em encerramento. A [documentação](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34576735019) passou. A única repetição do job Android (attempt 2) passou no mesmo SHA, com conclusão em 2026-09-11T08:41:01Z. HO-014 reconciliada como concluída; a repetição não apaga a falha inicial.
 
 Correção restrita à verificação: inicialização push revalida a sessão após cleanup e não inicia consulta de capacidades quando o dispositivo não tem configuração Firebase. Estado continua indisponível, nunca ligado. Regressões simuladas cobrem cancelamento durante cleanup e dispositivo sem configuração. Não implementa administração Android nem muda o gate de push real.
 
