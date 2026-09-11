@@ -153,6 +153,7 @@ def main():
                 assert not container['State']['OOMKilled']
                 assert container['HostConfig']['Memory'] > 0
                 assert container['HostConfig']['MemorySwap'] == container['HostConfig']['Memory']
+                assert container['HostConfig']['NanoCpus'] > 0 or container['HostConfig']['CpuQuota'] > 0
             STAGE = 'restart, new database restore and preserved encrypted keys'
             keys = list((private / 'keys').glob('key-*.xml'))
             assert keys and all('encryptedSecret' in p.read_text() for p in keys)

@@ -54,6 +54,9 @@ case "${1:-help}" in
     docker version --format '{{.Server.Version}}' | awk -F. '{if ($1<20 || ($1==20 && ($2<10 || ($2==10 && $3<10)))) exit 1}' || {
         echo 'Engine below 20.10.10: stop for compatibility review; do not bypass seccomp or update DSM here.'; exit 1;
     }
+    test "$(docker info --format '{{.MemoryLimit}} {{.SwapLimit}} {{.CpuCfsQuota}}')" = 'true true true' || {
+        echo 'Memory/swap/CPU limits unavailable: stop for compatibility review, no services changed.'; exit 1;
+    }
     # Images must already be imported. This script never pulls/builds on the NAS.
     dc config --images | while read -r image; do docker image inspect "$image" >/dev/null; done
     test "$(id -u)" = 0 || { echo 'Use the authorized operator sudo session for trial file ownership.'; exit 1; }
@@ -100,7 +103,7 @@ case "${1:-help}" in
     awk '/pswpin|pswpout|oom_kill/ {print}' /proc/vmstat
     for id in $(dc ps -q); do
         docker stats --no-stream --format '{{.Name}} CPU={{.CPUPerc}} RAM={{.MemUsage}} PIDs={{.PIDs}}' "$id"
-        docker inspect "$id" --format 'OOM={{.State.OOMKilled}} exit={{.State.ExitCode}} restart={{.RestartCount}} memory={{.HostConfig.Memory}} swap={{.HostConfig.MemorySwap}} cpuPeriod={{.HostConfig.CpuPeriod}} cpuQuota={{.HostConfig.CpuQuota}}'
+        docker inspect "$id" --format 'OOM={{.State.OOMKilled}} exit={{.State.ExitCode}} restart={{.RestartCount}} memory={{.HostConfig.Memory}} swap={{.HostConfig.MemorySwap}} nanoCPUs={{.HostConfig.NanoCpus}} cpuPeriod={{.HostConfig.CpuPeriod}} cpuQuota={{.HostConfig.CpuQuota}}'
     done
     ;;
   restart)
