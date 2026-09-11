@@ -13,3 +13,5 @@ Rede interna própria, sem portas no host, acesso Web/Mailpit por encaminhamento
 O harness de CI executa migração, ativação, convites, aprovação, worker, reinício, recuperação autenticada e medidas curtas. É restrito ao runner descartável; nunca executar verify.py no Pi, pois o cleanup remove os volumes de teste do runner. Resultados ARM64 não certificam performance do Pi, resistência da microSD, comportamento térmico ou produção. [Proposta](../HO-012-PILOT.md), [recursos e comandos para revisão](../../infra/pi/README.md). PR #37 draft, HO-012 aberta.
 
 Adenda 2026-09-11: [inventário](../HO-012-PI-INVENTORY.md) confirma SSH/Docker ARM64, mas controlador memory desativado. Manter limites e recusa do preflight. Ativação/reinício do host ficam para decisão separada; nenhuma instalação por esta adenda.
+
+Adenda posterior 2026-09-11: alteração mínima e um reinício autorizados concluídos; Docker confirma memória/swap/CFS e memory V2 está ativo. [Evidência e recuperação](../HO-012-PI-INVENTORY.md). Preservar o bloqueio inicial como histórico; instalação e medições da aplicação continuam pendentes.

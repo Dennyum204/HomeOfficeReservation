@@ -4,7 +4,7 @@ Preparação autorizada; **HomeOffice ainda não instalado no Pi**. [Proposta](.
 
 ## Evidência e acesso
 
-SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. **Memory=false/Swap=false**: memory V2 ausente e cgroup_disable=memory ativo. Ativação do controlador/reinício por rever e autorizar separadamente; não retirar limites. Nenhum boot alterado ou HomeOffice instalado. [Inventário atualizado](../../docs/HO-012-PI-INVENTORY.md).
+SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. Após alteração mínima de arranque e um reinício autorizados, **Memory=true/Swap=true/CFS=true** confirmados pelo Docker; controlador memory V2 disponível. O kernel processou o disable herdado do DTB e depois o enable explícito, conforme suportado pelo fornecedor. Original preservado. Suporte não equivale a teste de aplicação ou de imposição dos limites. HomeOffice não instalado. [Inventário atualizado](../../docs/HO-012-PI-INVENTORY.md).
 
 Numa sessão SSH autorizada, executar [inventory.sh](inventory.sh) com sudo para as leituras Docker/sshd. O script só recolhe metadados: versão Engine, workloads/volumes/redes, armazenamento, memória/swap/pressão, temperatura quando disponível e limites. Confirmar a configuração sshd também com o contexto do utilizador se existirem regras Match. Não partilhar passwords ou logs integrais.
 
