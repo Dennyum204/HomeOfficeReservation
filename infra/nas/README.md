@@ -70,6 +70,8 @@ sudo sh trial.sh bootstrap
 
 `start` verifica imagens importadas, ajusta ownership **apenas no diretório privado deste ensaio**, inicia PostgreSQL/Mailpit, para só a app deste projeto, migra explicitamente e inicia API/worker/edge. Não provisiona contas automaticamente. `bootstrap` cria titular administrador+colaborador sem password e entrega o código no Mailpit; repetir não duplica o titular nem ativa por si.
 
+O identificador aleatório HO_TRIAL_ID identifica os volumes/rede; scripts recusam recursos retidos de outro ensaio mesmo com o mesmo nome de projeto. Não substituir esse identificador para reutilizar dados.
+
 Recursos exatos: quatro contentores Compose (nomes concretos variam entre v1/v2), rede `homeoffice-nas-trial_trial`, volumes `homeoffice-nas-trial_database` e `homeoffice-nas-trial_mail`, key ring bind `private/keys`, ficheiros/backups locais e quatro tags exclusivas `ho012-<SHA>`. Nenhuma porta publicada, socket Docker montado, rede host, acesso a pastas DSM ou dados de outros serviços. Rede interna sem saída e Mailpit sem relay impedem envio real pela stack. Não publicar Mailpit ou PostgreSQL.
 
 ## 3. Acesso e percurso manual sintético
@@ -95,6 +97,7 @@ Este ensaio prepara **Web/API** no NAS. Não altera a app/emulador habitual nem 
 ```sh
 sudo sh trial.sh health
 sudo sh trial.sh metrics
+sudo sh trial.sh database-outage-check
 # Amostras por 10 minutos, apenas ficheiro privado novo do ensaio:
 umask 077
 for n in $(seq 1 20); do sudo sh trial.sh metrics; sleep 30; done > private/measurements-10min.txt
@@ -104,7 +107,7 @@ sudo sh trial.sh health
 
 Guardar baseline DSM, samples com duas sessões, p95/erros HTTP e 30 min de observação posterior. `metrics` inclui CPU/RAM/PIDs, MemAvailable, swap global, pswpin/out, OOMKilled, reinícios e limites efetivos. Não confundir swap total já ocupado com atividade nova; comparar deltas. Consultar dmesg e Resource Monitor sem alterar DSM; documentar qualquer falta de acesso. Rejeitar se OOM, reinício inesperado, swap crescente ou degradação dos outros serviços. Não extrapolar carga do runner para o Celeron.
 
-Liveness é `/health/live` interno e não testa DB; readiness `/health/ready` exige ligação/migrações. O proxy bloqueia ambos. Para exercitar DB indisponível, **só no ensaio aprovado**, parar `database` deste projeto com o Compose local, verificar liveness 200 e readiness não 200 via `exec app`/bash; arrancar novamente e aguardar readiness. A CI core já exercita a distinção com um processo real; isso não é medição NAS. Nunca usar `docker stop $(docker ps -q)`.
+Liveness é `/health/live` interno e não testa DB; readiness `/health/ready` exige ligação/migrações. O proxy bloqueia ambos. `database-outage-check`, **só no ensaio aprovado**, para apenas `database` deste projeto, exige liveness 200 e readiness não 200 via exec interno e volta a iniciar a DB. Uma falha conserva o diagnóstico, sem afirmar saúde. A CI exercita a distinção, mas não é medição NAS. Nunca usar `docker stop $(docker ps -q)`.
 
 Após restart: sem nova ativação, as sessões devem funcionar, relação chefia, pedido/decisão, inbox e convites devem permanecer. Verificar emails capturados persistentes. Não apagar key ring, certificados ou volumes para corrigir login.
 
@@ -120,7 +123,7 @@ Backup faz uma breve pausa só na API/worker, `pg_dump -Fc`, cópia de key ring/
 
 O restauro SQL **não basta**. Para ensaio autenticado, pausar a app, guardar cópia de `private/application.json`, mudar **apenas Database=** para o nome restaurado, preservar Staging/PFX/key ring e reiniciar só a app. Verificar as mesmas sessões, titular/chefia, pedido aprovado e notificações. Repor configuração da base fonte ao terminar, sem apagar a restaurada. Confirmar contagens/hash da tabela e registar tempos/resultado sem payloads. A CI exercita este percurso completo numa base nova e recupera também PFX/key ring. O comando `backup` usa sempre a fonte `homeoffice`: não o usar como política permanente depois de escolher outra base; no ensaio, voltar à fonte antes do próximo backup.
 
-Hashes não cifram. Backups/configuração são privados; uma cópia neste NAS não protege contra perda do NAS. Antes de dados reais é necessária cópia cifrada independente, incluindo key ring, PFX/password e procedimento testado a partir de outro equipamento. Nenhum destino externo/retic/compra está configurado nesta etapa.
+Hashes não cifram. Backups/configuração são privados; uma cópia neste NAS não protege contra perda do NAS. Antes de dados reais é necessária cópia cifrada independente, incluindo key ring, PFX/password e procedimento testado a partir de outro equipamento. Nenhum destino externo/restic/compra está configurado nesta etapa.
 
 ## 6. Parar e remover apenas o ensaio
 

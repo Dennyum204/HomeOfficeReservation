@@ -94,9 +94,12 @@ services:
     security_opt: [no-new-privileges:true]
 volumes:
   database:
+    labels: {org.homeoffice.trial: '${HO_TRIAL_ID:?prepare a new trial identity}'}
   mail:
+    labels: {org.homeoffice.trial: '${HO_TRIAL_ID:?prepare a new trial identity}'}
 networks:
   trial:
+    labels: {org.homeoffice.trial: '${HO_TRIAL_ID:?prepare a new trial identity}'}
     internal: true
     ipam:
       config: [{subnet: 10.78.16.0/24, ip_range: 10.78.16.128/25}]

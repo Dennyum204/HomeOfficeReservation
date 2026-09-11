@@ -8,6 +8,7 @@ import re
 import secrets
 import shutil
 import subprocess
+import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -68,7 +69,7 @@ def prepare(destination, image):
         shutil.copyfile(Path(__file__).with_name(name), destination / name)
     shutil.copyfile(ROOT / 'infra/pilot/init-database.sh', destination / 'init-database.sh')
     tag = image.split(':')[1]
-    (destination / '.env').write_text('HO_IMAGE=' + image + '\n' +
+    (destination / '.env').write_text('HO_TRIAL_ID=' + uuid.uuid4().hex + '\nHO_IMAGE=' + image + '\n' +
         'HO_DATABASE_IMAGE=homeoffice-nas-postgres:' + tag + '\n' +
         'HO_EDGE_IMAGE=homeoffice-nas-caddy:' + tag + '\n' +
         'HO_MAIL_IMAGE=homeoffice-nas-mailpit:' + tag + '\n', encoding='utf-8')

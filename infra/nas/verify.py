@@ -87,6 +87,11 @@ def main():
             trial('start')
             assert sql('SELECT count(*) FROM "Members"') == '0'
             trial('health')
+            trial('database-outage-check')
+            original_env = (folder / '.env').read_text()
+            (folder / '.env').write_text(original_env.replace('HO_TRIAL_ID=', 'UNUSED_TRIAL_ID=') + 'HO_TRIAL_ID=different-trial\n')
+            assert trial('health', ok=False).returncode != 0, 'Foreign trial volumes were accepted'
+            (folder / '.env').write_text(original_env)
             for route in ['/', '/calendar', '/requests', '/administration', '/settings']:
                 assert b'<div id="root">' in request(owner, route)
             request(owner, '/api/v1/me', expected=401)
@@ -176,7 +181,7 @@ def main():
             assert request(manager, detail_url)['days'][0]['decision'] == 'Approved'
             evidence = {'commit': sha, 'environment': 'disposable ubuntu-24.04 CI, NOT Synology NAS',
                 'architecture': 'linux/amd64', 'stack': 'four containers; 896 MiB total hard limits; no host ports',
-                'checks': ['startup', 'explicit migration', 'no automatic accounts', 'idempotent dual-role owner bootstrap',
+                'checks': ['startup', 'explicit migration', 'no automatic accounts', 'database outage readiness/liveness', 'foreign trial volume refusal', 'idempotent dual-role owner bootstrap',
                     'captured SMTP STARTTLS', 'invitation replay', 'two activations', 'manager association', 'submission',
                     'self-approval refused', 'manager approval', 'durable inbox', 'two concurrent readers', 'no OOM',
                     'restart preserves session and plan', 'new database restore', 'existing target refused', 'restored keys/session/plan'],
@@ -201,6 +206,10 @@ def main():
                             'os': x['Os'], 'architecture': x['Architecture']} for x in metadata]}
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     (output / 'SHA256SUMS').write_text(manifest['archive_sha256'] + '  images.tar\n')
+    # docker save creates a root-only archive under sudo; the artifact action runs as runner.
+    # These three files contain public images/metadata only. Never relax the private trial directory.
+    for path in output.iterdir():
+        path.chmod(0o644)
 
 
 if __name__ == '__main__':
