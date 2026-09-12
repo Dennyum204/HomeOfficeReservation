@@ -1,6 +1,6 @@
 # HO-012 — Ensaio Raspberry Pi ARM64 para revisão
 
-Adenda 2026-09-12: o responsável aceitou manualmente submissão pelo titular, aprovação pelo chefe e resultado no calendário/notificação. Aceitação parcial, sem lançamento V1. [Preparação HTTPS Cloudflare](../../docs/HO-012-HTTPS.md), sem publicação autorizada; histórico abaixo preservado.
+Adenda 2026-09-12: o responsável aceitou manualmente submissão pelo titular, aprovação pelo chefe e resultado no calendário/notificação. Aceitação parcial, sem lançamento V1. [Preparação HTTPS Cloudflare](../../docs/HO-012-HTTPS.md), publicação posteriormente autorizada e executada: [evidência externa](../../docs/HO-012-HTTPS-PUBLICATION.md). Cinco serviços/1600 MiB, reinício automático e acesso Web/API sem PC; SMTP capturado. O perfil de quatro serviços abaixo é o histórico/base para recuperação local.
 
 Instalação isolada autorizada e executada: [evidência real](../../docs/HO-012-PI-TRIAL.md). Não repetir a criação/extração sobre o ensaio existente. [Proposta](../../docs/HO-012-PILOT.md), [ADR-019](../../docs/adr/ADR-019-pi-arm64-trial.md). NAS/AMD64 preservado em [infra/nas](../nas/README.md); não reutilizar os seus arquivos, volumes ou credenciais.
 

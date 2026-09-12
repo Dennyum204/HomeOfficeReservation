@@ -2,7 +2,9 @@
 
 2026-09-12. PR #37 **draft**, issue #13 aberta. O responsável aceitou manualmente o percurso no Pi: titular submete, chefe distinto aprova, calendário e notificação refletem a decisão. É aceitação parcial do ensaio, não lançamento V1 nem validação HTTPS externa.
 
-## Estado observado e limite da autorização
+**Adenda:** publicação posteriormente autorizada e executada após CI verde; [estado público, recursos criados, medições e recuperação](HO-012-HTTPS-PUBLICATION.md). As referências abaixo a ausência de token/DNS descrevem a preparação anterior. Não repetir a preparação sobre a instalação existente.
+
+## Estado observado durante a preparação anterior
 
 Plugin Cloudflare autorizado: zona **ferbatech.com ativa**; não existiam registos exatos `homeoffice.ferbatech.com` nem `*.ferbatech.com`. O túnel `nas-connectivity-test` estava down e não foi alterado. Preparado um túnel remoto separado **homeoffice-pi**, UUID **cc5b6025-b9fc-4d54-9854-5ed3aee17cad**, sem conector, sem rotas privadas e apenas resposta 404. Nenhum token foi obtido ou impresso. Nenhum DNS/hostname publicado. Certificado Universal ativo para apex/*.ferbatech.com (expiração observada 2026-12-07); cobre homeoffice.ferbatech.com, mas não cobre automaticamente staging.homeoffice.ferbatech.com. Não publicar staging nesta etapa. Inventário: SSL full, Always Use HTTPS off, Browser Integrity Check on, security medium, cache aggressive; sem Page Rules, rotas Workers ou rulesets de zona personalizados nas fases pretendidas. Access devolveu not_enabled; não foi ativado e não é necessário para Identity.
 
@@ -36,7 +38,7 @@ Web e API partilham origem; sem CORS permissivo. Cookies Identity HttpOnly/Secur
 
 Android mantém tokens opacos e refresh do framework, base `https://homeoffice.ferbatech.com`, certificado público normalmente confiado pelo Android. Testes HTTP de login/refresh não equivalem a ensaio num dispositivo físico. A interface de Administração da **aplicação** continua autorizada só para administradores ativos; não expõe DSM, Docker, Mailpit ou SSH.
 
-## Plano exato da publicação — ainda NÃO executar
+## Plano revisto e executado após autorização — referência, não repetir
 
 1. Confirmar novo backup DB/configuração/PFX/keys e preservar compose/Caddy originais. Validar origem privada; repor automaticamente acesso localhost no fim. Verificar imagem/digest, colisões, TLS, CSRF, bearer e headers antes de pedir autorização final.
 2. Após autorização, guardar token do túnel **homeoffice-pi** diretamente em ficheiro privado. Nunca colocar token em argumento, variável publicada, histórico, Git ou chat. Entrada local oculta/ficheiro transferido por SSH; não usar token do NAS. Conferir ownership 65532:65532 e 0400.
@@ -77,7 +79,7 @@ Remover somente o CNAME criado, identificado pelo seu ID e conteúdo exatos, se 
 
 ## Falta para concluir HO-012
 
-- Validação/publicação HTTPS autorizada e aceitação externa; destino definitivo e separação staging/produção, retenção e renovação de certificados.
+- Aceitação externa pelo responsável após a publicação HTTPS verificada; destino definitivo e separação staging/produção, retenção e renovação de certificados.
 - SMTP real autorizado: entrega, falhas/retry, reputação e convite/aceitação; não confundir Mailpit com envio real.
 - Backups cifrados externos **automatizados**, retenção/RPO/RTO e restauro exercitado; cópia manual no PC é apenas uma salvaguarda adicional.
 - Monitorização/alertas acionáveis de disponibilidade, worker/falhas, capacidade, backups e certificados; operação/atualizações do Pi/microSD.

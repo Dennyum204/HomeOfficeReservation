@@ -1,5 +1,7 @@
 {
-  "publication_authorized": false,
+  "publication_authorized": true,
+  "authorization_date": "2026-09-12",
+  "publication_status": "active_synthetic_trial",
   "tunnel_id": "cc5b6025-b9fc-4d54-9854-5ed3aee17cad",
   "zone_name": "ferbatech.com",
   "dns_record": {
@@ -14,7 +16,7 @@
       {
         "ref": "ho012_homeoffice_https",
         "description": "HomeOffice only: HTTPS redirect",
-        "expression": "(http.host eq \"homeoffice.ferbatech.com\" and http.request.scheme eq \"http\")",
+        "expression": "(http.host eq \"homeoffice.ferbatech.com\" and not ssl)",
         "action": "redirect",
         "action_parameters": {
           "from_value": {
