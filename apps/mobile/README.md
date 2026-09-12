@@ -107,6 +107,9 @@ Datas isoladas e intervalos inclusivos, preview do servidor, rascunhos, submiss�
 Presenças/tarefas partilham colaborador, sessão e journal de escrita com o calendário. Formulários usam DTOs gerados, preview atual, versões esperadas e confirmação explícita; falhas conservam input protegido. O calendário abre o detalhe da presença e a resolução reutiliza propostas/aceitação/decisão. A caixa distingue abrir, ler e confirmar presença.
 
 `integration_test/work_test.dart` percorre os novos workflows com API/PG reais sem Firebase. `cross_platform_test.dart` alterna com o browser, usando estado de ensaio privado. `work_push_live_test.dart` é externo ao core e requer configuração real, permissão explícita no dispositivo de teste e contas sintéticas. Comandos, limites e evidência no [guia HO-011](../../docs/HO-011-CORE-ACCEPTANCE.md). Restaurar sempre o entrypoint normal depois de testes com contas privadas.
+# Preparação de distribuição privada HO-012
+
+Package preservado: `dev.homeoffice.homeoffice_mobile`. `HO_ANDROID_SIGNING_PROPERTIES` aponta para properties e keystore absolutos **fora do repositório**; configuração ausente gera release unsigned, nunca assinatura debug automática. [Chave, HTTPS, Firebase, build e atualização](../../infra/pilot/README.md). O ensaio `python scripts/check_android_signing.py` usa uma chave descartável e não instala/distribui o APK. Piloto físico e FCM do futuro alojamento permanecem por validar. Não desinstalar a app existente para contornar assinatura diferente.
 
 ## Cabeçalhos e sessão HO-016
 

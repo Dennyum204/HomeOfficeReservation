@@ -208,6 +208,7 @@ void main() {
       }
       expect(find.byKey(const Key('request-counts')), findsNothing);
       expect(find.text('Entre no seu espaço'), findsOneWidget);
+      expect(await SecureTokenStore(ApiSettings.baseUrl).read(), isNull);
       // No Firebase credentials/provider are used. This proves native inbox/API/worker connectivity only.
     },
   );

@@ -2,9 +2,9 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-11.
+Atualizado: 2026-09-12.
 
-Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.
+Core Web/Android integrado. HO-012: Pi instalado, teste manual de submissão/aprovação/calendário/notificação aceite parcialmente; HTTPS Cloudflare em preparação, sem publicação. SMTP real, backups externos automatizados, monitorização, Android físico/distribuição e aceitação final pendentes. NAS/Hetzner históricos; iOS/Outlook adiados.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
@@ -113,7 +113,7 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 
 ## ui-refresh — Identidade visual Claude + — Web e Android
 
-**Quando:** Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.
+**Quando:** HO-016 integrado pelo PR #45 em 2026-09-11; claro/escuro e regressão verificados.
 
 **Gate:** HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.
 

@@ -129,3 +129,25 @@ accounts.json
 client-test.json
 key-*.xml
 *.pfx.password
+# Private deployment and recovery material (safe examples are explicitly named).
+*.dump
+*.backup
+*.tar.gz
+*.apk
+*.aab
+signing.properties
+ho012-*-evidence.json
+# HO-012 NAS preparation outputs: never commit archives, actual configuration or runner receipts.
+/ho012-nas-images/
+/ho012-nas-evidence.json
+/ho012-nas-runner-metrics.txt
+**/.ho012-nas-trial
+
+# Isolated Pi ARM64 outputs and private trial markers.
+/ho012-pi-images/
+/ho012-pi-runner-metrics.txt
+**/.ho012-pi-trial
+
+# Real Tunnel credentials and staged private origin configuration.
+tunnel-token
+**/private/https/

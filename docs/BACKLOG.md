@@ -20,11 +20,11 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
-| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014 |
+| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014, HO-015 |
 | HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
 | HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Concluído | HO-003, HO-007 |
 | HO-015 | Administração Web de membros e convites | v1.0 | web | Concluído | HO-011, HO-013, HO-014 |
-| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Em revisão | HO-011, HO-015 |
+| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Concluído | HO-011, HO-015 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -345,18 +345,19 @@ Release: v1.0 · Área: operations · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
-Dependências: HO-011, HO-013, HO-014
+Dependências: HO-011, HO-013, HO-014, HO-015
 
 Funcionalidades: Preparação/fundação da release.
 
 Critérios de aceitação:
 
-- Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.
+- Alojamento/região, retenção e plataformas definidos pelo responsável. Domínio existente ferbatech.com: homeoffice.ferbatech.com em produção e staging.homeoffice.ferbatech.com em staging, sem compra/transferência e preservando DNS/email existentes.
 - Staging/produção isolados; segredos externos; migração e restauro demonstrados.
 - Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.
 - Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.
 - Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.
 - Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
+- Antes de convidar pessoas reais: titular administrador/colaborador e chefe associado configuráveis com segurança (HO-013), ciclo de convite recuperável e revogável (HO-014), SMTP real e autorização ensaiados. Antes da gestão autónoma de convidados/piloto aceite: administração Web HO-015 concluída. Convites da aplicação não são convites Firebase para APK.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
 
@@ -431,7 +432,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/44
 
 ## HO-016 — Tema Claude + e hierarquia visual Web/Android
 
-Release: ui-refresh · Área: fullstack · Estado: Em revisão
+Release: ui-refresh · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 

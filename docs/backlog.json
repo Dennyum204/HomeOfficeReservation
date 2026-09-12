@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-11",
-  "planning_note": "Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.",
+  "updated_at": "2026-09-12",
+  "planning_note": "Core Web/Android integrado. HO-012: Pi instalado, teste manual de submissão/aprovação/calendário/notificação aceite parcialmente; HTTPS Cloudflare em preparação, sem publicação. SMTP real, backups externos automatizados, monitorização, Android físico/distribuição e aceitação final pendentes. NAS/Hetzner históricos; iOS/Outlook adiados.",
   "releases": [
     {
       "id": "v1.0",
@@ -13,6 +13,10 @@
       "status": "planned",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1",
       "scope_history": [
+        {
+          "date": "2026-09-10",
+          "reason": "Acesso privado escolhido pelo responsável; acrescentados gates HO-013/014/015 sem iniciar implementação nem bloquear a decisão de alojamento."
+        },
         {
           "date": "2026-09-11",
           "reason": "Preservar gate privado acordado no PR #37; apenas HO-013 importada nesta entrega.",
@@ -78,10 +82,10 @@
     {
       "id": "ui-refresh",
       "title": "Identidade visual Claude + — Web e Android",
-      "timing": "Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.",
+      "timing": "HO-016 integrado pelo PR #45 em 2026-09-11; claro/escuro e regressão verificados.",
       "gate": "HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.",
       "review_trigger": "Ao selecionar o próximo trabalho visual e após feedback de utilização.",
-      "status": "planned",
+      "status": "done",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/8"
     }
   ],
@@ -919,16 +923,18 @@
       "depends_on": [
         "HO-011",
         "HO-013",
-        "HO-014"
+        "HO-014",
+        "HO-015"
       ],
       "features": [],
       "acceptance": [
-        "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+        "Alojamento/região, retenção e plataformas definidos pelo responsável. Domínio existente ferbatech.com: homeoffice.ferbatech.com em produção e staging.homeoffice.ferbatech.com em staging, sem compra/transferência e preservando DNS/email existentes.",
         "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
         "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
         "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
         "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
-        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.",
+        "Antes de convidar pessoas reais: titular administrador/colaborador e chefe associado configuráveis com segurança (HO-013), ciclo de convite recuperável e revogável (HO-014), SMTP real e autorização ensaiados. Antes da gestão autónoma de convidados/piloto aceite: administração Web HO-015 concluída. Convites da aplicação não são convites Firebase para APK."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
       "pr_urls": [
@@ -964,14 +970,34 @@
           ]
         },
         {
-          "date": "2026-09-11",
-          "reason": "HO-013 selecionada separadamente. Referenciar apenas o gate de titular; proposta operacional completa e outras novas entradas continuam no PR draft #37.",
+          "date": "2026-09-10",
+          "reason": "Responsável escolheu ferbatech.com existente, acesso privado por convite e titular administrador/colaborador; lacunas de acesso separadas do PR operacional, sem autorizar ações externas.",
           "previous_depends_on": [
             "HO-011"
+          ],
+          "previous_acceptance": [
+            "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+            "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+            "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
+            "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+            "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
           ]
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou preparar ensaio NAS isolado antes de escolher alojamento; Hetzner não aprovado. Instalação é próximo passo, sem mudar critérios finais de piloto/distribuição. HO-013/014/015/016 entretanto integrados."
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou Raspberry Pi 5 de 4 GB, Debian 13 aarch64, como alvo do ensaio isolado. NAS fica inalterado e histórico. Preparação/CI ARM64 autorizadas, instalação ainda sujeita a revisão. Critérios finais HO-012 preservados."
+        },
+        {
+          "date": "2026-09-12",
+          "reason": "Após ensaio Pi e aceitação manual parcial, o responsável autorizou publicação exclusiva Web/API em homeoffice.ferbatech.com quando a CI pendente passasse. Gate d232709 verde; publicação e verificação externa executadas. Não autoriza SMTP real, Android/distribuição, DNS adicional ou lançamento; critérios finais HO-012 preservados."
         }
       ],
-      "notes": "Incompleta; PR #37 continua draft na branch ops/ho-012-pilot-preparation, preservada. Alojamento aguarda decisão; sem contratação/DNS/deployment/emails reais/distribuição. Domínio existente ferbatech.com, homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Convites HO-014 (#39) e administração Web HO-015 (#40) continuam gates do piloto conforme PR #37; tema HO-016 (#41) separado. Apenas HO-013 importada para esta branch. HO-014 passa a tracking nesta branch; HO-015/016 ainda no PR #37. NAS: só conectividade de túnel reportada, sem instalação/medição ou alojamento pago."
+      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados: docs/HO-012-INTEGRATION.md. Pi 5/4 GB Debian 13.4 ARM64, Docker 29.8.0/Compose 5.5.1, memory/swap/CFS verificados. Instalação isolada autorizada com imagens 21a2f21, contas sintéticas, migração, convites capturados, chefia distinta, submissão/aprovação, autoaprovação recusada, worker, persistência e restauro numa base nova verificados; ensaio curto não certifica produção. Responsável aceitou manualmente submissão pelo titular, aprovação pelo chefe, calendário e notificação. Preparação HTTPS privada passou no Pi após correção Id Docker clássico/containerd para RepoDigest + OS/ARM64. Publicação autorizada após CI d232709 verde (project-docs/backend-contracts/web/flutter-android/pi-preparation). homeoffice.ferbatech.com ativo por túnel homeoffice-pi: cinco serviços/1600 MiB/3,25 CPU, reinício automático, sem portas host, token privado. TLS público/origem, redirect 308, Web CSRF/cookies/login/logout, bearer/refresh e bloqueio de endpoints internos verificados; browser real abre login, Android físico não testado. Quatro DNS preexistentes preservados; NAS/router intactos. Novo backup antes da publicação e cópia manual AES-GCM no PC verificados, não automatizados. Observação 125,3 s: pico agregado 194 MiB, conector 19,4 MiB, host disponível mínimo 3196 MiB, 57,3 C, zram 1 MiB, sem OOM/throttling. Reinício automático do conector observado; docs/HO-012-HTTPS-PUBLICATION.md. Faltam aceitação externa do responsável, destino definitivo/separação staging–produção, SMTP real, backups externos automatizados/retidos, monitorização/renovação, Android físico/assinatura/distribuição e aceitação piloto final. Origem TLS vence em 2026-10-11, renovação manual. Nenhum email real, APK, contratação, merge/auto-merge/release. NAS/Hetzner históricos, iOS/Outlook adiados."
     },
     {
       "id": "HO-013",
@@ -997,7 +1023,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/42"
       ],
-      "notes": "HO-013 integrado pelo PR #42, merge f62408eaab4bd47bdf039d53b210a7798fc76dc3, com quatro checks de integração verificados em HO-014 (Android retry 2). Bootstrap legado/titular, extensão idempotente e dados/credenciais preservados. Teste manual aprovado pelo responsável. Convites HO-014 selecionados separadamente; HO-015/016 e preparação HO-012 mantêm âmbito próprio.",
+      "notes": "HO-013 integrado pelo PR #42, merge f62408eaab4bd47bdf039d53b210a7798fc76dc3, com quatro checks de integração verificados em HO-014 (Android retry 2). Bootstrap legado/titular, extensão idempotente e dados/credenciais preservados. Teste manual aprovado pelo responsável. Convites HO-014 selecionados separadamente; HO-015/016 e preparação HO-012 mantêm âmbito próprio. Reconciliação HO-012 em 2026-09-11: PR #42 MERGED em main; f62408eaab4bd47bdf039d53b210a7798fc76dc3 ancestral de origin/main; project-docs 34539320219, backend-contracts/web/flutter-android 34539320227 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38",
       "scope_history": [
         {
@@ -1043,7 +1069,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
       ],
-      "notes": "PR #43 integrado em main, teste manual aprovado pelo responsável e integração remota confirmada. Primeira falha Android e repetição verde da mesma base preservadas na evidência; SMTP externo continua gate operacional HO-012.",
+      "notes": "PR #43 integrado em main, teste manual aprovado pelo responsável e integração remota confirmada. Primeira falha Android e repetição verde da mesma base preservadas na evidência; SMTP externo continua gate operacional HO-012. Reconciliação HO-012 em 2026-09-11: PR #43 MERGED em main; e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9 ancestral de origin/main; project-docs 34576735019, backend-contracts/web/flutter-android 34576735065 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
       "scope_history": [
         {
@@ -1089,7 +1115,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/44"
       ],
-      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks. HO-016 verificou merge humano #44 e os quatro checks de integração verdes no commit dcda6e2; trabalho concluído.",
+      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks. HO-016 verificou merge humano #44 e os quatro checks de integração verdes no commit dcda6e2; trabalho concluído. Reconciliação HO-012 em 2026-09-11: PR #44 MERGED em main; dcda6e2cceef570b3f8ab6dc5d5905d6af6212ec ancestral de origin/main; project-docs 34591956785, backend-contracts/web/flutter-android 34591956766 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
       "scope_history": [
         {
@@ -1119,7 +1145,7 @@
       "title": "Tema Claude + e hierarquia visual Web/Android",
       "release": "ui-refresh",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-011",
@@ -1141,7 +1167,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/45"
       ],
-      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft. PR #45 aberto; entrega para revisão humana apenas após os quatro checks do head final verdes e sem conflitos. 51 testes Flutter passaram; aplicação normal de revisão sem credenciais compiladas. HO-016 permanece review até integração humana. Refinamento Android: 52 testes locais, análise/format e ensaio nativo com 26 capturas adicionais passaram; scroll por conta, identidade em Definições e seletor da chefia preservados. As 84 capturas iniciais ficam como histórico. Quatro checks remotos devem ser novamente verificados no head final; issue permanece aberta até merge humano.",
+      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft. PR #45 aberto; entrega para revisão humana apenas após os quatro checks do head final verdes e sem conflitos. 51 testes Flutter passaram; aplicação normal de revisão sem credenciais compiladas. HO-016 permanece review até integração humana. Refinamento Android: 52 testes locais, análise/format e ensaio nativo com 26 capturas adicionais passaram; scroll por conta, identidade em Definições e seletor da chefia preservados. As 84 capturas iniciais ficam como histórico. Quatro checks remotos devem ser novamente verificados no head final; issue permanece aberta até merge humano. Reconciliação HO-012 em 2026-09-11: PR #45 MERGED em main; f07c3dd7185743c62f5c47d15c4b8a5198d92cbb ancestral de origin/main; project-docs 34605827077, backend-contracts/web/flutter-android 34605827090 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41",
       "scope_history": [
         {

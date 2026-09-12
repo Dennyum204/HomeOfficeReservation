@@ -1,5 +1,6 @@
 # HomeOfficeReservation
 
+**HO-012 — ensaio Raspberry Pi ARM64 instalado e em validação:** [stack e comandos para revisão](infra/pi/README.md), [proposta atual](docs/HO-012-PILOT.md). NAS preservado como histórico; [Ensaio isolado real e medições iniciais](docs/HO-012-PI-TRIAL.md); aceitação manual parcial confirmada (submissão, aprovação, calendário e notificação). [HTTPS público autorizado e verificado](docs/HO-012-HTTPS-PUBLICATION.md) em homeoffice.ferbatech.com; SMTP continua capturado e piloto incompleto. PR #37 draft, sem lançamento V1.
 **HO-016 — Identidade visual Web/Android:** tema Claude + adaptado, claro/escuro/sistema, secções de formulário e estados separados por rótulos e ícones. [Tema, contraste e revisão visual](docs/HO-016-VISUAL-THEME.md). Sem alteração de API, dados ou permissões.
 
 **HO-015 — Administração Web:** membros, convites, estado de entrega, papéis e chefias com confirmação e recuperação de respostas perdidas. [Guia e teste isolado](docs/HO-015-WEB-ADMINISTRATION.md). O titular mantém a sua conta de colaborador; o chefe associado decide os pedidos.
@@ -97,4 +98,6 @@ O workflow documental permite `outlook-probe-tests` apenas manualmente com `run_
 
 [Issues com IDs estáveis](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [milestones core/opcionais](https://github.com/Dennyum204/HomeOfficeReservation/milestones). URLs reais e histórico de mudanças de âmbito no backlog canónico. Repositório público; segredos, configuração privada e dados de calendário ficam fora do Git. Lockfiles, migrações e exemplos seguros devem ser versionados quando existirem.
 
-Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. Alojamento continua pendente; preparação operacional no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), sem autorização de contratação, DNS, deployment ou distribuição. O domínio existente escolhido é ferbatech.com, com `homeoffice.ferbatech.com` e `staging.homeoffice.ferbatech.com`; nenhuma configuração DNS foi aplicada nesta tarefa.
+Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. HO-013/014/015/016 integrados com [evidência de merge/CI](docs/HO-012-INTEGRATION.md). HO-012 continua no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), issue #13 aberta.
+
+Domínio existente **ferbatech.com**, nomes futuros homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Nenhum DNS/email alterado, domínio comprado ou alojamento contratado. NAS apenas candidato; conectividade Cloudflare reportada não prova instalação/desempenho. [Acesso privado já implementado e gates operacionais restantes](docs/HO-012-PRIVATE-ACCESS.md). Convites Firebase não concedem acesso à aplicação. Dados/emuladores privados preservados; iOS/Outlook adiados.

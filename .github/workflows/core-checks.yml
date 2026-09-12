@@ -15,10 +15,39 @@ env:
   HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
 
 jobs:
+  pi-preparation:
+    name: pi-preparation
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          # PR checkout normally uses a synthetic merge; archive labels must identify the actual head.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Windows bundle newline regression
+        run: python3 -m unittest discover -s infra/pi -p test_prepare.py -v
+      - name: Native ARM64 build and exact isolated Pi stack; no emulation or deployment
+        run: sudo -E python3 infra/pi/verify.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ho012-pi-images-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ho012-pi-images/
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ho012-pi-runner-evidence
+          path: |
+            ho012-pi-evidence.json
+            ho012-pi-runner-metrics.txt
+          if-no-files-found: error
+          retention-days: 14
+
   backend-contracts:
     name: backend-contracts
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
       POSTGRES_PASSWORD: ci-synthetic-only
       HO_TEST_DATABASE: Host=localhost;Port=5432;Database=homeoffice;Username=homeoffice;Password=ci-synthetic-only;Timeout=3
@@ -51,6 +80,14 @@ jobs:
           python3 scripts/smoke_api.py
       - if: always()
         run: docker compose -f infra/compose.yaml down
+      - name: Isolated production image, HTTPS, SMTP sink, restart and verified restore
+        run: sudo -E python3 infra/pilot/verify.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: production-preparation-evidence
+          path: ho012-production-evidence.json
+          if-no-files-found: error
+          retention-days: 14
 
   web:
     name: web
@@ -109,6 +146,8 @@ jobs:
         working-directory: contracts/dart
       - run: flutter pub get --enforce-lockfile
         working-directory: apps/mobile
+      - name: Private signing path with disposable key; no APK publication or installation
+        run: python3 scripts/check_android_signing.py
       - run: dart format --output=none --set-exit-if-changed lib/main.dart lib/config lib/features lib/theme test tool integration_test test_driver
         working-directory: apps/mobile
       - run: flutter analyze && flutter test
@@ -145,6 +184,8 @@ jobs:
           done
           test "$ready" = 1
           python3 scripts/prepare_invitation_test.py --base-url http://localhost:5080 --accounts "$RUNNER_TEMP/identity/accounts.json" --output "$RUNNER_TEMP/identity/client-test.json"
+      - name: Observe Android transport and host resources without changing test behavior
+        run: python3 scripts/android_ci_diagnostics.py --start
       - uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 35
@@ -167,4 +208,11 @@ jobs:
         with:
           name: android-planning-evidence
           path: apps/mobile/test-results/*.png
+          retention-days: 14
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: android-transport-diagnostics
+          path: ${{ runner.temp }}/android-transport.jsonl
+          if-no-files-found: warn
           retention-days: 14

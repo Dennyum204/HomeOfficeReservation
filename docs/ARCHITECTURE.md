@@ -54,6 +54,8 @@ HO-002 criou os projetos compiláveis. HO-003 acrescenta modelos Organization/Me
 
 Admissão de membros controlada pelo administrador; recuperação/ativação por mecanismos Identity, sem escolha livre de papéis. Sem Microsoft, email empresarial ou diretório Entra obrigatórios. Microsoft sign-in é apenas uma possível opção futura, distinta de consentimento de calendário. As limitações de sessão/revogação e os gates HO-003 estão no ADR.
 
+Acesso privado confirmado em HO-012 e implementado em HO-013/014/015: titular administrador/colaborador por bootstrap explícito, gestor distinto associado, convites Identity duráveis com reenvio/cancelamento e administração Web. API recusa edição geral dos próprios papéis, autoaprovação, acesso entre organizações e remoção do último administrador ativo. [Estado atual e gates operacionais](HO-012-PRIVATE-ACCESS.md). Convites Firebase para APK não alteram a autorização da aplicação.
+
 HO-004 implementa o calendário autoritativo e transações Planning/PostgreSQL; [ADR-006](adr/ADR-006-transactional-planning.md) concretiza as decisões. O core não necessita de módulos Graph, credenciais ou endpoints OAuth/webhook. HO-003 implementa autenticação; HO-004 implementa pedidos, decisões, revisões, contrapropostas e leitura de calendário na API. HO-005/006 implementam interfaces Web e presenças/tarefas; HO-007 acrescenta entregas internas.
 
 Quando HO-008 for selecionado, a ação explícita em Definições associa uma conta Microsoft ao MemberId já autenticado, sem exigir igualdade de email ou de IDs entre fornecedores. Estado/nonce/PKCE e callback validado por biblioteca impedem associação a outro membro; confirmar a conta escolhida antes de guardar. Tokens Graph ficam numa cache cifrada no backend. Revogação/desligar afetam apenas publicação. O [estudo anterior](HO-001-MICROSOFT-OUTLOOK-STUDY.md) é referência histórica, não o contrato de login atual.
@@ -85,7 +87,7 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 - Hospedagem Linux para API/Web HTTPS e worker de notificações ativo. Callbacks Microsoft só em HO-008; webhooks públicos só em HO-009. Não usar scale-to-zero para este desenho sem separar/agendar o worker.
 - Registos estruturados com correlation ID, health/readiness e métricas de atraso/erro de sync.
 - Backups automáticos e ensaio de restauro antes do piloto com dados reais.
-- Provedor, região, custos, domínio e distribuição mobile são escolhidos em HO-012; nada foi contratado ou publicado.
+- HO-012 prepara um ensaio Raspberry Pi ARM64; [ADR-019](adr/ADR-019-pi-arm64-trial.md) substitui o alvo NAS, mantendo ADR-013/018 históricos. ferbatech.com e hostnames futuros preservados; sem DNS, HTTPS externo ou deployment nesta etapa.
 
 ## Versões e dependências
 
@@ -110,6 +112,9 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 ## Interfaces core HO-011
 
 [ADR-012](adr/ADR-012-core-interfaces.md) estende o controller/journal Android a presenças/tarefas, conservando um colaborador autorizado e uma intenção incerta de cada vez. Gerações separadas protegem leituras/previews; input e comandos são protegidos por conta. Notificações resolvem destinos atuais de pedidos, presenças e tarefas. Não há alteração de contrato, migração ou infraestrutura. [Matriz de aceitação corrente](HO-011-CORE-ACCEPTANCE.md).
+## Ensaio Raspberry Pi ARM64 — HO-012
+
+[ADR-019](adr/ADR-019-pi-arm64-trial.md): API/Web/worker no mesmo processo, PostgreSQL, TLS local e captura SMTP. Rede interna sem portas publicadas; acesso SSH privado sujeito a inventário. Build/test nativos Linux ARM64 fora do Pi, imagens próprias por commit, limites propostos de 1472 MiB, configuração/key ring/PFX privados e restauro para base nova. [Runbook](../infra/pi/README.md). Pi posteriormente instalado e medido em ensaio curto; [evidência](HO-012-PI-TRIAL.md). [ADR-020](adr/ADR-020-pi-cloudflare-origin.md) acrescenta Cloudflare Tunnel ARM64: apenas Web/API em homeoffice.ferbatech.com, TLS de origem verificado, cinco serviços/1600 MiB, sem portas host, mesma Identity e Data Protection. [Publicação autorizada e testes externos](HO-012-HTTPS-PUBLICATION.md). NAS e Hetzner preservados como histórico, sem alterações nem contratação. HO-013/014/015/016 integrados; gates operacionais pendentes.
 
 ## Identidade visual HO-016
 

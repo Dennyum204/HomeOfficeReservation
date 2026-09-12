@@ -9,11 +9,18 @@ using HomeOffice.Application.Planning;
 using HomeOffice.Infrastructure.Planning;
 using HomeOffice.Api.Planning;
 using HomeOffice.Api.Notifications;
+using HomeOffice.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 var generatingContract = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider";
-if (!generatingContract)
+if (!generatingContract && builder.Environment.IsDevelopment())
     builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: false).AddEnvironmentVariables();
+if (!generatingContract && Environment.GetEnvironmentVariable("HO_CONFIG_FILE") is { } privateConfig)
+{
+    if (!Path.IsPathFullyQualified(privateConfig)) throw new InvalidOperationException("HO_CONFIG_FILE must be an absolute private file path.");
+    builder.Configuration.AddJsonFile(privateConfig, optional: false, reloadOnChange: false).AddEnvironmentVariables();
+}
+ProductionHosting.Configure(builder.Services, builder.Configuration, builder.Environment, generatingContract);
 builder.Services.AddProblemDetails();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow);
@@ -44,6 +51,7 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Testing"))
 {
+    app.UseForwardedHeaders();
     app.UseHsts();
     app.Use(async (context, next) =>
     {
@@ -51,6 +59,11 @@ if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Testing"
         { context.Response.StatusCode = 400; return; }
         await next(context);
     });
+}
+if (Directory.Exists(app.Environment.WebRootPath))
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
 }
 app.UseAuthentication();
 app.UseAuthorization();
@@ -70,6 +83,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+// Deliberate client routes only: an unknown /api path must remain a real 404.
+if (Directory.Exists(app.Environment.WebRootPath))
+    foreach (var route in new[] { "/calendar", "/requests", "/onsite", "/tasks", "/notifications", "/settings", "/administration" })
+        app.MapFallbackToFile(route, "index.html").ExcludeFromDescription();
 app.Run();
 
 public partial class Program;

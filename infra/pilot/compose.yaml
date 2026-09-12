@@ -1,0 +1,72 @@
+# Separate host/project/private directory for each environment. No external deployment is automatic.
+name: ${HO_PROJECT:?set a distinct project name}
+x-logging: &logging
+  driver: local
+  options: { max-size: "10m", max-file: "3" }
+services:
+  edge:
+    image: caddy:2.11.4-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      HO_PUBLIC_HOST: ${HO_PUBLIC_HOST:?}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      pilot: { ipv4_address: 10.77.0.2 }
+    logging: *logging
+    mem_limit: 128m
+  app:
+    image: ${HO_IMAGE:?use the immutable prepared image tag}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp:uid=1654,gid=1654,mode=700"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${HO_ENVIRONMENT:?Production or Staging}
+      HO_CONFIG_FILE: /run/config/application.json
+      HO_PUBLIC_HOST: ${HO_PUBLIC_HOST:?}
+      GOOGLE_APPLICATION_CREDENTIALS: /run/config/firebase-admin.json
+    volumes:
+      # The API never receives the PostgreSQL cluster administrator password.
+      - ${HO_PRIVATE_DIR:?absolute private directory}/application.json:/run/config/application.json:ro
+      - ${HO_PRIVATE_DIR:?}/protection.pfx:/run/config/protection.pfx:ro
+      - ${HO_PRIVATE_DIR:?}/firebase-admin.json:/run/config/firebase-admin.json:ro
+      - ${HO_PRIVATE_DIR:?}/bootstrap.json:/run/config/bootstrap.json:ro
+      - ${HO_PRIVATE_DIR:?}/keys:/var/lib/homeoffice/keys
+    depends_on:
+      database: { condition: service_healthy }
+    networks: [pilot]
+    logging: *logging
+    mem_limit: 1g
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+  database:
+    image: postgres:18.6-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+      HO_DATABASE_PASSWORD_FILE: /run/secrets/database-password
+    volumes:
+      - database:/var/lib/postgresql
+      - ${HO_PRIVATE_DIR:?}/postgres-password:/run/secrets/postgres-password:ro
+      - ${HO_PRIVATE_DIR:?}/database-password:/run/secrets/database-password:ro
+      - ./init-database.sh:/docker-entrypoint-initdb.d/10-homeoffice.sh:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d homeoffice"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    networks: [pilot]
+    logging: *logging
+    mem_limit: 1g
+volumes:
+  database:
+  caddy_data:
+  caddy_config:
+networks:
+  pilot:
+    ipam:
+      # Reserve the low addresses for explicit services, even when database starts first.
+      config: [{ subnet: 10.77.0.0/24, ip_range: 10.77.0.128/25 }]

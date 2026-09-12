@@ -82,7 +82,7 @@ public sealed class IdentityFixture : IAsyncDisposable
             builder.ConfigureAppConfiguration((_, c) => c.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Database"] = connection,
-                ["Notifications:WorkerEnabled"] = "false", // Tests drive real leased processing explicitly.
+                ["Notifications:WorkerEnabled"] = production ? "true" : "false",
                 ["Notifications:PushProvider"] = production ? "Disabled" : "Local",
                 ["DataProtection:KeyDirectory"] = Path.Combine(DirectoryPath, "keys"),
                 ["DataProtection:CertificatePath"] = certificatePath,
@@ -93,11 +93,18 @@ public sealed class IdentityFixture : IAsyncDisposable
                 ["Email:From"] = "test@example.invalid",
                 ["Email:Username"] = "test",
                 ["Email:Password"] = Password,
-                ["Auth:RequestsPerMinute"] = requestLimit.ToString()
+                ["Auth:RequestsPerMinute"] = production ? null : requestLimit.ToString(),
+                ["Hosting:PublicOrigin"] = "https://localhost",
+                ["Hosting:KnownProxies"] = "127.0.0.1",
+                ["AllowedHosts"] = "localhost"
             }));
             builder.ConfigureLogging(logging => logging.ClearProviders());
             builder.ConfigureServices(services =>
             {
+                // This fixture drives leases explicitly; production process tests run the real worker.
+                var worker = services.SingleOrDefault(d => d.ServiceType == typeof(Microsoft.Extensions.Hosting.IHostedService) &&
+                    d.ImplementationType == typeof(HomeOffice.Infrastructure.Notifications.NotificationWorker));
+                if (worker is not null) services.Remove(worker);
                 // The minimal host reads protection paths during registration. Explicitly isolate its
                 // repository/certificate after that registration; never reuse a developer key ring.
                 services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(DirectoryPath, "keys")))
