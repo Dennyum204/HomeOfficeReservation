@@ -27,6 +27,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Windows bundle newline regression
         run: python3 -m unittest discover -s infra/pi -p test_prepare.py -v
+      - name: Pinned native restic and backup safety/encryption tests (local repository only)
+        run: |
+          python3 infra/pi/backup/download_restic.py linux_arm64 "$RUNNER_TEMP/ho012-restic"
+          echo "HO_RESTIC_TEST_BINARY=$RUNNER_TEMP/ho012-restic" >> "$GITHUB_ENV"
+          HO_RESTIC_TEST_BINARY="$RUNNER_TEMP/ho012-restic" python3 -m unittest discover -s infra/pi/backup -p test_backup.py -v
       - name: Native ARM64 build and exact isolated Pi stack; no emulation or deployment
         run: sudo -E python3 infra/pi/verify.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

@@ -6,6 +6,8 @@ Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOffic
 
 ## Evidência e mudança de alvo
 
+Preparação 2026-09-13: [backups externos](HO-012-BACKUPS.md) com restic e R2 privado UE proposto. Sem ativar fornecedor/timer/envio; destino real e kit independente aguardam decisão. Aceitação manual parcial do browser do telemóvel permanece registada; gates operacionais restantes não são dados como concluídos.
+
 O responsável confirmou por comandos Pi 5 de 4 GB, Debian 13 Trixie aarch64, alimentação oficial 27 W, caixa com ventoinha, microSD High Endurance de 64 GB com 50 GB livres, 3,7 GiB de RAM disponíveis antes do Docker e swap zero. Reportou instalação Docker pelo repositório oficial Debian, hello-world arm64v8 bem-sucedido e Compose 5.5.1.
 
 SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. Após alteração mínima de arranque e um reinício autorizados, **Memory=true/Swap=true/CFS=true** confirmados pelo Docker; controlador memory V2 disponível. O kernel processou o disable herdado do DTB e depois o enable explícito, conforme suportado pelo fornecedor. Original preservado. Suporte não equivale a teste de aplicação ou de imposição dos limites. HomeOffice instalado por autorização posterior conforme ensaio real. [Inventário](HO-012-PI-INVENTORY.md), [diagnóstico Android](HO-012-ANDROID-CI.md).

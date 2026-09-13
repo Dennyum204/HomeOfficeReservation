@@ -12,6 +12,7 @@ import shutil
 import ssl
 import subprocess
 import tempfile
+import sys
 import time
 import traceback
 import urllib.error
@@ -20,6 +21,8 @@ import uuid
 from prepare import prepare, ROOT
 from prepare_https import CONNECTOR_IMAGE
 from verify_https import verify as verify_https
+sys.path.insert(0, str(Path(__file__).parent / 'backup'))
+from verify_integration import verify_integration as verify_backup_integration
 
 STAGE = 'initialize'
 
@@ -190,6 +193,8 @@ def main():
             trial('restart')
             assert request(owner, '/api/v1/me')['memberId'] == owner_profile['memberId']
             assert request(manager, detail_url)['days'][0]['decision'] == 'Approved'
+            STAGE = 'encrypted backup transport, new PostgreSQL database and independent recovery material'
+            restic_database, restic_private, restic_evidence = verify_backup_integration(folder)
             trial('backup')
             backup = next((private / 'backups').iterdir())
             restored = 'ho012_restore_ci'
@@ -197,25 +202,27 @@ def main():
             assert trial('restore-new', str(backup), restored, ok=False).returncode != 0
             assert sql('SELECT count(*) FROM "Members"', restored) == '2'
             config = json.loads((private / 'application.json').read_text())
-            config['ConnectionStrings']['Database'] = config['ConnectionStrings']['Database'].replace('Database=homeoffice;', 'Database=' + restored + ';')
+            config['ConnectionStrings']['Database'] = config['ConnectionStrings']['Database'].replace('Database=homeoffice;', 'Database=' + restic_database + ';')
             dc('stop', 'app')
             (private / 'application.json').write_text(json.dumps(config))
             # Recover the actual protected key material as well as the database, only inside this disposable directory.
             shutil.rmtree(private / 'keys')
-            shutil.copytree(backup / 'keys', private / 'keys')
-            shutil.copyfile(backup / 'protection.pfx', private / 'protection.pfx')
+            shutil.copytree(restic_private / 'keys', private / 'keys')
+            shutil.copyfile(restic_private / 'protection.pfx', private / 'protection.pfx')
             for path in [private / 'keys', * (private / 'keys').rglob('*'), private / 'protection.pfx']:
                 os.chown(path, 1654, 1654)
             dc('start', 'app')
             trial('health')
             assert request(owner, '/api/v1/me')['memberId'] == owner_profile['memberId']
             assert request(manager, detail_url)['days'][0]['decision'] == 'Approved'
+            restic_evidence['checks'].append('downloaded PFX/key ring restore authenticates existing cookie and preserves approved plan')
             STAGE = 'private HTTPS origin overlay, simulated connector and authentication'
             https_evidence = verify_https(folder)
             trial('health')
             assert request(owner, '/api/v1/me')['memberId'] == owner_profile['memberId']
             evidence = {'commit': sha, 'environment': 'native ubuntu-24.04-arm CI, NOT Raspberry Pi hardware',
                 'https_preparation': https_evidence,
+                'backup_preparation': restic_evidence,
                 'architecture': 'linux/arm64', 'emulation': False, 'dependencies': base_images, 'stack': 'four containers; 1472 MiB total hard limits; no host ports',
                 'checks': ['startup', 'explicit migration', 'no automatic accounts', 'database outage readiness/liveness', 'foreign trial volume refusal', 'idempotent dual-role owner bootstrap',
                     'captured SMTP STARTTLS', 'invitation replay', 'two activations', 'manager association', 'submission',
