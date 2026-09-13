@@ -50,6 +50,8 @@ systemctl show homeoffice-backup.timer homeoffice-backup-check.timer \
 
 Rollback: parar timers, aguardar jobs terminarem, repor backup.py em /opt/homeoffice-backup e os dois serviços em /etc/systemd/system a partir do diretório de recuperação; daemon-reload e repor só timers antes ativos. Não apagar backups. Para suspender apenas telemetria: enabled=false privadamente e pausar checks no fornecedor, registando perda de cobertura.
 
+Antes de declarar cobertura, confirmar no fornecedor que os dois checks operacionais estão ativos e têm próximo prazo. Um check novo ainda sem sinal não demonstra vigilância. Após aprovação, executar uma vez os serviços reais `homeoffice-backup.service` e `homeoffice-backup-check.service` com os hooks instalados, confirmar etapas/recibos e start/success recebidos. Essa inicialização é **manual**, pode usar a breve pausa de captura já documentada e não valida o timer. Não emitir um success sintético em daily/weekly para os armar; em alternativa aguardar os primeiros jobs agendados, mantendo explicitamente a cobertura pendente até os observar.
+
 ## Ensaio controlado após aprovação
 
 Usar só `rehearsal`, com o destinatário aprovado. Não tocar nos checks operacionais nem parar serviços, backups ou Pi:
