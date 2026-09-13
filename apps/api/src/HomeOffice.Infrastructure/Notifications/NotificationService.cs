@@ -22,10 +22,10 @@ public sealed class NotificationService(HomeOfficeDbContext db, NotificationAcce
         var destination = await access.Destination(row, ct);
         return new(row.Id, destination is null ? "context.unavailable" : row.EventType, row.CreatedAt, row.ReadAt, row.Historical, destination);
     }
-    public async Task<NotificationPage> List(Guid actor, int offset, int limit, bool unreadOnly, bool historical, CancellationToken ct)
+    public async Task<NotificationPage> List(Guid actor, int offset, int limit, bool unreadOnly, bool historical, CancellationToken ct, bool readOnly = false)
     {
         Require(offset is >= 0 and <= 10000 && limit is >= 1 and <= 100, "invalid_pagination", 400);
-        var rows = await access.Visible(actor).AsNoTracking().Where(n => n.Historical == historical && (!unreadOnly || n.ReadAt == null))
+        var rows = await access.Visible(actor).AsNoTracking().Where(n => n.Historical == historical && (!unreadOnly || n.ReadAt == null) && (!readOnly || n.ReadAt != null))
             .OrderByDescending(n => n.CreatedAt).ThenBy(n => n.Id).Skip(offset).Take(limit + 1).ToArrayAsync(ct);
         var views = new List<NotificationView>();
         foreach (var row in rows.Take(limit)) views.Add(await View(row, ct));

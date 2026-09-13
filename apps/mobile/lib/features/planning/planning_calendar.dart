@@ -159,13 +159,30 @@ class PlanningCalendar extends StatelessWidget {
                   color: chosen
                       ? Theme.of(context).colorScheme.primaryContainer
                       : date.month == c.month.month
-                      ? Theme.of(context).colorScheme.surface
+                      ? Color.alphaBlend(
+                          (day?.location == WorkLocation.remotePortugal
+                                  ? const Color(0xffb56545)
+                                  : const Color(0xff72849a))
+                              .withValues(
+                                alpha:
+                                    day?.availability == Availability.working &&
+                                        (day?.location ==
+                                                WorkLocation.remotePortugal ||
+                                            day?.location ==
+                                                WorkLocation.officeSwitzerland)
+                                    ? 0.12
+                                    : 0,
+                              ),
+                          Theme.of(context).colorScheme.surface,
+                        )
                       : Theme.of(context).colorScheme.surfaceContainerLow,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(9),
                     side: BorderSide(
                       color: chosen
                           ? Theme.of(context).colorScheme.primary
+                          : waiting > 0
+                          ? const Color(0xffb89455)
                           : Theme.of(context).colorScheme.outlineVariant,
                       width: chosen ? 2 : 1,
                     ),

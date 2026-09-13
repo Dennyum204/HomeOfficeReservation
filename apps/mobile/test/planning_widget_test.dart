@@ -103,6 +103,18 @@ void main() {
       final pending = Completer<http.Response>();
       var calls = 0;
       f.intercept = (r) async {
+        if (r.url.path.endsWith('/notifications/note/read')) {
+          return json(
+            NotificationView(
+              createdAt: DateTime.utc(2026),
+              eventType: 'planning.decided',
+              historical: false,
+              id: 'note',
+              readAt: DateTime.utc(2026),
+              destination: null,
+            ),
+          );
+        }
         if (r.url.path.endsWith('/notifications/note')) {
           calls++;
           return pending.future;
@@ -144,16 +156,14 @@ void main() {
           ),
         ),
       );
+      await tester.pumpAndSettle();
       await opening;
       await tester.pumpAndSettle();
       expect(f.c.detail!.id, 'request');
       expect(find.text('0 dias aprovados · 0 dias pendentes'), findsOneWidget);
       expect(f.auth.notificationIntent, isNull);
-      expect(
-        f.writes,
-        isEmpty,
-        reason: 'Opening performs no decision or read-status mutation',
-      );
+      expect(f.writes, hasLength(1));
+      expect(f.writes.single.url.path, '/api/v1/notifications/note/read');
       await f.auth.logout();
       await tester.pumpAndSettle();
       expect(f.c.detail, isNull);

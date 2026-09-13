@@ -1,3 +1,4 @@
+import { Select } from "../../theme/Select";
 import { useCallback, useState } from "react";
 import type {
   DayInput,
@@ -147,7 +148,8 @@ function EmployeePlanning({
     restoreEditor(member.memberId, employeeId),
   );
   const [requestId, setRequestId] = useState<string | undefined>(() =>
-    initialDestination?.kind === "Request"
+    initialDestination?.kind === "Request" ||
+    initialDestination?.kind === "Proposal"
       ? initialDestination.resourceId
       : restoreEditor(member.memberId, employeeId)?.requestId,
   );
@@ -497,7 +499,7 @@ function EmployeePlanning({
       <div className="planning-controls">
         <label>
           {p.employee}
-          <select
+          <Select
             aria-label={p.employee}
             disabled={command.locked || preparing || !!editor}
             value={employeeId}
@@ -510,7 +512,7 @@ function EmployeePlanning({
                   : choice.displayName}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <button disabled={command.busy || refreshing} onClick={refresh}>
           {p.refresh}
@@ -652,7 +654,7 @@ function EmployeePlanning({
             </div>
             <label>
               {p.filter}
-              <select
+              <Select
                 value={filter}
                 disabled={command.locked}
                 onChange={(e) => {
@@ -668,7 +670,7 @@ function EmployeePlanning({
                       {label}
                     </option>
                   ))}
-              </select>
+              </Select>
             </label>
             {requests.data?.items.length === 0 && (
               <p className="empty-state">{p.noRequests}</p>
@@ -787,7 +789,7 @@ function EmployeePlanning({
                   {locations.map((location, i) => (
                     <label key={p.weekdays[i]}>
                       {p.weekdays[i]}
-                      <select
+                      <Select
                         value={location}
                         onChange={(e) =>
                           setLocations((values) =>
@@ -802,7 +804,7 @@ function EmployeePlanning({
                             {label}
                           </option>
                         ))}
-                      </select>
+                      </Select>
                     </label>
                   ))}
                 </div>
