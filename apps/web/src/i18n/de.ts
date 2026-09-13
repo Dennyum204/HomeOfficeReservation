@@ -135,7 +135,7 @@ export const strings: typeof stringsPt = {
 import type { p as pPt } from "./planning.pt-PT";
 export const p: typeof pPt = {
   draftCount: (count: number) =>
-    `${count.toLocaleString("de")} ${count === 1 ? "Tag im Entwurf" : "Tage im Entwurf"} · noch nicht eingereicht`,
+    `${count.toLocaleString("de-CH")} ${count === 1 ? "Tag im Entwurf" : "Tage im Entwurf"} · noch nicht eingereicht`,
   emptyPreview:
     "Dieser Zeitraum enthält keine Arbeitstage. Prüfen Sie die Daten oder schliessen Sie Wochenenden ein.",
   locationShort: {
@@ -370,9 +370,9 @@ export const p: typeof pPt = {
     "Eine Stornierung entfernt die Genehmigung erst nach der Entscheidung der Führungskraft. Danach wird das Muster wieder sichtbar.",
   request: "Antrag",
   countDays: (count: number) =>
-    `${count.toLocaleString("de")} ${count === 1 ? "Tag" : "Tage"}`,
+    `${count.toLocaleString("de-CH")} ${count === 1 ? "Tag" : "Tage"}`,
   counts: (approved: number, pending: number) =>
-    `${approved.toLocaleString("de")} ${approved === 1 ? "genehmigter Tag" : "genehmigte Tage"} · ${pending.toLocaleString("de")} ${pending === 1 ? "ausstehender Tag" : "ausstehende Tage"}`,
+    `${approved.toLocaleString("de-CH")} ${approved === 1 ? "genehmigter Tag" : "genehmigte Tage"} · ${pending.toLocaleString("de-CH")} ${pending === 1 ? "ausstehender Tag" : "ausstehende Tage"}`,
 };
 import type { w as wPt } from "./work.pt-PT";
 export const w: typeof wPt = {

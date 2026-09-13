@@ -96,6 +96,9 @@ describe("language preference", () => {
         new Intl.NumberFormat(locale()).format(12345),
       );
     }
+    expect(p.countDays(12345)).toBe(
+      `${new Intl.NumberFormat("de-CH").format(12345)} Tage`,
+    );
     expect(longDayLabel("2026-10-25")).toContain("Oktober");
     selectLanguage("en");
     expect(longDayLabel("2026-10-25")).toContain("October");

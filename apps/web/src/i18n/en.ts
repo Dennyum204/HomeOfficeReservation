@@ -130,7 +130,7 @@ export const strings: typeof stringsPt = {
 import type { p as pPt } from "./planning.pt-PT";
 export const p: typeof pPt = {
   draftCount: (count: number) =>
-    `${count.toLocaleString("en")} ${count === 1 ? "day in draft" : "days in draft"} · not submitted yet`,
+    `${count.toLocaleString("en-GB")} ${count === 1 ? "day in draft" : "days in draft"} · not submitted yet`,
   emptyPreview:
     "This range contains no working days. Review the dates or include weekends.",
   locationShort: {
@@ -359,9 +359,9 @@ export const p: typeof pPt = {
     "Cancellation removes approval only after the manager's decision. The pattern then becomes visible again.",
   request: "Request",
   countDays: (count: number) =>
-    `${count.toLocaleString("en")} ${count === 1 ? "day" : "days"}`,
+    `${count.toLocaleString("en-GB")} ${count === 1 ? "day" : "days"}`,
   counts: (approved: number, pending: number) =>
-    `${approved.toLocaleString("en")} ${approved === 1 ? "approved day" : "approved days"} · ${pending.toLocaleString("en")} ${pending === 1 ? "pending day" : "pending days"}`,
+    `${approved.toLocaleString("en-GB")} ${approved === 1 ? "approved day" : "approved days"} · ${pending.toLocaleString("en-GB")} ${pending === 1 ? "pending day" : "pending days"}`,
 };
 import type { w as wPt } from "./work.pt-PT";
 export const w: typeof wPt = {

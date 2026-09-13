@@ -141,7 +141,7 @@ function Administration({ actorId }: { actorId: string }) {
       </div>
       {command.message && (
         <p role="status" className="admin-notice">
-          {command.message}
+          {localizedFeedback(command.message)}
         </p>
       )}
       {command.journal && (
