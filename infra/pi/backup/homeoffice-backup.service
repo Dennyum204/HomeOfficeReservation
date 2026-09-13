@@ -3,14 +3,16 @@ Description=HomeOffice encrypted external backup (explicitly provisioned destina
 Wants=network-online.target
 After=network-online.target docker.service
 Requires=docker.service
-OnFailure=homeoffice-backup-failure.service
+OnFailure=homeoffice-backup-failure.service homeoffice-backup-monitor-failure@daily.service
 
 [Service]
 Type=oneshot
 User=root
 UMask=0077
+ExecStartPre=-/usr/bin/python3 /opt/homeoffice-backup/monitor.py daily start
 ExecStart=/usr/bin/python3 /opt/homeoffice-backup/backup.py run
 ExecStopPost=/usr/bin/python3 /opt/homeoffice-backup/backup.py resume
+ExecStartPost=/usr/bin/python3 /opt/homeoffice-backup/monitor.py daily success
 TimeoutStartSec=2h
 TimeoutStopSec=3min
 MemoryMax=512M

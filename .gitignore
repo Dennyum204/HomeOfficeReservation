@@ -151,3 +151,6 @@ ho012-*-evidence.json
 # Real Tunnel credentials and staged private origin configuration.
 tunnel-token
 **/private/https/
+
+# Private hosted monitoring capabilities (safe template remains tracked).
+monitor.json

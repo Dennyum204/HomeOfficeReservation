@@ -1,0 +1,18 @@
+[Unit]
+Description=Sanitized HomeOffice backup failure heartbeat (%i)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/bin/python3 /opt/homeoffice-backup/monitor.py %i fail
+TimeoutStartSec=20s
+MemoryMax=64M
+MemorySwapMax=0
+CPUQuota=25%
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/homeoffice-backup

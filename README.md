@@ -103,3 +103,5 @@ O workflow documental permite `outlook-probe-tests` apenas manualmente com `run_
 Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. HO-013/014/015/016 integrados com [evidência de merge/CI](docs/HO-012-INTEGRATION.md). HO-012 continua no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), issue #13 aberta.
 
 Domínio existente **ferbatech.com**, nomes futuros homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Nenhum DNS/email alterado, domínio comprado ou alojamento contratado. NAS apenas candidato; conectividade Cloudflare reportada não prova instalação/desempenho. [Acesso privado já implementado e gates operacionais restantes](docs/HO-012-PRIVATE-ACCESS.md). Convites Firebase não concedem acesso à aplicação. Dados/emuladores privados preservados; iOS/Outlook adiados.
+
+Monitorização externa: [integração preparada e decisão pendente](docs/HO-012-BACKUP-MONITORING.md). Healthchecks.io Hobbyist proposto, três checks/US$0, destinatário por indicar; sem conta ou alertas reais. Ensaios simulados não substituem validação externa.

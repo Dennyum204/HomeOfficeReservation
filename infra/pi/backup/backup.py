@@ -337,7 +337,8 @@ def main():
             print('HO012 backup operation completed: ' + args.action)
             return 0
         except (Exception, SystemExit):
-            write_json(receipt, {**old, 'result': 'failed', 'failed_at': time.time(), 'operation': args.action})
+            if args.action == 'run':
+                write_json(receipt, {**old, 'result': 'failed', 'failed_at': time.time(), 'operation': args.action})
             if args.action == 'check-full':
                 write_json(backup.state / 'full-check.json', {'result': 'failed', 'at': time.time()})
             print('HO012 backup FAILED; no success claimed. Inspect systemd status; sensitive output suppressed.', file=sys.stderr)

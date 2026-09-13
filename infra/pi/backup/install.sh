@@ -14,7 +14,7 @@ for unit in homeoffice-backup*.service homeoffice-backup*.timer; do
 done
 install -d -m 700 /opt/homeoffice-backup /etc/homeoffice-backup /var/lib/homeoffice-backup
 install -m 700 restic /opt/homeoffice-backup/restic
-install -m 600 backup.py config.example.json /opt/homeoffice-backup/
+install -m 600 backup.py monitor.py monitor.example.json config.example.json /opt/homeoffice-backup/
 for unit in homeoffice-backup*.service homeoffice-backup*.timer; do
     install -m 644 "$unit" "/etc/systemd/system/$unit"
 done
