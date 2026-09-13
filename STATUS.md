@@ -1,6 +1,6 @@
 # Estado do projeto
 
-Atualizado: 2026-09-12.
+Atualizado: 2026-09-13.
 
 HO-000 a HO-007, HO-010/011 e **HO-013/014/015/016 integrados**. Merges humanos #42–#45, ancestralidade e quatro checks de integração: [evidência](docs/HO-012-INTEGRATION.md). [Histórico](docs/history/HO-012-resume-before-reconciliation.md).
 
@@ -16,4 +16,6 @@ Aceitação manual parcial confirmada: titular submete, chefe aprova, calendári
 
 **HTTPS público do ensaio ativo:** [evidência externa](docs/HO-012-HTTPS-PUBLICATION.md). Túnel Pi separado, cinco serviços ARM64, 1600 MiB/3,25 CPU efetivos e reinício automático, sem portas host. Certificado público, redirect, cookies/CSRF/login/logout, bearer/refresh, negação anónima e endpoints privados verificados; browser real abre login. Reinício automático do conector observado. Novo backup e cópia cifrada manual fora do Pi verificados. Medição adicional de 125,3 s: pico agregado 194 MiB, conector 19,4 MiB, mínimo host 3196 MiB disponíveis, 57,3 °C, 1 MiB zram, sem OOM/throttling. Ensaio curto, não dimensionamento de produção. Os quatro DNS anteriores, NAS, router, dados e chaves preservados; somente o CNAME e regras do hostname foram criados.
 
-Faltam aceitação externa pelo responsável, destino definitivo/separação staging–produção, SMTP real, backups externos automatizados, monitorização/alertas/renovação, Android físico/assinatura/distribuição e aceitação final. Certificado privado da origem vence em 2026-10-11; renovação ainda manual. Sem email real, APK, merge/auto-merge/release. iOS e Outlook adiados. PR #37 continua draft e HO-012 aberta.
+Em 2026-09-13, o responsável confirmou o percurso no browser do telemóvel pelo hostname público: titular submete, chefe aprova e titular confirma calendário/notificações internas. Aceitação manual parcial reportada; rede móvel sem Wi-Fi não foi explicitamente confirmada. A dificuldade inicial de login era um erro de cópia da password, esclarecido pelo responsável; nenhuma alteração de contas ou autenticação. Não equivale a testar a aplicação Android instalada ou push físico.
+
+Faltam destino definitivo/separação staging–produção, SMTP real, backups externos automatizados, monitorização/alertas/renovação, Android físico/assinatura/distribuição e aceitação final. Certificado privado da origem vence em 2026-10-11; renovação ainda manual. Sem email real, APK, merge/auto-merge/release. iOS e Outlook adiados. PR #37 continua draft e HO-012 aberta.

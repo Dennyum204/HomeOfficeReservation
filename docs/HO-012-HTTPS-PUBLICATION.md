@@ -59,10 +59,14 @@ sudo docker compose -p homeoffice-pi-trial -f compose.yaml -f private/https/comp
 
 O compose base serve a recuperação **local**, não a manutenção do perfil público. Backups posteriores à publicação têm de incluir também `private/https` com proteção adequada; o comando base de backup, isoladamente, só copia a configuração local original. Não mostrar `docker inspect` completo, configuração efetiva, tokens ou dumps em canais públicos.
 
-## Próxima aceitação e critérios ainda abertos
+## Aceitação manual no telemóvel — 2026-09-13
 
-O responsável deve abrir o hostname no telemóvel com Wi-Fi desligado e repetir o percurso titular→chefe→calendário/notificação com as contas sintéticas existentes. Credenciais, guia e recibos completos ficam apenas no diretório privado do PC. Mailpit permanece pelo encaminhamento SSH local; não há entrega de email real.
+O responsável confirmou que passou o percurso solicitado no browser do telemóvel em **https://homeoffice.ferbatech.com**: titular submete, chefe aprova e titular confirma o resultado no calendário e nas notificações internas. É aceitação manual reportada pelo responsável com contas sintéticas, distinta dos testes automatizados anteriores. Não se registou o modelo do dispositivo, versão do browser ou confirmação explícita de Wi-Fi desligado; não atribuir essa condição ao ensaio.
 
-HO-012 continua incompleta: aceitação externa pelo responsável, escolha definitiva/separação staging–produção, SMTP real autorizado, backups externos automatizados/retidos e restauro, monitorização/alertas/renovação, Android físico/assinatura/distribuição privada e aceitação final. iOS/Outlook adiados. Sem merge, auto-merge ou release.
+A dificuldade inicial de login foi identificada pelo próprio responsável como erro ao copiar a password. Não foi necessário alterar contas, credenciais, regras de autenticação ou proteções Cloudflare. Este teste Web no telemóvel não valida a aplicação Android instalada, push físico, distribuição ou todos os critérios do piloto.
+
+Credenciais, guia e recibos completos ficam apenas no diretório privado do PC. Mailpit permanece pelo encaminhamento SSH local; não há entrega de email real.
+
+HO-012 continua incompleta: escolha definitiva/separação staging–produção, SMTP real autorizado, backups externos automatizados/retidos e restauro, monitorização/alertas/renovação, Android físico/assinatura/distribuição privada e aceitação final. iOS/Outlook adiados. Sem merge, auto-merge ou release.
 
 Fontes oficiais consultadas em 2026-09-12: [campo ssl](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/ssl/), [normalização dos caminhos Caddy](https://caddyserver.com/docs/caddyfile/matchers#path), restantes fontes e configuração na [preparação HTTPS](HO-012-HTTPS.md).
