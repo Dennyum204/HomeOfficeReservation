@@ -43,6 +43,6 @@ def verify_integration(trial):
         'transport': 'real encrypted local restic repository on disposable ARM64 CI; NOT external R2',
         'checks': ['capture includes SQL/configuration/PFX/key ring/runtime images', 'source app resumed',
                    'encrypted snapshot upload to local repository', 'download and SHA256 verification',
-                   'full repository read', '7 daily/4 weekly/6 monthly retention command',
+                   'full repository read', '6 monthly retention command',
                    'restore into new PostgreSQL database', 'existing database refused', 'source member count unchanged'],
         'external_destination': 'unconfigured; upload and restore still require authorization and live evidence'}

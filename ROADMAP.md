@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-13.
 
-Core Web/Android integrado. HO-012: Pi instalado e HTTPS Cloudflare publicado; percurso titular → chefe → calendário/notificações aceite pelo responsável no browser do telemóvel em 2026-09-13. Aceitação parcial, PR #37 draft. Backups restic preparados; R2 UE ainda por autorizar/validar. SMTP real, backups externos automatizados, monitorização, Android físico/distribuição e aceitação final pendentes. NAS/Hetzner históricos; iOS/Outlook adiados.
+Core Web/Android integrado. HO-012: Pi instalado e HTTPS Cloudflare publicado; percurso titular → chefe → calendário/notificações aceite pelo responsável no browser do telemóvel em 2026-09-13. Aceitação parcial, PR #37 draft. Backups restic preparados; R2 UE autorizado, bucket privado criado; agenda mensal preparada e envio/restauro por validar. SMTP real, backups externos automatizados, monitorização, Android físico/distribuição e aceitação final pendentes. NAS/Hetzner históricos; iOS/Outlook adiados.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 

@@ -118,6 +118,6 @@ A fila é durável e suporta mais de uma instância sem duplicar efeitos; não b
 
 ## Identidade visual HO-016
 
-Operação HO-012: [ADR-021](adr/ADR-021-pi-encrypted-external-backups.md) prepara snapshots restic cifrados de SQL/configuração/PFX/key ring/imagens, timer no Pi e restauro para base nova. R2 UE proposto; ativação/envio real dependem de autorização, não de CI verde. [Evidência e gates](HO-012-BACKUPS.md).
+Operação HO-012: [ADR-021](adr/ADR-021-pi-encrypted-external-backups.md) prepara snapshots restic cifrados de SQL/configuração/PFX/key ring/imagens, timer no Pi e restauro para base nova. R2 UE autorizado e bucket privado criado; agenda mensal/seis cópias, credencial privada preparada; kit independente e envio/restauro reais ainda pendentes. CI verde não prova operação externa. [Evidência e gates](HO-012-BACKUPS.md).
 
 [ADR-017](adr/ADR-017-shared-visual-theme.md): tokens semânticos comuns geram CSS e cores Dart, com contraste e divergência verificados. Componentes React/CSS e Material 3 existentes continuam responsáveis pela apresentação; claro/escuro/sistema é uma preferência local. Não altera os clientes gerados, regras de negócio, autenticação ou esquema PostgreSQL. [Guia e evidência](HO-016-VISUAL-THEME.md).

@@ -6,7 +6,7 @@ Atualizado em 2026-09-11. [PR #37 draft](https://github.com/Dennyum204/HomeOffic
 
 ## Evidência e mudança de alvo
 
-Preparação 2026-09-13: [backups externos](HO-012-BACKUPS.md) com restic e R2 privado UE proposto. Sem ativar fornecedor/timer/envio; destino real e kit independente aguardam decisão. Aceitação manual parcial do browser do telemóvel permanece registada; gates operacionais restantes não são dados como concluídos.
+Preparação 2026-09-13: [backups externos](HO-012-BACKUPS.md) com restic e R2 privado UE autorizado, bucket criado. Agenda mensal/seis cópias preparada; token privado preparado; kit independente, envio/restauro e ativação do timer pendentes. Responsável reporta alerta US$1; sem garantia de custo zero. Aceitação manual parcial do browser do telemóvel permanece registada; gates operacionais restantes não são dados como concluídos.
 
 O responsável confirmou por comandos Pi 5 de 4 GB, Debian 13 Trixie aarch64, alimentação oficial 27 W, caixa com ventoinha, microSD High Endurance de 64 GB com 50 GB livres, 3,7 GiB de RAM disponíveis antes do Docker e swap zero. Reportou instalação Docker pelo repositório oficial Debian, hello-world arm64v8 bem-sucedido e Compose 5.5.1.
 

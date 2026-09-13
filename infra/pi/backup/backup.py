@@ -241,7 +241,7 @@ class Backup:
         shutil.rmtree(restored)
         # One fixed host/tag group; NEVER apply object lifecycle deletion to a restic repository.
         self.restic('forget', '--host', PROJECT, '--tag', TAG, '--group-by', 'host,tags',
-                    '--keep-daily', '7', '--keep-weekly', '4', '--keep-monthly', '6', '--prune', '--max-unused', '5%')
+                    '--keep-monthly', '6', '--prune', '--max-unused', '5%')
         return snapshot
 
     def restore(self, snapshot, include_runtime=True):
@@ -284,7 +284,8 @@ def lock(state):
 def status(state):
     value = json.loads((state / 'status.json').read_text()) if (state / 'status.json').exists() else {}
     age = time.time() - value.get('last_success', 0)
-    good = value.get('result') == 'success' and age < 36 * 3600
+    # Monthly schedule: allow the longest month plus one day for jitter/recovery.
+    good = value.get('result') == 'success' and age < 32 * 86400
     full = json.loads((state / 'full-check.json').read_text()) if (state / 'full-check.json').exists() else {}
     full_good = full.get('result') == 'success' and time.time() - full.get('at', 0) < 8 * 86400
     print(json.dumps({'backup_healthy': good, 'last_result': value.get('result', 'never'),
