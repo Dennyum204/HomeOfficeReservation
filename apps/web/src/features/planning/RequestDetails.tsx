@@ -1,4 +1,6 @@
+import { ContextRead } from "../notifications/contextRead";
 import {
+  useContext,
   useCallback,
   useEffect,
   useRef,
@@ -55,6 +57,8 @@ interface Props {
 }
 export function RequestDetails(props: Props) {
   const { request, employeeId, disabled, locked, own, manager, nonce } = props;
+  const opened = useContext(ContextRead);
+  useEffect(() => opened(request.id), [opened, request.id]);
   const [selection, setSelection] = useState(
     request.days.filter((d) => d.decision === "Pending").map((d) => d.id),
   );

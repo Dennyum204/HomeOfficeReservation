@@ -332,6 +332,48 @@ void main() {
     expect(auth.message, AuthMessage.pushCleanup);
     expect((jsonDecode(store.value!) as Map)['pendingRemoval'], hasLength(1));
   });
+  test('context metadata alone stays unread; acknowledged read updates count and unread list', () async {
+    final repo = ReadRepository();
+    final inbox = InboxController(repo)..inboxOpen = true;
+    addTearDown(() {
+      inbox.dispose();
+      repo.auth.dispose();
+    });
+    expect(inbox.filter, 'unread');
+    await inbox.refresh();
+    await inbox.open('note');
+    expect(repo.writes, 0);
+    expect(inbox.unreadCount, 1);
+    await inbox.read(inbox.detail!);
+    expect(repo.writes, 1);
+    expect(inbox.readFailed, false);
+    expect(inbox.unreadCount, 0);
+    expect(inbox.page!.items, isEmpty);
+    await inbox.read(inbox.detail!);
+    expect(repo.writes, 1, reason: 'Read is idempotent, never a toggle');
+  });
+  test(
+    'rejected read preserves unread state and retries only the read operation',
+    () async {
+      final repo = ReadRepository()..fail = true;
+      final inbox = InboxController(repo)..inboxOpen = true;
+      addTearDown(() {
+        inbox.dispose();
+        repo.auth.dispose();
+      });
+      await inbox.refresh();
+      await inbox.open('note');
+      await inbox.read(inbox.detail!);
+      expect(inbox.readFailed, true);
+      expect(inbox.detail!.readAt, isNull);
+      expect(inbox.page!.items, hasLength(1));
+      expect(inbox.unreadCount, 1);
+      repo.fail = false;
+      await inbox.read(inbox.detail!);
+      expect(inbox.readFailed, false);
+      expect(inbox.unreadCount, 0);
+    },
+  );
   test(
     'in-flight simulated inbox read cannot repopulate a disposed account',
     () async {
@@ -374,4 +416,43 @@ class DelayedBinding extends BindingStore {
 class UnconfiguredGateway extends FakeGateway {
   @override
   bool get configured => false;
+}
+
+class ReadRepository extends NotificationRepository {
+  ReadRepository()
+    : super(
+        fixture.controller(
+          fixture.MemoryStore(),
+          (_) async => fixture.json({}),
+        ),
+      );
+  bool fail = false;
+  int writes = 0;
+  NotificationView item = NotificationView(
+    id: 'note',
+    createdAt: DateTime.utc(2026),
+    eventType: 'planning.decided',
+    historical: false,
+    readAt: null,
+    destination: null,
+  );
+  @override
+  Future<NotificationView> detail(String id) async => item;
+  @override
+  Future<int> count() async => item.readAt == null ? 1 : 0;
+  @override
+  Future<NotificationPage> list(int offset, String filter) async =>
+      NotificationPage(
+        items: item.readAt == null || filter != 'unread' ? [item] : [],
+        nextOffset: null,
+        unreadCount: await count(),
+      );
+  @override
+  Future<NotificationView> markRead(String id, bool read) async {
+    writes++;
+    expect(read, true);
+    if (fail) throw ApiException(503, 'synthetic');
+    item = item.copyWith(readAt: DateTime.utc(2026));
+    return item;
+  }
 }

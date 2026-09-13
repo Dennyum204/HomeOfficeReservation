@@ -1,3 +1,4 @@
+import { choose } from "./support";
 import { randomUUID } from "node:crypto";
 import {
   test,
@@ -102,9 +103,13 @@ async function newDraft(
       exact: true,
     })
     .click();
-  await dialog(page)
-    .getByRole("combobox", { name: "Disponibilidade", exact: true })
-    .selectOption(availability);
+  await choose(
+    dialog(page).getByRole("combobox", {
+      name: "Disponibilidade",
+      exact: true,
+    }),
+    availability,
+  );
   await dialog(page).getByLabel("De", { exact: true }).fill(dates[0]);
   await dialog(page).getByLabel("Até", { exact: true }).fill(dates.at(-1)!);
   await dialog(page)
@@ -170,9 +175,9 @@ test("five days, partial decision, withdrawal, revision and stale recovery use r
 }, info) => {
   await signIn(page);
   await ready(page);
-  const employeeId = await page
+  const employeeId = (await page
     .getByLabel("Colaborador selecionado", { exact: true })
-    .inputValue();
+    .getAttribute("data-value"))!;
   const dates = await freeWeek(page, employeeId);
   const note = `Ensaio HO-005 · ${info.project.name} · ${randomUUID().slice(0, 8)}`;
   await newDraft(page, dates, note);
@@ -186,9 +191,10 @@ test("five days, partial decision, withdrawal, revision and stale recovery use r
   const manager = await managerContext.newPage();
   try {
     await signIn(manager, "manager");
-    await manager
-      .getByLabel("Colaborador selecionado", { exact: true })
-      .selectOption(employeeId);
+    await choose(
+      manager.getByLabel("Colaborador selecionado", { exact: true }),
+      employeeId,
+    );
     await openRequest(manager, note);
     await select(manager, dates.slice(0, 3));
     await details(manager)
@@ -275,9 +281,10 @@ test("five days, partial decision, withdrawal, revision and stale recovery use r
     await details(page)
       .getByRole("button", { name: "Propor alteração", exact: true })
       .click();
-    await dialog(page)
-      .getByLabel(`Localização ${dates[0]}`, { exact: true })
-      .selectOption("OfficeSwitzerland");
+    await choose(
+      dialog(page).getByLabel(`Localização ${dates[0]}`, { exact: true }),
+      "OfficeSwitzerland",
+    );
     await dialog(page)
       .getByRole("textbox", { name: "Comentário do pedido", exact: true })
       .fill(`${note} · revisão`);
@@ -353,9 +360,9 @@ test("lost response replays the exact command after reload; logout clears privat
 }, info) => {
   await signIn(page);
   await ready(page);
-  const employeeId = await page
+  const employeeId = (await page
     .getByLabel("Colaborador selecionado", { exact: true })
-    .inputValue();
+    .getAttribute("data-value"))!;
   const dates = await freeWeek(page, employeeId);
   const note = `Recuperação HO-005 · ${info.project.name} · ${randomUUID().slice(0, 8)}`;
   await newDraft(page, [dates[0]], note);
@@ -460,9 +467,9 @@ test("counterproposal acceptance still needs a final decision; cancellation and 
 }, info) => {
   await signIn(page);
   await ready(page);
-  const employeeId = await page
+  const employeeId = (await page
     .getByLabel("Colaborador selecionado", { exact: true })
-    .inputValue();
+    .getAttribute("data-value"))!;
   const dates = await freeWeek(page, employeeId);
   const note = `Alternativa HO-005 · ${info.project.name} · ${randomUUID().slice(0, 8)}`;
   await newDraft(page, dates.slice(0, 2), note);
@@ -474,17 +481,19 @@ test("counterproposal acceptance still needs a final decision; cancellation and 
   const manager = await context.newPage();
   try {
     await signIn(manager, "manager");
-    await manager
-      .getByLabel("Colaborador selecionado", { exact: true })
-      .selectOption(employeeId);
+    await choose(
+      manager.getByLabel("Colaborador selecionado", { exact: true }),
+      employeeId,
+    );
     await openRequest(manager, note);
     await select(manager, [dates[0]]);
     await details(manager)
       .getByRole("button", { name: "Criar contraproposta", exact: true })
       .click();
-    await dialog(manager)
-      .getByLabel(`Localização ${dates[0]}`, { exact: true })
-      .selectOption("OfficeSwitzerland");
+    await choose(
+      dialog(manager).getByLabel(`Localização ${dates[0]}`, { exact: true }),
+      "OfficeSwitzerland",
+    );
     await dialog(manager)
       .getByRole("textbox", { name: "Motivo", exact: true })
       .fill(`${note} · alternativa`);

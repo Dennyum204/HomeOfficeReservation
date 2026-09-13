@@ -1,3 +1,4 @@
+import { Select } from "../../theme/Select";
 import { useCallback, useState } from "react";
 import type {
   NotificationDestination,
@@ -18,10 +19,13 @@ export function NotificationCentre({
 }: {
   tick: number;
   refresh: () => void;
-  onOpen: (destination: NotificationDestination) => void;
+  onOpen: (
+    destination: NotificationDestination,
+    notificationId: string,
+  ) => void;
 }) {
   const actor = useMember()!.memberId;
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("unread");
   const [offset, setOffset] = useState(0);
   const [version, setVersion] = useState(0);
   const [busy, setBusy] = useState<string>();
@@ -34,6 +38,7 @@ export function NotificationCentre({
           offset,
           limit: 20,
           unreadOnly: filter === "unread",
+          readOnly: filter === "read",
           historical: filter === "archive",
         },
         { signal },
@@ -56,7 +61,7 @@ export function NotificationCentre({
         const current = await notificationsApi.getNotification({
           notificationId: item.id,
         });
-        if (current.destination) onOpen(current.destination);
+        if (current.destination) onOpen(current.destination, item.id);
         else setError(n.unavailable);
       } else {
         await notificationsApi.setNotificationRead(
@@ -82,17 +87,18 @@ export function NotificationCentre({
       <div className="notification-toolbar">
         <label>
           {n.filter}
-          <select
+          <Select
             value={filter}
             onChange={(event) => {
               setFilter(event.target.value);
               setOffset(0);
             }}
           >
+            <option value="read">{n.readFilter}</option>
             <option value="all">{n.all}</option>
             <option value="unread">{n.unread}</option>
             <option value="archive">{n.archive}</option>
-          </select>
+          </Select>
         </label>
         <button
           onClick={() => {
@@ -117,7 +123,9 @@ export function NotificationCentre({
         </p>
       )}
       {list.loading && <p role="status">{n.loading}</p>}
-      {list.data?.items.length === 0 && <p>{n.empty}</p>}
+      {list.data?.items.length === 0 && (
+        <p>{filter === "unread" ? n.emptyUnread : n.empty}</p>
+      )}
       <ul className="notification-list">
         {list.data?.items.map((item) => (
           <li
@@ -140,9 +148,11 @@ export function NotificationCentre({
               <button disabled={!!busy} onClick={() => void act(item, true)}>
                 {n.open}
               </button>
-              <button disabled={!!busy} onClick={() => void act(item, false)}>
-                {item.readAt ? n.markUnread : n.markRead}
-              </button>
+              {item.readAt && (
+                <button disabled={!!busy} onClick={() => void act(item, false)}>
+                  {n.markUnread}
+                </button>
+              )}
             </div>
           </li>
         ))}

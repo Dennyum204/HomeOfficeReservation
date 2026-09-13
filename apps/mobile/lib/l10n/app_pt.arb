@@ -93,7 +93,7 @@
   "notificationMarkRead": "Marcar como lida",
   "notificationMarkUnread": "Marcar como não lida",
   "notificationRead": "Lida",
-  "notificationUnread": "Não lida",
+  "notificationUnread": "Por ler",
   "notificationArchiveHint": "Histórico anterior à ativação das notificações. Sem alertas nem contagem de não lidas.",
   "notificationError": "Não foi possível atualizar as notificações. Os dados apresentados podem estar desatualizados. Verifique a ligação e tente novamente.",
   "notificationBack": "Voltar à caixa",
@@ -331,5 +331,9 @@
   "visualComment": "Comentário e contexto",
   "visualActions": "Ações disponíveis",
   "visualDecisions": "Decisões por dia",
-  "visualHistory": "Histórico e contexto"
+  "visualHistory": "Histórico e contexto",
+  "notificationReadFilter": "Já lidas",
+  "notificationEmptyUnread": "Não há notificações por ler.",
+  "notificationSaveReadError": "O contexto foi aberto, mas não foi possível guardar a leitura.",
+  "notificationRetryRead": "Tentar guardar leitura"
 }

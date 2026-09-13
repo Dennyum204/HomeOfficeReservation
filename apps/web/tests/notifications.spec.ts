@@ -1,3 +1,4 @@
+import { choose } from "./support";
 import { randomUUID } from "node:crypto";
 import { test, expect, type Page } from "@playwright/test";
 import { signIn } from "./support";
@@ -135,8 +136,44 @@ test("real worker delivers submission, decision, onsite and task; read state nev
       manager,
       `${base}/requests/${draft.contextId}`,
     );
+    const notificationUrl = `**/api/v1/notifications/${incoming.item.id}`;
+    await manager.route(notificationUrl, (route) =>
+      route.fulfill({ status: 404 }),
+    );
     await incoming.row
-      .getByRole("button", { name: "Marcar como lida", exact: true })
+      .getByRole("button", { name: "Abrir contexto", exact: true })
+      .click();
+    await expect(manager.getByRole("alert")).toBeVisible();
+    expect(
+      (
+        await get<{ unreadCount: number }>(
+          manager,
+          "/api/v1/notifications/unread-count",
+        )
+      ).unreadCount,
+    ).toBe(countBefore.unreadCount);
+    await manager.unroute(notificationUrl);
+    const readUrl = `**/api/v1/notifications/${incoming.item.id}/read`;
+    await manager.route(readUrl, (route) => route.fulfill({ status: 503 }));
+    await incoming.row
+      .getByRole("button", { name: "Abrir contexto", exact: true })
+      .click();
+    await expect(
+      manager.getByText(
+        "O contexto foi aberto, mas não foi possível guardar a leitura.",
+      ),
+    ).toBeVisible();
+    expect(
+      (
+        await get<{ unreadCount: number }>(
+          manager,
+          "/api/v1/notifications/unread-count",
+        )
+      ).unreadCount,
+    ).toBe(countBefore.unreadCount);
+    await manager.unroute(readUrl);
+    await manager
+      .getByRole("button", { name: "Tentar guardar leitura" })
       .click();
     await expect
       .poll(
@@ -152,14 +189,44 @@ test("real worker delivers submission, decision, onsite and task; read state nev
     expect(
       await get<RequestView>(manager, `${base}/requests/${draft.contextId}`),
     ).toEqual(before);
-    await incoming.row
-      .getByRole("button", { name: "Abrir contexto", exact: true })
-      .click();
+
     await expect(
       manager
         .locator(".request-detail")
         .getByRole("heading", { name: note, exact: true }),
     ).toBeVisible();
+    await inbox(manager);
+    await expect(incoming.row).toHaveCount(0);
+    await choose(manager.getByLabel("Filtrar notificações"), "read");
+    await expect(incoming.row).toBeVisible();
+    expect(
+      (
+        await get<NotificationPage>(
+          manager,
+          "/api/v1/notifications?readOnly=true&limit=100",
+        )
+      ).items.every((item) => item.readAt !== null),
+    ).toBe(true);
+    // Marking unread deliberately and opening the same context again must work.
+    await incoming.row
+      .getByRole("button", { name: "Marcar como não lida", exact: true })
+      .click();
+    await choose(manager.getByLabel("Filtrar notificações"), "unread");
+    await expect(incoming.row).toBeVisible();
+    await incoming.row
+      .getByRole("button", { name: "Abrir contexto", exact: true })
+      .click();
+    await expect
+      .poll(
+        async () =>
+          (
+            await get<{ unreadCount: number }>(
+              manager,
+              "/api/v1/notifications/unread-count",
+            )
+          ).unreadCount,
+      )
+      .toBe(countBefore.unreadCount - 1);
     const current = await get<CalendarView>(
       manager,
       `${base}/calendar?from=${date}&to=${date}`,
@@ -209,7 +276,7 @@ test("real worker delivers submission, decision, onsite and task; read state nev
     await inbox(page);
     const presence = await waitNotification(page, onsite.contextId);
     await presence.row
-      .getByRole("button", { name: "Marcar como lida", exact: true })
+      .getByRole("button", { name: "Abrir contexto", exact: true })
       .click();
     expect(
       (
@@ -219,9 +286,7 @@ test("real worker delivers submission, decision, onsite and task; read state nev
         )
       ).readAt,
     ).toBeNull();
-    await presence.row
-      .getByRole("button", { name: "Abrir contexto", exact: true })
-      .click();
+
     await expect(
       page
         .locator(".work-detail")

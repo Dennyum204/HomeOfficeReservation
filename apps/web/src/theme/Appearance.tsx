@@ -1,3 +1,4 @@
+import { Select } from "./Select";
 import {
   createContext,
   useContext,
@@ -76,7 +77,7 @@ export function Appearance({ compact = false }: { compact?: boolean }) {
       )}
       <label>
         <span className={compact ? "sr-only" : undefined}>{s.label}</span>
-        <select
+        <Select
           value={preference}
           onChange={(event) => {
             const next = event.target.value as ThemePreference;
@@ -86,7 +87,7 @@ export function Appearance({ compact = false }: { compact?: boolean }) {
           <option value="system">{s.system}</option>
           <option value="light">{s.light}</option>
           <option value="dark">{s.dark}</option>
-        </select>
+        </Select>
       </label>
       {storageError && <p role="status">{s.storage}</p>}
     </section>

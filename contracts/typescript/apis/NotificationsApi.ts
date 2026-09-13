@@ -93,6 +93,10 @@ export interface ListNotificationsRequest {
      *
      */
     historical?: boolean;
+    /**
+     *
+     */
+    readOnly?: boolean;
 }
 
 export interface RegisterPushDeviceRequest {
@@ -311,6 +315,10 @@ export class NotificationsApi extends runtime.BaseAPI {
 
         if (requestParameters['historical'] != null) {
             queryParameters['historical'] = requestParameters['historical'];
+        }
+
+        if (requestParameters['readOnly'] != null) {
+            queryParameters['readOnly'] = requestParameters['readOnly'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

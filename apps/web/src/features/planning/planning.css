@@ -1077,3 +1077,41 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+.calendar-day:not(.outside)[data-location="OfficeSwitzerland"] {
+  background: color-mix(in srgb, #6b7c91 10%, var(--background));
+}
+.calendar-day:not(.outside)[data-location="RemotePortugal"] {
+  background: color-mix(in srgb, var(--primary) 12%, var(--background));
+}
+.calendar-day[data-pending="true"] {
+  border-bottom: 4px solid color-mix(in srgb, #bd8b38 65%, var(--border));
+}
+.calendar-day.active {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.editor-day {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.editor-day > strong {
+  grid-column: 1 / -1;
+  padding-right: 48px;
+}
+.editor-day > label {
+  min-width: 0;
+}
+.editor-day .remove-day {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 44px;
+  height: 44px;
+  padding: 0.65rem;
+}
+@media (max-width: 600px) {
+  .editor-day {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

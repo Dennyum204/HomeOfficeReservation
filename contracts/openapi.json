@@ -2904,6 +2904,14 @@
               "default": false,
               "type": "boolean"
             }
+          },
+          {
+            "in": "query",
+            "name": "readOnly",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
           }
         ],
         "responses": {

@@ -17,7 +17,7 @@ public static class NotificationEndpoints
             .AddEndpointFilter<ActiveMemberFilter>().AddEndpointFilter<PlanningErrorFilter>()
             .WithMetadata(new ProducesResponseTypeAttribute(typeof(ProblemDetails), 400), new ProducesResponseTypeAttribute(typeof(ProblemDetails), 403),
                 new ProducesResponseTypeAttribute(typeof(ProblemDetails), 404), new ProducesResponseTypeAttribute(typeof(ProblemDetails), 409), new ProducesResponseTypeAttribute(typeof(ProblemDetails), 412));
-        group.MapGet("", (HttpContext c, INotificationService s, CancellationToken ct, int offset = 0, int limit = 25, bool unreadOnly = false, bool historical = false) => s.List(Actor(c), offset, limit, unreadOnly, historical, ct)).WithName("ListNotifications");
+        group.MapGet("", (HttpContext c, INotificationService s, CancellationToken ct, int offset = 0, int limit = 25, bool unreadOnly = false, bool historical = false, bool readOnly = false) => s.List(Actor(c), offset, limit, unreadOnly, historical, ct, readOnly)).WithName("ListNotifications");
         group.MapGet("/unread-count", (HttpContext c, INotificationService s, CancellationToken ct) => s.Count(Actor(c), ct)).WithName("GetNotificationUnreadCount");
         group.MapGet("/capabilities", (IOptions<NotificationOptions> o) => new NotificationCapabilities(o.Value.PushProvider)).WithName("GetNotificationCapabilities");
         group.MapGet("/{notificationId:guid}", (Guid notificationId, HttpContext c, INotificationService s, CancellationToken ct) => s.Detail(Actor(c), notificationId, ct)).WithName("GetNotification");

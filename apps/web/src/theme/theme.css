@@ -155,7 +155,7 @@ nav button[aria-current] {
 .planning-workspace input,
 .planning-workspace select,
 .planning-workspace textarea,
-.planning-dialog input,
+.planning-dialog input:not([type="checkbox"]),
 .planning-dialog select,
 .planning-dialog textarea,
 .admin-workspace input:not([type="checkbox"]),
@@ -508,4 +508,24 @@ nav button[aria-current] {
   .appearance-compact select {
     min-width: 7rem;
   }
+}
+
+.planning-dialog .admin-check {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+}
+.planning-dialog .admin-check input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  flex: 0 0 20px;
+  margin: 0;
+  padding: 0;
+}
+.planning-dialog .admin-form,
+.planning-dialog fieldset {
+  min-width: 0;
+  max-width: 100%;
 }

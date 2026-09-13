@@ -1,3 +1,5 @@
+import { Select } from "../../theme/Select";
+import { ContextOpened } from "../notifications/ContextOpened";
 import { useCallback, useRef, useState } from "react";
 import type {
   AssignedTaskState,
@@ -115,7 +117,7 @@ export function WorkPanel(props: Props) {
         </p>
         <label>
           {w.filter}
-          <select
+          <Select
             value={filter}
             onChange={(e) => {
               setFilter(e.target.value as typeof filter);
@@ -130,7 +132,7 @@ export function WorkPanel(props: Props) {
                 </option>
               ),
             )}
-          </select>
+          </Select>
         </label>
         {list.loading && <p role="status">{p.loading}</p>}
         {!!list.error && <p role="alert">{readError(list.error)}</p>}
@@ -268,6 +270,9 @@ function WorkDetail(props: Props & { focus: WorkFocus }) {
           {w.close}
         </button>
       </div>
+      {!detail.loading && !detail.error && detail.data && (
+        <ContextOpened id={detail.data.id} />
+      )}
       {detail.loading && <p role="status">{p.loading}</p>}
       {!!detail.error && <p role="alert">{readError(detail.error)}</p>}
       {requirement && (
@@ -834,7 +839,7 @@ function TaskForm({
         </label>
         <label>
           {w.taskStatus}
-          <select
+          <Select
             value={state}
             onChange={(e) => setState(e.target.value as AssignedTaskState)}
           >
@@ -843,7 +848,7 @@ function TaskForm({
                 {label}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       </div>
       <label className="checkbox-label">
@@ -857,7 +862,7 @@ function TaskForm({
       <p className="muted">{w.requiresHint}</p>
       <label>
         {w.link}
-        <select value={link} onChange={(e) => setLink(e.target.value)}>
+        <Select value={link} onChange={(e) => setLink(e.target.value)}>
           <option value="">{w.noLink}</option>
           {link && !options.data?.items.some((x) => x.id === link) && (
             <option value={link}>{w.link}</option>
@@ -869,7 +874,7 @@ function TaskForm({
                 {x.reason} · {w.state[x.state]}
               </option>
             ))}
-        </select>
+        </Select>
       </label>
       {options.loading && <p role="status">{p.loading}</p>}
       {!!options.error && <p role="alert">{readError(options.error)}</p>}
@@ -951,7 +956,7 @@ function TaskProgress({
     >
       <label>
         {w.progress}
-        <select
+        <Select
           value={state}
           onChange={(e) => setState(e.target.value as AssignedTaskState)}
         >
@@ -962,7 +967,7 @@ function TaskProgress({
                 {label}
               </option>
             ))}
-        </select>
+        </Select>
       </label>
       <label>
         {w.progressNote}

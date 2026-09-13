@@ -2,9 +2,9 @@
 
 Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamente.
 
-Atualizado: 2026-09-11.
+Atualizado: 2026-09-13.
 
-Core V1 autónomo para Web e Android. iOS adiado pelo responsável em HO-005, fonte/histórico preservados e reativação HO-306 sem data. Outlook opcional em marcos separados; nenhum destes bloqueia o core.
+HO-020 selecionado: UI/notificações Web e Android; HO-021 idiomas registado para depois da revisão. HO-016 integrado; PR #37 e piloto no Pi preservados. IDs HO-017/018/019 reservados nas issues #46/47/48 do PR #37, não reutilizar.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
