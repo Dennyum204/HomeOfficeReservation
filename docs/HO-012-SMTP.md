@@ -77,3 +77,7 @@ Publicação DNS autorizada em 2026-09-13: quatro registos adicionados, TTL Auto
 Recuperação futura: remover apenas os quatro registos de notificacoes e respetivos seletores, após rever dependências; IDs guardados no recibo privado quando disponíveis. Não remover registos do site ou túnel.
 
 Reverificação: código e ambos DKIM reconhecidos pelo Brevo. DMARC público confirmado correto pelo resolvedor 1.1.1.1, mas o assistente Brevo exige uma tag rua; não é apenas propagação. Mantido DMARC aprovado sem relatórios. Conclusão da autenticação pendente de resolver exigência do fornecedor ou obter aprovação específica para relatórios, sem alteração silenciosa.
+
+## Autenticação concluída após aprovação dos relatórios
+
+DMARC rua=mailto:rua@dmarc.brevo.com acrescentado por autorização explícita em 2026-09-13, preservando p=none/adkim=r/aspf=r. DNS público confirmado; Brevo reconheceu os quatro registos e apresentou Your domain has been authenticated. Autenticação DNS concluída, não equivale a envio SMTP. Sem alteração no Pi/backups ou mensagens da aplicação; chave SMTP e verificação de telefone continuam pendentes.
