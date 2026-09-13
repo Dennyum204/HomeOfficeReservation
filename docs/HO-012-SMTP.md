@@ -69,3 +69,9 @@ HO-012 permanece incompleta: além do SMTP, evidência correlacionada de ciclos 
 Brevo Free e remetente aprovados; sessão da conta confirmada e registos reais obtidos no fluxo manual em 2026-09-13. Manifesto guardado fora do Git para revisão; nenhum DNS publicado. Painel pede verificação de telefone antes de envio. SMTP key não criada/obtida; remetente ainda não confirmado. DMARC sugerido pelo fornecedor inclui rua para Brevo, sujeito a decisão distinta. Pi/backups/envios preservados.
 
 O fluxo novo permitiu omitir branded subdomain, escolher Individual DNS records e Manual. Registos obtidos: TXT de verificação com prefixo real `brevo-code:` (dois pontos, substitui o placeholder anterior com igual), CNAME brevo1._domainkey.notificacoes → b1.notificacoes-ferbatech-com.dkim.brevo.com e brevo2._domainkey.notificacoes → b2.notificacoes-ferbatech-com.dkim.brevo.com, TXT _dmarc.notificacoes. Sem delegação NS ou ligação automática Cloudflare. Valor único de verificação guardado no manifesto privado. O DMARC do painel é `v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com`; alternativa proposta sem relatórios conserva `v=DMARC1; p=none; adkim=r; aspf=r`. Publicação e escolha de relatórios ainda pendentes; não clicar Authenticate como se o DNS estivesse validado.
+
+## Publicação autorizada — validação pendente
+
+Publicação DNS autorizada em 2026-09-13: quatro registos adicionados, TTL Auto/DNS only, DMARC v=DMARC1; p=none; adkim=r; aspf=r sem rua/ruf. Releitura API confirmou nove registos e preservação exata dos cinco anteriores. DNS público devolve CNAME corretos. Brevo reconhece código, mas DKIM/DMARC ainda pendentes; autenticação não declarada concluída. Nenhum SMTP/envio/Pi/backup alterado.
+
+Recuperação futura: remover apenas os quatro registos de notificacoes e respetivos seletores, após rever dependências; IDs guardados no recibo privado quando disponíveis. Não remover registos do site ou túnel.
