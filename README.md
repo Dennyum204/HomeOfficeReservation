@@ -105,3 +105,5 @@ Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem a
 Domínio existente **ferbatech.com**, nomes futuros homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Nenhum DNS/email alterado, domínio comprado ou alojamento contratado. NAS apenas candidato; conectividade Cloudflare reportada não prova instalação/desempenho. [Acesso privado já implementado e gates operacionais restantes](docs/HO-012-PRIVATE-ACCESS.md). Convites Firebase não concedem acesso à aplicação. Dados/emuladores privados preservados; iOS/Outlook adiados.
 
 Monitorização externa: [integração preparada e decisão pendente](docs/HO-012-BACKUP-MONITORING.md). Healthchecks.io Hobbyist proposto, três checks/US$0, destinatário por indicar; sem conta ou alertas reais. Ensaios simulados não substituem validação externa.
+
+[SMTP real: proposta para revisão](docs/HO-012-SMTP.md). SMTP real preparado para revisão: Brevo Free proposto, remetente no-reply@notificacoes.ferbatech.com, manifesto DNS dependente dos valores reais do fornecedor. Cinco DNS existentes consultados e preservados. Sem conta/credenciais/publicação/envio ou alteração no Pi/backups. docs/HO-012-SMTP.md.

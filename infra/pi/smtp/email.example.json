@@ -1,0 +1,9 @@
+{
+  "Email": {
+    "Host": "smtp-relay.brevo.com",
+    "Port": 587,
+    "From": "HomeOffice <no-reply@notificacoes.ferbatech.com>",
+    "Username": "REPLACE_WITH_PRIVATE_SMTP_LOGIN",
+    "Password": "REPLACE_WITH_PRIVATE_SMTP_KEY"
+  }
+}

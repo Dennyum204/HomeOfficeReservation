@@ -148,3 +148,5 @@ Remoção conserva volumes, dados, keys, PFX, imagens e backups. Inspecionar ró
 - [Limites Docker](https://docs.docker.com/engine/containers/resource_constraints/), [redes internas](https://docs.docker.com/reference/compose-file/networks/#internal), [Data Protection](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-10.0), [pg_restore](https://www.postgresql.org/docs/18/app-pgrestore.html).
 
 Monitorização externa: [integração preparada e decisão pendente](../../docs/HO-012-BACKUP-MONITORING.md). Healthchecks.io Hobbyist proposto, três checks/US$0, destinatário por indicar; sem conta ou alertas reais. Ensaios simulados não substituem validação externa.
+
+[SMTP real: proposta para revisão](../../docs/HO-012-SMTP.md). SMTP real preparado para revisão: Brevo Free proposto, remetente no-reply@notificacoes.ferbatech.com, manifesto DNS dependente dos valores reais do fornecedor. Cinco DNS existentes consultados e preservados. Sem conta/credenciais/publicação/envio ou alteração no Pi/backups. docs/HO-012-SMTP.md.
