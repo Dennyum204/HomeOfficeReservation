@@ -81,3 +81,5 @@ Reverificação: código e ambos DKIM reconhecidos pelo Brevo. DMARC público co
 ## Autenticação concluída após aprovação dos relatórios
 
 DMARC rua=mailto:rua@dmarc.brevo.com acrescentado por autorização explícita em 2026-09-13, preservando p=none/adkim=r/aspf=r. DNS público confirmado; Brevo reconheceu os quatro registos e apresentou Your domain has been authenticated. Autenticação DNS concluída, não equivale a envio SMTP. Sem alteração no Pi/backups ou mensagens da aplicação; chave SMTP e verificação de telefone continuam pendentes.
+
+Preparação SMTP concluída no fornecedor: verificação de telefone reportada pelo responsável e aviso removido; remetente HomeOffice <no-reply@notificacoes.ferbatech.com> Verified. Chave HomeOffice Pi SMTP criada pelo responsável, Active, expira em 2027-09-13 (também após 90 dias de inatividade segundo painel). Login/chave guardados apenas na pasta privada do PC com ACL restrita, transferência cifrada e releitura validada. Cópia Bitwarden ainda por confirmar. Sem aplicação ao Pi, autenticação SMTP ou envio de teste; estes continuam pendentes de autorização.
