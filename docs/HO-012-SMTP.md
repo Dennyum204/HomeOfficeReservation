@@ -75,3 +75,5 @@ O fluxo novo permitiu omitir branded subdomain, escolher Individual DNS records 
 Publicação DNS autorizada em 2026-09-13: quatro registos adicionados, TTL Auto/DNS only, DMARC v=DMARC1; p=none; adkim=r; aspf=r sem rua/ruf. Releitura API confirmou nove registos e preservação exata dos cinco anteriores. DNS público devolve CNAME corretos. Brevo reconhece código, mas DKIM/DMARC ainda pendentes; autenticação não declarada concluída. Nenhum SMTP/envio/Pi/backup alterado.
 
 Recuperação futura: remover apenas os quatro registos de notificacoes e respetivos seletores, após rever dependências; IDs guardados no recibo privado quando disponíveis. Não remover registos do site ou túnel.
+
+Reverificação: código e ambos DKIM reconhecidos pelo Brevo. DMARC público confirmado correto pelo resolvedor 1.1.1.1, mas o assistente Brevo exige uma tag rua; não é apenas propagação. Mantido DMARC aprovado sem relatórios. Conclusão da autenticação pendente de resolver exigência do fornecedor ou obter aprovação específica para relatórios, sem alteração silenciosa.
