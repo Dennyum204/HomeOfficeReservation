@@ -29,6 +29,7 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
     await page.screenshot({
       path: `test-results/ho020-${info.project.name}-${mode}-invite.png`,
       fullPage: false,
+      animations: "disabled",
       scale: "css",
     });
     await modal
@@ -57,6 +58,7 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
     await page.screenshot({
       path: `test-results/ho020-${info.project.name}-${mode}-calendar.png`,
       fullPage: false,
+      animations: "disabled",
       scale: "css",
     });
     await page.getByRole("button", { name: /Pedir os meus dias/ }).click();
@@ -82,6 +84,7 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
     await page.screenshot({
       path: `test-results/ho020-${info.project.name}-${mode}-dropdown.png`,
       fullPage: false,
+      animations: "disabled",
       scale: "css",
     });
     await page.keyboard.press("End");
@@ -98,6 +101,7 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
     await page.screenshot({
       path: `test-results/ho020-${info.project.name}-${mode}-editor.png`,
       fullPage: false,
+      animations: "disabled",
       scale: "css",
     });
     const remove = modal.getByRole("button", {
@@ -124,6 +128,7 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
     await page.screenshot({
       path: `test-results/ho020-${info.project.name}-${mode}-notifications.png`,
       fullPage: false,
+      animations: "disabled",
       scale: "css",
     });
   }
