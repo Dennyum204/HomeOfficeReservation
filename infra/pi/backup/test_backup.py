@@ -56,9 +56,15 @@ class SafetyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             self.assertEqual(status(root), 1)
+            write_json(root / 'full-check.json', {'result': 'success', 'at': time.time()})
             for result, last, expected in [('success', time.time(), 0), ('failed', time.time(), 1), ('success', time.time()-37*3600, 1)]:
                 write_json(root / 'status.json', {'result': result, 'last_success': last})
                 self.assertEqual(status(root), expected)
+            write_json(root / 'status.json', {'result': 'success', 'last_success': time.time()})
+            write_json(root / 'full-check.json', {'result': 'failed', 'at': time.time()})
+            self.assertEqual(status(root), 1)
+            write_json(root / 'full-check.json', {'result': 'success', 'at': time.time()-9*86400})
+            self.assertEqual(status(root), 1)
 
     def test_unauthorized_destination_refused_before_command(self):
         c = {'trial': '/home/dennyum/ho012-pi-trial', 'state': '/var/lib/homeoffice-backup',
@@ -151,6 +157,9 @@ class RealResticTests(unittest.TestCase):
             c['repository_id'] = '0'*64
             with self.assertRaises(ValueError): b.repository_check()
             pack = next(p for p in (root / 'repository/data').rglob('*') if p.is_file())
+            # Restic stores packs read-only on Linux. Deliberately corrupt ONLY this
+            # disposable test repository; production permissions remain untouched.
+            pack.chmod(0o600)
             pack.write_bytes(b'corrupted pack')
             with self.assertRaises(RuntimeError): b.restic('check', '--read-data')
 

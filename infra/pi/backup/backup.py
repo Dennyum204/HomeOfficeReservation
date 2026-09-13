@@ -262,9 +262,12 @@ def status(state):
     value = json.loads((state / 'status.json').read_text()) if (state / 'status.json').exists() else {}
     age = time.time() - value.get('last_success', 0)
     good = value.get('result') == 'success' and age < 36 * 3600
+    full = json.loads((state / 'full-check.json').read_text()) if (state / 'full-check.json').exists() else {}
+    full_good = full.get('result') == 'success' and time.time() - full.get('at', 0) < 8 * 86400
     print(json.dumps({'backup_healthy': good, 'last_result': value.get('result', 'never'),
+                      'full_read_healthy': full_good,
                       'hours_since_success': round(age / 3600, 1) if value.get('last_success') else None}))
-    return 0 if good else 1
+    return 0 if good and full_good else 1
 
 
 def main():
@@ -311,6 +314,8 @@ def main():
             return 0
         except (Exception, SystemExit):
             write_json(receipt, {**old, 'result': 'failed', 'failed_at': time.time(), 'operation': args.action})
+            if args.action == 'check-full':
+                write_json(backup.state / 'full-check.json', {'result': 'failed', 'at': time.time()})
             print('HO012 backup FAILED; no success claimed. Inspect systemd status; sensitive output suppressed.', file=sys.stderr)
             return 1
 

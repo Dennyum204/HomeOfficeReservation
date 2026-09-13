@@ -51,8 +51,8 @@ Antes do primeiro envio: preparar e confirmar o **kit de recuperação independe
 sudo python3 /opt/homeoffice-backup/backup.py init
 # Registar repository_id devolvido na configuração e atualizar o kit independente.
 sudo systemctl start homeoffice-backup.service
-sudo python3 /opt/homeoffice-backup/backup.py status
 sudo systemctl start homeoffice-backup-check.service
+sudo python3 /opt/homeoffice-backup/backup.py status
 ```
 
 `init` é explícito, recusa repositório já configurado, nunca faz parte do job diário. Confirmar recibo/snapshot, download e restauro abaixo antes de ativar:
@@ -81,7 +81,7 @@ Recriar uma stack isolada sem ativar cloudflared: copiar `current/trial` apenas 
 
 ## Integridade, falhas e remoção
 
-`status.json` privado conserva último sucesso, snapshot e erro/execução em curso. `backup.py status` retorna erro para nunca executado, última tentativa falhada ou último sucesso com mais de 36 h. `full-check.json` regista a leitura integral semanal; conferir frescura <=8 dias. Systemd falha o job e OnFailure escreve `HO012_BACKUP_FAILED` sem payload no journal. Consultar `systemctl --failed`, `systemctl status homeoffice-backup.service homeoffice-backup-check.service` e status privado; não publicar logs completos.
+`status.json` privado conserva último sucesso, snapshot e erro/execução em curso. `backup.py status` retorna erro para nunca executado, última tentativa falhada ou último sucesso com mais de 36 h; também falha se a leitura integral nunca passou, falhou ou tem mais de 8 dias. `full-check.json` regista essa evidência separadamente, sem um backup diário apagar uma falha semanal. Systemd falha o job e OnFailure escreve `HO012_BACKUP_FAILED` sem payload no journal. Consultar `systemctl --failed`, `systemctl status homeoffice-backup.service homeoffice-backup-check.service` e status privado; não publicar logs completos.
 
 **Monitorização externa ainda pendente:** journal não avisa se o Pi perde energia/rede. Antes de dados reais, escolher alerta externo de ausência de sucesso, incluindo falha/check semanal e capacidade. Uma credencial S3 de escrita/eliminação pode apagar backups se o Pi for comprometido; não se promete imutabilidade. Não aplicar bucket lock/lifecycle incompatível com restic/prune sem novo desenho/teste.
 
