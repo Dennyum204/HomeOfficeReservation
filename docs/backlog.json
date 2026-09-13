@@ -1531,7 +1531,9 @@
         "Reportar o commit verificado, resultados e passos curtos de teste manual."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/49",
-      "pr_urls": [],
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/51"
+      ],
       "notes": "Implementação Web/Android e filtro readOnly opcional; sem migração. Regressão local com PostgreSQL isolado, 73 testes backend, 54 Flutter, 36 E2E Web e 24 capturas reais. Aguardar quatro checks no head final antes de retirar draft. HO-021 apenas planeado; PR #37 e Pi preservados."
     },
     {
@@ -1555,7 +1557,10 @@
         "Identificar explicitamente como ficam os emails e as notificações produzidos pelo servidor, para não declarar suporte completo deixando essas mensagens esquecidas."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/50",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/52"
+      ],
+      "notes": "PR #52 draft apenas documental para registar o âmbito. Implementação não iniciada; depende da revisão HO-020/PR #51. Os critérios de localização, incluindo mensagens produzidas pelo servidor, permanecem pendentes."
     }
   ],
   "repository_url": "https://github.com/Dennyum204/HomeOfficeReservation"

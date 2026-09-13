@@ -750,7 +750,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/49
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/51
 
 ## HO-021 — Português, inglês e alemão
 
@@ -774,4 +774,4 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/50
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/52

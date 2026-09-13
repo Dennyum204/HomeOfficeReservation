@@ -1,8 +1,8 @@
 # Estado do projeto
 
-HO-020 em `review`: UI e leitura automática de notificações, [issue #49](https://github.com/Dennyum204/HomeOfficeReservation/issues/49). Branch `codex/ho-020-ui-notifications`, worktree separado. [Implementação e verificação](docs/HO-020-UI-NOTIFICATIONS.md), [comparações reais](docs/evidence/ho020/README.md). 73 testes backend/PostgreSQL, 54 Flutter, 36 E2E Web passaram localmente; capturas reais em claro/escuro, desktop, viewport estreito e Android. A entrega só fica pronta após os quatro checks remotos no head final e ausência de conflitos.
+HO-020 em `review`, [PR #51](https://github.com/Dennyum204/HomeOfficeReservation/pull/51): UI e leitura automática de notificações, [issue #49](https://github.com/Dennyum204/HomeOfficeReservation/issues/49). Branch `codex/ho-020-ui-notifications`, worktree separado. [Implementação e verificação](docs/HO-020-UI-NOTIFICATIONS.md), [comparações reais](docs/evidence/ho020/README.md). 73 testes backend/PostgreSQL, 54 Flutter, 36 E2E Web passaram localmente; capturas reais em claro/escuro, desktop, viewport estreito e Android. A entrega só fica pronta após os quatro checks remotos no head final e ausência de conflitos.
 
-HO-016 concluída: merge humano do PR #45 em main (`f07c3dd7185743c62f5c47d15c4b8a5198d92cbb`) e CI de integração verificados. HO-021/issue #50 regista o âmbito completo de idiomas, sem implementação antes da revisão de HO-020. PR #37 e piloto Pi preservados; o estado operacional mais recente de HO-012 permanece na sua branch, não no histórico abaixo.
+HO-016 concluída: merge humano do PR #45 em main (`f07c3dd7185743c62f5c47d15c4b8a5198d92cbb`) e CI de integração verificados. HO-021/issue #50 e [PR #52 draft documental](https://github.com/Dennyum204/HomeOfficeReservation/pull/52) registam o âmbito completo de idiomas, sem implementação antes da revisão de HO-020. PR #37 e piloto Pi preservados; o estado operacional mais recente de HO-012 permanece na sua branch, não no histórico abaixo.
 
 ## Evidência anterior
 

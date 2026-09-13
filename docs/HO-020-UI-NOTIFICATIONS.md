@@ -1,6 +1,6 @@
 # HO-020 — UI e leitura automática de notificações
 
-[Issue #49](https://github.com/Dennyum204/HomeOfficeReservation/issues/49). Trabalho separado de HO-012/PR #37 e do piloto instalado no Pi. Base verificada: `origin/main` `f07c3dd7185743c62f5c47d15c4b8a5198d92cbb`, merge humano de HO-016/PR #45 com integração core e documentação verdes.
+[PR #51](https://github.com/Dennyum204/HomeOfficeReservation/pull/51), [issue #49](https://github.com/Dennyum204/HomeOfficeReservation/issues/49). Trabalho separado de HO-012/PR #37 e do piloto instalado no Pi. Base verificada: `origin/main` `f07c3dd7185743c62f5c47d15c4b8a5198d92cbb`, merge humano de HO-016/PR #45 com integração core e documentação verdes.
 
 ## Comportamento
 
@@ -31,7 +31,7 @@ Os quatro checks remotos **project-docs, backend-contracts, web, flutter-android
 
 A receção de push FCM num dispositivo físico não foi executada nesta tarefa: o callback e o encaminhamento autenticado são cobertos por testes simulados. As capturas nativas são de execução real no emulador; não são prova de distribuição ou acessibilidade validada por uma pessoa com leitor de ecrã. As permissões e regras continuam na API.
 
-[HO-021/issue #50](https://github.com/Dennyum204/HomeOfficeReservation/issues/50) regista português/inglês/alemão, preferência persistente, formatação, acessibilidade/plurais e estratégia para emails/notificações do servidor. A implementação aguarda a revisão deste primeiro PR.
+[HO-021/issue #50](https://github.com/Dennyum204/HomeOfficeReservation/issues/50) regista português/inglês/alemão, preferência persistente, formatação, acessibilidade/plurais e estratégia para emails/notificações do servidor. O [PR #52](https://github.com/Dennyum204/HomeOfficeReservation/pull/52) fica draft apenas com planeamento. A implementação aguarda a revisão deste primeiro PR.
 
 ## Recuperação e teste manual
 
