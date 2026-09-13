@@ -67,7 +67,7 @@ class SafetyTests(unittest.TestCase):
             self.assertEqual(status(root), 1)
             write_json(root / 'full-check.json', {'result': 'success', 'at': time.time()})
             for result, last, expected in [('success', time.time(), 0), ('failed', time.time(), 1),
-                                            ('success', time.time()-31*86400, 0), ('success', time.time()-33*86400, 1)]:
+                                            ('success', time.time()-25*3600, 0), ('success', time.time()-37*3600, 1)]:
                 write_json(root / 'status.json', {'result': result, 'last_success': last})
                 self.assertEqual(status(root), expected)
             write_json(root / 'status.json', {'result': 'success', 'last_success': time.time()})

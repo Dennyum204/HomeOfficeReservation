@@ -1,8 +1,8 @@
 [Unit]
-Description=Monthly HomeOffice encrypted backup independent of PC
+Description=Daily HomeOffice encrypted backup independent of PC
 
 [Timer]
-OnCalendar=*-*-01 03:15:00 UTC
+OnCalendar=*-*-* 03:15:00 UTC
 RandomizedDelaySec=15min
 Persistent=true
 Unit=homeoffice-backup.service

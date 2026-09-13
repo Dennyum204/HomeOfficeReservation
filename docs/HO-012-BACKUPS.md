@@ -1,6 +1,6 @@
 # HO-012 — Preparação de backups externos automatizados
 
-2026-09-13 · [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37) · [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). [ADR-021](adr/ADR-021-pi-encrypted-external-backups.md). **Destino autorizado e bucket criado; automação ainda não ativada.** O responsável ativou R2 e autorizou continuar após esclarecer a faturação de excedentes. Bucket homeoffice-pi-backups criado em EU/Standard, Public Access Disabled, 0 B observado. Credencial criada pelo responsável, recolhida cifrada e guardada com ACL privada no PC; kit independente, envio/restauro e timers continuam pendentes.
+2026-09-13 · [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37) · [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). [ADR-021](adr/ADR-021-pi-encrypted-external-backups.md). **Destino autorizado e bucket criado; automação ainda não ativada.** O responsável ativou R2 e autorizou continuar após esclarecer a faturação de excedentes. Bucket homeoffice-pi-backups criado em EU/Standard, Public Access Disabled, 0 B observado. Credencial criada pelo responsável, recolhida cifrada e guardada com ACL privada no PC; kit independente confirmado em Bitwarden com acesso noutro dispositivo. Envio/restauro e timers continuam pendentes da aprovação final pedida pelo responsável.
 
 ## Estado confirmado nesta revisão
 
@@ -8,7 +8,7 @@
 - SSH com chave dedicada voltou a funcionar; ARM64, Docker systemd ativo, cerca de 3382 MiB disponíveis, swap 0 MiB e 48 GiB livres. O Pi tinha cerca de 20 minutos de uptime; nenhum reboot foi pedido nesta tarefa. Não se atribui uma causa ao reinício observado.
 - HTTPS público 200/DYNAMIC, TLS normal; teste de browser Edge com titular e chefe confirmou login, calendário, papéis, cookies Secure/HttpOnly e logout. Sem alterar contas/configuração.
 - sudo sem interação foi recusado. Estado protegido individual dos contentores/backups não foi novamente inspecionado; evidência anterior não é apresentada como leitura atual. [Inventário mínimo protegido](../infra/pi/backup/inventory.sh) preparado para execução sudo no terminal.
-- A leitura inicial R2 devolveu **10042**; o responsável ativou depois a subscrição. Bucket privado EU criado pelo painel e confirmado vazio. Gestão de tokens recusada pelo conector (9109); Object Read & Write limitado ao bucket EU criado pelo responsável no painel e guardado fora do Git/chat. Kit gerado no PC e conferido contra a password restic; cópia independente ainda por confirmar. Não se presume ausência de outros serviços pessoais que não estejam configurados no projeto.
+- A leitura inicial R2 devolveu **10042**; o responsável ativou depois a subscrição. Bucket privado EU criado pelo painel e confirmado vazio. Gestão de tokens recusada pelo conector (9109); Object Read & Write limitado ao bucket EU criado pelo responsável no painel e guardado fora do Git/chat. Kit gerado no PC e conferido contra a password restic; responsável confirmou a cópia no Bitwarden e acesso noutro dispositivo. Conteúdo nunca publicado. Não se presume ausência de outros serviços pessoais que não estejam configurados no projeto.
 
 ## Destino recomendado e custo
 
@@ -18,6 +18,17 @@ Preços oficiais consultados em **2026-09-13**: Standard **US$0,015/GB-mês**, 1
 
 Ativação e utilização R2 autorizadas pelo responsável depois de esclarecido que os excedentes são cobrados automaticamente. O responsável reporta um alerta de US$1 e acompanhamento manual. Alertas não bloqueiam gastos; não se promete custo zero. [Alertas oficiais](https://developers.cloudflare.com/billing/manage/budget-alerts/). Não contratar espaço noutro fornecedor. O NAS não é destino único; cópia manual no PC permanece complementar. [Jurisdição UE](https://developers.cloudflare.com/r2/reference/data-location/), [arranque R2](https://developers.cloudflare.com/r2/get-started/).
 
+
+### Impacto da agenda diária e aprovação final
+
+Destino exato privado: `s3:https://f39181d61ca060444639b0cefdd69521.eu.r2.cloudflarestorage.com/homeoffice-pi-backups/restic-v1`, EU/Standard, sem acesso público. No PC mediu-se o bundle base de imagens anterior em 856268288 bytes (~0,86 GB); a captura atual inclui também o conector e as alterações posteriores. Não é uma medição do repositório R2, que ainda não foi inicializado.
+
+Estimativa para duas pessoas: **US$0/mês enquanto toda a conta permanecer nas franquias**. Diário executa cerca de 30 backups/mês em vez de um: mais pedidos S3, metadados e versões dos dados. restic deduplica blocos já guardados; imagens inalteradas não são reenviadas integralmente todos os dias. Portanto o armazenamento não aumenta automaticamente 30 vezes. Sete diários + seis mensais aumentam a retenção face aos seis mensais anteriores; medir bytes/operações após a primeira captura. Não se promete um aumento exato sem essa evidência. Alertas US$1 não bloqueiam cobranças, e impostos/câmbio permanecem desconhecidos. Não criar uma regra lifecycle R2 para controlar custos apagando packs.
+
+Procedimento inicial preparado: instalar unidades desativadas e configuração root-only, inicializar explicitamente o repositório, primeiro envio cifrado, leitura integral/download/hash, restauro para uma base **nova** `ho012_restore_r2_TIMESTAMP`, recusa de alvo existente e confirmação de saúde da fonte. A cópia e a base original não são substituídas. Captura pausa brevemente app/worker e retoma antes do upload; medir essa pausa. Configuração, PFX/password, key ring e imagens são recuperados; autenticação numa instância restaurada permanece evidência CI até ensaio específico. Só ativar a agenda depois destas verificações passarem. Sem alterações DNS/NAS/contas/emails reais.
+
+O responsável pediu ver destino/custo/agenda antes de autorizar os envios; ainda não foi executado `init`, upload, restauro externo ou instalação de timers. Gate privado bloqueia o lançador até aprovação explícita. Confirmação do kit é independente dessa autorização.
+
 ## Conteúdo, execução e retenção
 
 [Código](../infra/pi/backup/backup.py), [exemplo sem segredos](../infra/pi/backup/config.example.json). O serviço usa o perfil ativo, incluindo `private/https/compose.json`; nunca troca para localhost durante manutenção.
@@ -26,13 +37,13 @@ Ativação e utilização R2 autorizadas pelo responsável depois de esclarecido
 2. Exportar imagens runtime para cache privada, apenas quando muda o conjunto. Guardar `.env`, compose, scripts de arranque e hashes; não depender de imagens Docker locais nem artifacts CI após perda do Pi.
 3. Pausar apenas app/worker enquanto produz dump PostgreSQL custom e copia configuração base/HTTPS, passwords de serviços, SMTP/TLS, PFX e key ring cifrado. A password do PFX está na configuração privada. Preservar Staging/nome Data Protection. Retomar o app existente em finally; marcador+ExecStopPost tratam interrupção do processo. Upload começa depois de recuperar a aplicação.
 4. restic cifra SQL/configuração/chaves/imagens antes de guardar no destino; `check`, download do snapshot SQL/configuração/chaves e hashes antes de retenção. Código não imprime credenciais, conteúdo, stderr sensível ou tokens. Ficheiros de staging permanecem privados; última captura incompleta fica para diagnóstico/repetição, sem sucesso registado.
-5. Reter 6 snapshots mensais, conforme preferência posterior do responsável por backups espaçados. `forget/prune` filtra host/tag exclusivos e só corre após envio/download verificado. Não usar lifecycle de expiração R2: packs são partilhados entre snapshots.
+5. Reter 7 snapshots diários e 6 mensais (até 13 pontos, com sobreposição entre categorias). Pedido final do responsável substitui a proposta mensal intermédia; não reter quatro semanais. `forget/prune` filtra host/tag exclusivos e só corre após envio/download verificado. Não usar lifecycle de expiração R2: packs são partilhados entre snapshots.
 
-Timer mensal no dia 1 às 03:15 UTC + até 15 min de jitter, Persistent=true; recuperação de execução perdida após arranque. Check integral aos domingos às 06:00 UTC, com o mesmo jitter. Lock exclusivo entre backup/check/restauro, sem remover locks remotos automaticamente. Antes do uso real, medir a pausa local e duração/upload. Limites extra 512 MiB/0,5 CPU, sem swap adicional, prioridade baixa, upload até 2 MiB/s; não alteram limites da aplicação. RPO mensal: uma perda pode eliminar até 31 dias de alterações, mais jitter/duração; status assinala atraso aos 32 dias. Esta redução de frequência substitui a proposta diária inicial e não é uma garantia de custo zero. RTO continua por medir.
+Timer diário às 03:15 UTC + até 15 min de jitter, Persistent=true; recuperação de execução perdida após arranque. Check integral aos domingos às 06:00 UTC, com o mesmo jitter. Lock exclusivo entre backup/check/restauro, sem remover locks remotos automaticamente. Antes do uso real, medir a pausa local e duração/upload. Limites extra 512 MiB/0,5 CPU, sem swap adicional, prioridade baixa, upload até 2 MiB/s; não alteram limites da aplicação. RPO pretendido de 24 h mais jitter/duração; status assinala atraso às 36 h. Falhas detetadas invalidam o status imediatamente. A agenda diária não é uma garantia de custo zero. RTO continua por medir.
 
 ## Instalação preparada, ainda não executada
 
-Paths novos: `/opt/homeoffice-backup` (scripts/binário), `/etc/homeoffice-backup` (configuração e credenciais), `/var/lib/homeoffice-backup` (staging/cache/recibos/restauros). Diretórios root 0700; configuração/passwords root 0600 ou 0400. Unidades `homeoffice-backup{,-check,-failure}.service` e timers mensal/semanal em `/etc/systemd/system`. Sem novas portas, containers, rotas ou ficheiros no NAS.
+Paths novos: `/opt/homeoffice-backup` (scripts/binário), `/etc/homeoffice-backup` (configuração e credenciais), `/var/lib/homeoffice-backup` (staging/cache/recibos/restauros). Diretórios root 0700; configuração/passwords root 0600 ou 0400. Unidades `homeoffice-backup{,-check,-failure}.service` e timers diário/semanal em `/etc/systemd/system`. Sem novas portas, containers, rotas ou ficheiros no NAS.
 
 Binário restic **0.19.1** descarregado fora do Pi por [download_restic.py](../infra/pi/backup/download_restic.py), SHA256 do arquivo fixado a partir da release oficial. Linux ARM64 descomprimido SHA256 `2fb45ac6f9071b6f20eb883953a188f9e7c7cb6bbe43c67a2e47ada4e85ee7f0`. Não instalar pacotes pesados nem usar emulação.
 
@@ -45,7 +56,7 @@ sudo sh install.sh
 
 O instalador recusa paths/unidades existentes e **não ativa timers**. Copiar o exemplo para `/etc/homeoffice-backup/config.json` em sessão root/umask 077; preencher conta, paths e flags apenas após os factos correspondentes. `s3.json` contém exclusivamente `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` do token de objetos limitado ao bucket; não usar token administrativo da conta. Password aleatória restic independente em `repository-password`. Não colocar valores em argumentos publicados ou no histórico.
 
-Antes do primeiro envio: preparar e confirmar o **kit de recuperação independente**: password restic, endpoint/bucket/prefixo/ID, versão/checksum do binário e este runbook. Guardar fora do Pi e com recuperação independente do PC; acesso Cloudflare/MFA/códigos de recuperação sob controlo do responsável. Token S3 pode ser reemitido após perda do Pi; perder a única password restic impede recuperar. A própria cópia cifrada não pode ser o único local da sua chave. O exemplo mantém flags falsas. A autorização externa já foi dada; confirmar `recovery_kit_confirmed` apenas após guardar e verificar o kit independente. Ainda não está confirmado.
+Antes do primeiro envio: preparar e confirmar o **kit de recuperação independente**: password restic, endpoint/bucket/prefixo/ID, versão/checksum do binário e este runbook. Guardar fora do Pi e com recuperação independente do PC; acesso Cloudflare/MFA/códigos de recuperação sob controlo do responsável. Token S3 pode ser reemitido após perda do Pi; perder a única password restic impede recuperar. A própria cópia cifrada não pode ser o único local da sua chave. O exemplo mantém flags falsas. O responsável confirmou Bitwarden/acesso noutro dispositivo; configuração privada regista `recovery_kit_confirmed=true`. `external_authorized=false` bloqueia instalação/init/envios até à nova aprovação final solicitada para esta agenda/destino/custo.
 
 ```sh
 sudo python3 /opt/homeoffice-backup/backup.py init
@@ -55,14 +66,14 @@ sudo systemctl start homeoffice-backup-check.service
 sudo python3 /opt/homeoffice-backup/backup.py status
 ```
 
-`init` é explícito, recusa repositório já configurado, nunca faz parte do job mensal. Confirmar recibo/snapshot, download e restauro abaixo antes de ativar:
+`init` é explícito, recusa repositório já configurado, nunca faz parte do job diário. Confirmar recibo/snapshot, download e restauro abaixo antes de ativar:
 
 ```sh
 sudo systemctl enable --now homeoffice-backup.timer homeoffice-backup-check.timer
 systemctl list-timers --all 'homeoffice-backup*'
 ```
 
-Estes comandos aguardam credenciais/kit e execução real; esta documentação não é evidência de sucesso.
+Estes comandos aguardam aprovação final da configuração revista e execução real; esta documentação não é evidência de sucesso.
 
 ## Restauro novo e perda total do Pi
 
@@ -81,7 +92,7 @@ Recriar uma stack isolada sem ativar cloudflared: copiar `current/trial` apenas 
 
 ## Integridade, falhas e remoção
 
-`status.json` privado conserva último sucesso, snapshot e erro/execução em curso. `backup.py status` retorna erro para nunca executado, última tentativa falhada ou último sucesso com 32 dias ou mais; também falha se a leitura integral nunca passou, falhou ou tem mais de 8 dias. `full-check.json` regista essa evidência separadamente, sem um backup mensal apagar uma falha semanal. Systemd falha o job e OnFailure escreve `HO012_BACKUP_FAILED` sem payload no journal. Consultar `systemctl --failed`, `systemctl status homeoffice-backup.service homeoffice-backup-check.service` e status privado; não publicar logs completos.
+`status.json` privado conserva último sucesso, snapshot e erro/execução em curso. `backup.py status` retorna erro para nunca executado, última tentativa falhada ou último sucesso com 36 h ou mais; também falha se a leitura integral nunca passou, falhou ou tem mais de 8 dias. `full-check.json` regista essa evidência separadamente, sem um backup diário apagar uma falha semanal. Systemd falha o job e OnFailure escreve `HO012_BACKUP_FAILED` sem payload no journal. Consultar `systemctl --failed`, `systemctl status homeoffice-backup.service homeoffice-backup-check.service` e status privado; não publicar logs completos.
 
 **Monitorização externa ainda pendente:** journal não avisa se o Pi perde energia/rede. Antes de dados reais, escolher alerta externo de ausência de sucesso, incluindo falha/check semanal e capacidade. Uma credencial S3 de escrita/eliminação pode apagar backups se o Pi for comprometido; não se promete imutabilidade. Não aplicar bucket lock/lifecycle incompatível com restic/prune sem novo desenho/teste.
 
@@ -93,7 +104,7 @@ Testes locais reais restic no Windows: cifragem, password errada, corrupção, i
 
 No Pi, binário ARM64 verificado e testes restic em diretório separado `/home/dennyum/ho012-backup-preparation-20260913`, sem sudo, acesso à base/app ou timers instalados. Unidades passaram `systemd-analyze verify`. Isto demonstra execução nativa do mecanismo, **não envio externo nem backup da aplicação atual**.
 
-`pi-preparation` acrescenta PostgreSQL real: captura → restic local cifrado → download → base nova → rejeição de sobrescrita → PFX/key ring recuperados → cookie existente/plano aprovado. Resultados remotos por commit no PR; não transferir sucesso local para CI. Quatro checks core preservados. **Envio/restauro R2, kit independente confirmado, agenda real e impacto sobre o Pi em uso permanecem por verificar.**
+`pi-preparation` acrescenta PostgreSQL real: captura → restic local cifrado → download → base nova → rejeição de sobrescrita → PFX/key ring recuperados → cookie existente/plano aprovado. Resultados remotos por commit no PR; não transferir sucesso local para CI. Quatro checks core preservados. **Kit independente confirmado pelo responsável; envio/restauro R2, agenda real e impacto sobre o Pi em uso permanecem por verificar.**
 
 Primeira execução integrada confirmada em **81933bfd77450b2fc7cde3bc1e55c0e1050b9235**, [pi-preparation passou](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34754523812/job/103716566051): recibo sanitizado confirma download, hashes, base nova, fonte preservada e sessão/plano recuperados com PFX/key ring do snapshot. A fixture inicial de corrupção falhou por packs read-only no Linux; corrigida apenas no repositório descartável e mantida a deteção de corrupção. A revisão seguinte acrescenta a recusa de configuração de fonte divergente; checks do head final são acompanhados no PR, sem atribuir a esse head os resultados desta execução anterior.
 
