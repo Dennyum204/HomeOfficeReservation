@@ -1,16 +1,18 @@
+import { useLanguage } from "./i18n/locale";
+import { LanguagePicker } from "./i18n/LanguagePicker";
 import { ContextRead } from "./features/notifications/contextRead";
 import { notificationsApi } from "./features/notifications/api";
 import { csrf } from "./features/auth/api";
 import { sessionFailure } from "./features/planning/api";
 import { AdminWorkspace } from "./features/admin/AdminWorkspace";
-import { a } from "./i18n/admin.pt-PT";
+import { a } from "./i18n/locale";
 import { Appearance, AppearanceProvider } from "./theme/Appearance";
 import { AppIcon } from "./theme/AppIcon";
 import { useCallback, useRef, useState } from "react";
-import { strings as s } from "./i18n/pt-PT";
-import { p } from "./i18n/planning.pt-PT";
-import { w } from "./i18n/work.pt-PT";
-import { n } from "./i18n/notifications.pt-PT";
+import { strings as s } from "./i18n/locale";
+import { p } from "./i18n/locale";
+import { w } from "./i18n/locale";
+import { n } from "./i18n/locale";
 import type { NotificationDestination } from "../../../contracts/typescript";
 import { NotificationCentre } from "./features/notifications/NotificationCentre";
 import { useNotificationPolling } from "./features/notifications/useNotificationPolling";
@@ -26,6 +28,7 @@ import "./features/planning/work.css";
 import "./theme/theme.css";
 
 export function App() {
+  useLanguage();
   return (
     <AppearanceProvider>
       <AuthGate>
@@ -245,6 +248,7 @@ export function WorkspaceShell() {
           )}
           {section === "settings" && (
             <div className="settings-connection">
+              <LanguagePicker />
               <Appearance />
               <ConnectionCard />
             </div>

@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { appearance as s } from "../i18n/appearance.pt-PT";
+import { appearance as s } from "../i18n/locale";
 
 export type ThemePreference = "light" | "dark" | "system";
 const key = "homeoffice.appearance";

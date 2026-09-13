@@ -70,7 +70,11 @@ class _HomeOfficeAppState extends State<HomeOfficeApp>
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
-        locale: const Locale('pt', 'PT'),
+        locale: Locale(appearance.language, switch (appearance.language) {
+          'en' => 'GB',
+          'de' => 'CH',
+          _ => 'PT',
+        }),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         theme: appTheme(Brightness.light),

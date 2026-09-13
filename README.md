@@ -1,5 +1,7 @@
 # HomeOfficeReservation
 
+**HO-021 — Idiomas:** português, inglês e alemão na Web/Android, preferência local e formatação regional. [Âmbito, limites de emails/push e verificação](docs/HO-021-LANGUAGES-PLAN.md).
+
 **HO-020 — UI e notificações:** caixa Por ler, leitura após contexto autorizado, dropdowns acessíveis e ajustes de calendário/formulários Web/Android. [Implementação, testes e revisão visual](docs/HO-020-UI-NOTIFICATIONS.md).
 
 **HO-016 — Identidade visual Web/Android:** tema Claude + adaptado, claro/escuro/sistema, secções de formulário e estados separados por rótulos e ícones. [Tema, contraste e revisão visual](docs/HO-016-VISUAL-THEME.md). Sem alteração de API, dados ou permissões.

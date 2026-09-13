@@ -1,3 +1,4 @@
+import { localizedFeedback } from "../../i18n/locale";
 import { Select } from "../../theme/Select";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -7,8 +8,8 @@ import {
   type WorkLocation,
   type Availability,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
-import { appearance as v } from "../../i18n/appearance.pt-PT";
+import { p } from "../../i18n/locale";
+import { appearance as v } from "../../i18n/locale";
 import { EDITOR_KEY } from "../auth/session";
 import { planningApi, sessionFailure } from "./api";
 import { dateKey, dateValue, dayLabel, todayInZone } from "./dates";
@@ -266,7 +267,7 @@ export function RequestEditor({
                 {preview.length > 0 && (
                   <div className="range-preview">
                     <strong>
-                      {p.included} · {preview.length} {p.days}
+                      {p.included} · {p.countDays(preview.length)}
                     </strong>
                     <ul>
                       {preview.map((date) => (
@@ -303,7 +304,7 @@ export function RequestEditor({
             <legend>{v.summary}</legend>
             <p className="muted">{v.summaryHint}</p>
             <h3>
-              {p.selectedDates} · {days.length} {p.days}
+              {p.selectedDates} · {p.countDays(days.length)}
             </h3>
             {days.length === 0 && <p className="muted">{p.emptyDates}</p>}
             <div className="editor-days">
@@ -414,7 +415,7 @@ export function RequestEditor({
         </fieldset>
         {error && (
           <p role="alert" className="notice error">
-            {error}
+            {localizedFeedback(error)}
           </p>
         )}
         <div className="dialog-actions">

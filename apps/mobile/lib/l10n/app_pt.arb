@@ -335,5 +335,9 @@
   "notificationReadFilter": "Já lidas",
   "notificationEmptyUnread": "Não há notificações por ler.",
   "notificationSaveReadError": "O contexto foi aberto, mas não foi possível guardar a leitura.",
-  "notificationRetryRead": "Tentar guardar leitura"
+  "notificationRetryRead": "Tentar guardar leitura",
+  "languageTitle": "Idioma",
+  "languageHelp": "Idioma guardado neste dispositivo. O idioma inicial é português.",
+  "languageStorage": "O idioma foi aplicado, mas não foi possível guardá-lo neste dispositivo.",
+  "notificationNavigation": "Notificações"
 }

@@ -219,7 +219,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                 labels.length,
                 (i) => NavigationDestination(
                   icon: navIcon(i, icons[i]),
-                  label: labels[i],
+                  label: i == 3 ? s.notificationNavigation : labels[i],
                 ),
               ),
             ),
@@ -284,6 +284,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SectionHeading(labels[_section]),
+                                if (_section == 4) const LanguagePicker(),
                                 if (_section == 4 &&
                                     widget.accountSection != null)
                                   widget.accountSection!,
@@ -543,12 +544,13 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      DateFormat.yMd('pt_PT')
-                                                          .add_Hms()
-                                                          .format(
-                                                            data.serverTimeUtc
-                                                                .toLocal(),
-                                                          ),
+                                                      DateFormat.yMd(
+                                                        Intl.defaultLocale ??
+                                                            'pt_PT',
+                                                      ).add_Hms().format(
+                                                        data.serverTimeUtc
+                                                            .toLocal(),
+                                                      ),
                                                     ),
                                                     const SizedBox(height: 12),
                                                     Text(

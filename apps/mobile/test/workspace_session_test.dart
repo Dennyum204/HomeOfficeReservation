@@ -213,6 +213,8 @@ void main() {
         find.byKey(const Key('password')),
         'simulated-password',
       );
+      await t.ensureVisible(find.byKey(const Key('submit')));
+      await t.pumpAndSettle();
       await t.tap(find.byKey(const Key('submit')));
       await t.pumpAndSettle();
       final next = t

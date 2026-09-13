@@ -1,6 +1,6 @@
 export const p = {
   draftCount: (count: number) =>
-    `${count} ${count === 1 ? "dia no rascunho" : "dias no rascunho"} · ainda não submetido`,
+    `${count.toLocaleString("pt-PT")} ${count === 1 ? "dia no rascunho" : "dias no rascunho"} · ainda não submetido`,
   emptyPreview:
     "Este intervalo não inclui dias de trabalho. Reveja as datas ou inclua fins de semana.",
   locationShort: {
@@ -232,7 +232,8 @@ export const p = {
   cancelHint:
     "O cancelamento só retira a aprovação após decisão do gestor. O padrão volta então a ficar visível.",
   request: "Pedido",
-  countDays: (count: number) => `${count} ${count === 1 ? "dia" : "dias"}`,
+  countDays: (count: number) =>
+    `${count.toLocaleString("pt-PT")} ${count === 1 ? "dia" : "dias"}`,
   counts: (approved: number, pending: number) =>
-    `${approved} ${approved === 1 ? "dia aprovado" : "dias aprovados"} · ${pending} ${pending === 1 ? "dia pendente" : "dias pendentes"}`,
+    `${approved.toLocaleString("pt-PT")} ${approved === 1 ? "dia aprovado" : "dias aprovados"} · ${pending.toLocaleString("pt-PT")} ${pending === 1 ? "dia pendente" : "dias pendentes"}`,
 };

@@ -37,8 +37,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-304 | Anexos e tarefas avançadas | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
 | HO-306 | Reativação futura de iOS | ios-reactivation | mobile | Em espera | HO-012 |
-| HO-020 | UI e leitura automática de notificações | ui-refresh | fullstack | Em revisão | HO-016 |
-| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Planeado | HO-020 |
+| HO-020 | UI e leitura automática de notificações | ui-refresh | fullstack | Concluído | HO-016 |
+| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Em revisão | HO-020 |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
@@ -702,7 +702,7 @@ Motivo: Adiado por decisão explícita em HO-005; sem data e sem gate core.
 
 ## HO-020 — UI e leitura automática de notificações
 
-Release: ui-refresh · Área: fullstack · Estado: Em revisão
+Release: ui-refresh · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -754,7 +754,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/51
 
 ## HO-021 — Português, inglês e alemão
 
-Release: ui-refresh · Área: fullstack · Estado: Planeado
+Release: ui-refresh · Área: fullstack · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 

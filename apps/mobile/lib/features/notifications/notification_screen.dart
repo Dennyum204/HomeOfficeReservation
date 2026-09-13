@@ -43,7 +43,9 @@ class NotificationScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            DateFormat.yMd('pt_PT').add_Hm().format(item.createdAt.toLocal()),
+            DateFormat.yMd(Intl.defaultLocale ?? 'pt_PT')
+                .add_Hm()
+                .format(item.createdAt.toLocal()),
           ),
           Text(item.readAt == null ? s.notificationUnread : s.notificationRead),
           if (item.historical) Text(s.notificationArchiveHint),

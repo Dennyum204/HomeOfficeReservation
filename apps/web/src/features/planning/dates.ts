@@ -1,3 +1,4 @@
+import { locale } from "../../i18n/locale";
 export function dateKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -34,20 +35,20 @@ export function todayInZone(zone = "Europe/Zurich"): string {
   return `${part("year")}-${part("month")}-${part("day")}`;
 }
 export const dayLabel = (key: string) =>
-  new Intl.DateTimeFormat("pt-PT", {
+  new Intl.DateTimeFormat(locale(), {
     day: "numeric",
     month: "short",
     year: "numeric",
   }).format(dateValue(key));
 export const longDayLabel = (key: string) =>
-  new Intl.DateTimeFormat("pt-PT", {
+  new Intl.DateTimeFormat(locale(), {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(dateValue(key));
 export const instantLabel = (value: Date) =>
-  new Intl.DateTimeFormat("pt-PT", {
+  new Intl.DateTimeFormat(locale(), {
     dateStyle: "short",
     timeStyle: "short",
   }).format(value);
@@ -71,7 +72,7 @@ export function period(anchor: string, view: "month" | "week") {
     days.push(date);
   const label =
     view === "month"
-      ? new Intl.DateTimeFormat("pt-PT", {
+      ? new Intl.DateTimeFormat(locale(), {
           month: "long",
           year: "numeric",
         }).format(value)

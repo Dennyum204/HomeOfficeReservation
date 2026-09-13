@@ -1,5 +1,6 @@
+import { localizedFeedback } from "../../i18n/locale";
 import type { useCommand } from "./useCommand";
-import { p } from "../../i18n/planning.pt-PT";
+import { p } from "../../i18n/locale";
 export function CommandNotice({
   command,
   refreshing,
@@ -9,13 +10,14 @@ export function CommandNotice({
 }) {
   return (
     <>
-      {((command.error && !(command.stale && command.error === p.stale)) ||
+      {((command.error &&
+        !(command.stale && localizedFeedback(command.error) === p.stale)) ||
         (command.journal && !command.busy)) && (
         <div className="notice warning" role="alert">
-          <p>{command.error || p.uncertain}</p>
+          <p>{localizedFeedback(command.error || p.uncertain)}</p>
           {command.journal && (
             <>
-              <strong>{command.journal.label}</strong>
+              <strong>{localizedFeedback(command.journal.label)}</strong>
               <button
                 type="button"
                 disabled={command.busy}

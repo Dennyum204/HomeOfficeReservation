@@ -1,7 +1,8 @@
+import { LanguagePicker } from "../../i18n/LanguagePicker";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { MemberProfile } from "../../../../../contracts/typescript";
-import { strings as s } from "../../i18n/pt-PT";
+import { strings as s } from "../../i18n/locale";
 import { Appearance } from "../../theme/Appearance";
 import { accessApi, authApi, csrf, statusOf } from "./api";
 import {
@@ -17,7 +18,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState<Mode>("login");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<
+    Exclude<keyof typeof s.auth, "titles" | "submit"> | ""
+  >("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
@@ -47,10 +50,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
         status === 401
           ? initial
             ? ""
-            : s.auth.expired
+            : "expired"
           : status === 403
-            ? s.auth.forbidden
-            : s.auth.network,
+            ? "forbidden"
+            : "network",
       );
     } finally {
       if (current === generation.current) setLoading(false);
@@ -90,7 +93,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
         const operation =
           mode === "activation" ? "requestActivation" : "requestRecovery";
         await authApi[operation]({ emailRequest: { email } });
-        setMessage(s.auth.sent);
+        setMessage("sent");
         setMode(mode === "activation" ? "activate" : "reset");
       } else {
         const operation =
@@ -101,18 +104,18 @@ export function AuthGate({ children }: { children: ReactNode }) {
         setPassword("");
         setCode("");
         setMode("login");
-        setMessage(s.auth.completed);
+        setMessage("completed");
       }
     } catch (error) {
       const status = statusOf(error);
       setMessage(
         status === 429
-          ? s.auth.limited
+          ? "limited"
           : status === 0 || status >= 500
-            ? s.auth.network
+            ? "network"
             : mode === "login"
-              ? s.auth.invalid
-              : s.auth.invalidCode,
+              ? "invalid"
+              : "invalidCode",
       );
     } finally {
       setBusy(false);
@@ -131,7 +134,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setCode("");
       setMessage("");
     } catch {
-      setMessage(s.auth.logoutFailed);
+      setMessage("logoutFailed");
     } finally {
       setBusy(false);
     }
@@ -182,7 +185,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
           >
             {s.auth.logout}
           </button>
-          {message && <p role="alert">{message}</p>}
+          {message && <p role="alert">{s.auth[message]}</p>}
         </section>
         <MemberContext.Provider key={member.memberId} value={member}>
           {children}
@@ -192,13 +195,16 @@ export function AuthGate({ children }: { children: ReactNode }) {
   return (
     <main className="auth-page">
       <section className="auth-card">
+        <LanguagePicker compact />
         <Appearance compact />
-        <p className="eyebrow">HOME OFFICE · PORTUGAL / SUÍÇA</p>
+        <p className="eyebrow">
+          {s.brand} · {s.brandCaption}
+        </p>
         <h1>{s.auth.titles[mode]}</h1>
         <p>{s.auth.intro}</p>
         {message && (
           <p role="status" className="auth-message">
-            {message}
+            {s.auth[message]}
           </p>
         )}
         <form

@@ -1,3 +1,5 @@
+import { localizedFeedback } from "../../i18n/locale";
+import { locale } from "../../i18n/locale";
 import { Select } from "../../theme/Select";
 import { ContextOpened } from "../notifications/ContextOpened";
 import { useCallback, useRef, useState } from "react";
@@ -11,8 +13,8 @@ import type {
   WorkContext,
   WorkEntryView,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
-import { w } from "../../i18n/work.pt-PT";
+import { p } from "../../i18n/locale";
+import { w } from "../../i18n/locale";
 import { planningApi, sessionFailure } from "./api";
 import { dateKey, dateValue, dayLabel, todayInZone } from "./dates";
 import { commandError, readError } from "./errors";
@@ -670,7 +672,7 @@ function OnsiteForm({
           {p.close}
         </button>
       </div>
-      {error && <p role="alert">{error}</p>}
+      {error && <p role="alert">{localizedFeedback(error)}</p>}
       {busy && <p role="status">{p.loading}</p>}
       {preview && (
         <section aria-label={w.previewTitle}>
@@ -1101,7 +1103,7 @@ function WorkHistory({
             </strong>{" "}
             ·{" "}
             <time dateTime={entry.createdAt.toISOString()}>
-              {entry.createdAt.toLocaleString("pt-PT")}
+              {entry.createdAt.toLocaleString(locale())}
             </time>
             {entry.text && <p>{entry.text}</p>}
             <Snapshot entry={entry} />

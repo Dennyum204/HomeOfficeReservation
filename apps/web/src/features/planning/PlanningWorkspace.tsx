@@ -1,3 +1,4 @@
+import { localizedFeedback } from "../../i18n/locale";
 import { Select } from "../../theme/Select";
 import { useCallback, useState } from "react";
 import type {
@@ -12,7 +13,7 @@ import type {
   RequestView,
   WorkLocation,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
+import { p } from "../../i18n/locale";
 import { accessApi, statusOf } from "../auth/api";
 import { EDITOR_KEY, useMember } from "../auth/session";
 import { planningApi, readJournal, sessionFailure, type Journal } from "./api";
@@ -521,12 +522,12 @@ function EmployeePlanning({
       {notice}
       {message && (
         <p className="notice success" role="status">
-          {message}
+          {localizedFeedback(message)}
         </p>
       )}
       {prepareError && (
         <p className="notice error" role="alert">
-          {prepareError}
+          {localizedFeedback(prepareError)}
         </p>
       )}
       {!!(calendar.error || requests.error || request.error) && (

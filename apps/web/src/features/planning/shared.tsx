@@ -4,7 +4,7 @@ import type {
   WorkLocation,
 } from "../../../../../contracts/typescript";
 import { locationIcon, locationLabel } from "./labels";
-import { p } from "../../i18n/planning.pt-PT";
+import { p } from "../../i18n/locale";
 
 export function Dialog({
   title,

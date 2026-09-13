@@ -116,7 +116,9 @@ async function newDraft(
     .getByRole("button", { name: "Pré-visualizar intervalo" })
     .click();
   await expect(
-    dialog(page).getByText(`Dias incluídos · ${dates.length} dias`),
+    dialog(page).getByText(
+      `Dias incluídos · ${dates.length} ${dates.length === 1 ? "dia" : "dias"}`,
+    ),
   ).toBeVisible();
   await dialog(page)
     .getByRole("button", { name: "Adicionar estes dias" })

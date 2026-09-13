@@ -186,7 +186,11 @@ Future<void> main() async {
     await SecureTokenStore(ApiSettings.baseUrl).clear();
     app.main();
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Ainda não ativei a conta'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Ainda não ativei a conta'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Já tenho um código'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Já tenho um código'));
     await tester.pumpAndSettle();
