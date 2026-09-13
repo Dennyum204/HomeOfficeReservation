@@ -51,6 +51,12 @@ Os testes de catálogo comparam chaves e tipos; Flutter verifica também placeho
 
 Verificação local concluída: 18 testes unitários Web, format/typecheck/lint/build; 58 testes Flutter e análise/formatação; 178 ficheiros de contratos sem divergência. Os 36 E2E existentes passaram na campanha completa; os 4 E2E de idiomas passaram após corrigir as expectativas dos novos testes. O ensaio nativo de idiomas passou com 18 capturas. [34 capturas e condições](evidence/ho021/README.md). A CI remota do head final é verificada separadamente nos [checks do PR #52](https://github.com/Dennyum204/HomeOfficeReservation/pull/52/checks). Builds e capturas não representam deployment nem validação em Android físico. iOS e Outlook continuam adiados. PR #37, piloto Pi, dados, configuração privada e emuladores habituais são preservados.
 
+## Correção da primeira execução Android remota
+
+No [run 34787558344](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34787558344), documentação/backend/Web passaram (Web: 4 testes de autenticação e 40 E2E). O Android passou os percursos anteriores, mas o novo teste de idiomas falhou antes do login: `tap(submit)` avisou que a posição calculada não atingia o botão, seguido da falha ao esperar pelo calendário autorizado. Não foi classificado como sucesso nem como falha transitória de infraestrutura.
+
+O helper nativo passa a aguardar as métricas de fecho do teclado, centrar o controlo no scroll e exigir um hit test válido antes do toque real. Mantém as verificações da API, as capturas e os prazos existentes. O ensaio local corrigido passou em 52 segundos com dimensões Pixel 6 (1080×2400, densidade 420), nos três idiomas/temas, usando API e PostgreSQL reais. O emulador local usa API 37.1; a CI usa API 35, pelo que o resultado remoto do novo head continua obrigatório.
+
 ## Revisão e recuperação
 
 Selecionar **English** ou **Deutsch** em Definições → Idioma; percorrer calendário, pedido com dia individual, notificações e Administração. Confirmar as datas e os rótulos; voltar a português e verificar que o conteúdo escrito continua igual. Reabrir a aplicação para confirmar persistência. Credenciais sintéticas ficam apenas no guia local privado.
