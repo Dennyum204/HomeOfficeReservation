@@ -1,18 +1,18 @@
 # HO-012 — Monitorização externa dos backups
 
-2026-09-13. PR #37 draft: integração preparada, **sem conta criada, destinatário escolhido, ping externo ou alerta real**. [Backup manual real](HO-012-BACKUPS.md) preservado. [ADR-022](adr/ADR-022-hosted-backup-monitoring.md).
+2026-09-13. PR #37 draft: integração instalada e ensaio externo validado; **execuções agendadas ainda por comprovar**. [Backup manual real](HO-012-BACKUPS.md) preservado. [ADR-022](adr/ADR-022-hosted-backup-monitoring.md).
 
-## Proposta para aprovação
+## Decisão aprovada
 
 Pesquisa nos scripts/documentação e unidades systemd do Pi não encontrou monitor externo configurado. Cloudflare Tunnel/R2 e o handler local existem; o alerta de orçamento não deteta falta de backups. Não se presume ausência de contas pessoais fora do projeto.
 
-Recomenda-se **Healthchecks.io alojado, Hobbyist, US$0/mês**, três dos 20 checks incluídos: diário, semanal e ensaio. Histórico de 100 entradas por check, removendo as mais antigas; start/success consomem duas entradas (~50 execuções). Sem plano pago, cartão, SMS, WhatsApp ou chamadas. **Email de destino por indicar pelo responsável**; não inferir de contas existentes. Aprovação deve incluir utilização/criação do serviço e avisos de ensaio, falha e recuperação para esse destinatário.
+Recomenda-se **Healthchecks.io alojado, Hobbyist, US$0/mês**, três dos 20 checks incluídos: diário, semanal e ensaio. Histórico de 100 entradas por check, removendo as mais antigas; start/success consomem duas entradas (~50 execuções). Sem plano pago, cartão, SMS, WhatsApp ou chamadas. Email explicitamente aprovado pelo responsável e configurado privadamente; criação e alertas de teste autorizados.
 
 Condições verificadas em 2026-09-13: [preço/limites](https://healthchecks.io/pricing/), [termos](https://healthchecks.io/terms/), [privacidade](https://healthchecks.io/privacy/). Não existe garantia de disponibilidade contínua. Conta/entrega exigem email; o fornecedor observa IP/horários de acesso. Os sinais não incluem dados pessoais da aplicação, dumps, logs, passwords ou credenciais R2. Alertas devem conter apenas nome genérico, estado e horário; rever uma mensagem de ensaio. URLs de ping são segredos de escrita de estado, exclusivamente em configuração privada, nunca Git/chat/logs.
 
 ## Configuração concreta
 
-Projeto privado `HomeOffice backups`, sem badges públicos. Uma integração Email para endereço **ainda não escolhido**, ligada aos três checks: DOWN/UP e lembrete diário enquanto DOWN. Filtrar **Only POST**, sem conteúdo/anexos. Não preencher descrições com pessoas, paths privados ou hostnames.
+Projeto privado existente da conta, sem badges públicos. Uma integração Email para endereço **aprovado e mantido privado**, ligada aos três checks: DOWN/UP e lembrete diário enquanto DOWN. Filtrar **Only POST**, sem conteúdo/anexos. Não preencher descrições com pessoas, paths privados ou hostnames.
 
 | Check | Agenda externa, Cron UTC | Grace | Sem sinal esperado |
 |---|---|---|---|
@@ -74,6 +74,12 @@ Rehearsal não altera recibos reais. Verificar conteúdo sanitizado do email sem
 - Manual real: envio R2/check/restauro novo e recuperação PC/Bitwarden passaram; 396 s, fonte preservada. Não repetido para monitorização.
 - Agendado real: releitura SSH em 2026-09-13 conserva LastTrigger vazio nos dois timers; próximos 14/09 03:26:26 UTC e 20/09 06:05:46 UTC. Ainda não observado. Relacionar depois LastTrigger/execução com recibo novo/snapshot e eventos externos; execução manual não prova timer.
 - Preparação: testes locais restic/cifragem e monitorização; falha, ausência e recuperação com recetor/relógio simulados, sem rede externa. CI corre suite e integração PostgreSQL/restic; resultados finais no PR. Não prova email entregue ou prazo real Healthchecks.
-- Externo pendente: conta/destinatário aprovados, instalação, ensaio DOWN/UP/silêncio recebido e primeiros ciclos diário/semanal.
+- Externo real: Monitorização Healthchecks.io Hobbyist ativada em 2026-09-13, três checks gratuitos e destinatário aprovado guardado privadamente. Ensaio isolado real confirmou falha, ausência de sinal e duas recuperações; responsável confirmou quatro emails recebidos. Rehearsal pausado ignorando pings. Hooks instalados no Pi; backup e leitura integral iniciais MANUAIS terminaram com success reconhecido (cerca de 81 s e 75 s). Timers ativos; LastTrigger 16:25:13 UTC não correlacionado com operação concluída, não prova execução agendada. Próximos prazos locais 14/09 03:23:13 UTC e 20/09 06:09:36 UTC. Ciclos realmente agendados permanecem por comprovar. docs/HO-012-BACKUP-MONITORING.md.
 
-HO-012 continua draft/incompleta. Também faltam SMTP real da aplicação, renovação TLS/monitorização geral, ambientes definitivos, Android físico/assinatura/distribuição e aceitação final. Sem NAS/DNS/rotas públicas/contas da aplicação ou emails reais alterados.
+HO-012 continua draft/incompleta. Também faltam SMTP real da aplicação, renovação TLS/monitorização geral, ambientes definitivos, Android físico/assinatura/distribuição e aceitação final. NAS/DNS/rotas públicas/contas da aplicação preservados. Emails de monitorização autorizados foram recebidos; SMTP da aplicação continua capturado.
+
+### Recibo de ativação e limites da evidência
+
+Falha explícita às 17:12 UTC, recuperação às 17:13, ausência detetada às 17:15 e segunda recuperação às 17:18 em 2026-09-13. Sinais reais enviados do PC ao check isolado, com job sintético; não se desligou o Pi. Quatro mensagens recebidas confirmadas pelo responsável, sem publicar capturas, email, IP ou URLs. Pausa persistente apenas do ensaio e lembrete diário para checks DOWN confirmados no painel.
+
+Instalação autorizada via sudo interativo: bundle verificado, originais guardados em diretório privado de recuperação e timers preservados. Recibos daily/weekly result=success, acknowledged=true. Releitura SSH confirma ambos os serviços Result=success (17:32–17:34 UTC). Estes arranques foram manuais. LastTrigger dos timers passou a 16:25:13 UTC, coincidente com ativação dos timers anterior aos hooks; não há aqui recibo correlacionado que prove conclusão agendada. Não substituir esta lacuna pelos sucessos manuais posteriores. Próximas execuções esperadas indicadas acima incluem jitter.
