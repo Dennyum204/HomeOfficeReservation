@@ -1,5 +1,12 @@
 # HO-012 — revisão de âmbito para merge
 
+## Âmbito vigente aprovado
+
+Âmbito aprovado: piloto inicial Web no Pi, aceitação funcional anterior válida. HO-017/#46 Android, HO-018/#47 staging/produção e HO-019/#48 TLS/monitorização geral separados e não concluídos. Renovação da origem antes de 11/10/2026. Bloqueios do PR: evidência do backup diário agendado e sinal externo, CI final e conflitos; não acrescentar gates.
+
+As referências abaixo ao âmbito mais amplo são históricas e não substituem esta decisão.
+
+
 Esta revisão não altera os critérios de aceitação nem declara o piloto concluído. PR #37 permanece draft. Fonte: acceptance de HO-012 em docs/backlog.json e issue #13; decisões posteriores do responsável.
 
 ## Concluído

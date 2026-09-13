@@ -20,7 +20,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-009 | Importação Outlook, webhooks e divergências | outlook-sync | integration | Planeado | HO-008 |
 | HO-010 | Android: calendário e pedidos para ambos os papéis | v1.0 | mobile | Concluído | HO-004, HO-005, HO-007 |
 | HO-011 | Integração das interfaces e testes de aceitação | v1.0 | fullstack | Concluído | HO-005, HO-006, HO-007, HO-010 |
-| HO-012 | Staging, distribuição privada e piloto V1 | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014, HO-015 |
+| HO-012 | Piloto inicial Web no Raspberry Pi | v1.0 | operations | Em revisão | HO-011, HO-013, HO-014, HO-015 |
 | HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
 | HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Concluído | HO-003, HO-007 |
 | HO-015 | Administração Web de membros e convites | v1.0 | web | Concluído | HO-011, HO-013, HO-014 |
@@ -37,6 +37,9 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-304 | Anexos e tarefas avançadas | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
 | HO-306 | Reativação futura de iOS | ios-reactivation | mobile | Em espera | HO-012 |
+| HO-017 | Android físico e distribuição privada | v1.0 | mobile | Planeado | HO-012 |
+| HO-018 | Separação definitiva staging e produção | v1.0 | operations | Planeado | HO-012 |
+| HO-019 | Renovação TLS da origem e monitorização geral | v1.0 | operations | Planeado | — |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
@@ -339,7 +342,7 @@ Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/12
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/36
 
-## HO-012 — Staging, distribuição privada e piloto V1
+## HO-012 — Piloto inicial Web no Raspberry Pi
 
 Release: v1.0 · Área: operations · Estado: Em revisão
 
@@ -351,13 +354,12 @@ Funcionalidades: Preparação/fundação da release.
 
 Critérios de aceitação:
 
-- Alojamento/região, retenção e plataformas definidos pelo responsável. Domínio existente ferbatech.com: homeoffice.ferbatech.com em produção e staging.homeoffice.ferbatech.com em staging, sem compra/transferência e preservando DNS/email existentes.
-- Staging/produção isolados; segredos externos; migração e restauro demonstrados.
-- Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.
-- Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.
-- Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.
-- Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.
-- Antes de convidar pessoas reais: titular administrador/colaborador e chefe associado configuráveis com segurança (HO-013), ciclo de convite recuperável e revogável (HO-014), SMTP real e autorização ensaiados. Antes da gestão autónoma de convidados/piloto aceite: administração Web HO-015 concluída. Convites da aplicação não são convites Firebase para APK.
+- Piloto inicial Web no Pi identificado como piloto em homeoffice.ferbatech.com; sem declarar produção definitiva ou distribuição Android. HO-017 e HO-018 preservam os requisitos transferidos.
+- Instalação ARM64, migração, worker, persistência e proteção de chaves/segredos demonstrados; HTTPS e autenticação/autorizações preservados.
+- Percurso titular submete, chefe aprova e resultado no calendário/notificação aceite funcionalmente pelo responsável; SMTP real, receção de convite e ativação pela aplicação validados.
+- Backup externo cifrado com restauro em base nova e recuperação independente demonstrados; agenda diária e retenção sete diários/seis mensais e verificação semanal configuradas. Confirmar execução diária realmente agendada com recibo e sinal externo, sem a substituir por execução manual.
+- Monitorização externa de falha/ausência/recuperação validada; observação do primeiro disparo semanal continua registada separadamente sem bloquear a aceitação do diário nem simular resultados.
+- Quatro checks core verdes no commit final, verificações Pi aplicáveis e ausência de conflitos antes de ready. Merge humano; sem auto-merge, release ou declaração de V1 completa.
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/13
 
@@ -698,3 +700,66 @@ Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/31
 PR: ainda não criado.
 
 Motivo: Adiado por decisão explícita em HO-005; sem data e sem gate core.
+
+## HO-017 — Android físico e distribuição privada
+
+Release: v1.0 · Área: mobile · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-012
+
+Funcionalidades: Preparação/fundação da release.
+
+Critérios de aceitação:
+
+- Preservar o alvo Android anteriormente incluído em HO-012; selecionar e autorizar a distribuição privada antes de distribuir APKs.
+- Assinatura válida com chaves protegidas fora do Git e procedimento de atualização/recuperação documentado.
+- Instalar num Android físico e validar convite/ativação, login, pedido, decisão e notificações com os papéis autorizados; não inferir sucesso a partir do browser ou emulador.
+- Registar aceitação e limitações da distribuição; não bloquear o piloto inicial Web aprovado.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/46
+
+PR: ainda não criado.
+
+## HO-018 — Separação definitiva staging e produção
+
+Release: v1.0 · Área: operations · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-012
+
+Funcionalidades: Preparação/fundação da release.
+
+Critérios de aceitação:
+
+- Definir e aprovar os ambientes definitivos; o ambiente atual homeoffice.ferbatech.com é piloto, não prova de produção definitiva.
+- Isolar dados, segredos, chaves e serviços entre staging e produção; preservar o domínio ferbatech.com e os restantes registos DNS/email.
+- Preparar homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com conforme decisão de promoção autorizada; demonstrar migração e restauro sem sobrescrever o piloto.
+- Documentar promoção e recuperação; não efetuar alterações externas sem autorização nem bloquear o piloto Web atual.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/47
+
+PR: ainda não criado.
+
+## HO-019 — Renovação TLS da origem e monitorização geral
+
+Release: v1.0 · Área: operations · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: Nenhuma.
+
+Funcionalidades: Preparação/fundação da release.
+
+Critérios de aceitação:
+
+- Renovar o certificado da origem antes de 11/10/2026 (2026-10-11), preservando validação TLS/SNI; Fernando é o responsável operacional até execução autorizada.
+- Documentar e ensaiar renovação/recuperação sem perda dos dados e sem confundir certificado TLS com chaves Data Protection.
+- Definir monitorização de disponibilidade e validade do certificado com alertas autorizados, reutilizando serviços existentes quando adequado.
+- Preservar os backups e a sua monitorização; este acompanhamento não reabre o âmbito do PR #37.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/48
+
+PR: ainda não criado.

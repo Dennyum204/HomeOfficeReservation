@@ -1,5 +1,12 @@
 # Estado do projeto
 
+## Âmbito vigente aprovado
+
+Âmbito aprovado: piloto inicial Web no Pi, aceitação funcional anterior válida. HO-017/#46 Android, HO-018/#47 staging/produção e HO-019/#48 TLS/monitorização geral separados e não concluídos. Renovação da origem antes de 11/10/2026. Bloqueios do PR: evidência do backup diário agendado e sinal externo, CI final e conflitos; não acrescentar gates.
+
+As referências abaixo ao âmbito mais amplo são históricas e não substituem esta decisão.
+
+
 Atualizado: 2026-09-13.
 
 HO-000 a HO-007, HO-010/011 e **HO-013/014/015/016 integrados**. Merges humanos #42–#45, ancestralidade e quatro checks de integração: [evidência](docs/HO-012-INTEGRATION.md). [Histórico](docs/history/HO-012-resume-before-reconciliation.md).
