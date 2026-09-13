@@ -4,7 +4,7 @@ import {
 } from "../../../../../contracts/typescript";
 import { accessApi, csrf, statusOf } from "../auth/api";
 import { SESSION_EVENT } from "../auth/session";
-import { a } from "../../i18n/admin.pt-PT";
+import { a } from "../../i18n/locale";
 
 export const ADMIN_JOURNAL = "homeoffice:admin-command";
 export type Operation =

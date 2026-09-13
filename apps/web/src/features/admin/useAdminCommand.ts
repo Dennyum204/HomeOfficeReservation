@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { statusOf } from "../auth/api";
-import { a } from "../../i18n/admin.pt-PT";
+import { a } from "../../i18n/locale";
 import {
   ADMIN_JOURNAL,
   errorMessage,

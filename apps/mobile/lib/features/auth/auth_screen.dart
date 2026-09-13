@@ -1,3 +1,5 @@
+import '../../theme/appearance.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -162,6 +164,7 @@ class _AuthScreenState extends State<AuthScreen> with WidgetsBindingObserver {
                           ),
                           const SizedBox(height: 12),
                           Text(s.authIntro),
+                          const LanguagePicker(),
                           if (c.message != AuthMessage.none)
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16),

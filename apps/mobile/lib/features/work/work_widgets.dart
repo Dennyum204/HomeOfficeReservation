@@ -163,7 +163,9 @@ class WorkHistoryEntry extends StatelessWidget {
         children: [
           Text(title, style: Theme.of(context).textTheme.titleSmall),
           Text(
-            DateFormat.yMd('pt_PT').add_Hm().format(entry.createdAt.toLocal()),
+            DateFormat.yMd(Intl.defaultLocale ?? 'pt_PT')
+                .add_Hm()
+                .format(entry.createdAt.toLocal()),
           ),
           if (entry.text.isNotEmpty) Text(entry.text),
           for (final line in details) Text(line),

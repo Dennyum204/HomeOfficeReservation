@@ -1,10 +1,12 @@
+import { localizedFeedback } from "../../i18n/locale";
+import { locale } from "../../i18n/locale";
 import { Select } from "../../theme/Select";
 import { useCallback, useState } from "react";
 import type {
   NotificationDestination,
   NotificationView,
 } from "../../../../../contracts/typescript";
-import { n } from "../../i18n/notifications.pt-PT";
+import { n } from "../../i18n/locale";
 import { csrf } from "../auth/api";
 import { useMember } from "../auth/session";
 import { sessionFailure } from "../planning/api";
@@ -114,12 +116,12 @@ export function NotificationCentre({
       </p>
       {message && (
         <p className="notice success" role="status">
-          {message}
+          {localizedFeedback(message)}
         </p>
       )}
       {!!(error || list.error) && (
         <p className="notice error" role="alert">
-          {error || n.error}
+          {localizedFeedback(error || n.error)}
         </p>
       )}
       {list.loading && <p role="status">{n.loading}</p>}
@@ -141,7 +143,7 @@ export function NotificationCentre({
                 {n.events[item.eventType] ?? n.events["context.unavailable"]}
               </h2>
               <time dateTime={item.createdAt.toISOString()}>
-                {item.createdAt.toLocaleString("pt-PT")}
+                {item.createdAt.toLocaleString(locale())}
               </time>
             </div>
             <div className="notification-actions">

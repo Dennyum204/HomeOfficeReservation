@@ -1,7 +1,7 @@
 import { ResponseError } from "../../../../../contracts/typescript";
 import { statusOf } from "../auth/api";
-import { p } from "../../i18n/planning.pt-PT";
-import { w } from "../../i18n/work.pt-PT";
+import { p } from "../../i18n/locale";
+import { w } from "../../i18n/locale";
 export function readError(error: unknown): string {
   const status = statusOf(error);
   return status === 401

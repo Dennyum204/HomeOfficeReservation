@@ -7,9 +7,10 @@ DateTime dayOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
 DateTime shiftDay(DateTime value, int days) =>
     DateTime(value.year, value.month, value.day + days);
-String dateKey(DateTime value) => DateFormat('yyyy-MM-dd').format(value);
+String dateKey(DateTime value) =>
+    '${value.year.toString().padLeft(4, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}';
 String dayLabel(DateTime value) =>
-    DateFormat('EEE, d MMM yyyy', 'pt_PT').format(value);
+    DateFormat('EEE, d MMM yyyy', Intl.defaultLocale ?? 'pt_PT').format(value);
 bool sameDay(DateTime a, DateTime b) => dateKey(a) == dateKey(b);
 
 bool _zonesReady = false;

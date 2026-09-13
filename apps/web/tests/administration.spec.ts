@@ -1,3 +1,4 @@
+import { dateKey } from "../src/features/planning/dates";
 import { choose } from "./support";
 import { randomUUID } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
@@ -190,7 +191,7 @@ test("admin UI invites owner and chief, accepts, preserves dual roles, suspends 
   const day = new Date();
   day.setDate(day.getDate() + 40);
   while ([0, 6].includes(day.getDay())) day.setDate(day.getDate() + 1);
-  const date = day.toISOString().slice(0, 10),
+  const date = dateKey(day),
     note = `Pedido titular HO015 ${randomUUID().slice(0, 8)}`;
   const dialog = owner.getByRole("dialog");
   await dialog.getByLabel("De", { exact: true }).fill(date);
