@@ -2,7 +2,7 @@ import type {
   Availability,
   WorkLocation,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
+import { p } from "../../i18n/locale";
 export function locationIcon(
   location: WorkLocation,
   availability?: Availability | null,

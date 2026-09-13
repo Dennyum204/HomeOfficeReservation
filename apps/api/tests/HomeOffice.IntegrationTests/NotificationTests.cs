@@ -146,6 +146,9 @@ public sealed partial class PlanningTests
         Assert.Equal("planning.submitted", manager.EventType); Assert.Equal(request.Id, manager.Destination!.ResourceId);
         Assert.Empty((await Inbox(f, f.Employee)).Items); var before = await f.Counts();
         await Notify(f, s => s.Read(f.Manager, manager.Id, true, default)); await Notify(f, s => s.Read(f.Manager, manager.Id, true, default));
+        Assert.All((await Notify(f, s => s.List(f.Manager, 0, 25, false, false, default, readOnly: true))).Items, n => Assert.NotNull(n.ReadAt));
+        Assert.Contains((await Notify(f, s => s.List(f.Manager, 0, 25, false, false, default, readOnly: true))).Items, n => n.Id == manager.Id);
+        Assert.Empty((await Notify(f, s => s.List(f.Manager, 0, 25, true, false, default, readOnly: true))).Items);
         Assert.Equal(0, (await Notify(f, s => s.Count(f.Manager, default))).UnreadCount); Assert.Equal(before, await f.Counts());
         await f.Decide(request.Id, request.Days); var onsite = await Onsite(f); var v = (await f.Calendar()).CalendarVersion;
         await f.Run(s => s.SaveTask(f.Manager, f.Employee, null, new(v, null, "XPTO", "", f.Date, AssignedTaskState.Todo, true, onsite.Id), Key(), default));

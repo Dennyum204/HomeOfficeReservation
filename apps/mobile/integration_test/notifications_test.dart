@@ -155,10 +155,23 @@ void main() {
       final unread = (await auth.readAuthenticated(
         () => notifications.getNotificationUnreadCount(),
       ))!.unreadCount;
-      await tester.ensureVisible(find.byKey(Key('read-${item.id}')));
+      final open = find.descendant(
+        of: card,
+        matching: find.text('Abrir notificação'),
+      );
+      await tester.ensureVisible(open);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key('read-${item.id}')));
+      await tester.tap(open);
       await tester.pumpAndSettle();
+      for (
+        var i = 0;
+        i < 20 && find.byKey(const Key('request-counts')).evaluate().isEmpty;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 500));
+      }
+      expect(find.byKey(const Key('request-counts')), findsOneWidget);
+      expect(find.text('Android notification integration'), findsOneWidget);
       for (var i = 0; i < 20; i++) {
         final current = (await auth.readAuthenticated(
           () => notifications.getNotification(item!.id),
@@ -180,23 +193,16 @@ void main() {
         ),
         before,
       );
-      final open = find.descendant(
-        of: card,
-        matching: find.text('Abrir notificação'),
-      );
-      await tester.ensureVisible(open);
+      await tester.tap(find.byIcon(Icons.notifications_outlined));
       await tester.pumpAndSettle();
-      await tester.tap(open);
-      await tester.pumpAndSettle();
-      for (
-        var i = 0;
-        i < 20 && find.byKey(const Key('request-counts')).evaluate().isEmpty;
-        i++
-      ) {
+      for (var i = 0; i < 20 && card.evaluate().isNotEmpty; i++) {
         await tester.pump(const Duration(milliseconds: 500));
       }
-      expect(find.byKey(const Key('request-counts')), findsOneWidget);
-      expect(find.text('Android notification integration'), findsOneWidget);
+      expect(card, findsNothing);
+      final readPage = (await auth.readAuthenticated(
+        () => notifications.listNotifications(readOnly: true, limit: 100),
+      ))!;
+      expect(readPage.items.any((entry) => entry.id == item!.id), isTrue);
       await signOut(tester);
       // Platform secure-storage/push cleanup can finish after the last scheduled frame.
       for (

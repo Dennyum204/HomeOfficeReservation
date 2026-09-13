@@ -1,3 +1,5 @@
+import { localizedFeedback } from "../../i18n/locale";
+import { Select } from "../../theme/Select";
 import { useCallback, useState } from "react";
 import type {
   DayInput,
@@ -11,7 +13,7 @@ import type {
   RequestView,
   WorkLocation,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
+import { p } from "../../i18n/locale";
 import { accessApi, statusOf } from "../auth/api";
 import { EDITOR_KEY, useMember } from "../auth/session";
 import { planningApi, readJournal, sessionFailure, type Journal } from "./api";
@@ -147,7 +149,8 @@ function EmployeePlanning({
     restoreEditor(member.memberId, employeeId),
   );
   const [requestId, setRequestId] = useState<string | undefined>(() =>
-    initialDestination?.kind === "Request"
+    initialDestination?.kind === "Request" ||
+    initialDestination?.kind === "Proposal"
       ? initialDestination.resourceId
       : restoreEditor(member.memberId, employeeId)?.requestId,
   );
@@ -497,7 +500,7 @@ function EmployeePlanning({
       <div className="planning-controls">
         <label>
           {p.employee}
-          <select
+          <Select
             aria-label={p.employee}
             disabled={command.locked || preparing || !!editor}
             value={employeeId}
@@ -510,7 +513,7 @@ function EmployeePlanning({
                   : choice.displayName}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <button disabled={command.busy || refreshing} onClick={refresh}>
           {p.refresh}
@@ -519,12 +522,12 @@ function EmployeePlanning({
       {notice}
       {message && (
         <p className="notice success" role="status">
-          {message}
+          {localizedFeedback(message)}
         </p>
       )}
       {prepareError && (
         <p className="notice error" role="alert">
-          {prepareError}
+          {localizedFeedback(prepareError)}
         </p>
       )}
       {!!(calendar.error || requests.error || request.error) && (
@@ -652,7 +655,7 @@ function EmployeePlanning({
             </div>
             <label>
               {p.filter}
-              <select
+              <Select
                 value={filter}
                 disabled={command.locked}
                 onChange={(e) => {
@@ -668,7 +671,7 @@ function EmployeePlanning({
                       {label}
                     </option>
                   ))}
-              </select>
+              </Select>
             </label>
             {requests.data?.items.length === 0 && (
               <p className="empty-state">{p.noRequests}</p>
@@ -787,7 +790,7 @@ function EmployeePlanning({
                   {locations.map((location, i) => (
                     <label key={p.weekdays[i]}>
                       {p.weekdays[i]}
-                      <select
+                      <Select
                         value={location}
                         onChange={(e) =>
                           setLocations((values) =>
@@ -802,7 +805,7 @@ function EmployeePlanning({
                             {label}
                           </option>
                         ))}
-                      </select>
+                      </Select>
                     </label>
                   ))}
                 </div>

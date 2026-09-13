@@ -3,6 +3,7 @@ import 'dart:io';
 import 'session_helpers.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:homeoffice_api/api.dart';
 import 'package:http/http.dart' as http;
@@ -72,6 +73,10 @@ Future<void> until(
 
 Future<void> tap(WidgetTester t, Finder finder) async {
   FocusManager.instance.primaryFocus?.unfocus();
+  // Native IME metrics may arrive after Flutter has no scheduled animation.
+  // Wait for the keyboard to close before locating a target in the scroll view.
+  await SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
+  await until(t, () => t.view.viewInsets.bottom == 0, 'native keyboard closed');
   await t.pumpAndSettle();
   if (finder.evaluate().isEmpty) {
     // A previously visited detail may have retained a lower scroll position.
@@ -89,10 +94,15 @@ Future<void> tap(WidgetTester t, Finder finder) async {
       scrollable: find.byType(Scrollable).first,
       maxScrolls: 70,
     );
-  } else {
-    await t.ensureVisible(finder);
   }
+  await Scrollable.ensureVisible(t.element(finder), alignment: 0.5);
   await t.pumpAndSettle();
+  expect(
+    finder.hitTestable(),
+    findsOneWidget,
+    reason:
+        'The visible action must receive a real pointer event before tapping.',
+  );
   await t.tap(finder);
   await t.pumpAndSettle();
 }

@@ -1,3 +1,6 @@
+import { localizedFeedback } from "../../i18n/locale";
+import { locale } from "../../i18n/locale";
+import { Select } from "../../theme/Select";
 import { useEffect, useRef, useState } from "react";
 import type {
   InvitationProfile,
@@ -7,7 +10,7 @@ import type {
 import { accessApi, statusOf } from "../auth/api";
 import { useMember } from "../auth/session";
 import { Dialog } from "../planning/shared";
-import { a } from "../../i18n/admin.pt-PT";
+import { a } from "../../i18n/locale";
 import { useRead } from "../planning/useRead";
 import { useAdminCommand } from "./useAdminCommand";
 import type { Intent } from "./api";
@@ -15,7 +18,7 @@ import "./admin.css";
 
 const date = (value?: Date | null) =>
   value
-    ? new Intl.DateTimeFormat("pt-PT", {
+    ? new Intl.DateTimeFormat(locale(), {
         dateStyle: "short",
         timeStyle: "short",
       }).format(value)
@@ -138,13 +141,13 @@ function Administration({ actorId }: { actorId: string }) {
       </div>
       {command.message && (
         <p role="status" className="admin-notice">
-          {command.message}
+          {localizedFeedback(command.message)}
         </p>
       )}
       {command.journal && (
         <div role="alert" className="admin-notice">
           <p>{command.busy ? a.busy : a.uncertain}</p>
-          <p>{command.journal.label}</p>
+          <p>{localizedFeedback(command.journal.label)}</p>
           <button
             disabled={command.busy}
             onClick={() => void command.recover()}
@@ -154,7 +157,7 @@ function Administration({ actorId }: { actorId: string }) {
         </div>
       )}
       {loading && <p role="status">{a.loading}</p>}
-      {error && <p role="alert">{error}</p>}
+      {error && <p role="alert">{localizedFeedback(error)}</p>}
       {!loading && !error && (
         <>
           <label className="admin-search">
@@ -569,7 +572,7 @@ function MemberDetails({
         >
           <label>
             {a.selectManager}
-            <select
+            <Select
               aria-label={a.selectManager}
               disabled={locked}
               value={managerId}
@@ -592,7 +595,7 @@ function MemberDetails({
                       : ""}
                   </option>
                 ))}
-            </select>
+            </Select>
           </label>
           <button disabled={locked}>{a.saveManager}</button>
         </form>

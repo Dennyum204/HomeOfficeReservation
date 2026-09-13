@@ -1,12 +1,18 @@
+import { useLanguage } from "./i18n/locale";
+import { LanguagePicker } from "./i18n/LanguagePicker";
+import { ContextRead } from "./features/notifications/contextRead";
+import { notificationsApi } from "./features/notifications/api";
+import { csrf } from "./features/auth/api";
+import { sessionFailure } from "./features/planning/api";
 import { AdminWorkspace } from "./features/admin/AdminWorkspace";
-import { a } from "./i18n/admin.pt-PT";
+import { a } from "./i18n/locale";
 import { Appearance, AppearanceProvider } from "./theme/Appearance";
 import { AppIcon } from "./theme/AppIcon";
-import { useEffect, useState } from "react";
-import { strings as s } from "./i18n/pt-PT";
-import { p } from "./i18n/planning.pt-PT";
-import { w } from "./i18n/work.pt-PT";
-import { n } from "./i18n/notifications.pt-PT";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { strings as s } from "./i18n/locale";
+import { p } from "./i18n/locale";
+import { w } from "./i18n/locale";
+import { n } from "./i18n/locale";
 import type { NotificationDestination } from "../../../contracts/typescript";
 import { NotificationCentre } from "./features/notifications/NotificationCentre";
 import { useNotificationPolling } from "./features/notifications/useNotificationPolling";
@@ -22,6 +28,7 @@ import "./features/planning/work.css";
 import "./theme/theme.css";
 
 export function App() {
+  useLanguage();
   return (
     <AppearanceProvider>
       <AuthGate>
@@ -61,6 +68,7 @@ export function WorkspaceShell() {
   const [launch, setLaunch] = useState<{
     key: number;
     destination: NotificationDestination;
+    notificationId: string;
   }>();
   const inbox = useNotificationPolling();
   const member = useMember();
@@ -72,8 +80,47 @@ export function WorkspaceShell() {
         : key === "onsite" || key === "tasks"
           ? w[key]
           : p[key];
-  function openNotification(destination: NotificationDestination) {
-    setLaunch((old) => ({ key: (old?.key ?? 0) + 1, destination }));
+  const reading = useRef<string | null>(null);
+  const [readError, setReadError] = useState(false);
+  const contextOpened = useCallback(
+    (id: string) => {
+      if (
+        !launch ||
+        launch.destination.resourceId !== id ||
+        reading.current === launch.notificationId
+      )
+        return;
+      const notificationId = launch.notificationId;
+      reading.current = notificationId;
+      void (async () => {
+        try {
+          await notificationsApi.setNotificationRead(
+            { notificationId, notificationReadInput: { read: true } },
+            await csrf(),
+          );
+          if (reading.current !== notificationId) return;
+          setReadError(false);
+          inbox.refresh();
+        } catch (error) {
+          if (reading.current !== notificationId) return;
+          sessionFailure(error);
+          setReadError(true);
+        }
+      })();
+    },
+    [launch, inbox],
+  );
+  function openNotification(
+    destination: NotificationDestination,
+    notificationId: string,
+  ) {
+    reading.current = null;
+    setReadError(false);
+    setLaunch((old) => ({
+      key: (old?.key ?? 0) + 1,
+      destination,
+      notificationId,
+    }));
     setSection(
       destination.kind === "Requirement"
         ? "onsite"
@@ -121,14 +168,14 @@ export function WorkspaceShell() {
                   </span>
                 )}
                 <span className="nav-arrow" aria-hidden="true">
-                  ›
+                  â€º
                 </span>
               </button>
             ))}
         </nav>
         <div className="sidebar-note">
           <div aria-hidden="true" className="route-line">
-            PT <span>············</span> CH
+            PT <span>Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·</span> CH
           </div>
           <p>{s.independent}</p>
         </div>
@@ -175,17 +222,38 @@ export function WorkspaceShell() {
           <div
             hidden={section === "notifications" || section === "administration"}
           >
-            <PlanningWorkspace
-              key={launch?.key ?? 0}
-              initialDestination={launch?.destination}
-              section={
+            <ContextRead.Provider
+              value={
                 section === "notifications" || section === "administration"
-                  ? "calendar"
-                  : section
+                  ? () => {}
+                  : contextOpened
               }
-              onSection={setSection}
-            />
+            >
+              <PlanningWorkspace
+                key={launch?.key ?? 0}
+                initialDestination={launch?.destination}
+                section={
+                  section === "notifications" || section === "administration"
+                    ? "calendar"
+                    : section
+                }
+                onSection={setSection}
+              />
+            </ContextRead.Provider>
           </div>
+          {readError && (
+            <p role="alert">
+              {n.readFailed}{" "}
+              <button
+                onClick={() => {
+                  reading.current = null;
+                  if (launch) contextOpened(launch.destination.resourceId);
+                }}
+              >
+                {n.retryRead}
+              </button>
+            </p>
+          )}
           {section === "administration" && <AdminWorkspace />}
           {section === "notifications" && (
             <NotificationCentre
@@ -196,6 +264,7 @@ export function WorkspaceShell() {
           )}
           {section === "settings" && (
             <div className="settings-connection">
+              <LanguagePicker />
               <Appearance />
               <ConnectionCard />
             </div>
@@ -204,7 +273,7 @@ export function WorkspaceShell() {
         </main>
         <footer>
           {s.footer}
-          <span>HomeOffice · 0.1</span>
+          <span>HomeOffice Â· 0.1</span>
         </footer>
       </div>
     </div>

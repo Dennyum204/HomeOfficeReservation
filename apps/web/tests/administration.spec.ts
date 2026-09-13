@@ -1,3 +1,5 @@
+import { dateKey } from "../src/features/planning/dates";
+import { choose } from "./support";
 import { randomUUID } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -155,9 +157,10 @@ test("admin UI invites owner and chief, accepts, preserves dual roles, suspends 
     (m) => m.email === chiefEmail,
   )!;
   await select(owner, name);
-  await owner
-    .getByLabel("Chefe associado", { exact: true })
-    .selectOption(chiefRow.memberId);
+  await choose(
+    owner.getByLabel("Chefe associado", { exact: true }),
+    chiefRow.memberId,
+  );
   await owner
     .getByRole("button", { name: "Rever associação", exact: true })
     .click();
@@ -188,7 +191,7 @@ test("admin UI invites owner and chief, accepts, preserves dual roles, suspends 
   const day = new Date();
   day.setDate(day.getDate() + 40);
   while ([0, 6].includes(day.getDay())) day.setDate(day.getDate() + 1);
-  const date = day.toISOString().slice(0, 10),
+  const date = dateKey(day),
     note = `Pedido titular HO015 ${randomUUID().slice(0, 8)}`;
   const dialog = owner.getByRole("dialog");
   await dialog.getByLabel("De", { exact: true }).fill(date);
@@ -217,9 +220,10 @@ test("admin UI invites owner and chief, accepts, preserves dual roles, suspends 
       .getByRole("region", { name: "Detalhe do pedido", exact: true })
       .getByText("0 dias aprovados · 1 dia pendente", { exact: true }),
   ).toBeVisible();
-  await chiefPage
-    .getByLabel("Colaborador selecionado", { exact: true })
-    .selectOption(ownerRow.memberId);
+  await choose(
+    chiefPage.getByLabel("Colaborador selecionado", { exact: true }),
+    ownerRow.memberId,
+  );
   await chiefPage.getByRole("button", { name: "Pedidos", exact: true }).click();
   await expect(
     chiefPage.getByRole("button", { name: "Atualizar dados", exact: true }),

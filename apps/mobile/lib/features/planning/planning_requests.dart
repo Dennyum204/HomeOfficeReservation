@@ -365,7 +365,7 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
                 if (day.reason?.isNotEmpty == true) Text(day.reason!),
                 if (day.decidedAt != null)
                   Text(
-                    DateFormat.yMd('pt_PT')
+                    DateFormat.yMd(Intl.defaultLocale ?? 'pt_PT')
                         .add_Hm()
                         .format(day.decidedAt!.toLocal()),
                   ),
@@ -588,7 +588,7 @@ class _PlanningRequestDetailState extends State<PlanningRequestDetail> {
                 ),
                 Text(comment.text),
                 Text(
-                  DateFormat.yMd('pt_PT')
+                  DateFormat.yMd(Intl.defaultLocale ?? 'pt_PT')
                       .add_Hm()
                       .format(comment.createdAt.toLocal()),
                 ),

@@ -1,5 +1,10 @@
 # HomeOfficeReservation
 
+**HO-021 — Idiomas:** português, inglês e alemão na Web/Android, preferência local e formatação regional. [Âmbito, limites de emails/push e verificação](docs/HO-021-LANGUAGES-PLAN.md).
+
+**HO-020 — UI e notificações:** caixa Por ler, leitura após contexto autorizado, dropdowns acessíveis e ajustes de calendário/formulários Web/Android. [Implementação, testes e revisão visual](docs/HO-020-UI-NOTIFICATIONS.md).
+
+
 **HO-012 — piloto inicial Web no Raspberry Pi:** [stack e comandos para revisão](infra/pi/README.md), [proposta atual](docs/HO-012-PILOT.md). NAS preservado como histórico; [Ensaio isolado real e medições iniciais](docs/HO-012-PI-TRIAL.md); aceitação manual parcial confirmada (submissão, aprovação, calendário e notificação). [HTTPS público autorizado e verificado](docs/HO-012-HTTPS-PUBLICATION.md) em homeoffice.ferbatech.com; SMTP Brevo ativo, convite recebido e ativado pela aplicação em teste manual; aceitação funcional confirmada, fecho operacional pendente do backup agendado e CI. PR #37 draft, sem lançamento V1.
 
 [Backups externos: envio e restauro verificados](docs/HO-012-BACKUPS.md). R2 privado UE, timers diário/semanal ativos, retenção sete diárias/seis mensais. Alertas externos de falha/ausência/recuperação verificados; disparos agendados ainda pendentes; recuperação independente com Bitwarden passou. Cópia no PC continua complementar.

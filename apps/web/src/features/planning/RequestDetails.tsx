@@ -1,4 +1,7 @@
+import { localizedFeedback } from "../../i18n/locale";
+import { ContextRead } from "../notifications/contextRead";
 import {
+  useContext,
   useCallback,
   useEffect,
   useRef,
@@ -11,9 +14,9 @@ import type {
   RequestView,
   SelectedDay,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
-import { appearance as v } from "../../i18n/appearance.pt-PT";
-import { w } from "../../i18n/work.pt-PT";
+import { p } from "../../i18n/locale";
+import { appearance as v } from "../../i18n/locale";
+import { w } from "../../i18n/locale";
 import { planningApi } from "./api";
 import { dateKey, dayLabel, instantLabel } from "./dates";
 import { DayChip, Dialog, StatusBadge } from "./shared";
@@ -55,6 +58,8 @@ interface Props {
 }
 export function RequestDetails(props: Props) {
   const { request, employeeId, disabled, locked, own, manager, nonce } = props;
+  const opened = useContext(ContextRead);
+  useEffect(() => opened(request.id), [opened, request.id]);
   const [selection, setSelection] = useState(
     request.days.filter((d) => d.decision === "Pending").map((d) => d.id),
   );
@@ -388,7 +393,7 @@ export function RequestDetails(props: Props) {
       </div>
       {error && (
         <p className="notice error" role="alert">
-          {error}
+          {localizedFeedback(error)}
         </p>
       )}
       <h3>{v.history}</h3>

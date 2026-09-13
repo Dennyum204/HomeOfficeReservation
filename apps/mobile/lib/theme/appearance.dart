@@ -3,11 +3,23 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../l10n/generated/app_localizations.dart';
 
+import 'package:intl/intl.dart';
+
 class AppearanceController extends ChangeNotifier {
   AppearanceController({FlutterSecureStorage? storage})
     : _storage = storage ?? const FlutterSecureStorage();
   final FlutterSecureStorage _storage;
   static const _key = 'homeoffice.appearance';
+  static const languageKey = 'homeoffice.language';
+  String language = 'pt';
+  String get formattingLocale => switch (language) {
+    'en' => 'en_GB',
+    'de' => 'de_CH',
+    _ => 'pt_PT',
+  };
+  bool languageStorageFailed = false;
+  int _languageGeneration = 0;
+  Future<void> _languageWrites = Future<void>.value();
   ThemeMode mode = ThemeMode.system;
   bool storageFailed = false;
   bool _disposed = false;
@@ -15,6 +27,10 @@ class AppearanceController extends ChangeNotifier {
   Future<void> _writes = Future<void>.value();
 
   Future<void> restore() async {
+    await Future.wait([_restoreAppearance(), restoreLanguage()]);
+  }
+
+  Future<void> _restoreAppearance() async {
     final generation = _generation;
     try {
       final value = await _storage.read(key: _key);
@@ -46,6 +62,38 @@ class AppearanceController extends ChangeNotifier {
       }
     });
     await _writes;
+  }
+
+  Future<void> restoreLanguage() async {
+    final generation = _languageGeneration;
+    try {
+      final value = await _storage.read(key: languageKey);
+      if (_disposed || generation != _languageGeneration) return;
+      language = value == 'en' || value == 'de' ? value! : 'pt';
+      Intl.defaultLocale = formattingLocale;
+      notifyListeners();
+    } catch (_) {
+      // Language storage failure must not prevent access to the application.
+    }
+  }
+
+  Future<void> selectLanguage(String value) async {
+    if (!['pt', 'en', 'de'].contains(value)) return;
+    final generation = ++_languageGeneration;
+    language = value;
+    Intl.defaultLocale = formattingLocale;
+    languageStorageFailed = false;
+    notifyListeners();
+    _languageWrites = _languageWrites.then((_) async {
+      try {
+        await _storage.write(key: languageKey, value: value);
+      } catch (_) {
+        if (_disposed || generation != _languageGeneration) return;
+        languageStorageFailed = true;
+        notifyListeners();
+      }
+    });
+    await _languageWrites;
   }
 
   @override
@@ -110,6 +158,49 @@ class AppearancePicker extends StatelessWidget {
             ),
             if (c.storageFailed)
               Semantics(liveRegion: true, child: Text(s.appearanceStorage)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LanguagePicker extends StatelessWidget {
+  const LanguagePicker({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final c = AppearanceScope.of(context);
+    if (c == null) return const SizedBox.shrink();
+    final s = AppLocalizations.of(context)!;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              s.languageTitle,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            Text(s.languageHelp),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              key: ValueKey('language-${c.language}'),
+              initialValue: c.language,
+              isExpanded: true,
+              decoration: InputDecoration(labelText: s.languageTitle),
+              items: const [
+                DropdownMenuItem(value: 'pt', child: Text('Português')),
+                DropdownMenuItem(value: 'en', child: Text('English')),
+                DropdownMenuItem(value: 'de', child: Text('Deutsch')),
+              ],
+              onChanged: (value) {
+                if (value != null) c.selectLanguage(value);
+              },
+            ),
+            if (c.languageStorageFailed)
+              Semantics(liveRegion: true, child: Text(s.languageStorage)),
           ],
         ),
       ),

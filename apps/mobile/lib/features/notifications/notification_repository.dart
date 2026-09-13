@@ -12,6 +12,7 @@ class NotificationRepository {
           offset: offset,
           limit: 20,
           unreadOnly: filter == 'unread',
+          readOnly: filter == 'read',
           historical: filter == 'archive',
         ))!,
       );

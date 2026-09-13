@@ -201,7 +201,9 @@ class NotificationsApi {
   /// * [bool] unreadOnly:
   ///
   /// * [bool] historical:
-  Future<Response> listNotificationsWithHttpInfo({ int? offset, int? limit, bool? unreadOnly, bool? historical, Future<void>? abortTrigger, }) async {
+  ///
+  /// * [bool] readOnly:
+  Future<Response> listNotificationsWithHttpInfo({ int? offset, int? limit, bool? unreadOnly, bool? historical, bool? readOnly, Future<void>? abortTrigger, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/notifications';
 
@@ -223,6 +225,9 @@ class NotificationsApi {
     }
     if (historical != null) {
       queryParams.addAll(_queryParams('', 'historical', historical));
+    }
+    if (readOnly != null) {
+      queryParams.addAll(_queryParams('', 'readOnly', readOnly));
     }
 
     const contentTypes = <String>[];
@@ -249,8 +254,10 @@ class NotificationsApi {
   /// * [bool] unreadOnly:
   ///
   /// * [bool] historical:
-  Future<NotificationPage?> listNotifications({ int? offset, int? limit, bool? unreadOnly, bool? historical, Future<void>? abortTrigger, }) async {
-    final response = await listNotificationsWithHttpInfo(offset: offset, limit: limit, unreadOnly: unreadOnly, historical: historical, abortTrigger: abortTrigger,);
+  ///
+  /// * [bool] readOnly:
+  Future<NotificationPage?> listNotifications({ int? offset, int? limit, bool? unreadOnly, bool? historical, bool? readOnly, Future<void>? abortTrigger, }) async {
+    final response = await listNotificationsWithHttpInfo(offset: offset, limit: limit, unreadOnly: unreadOnly, historical: historical, readOnly: readOnly, abortTrigger: abortTrigger,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

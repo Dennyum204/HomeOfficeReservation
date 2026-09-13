@@ -1,7 +1,8 @@
+import { numberLabel } from "../../i18n/locale";
 import { useEffect, useRef } from "react";
 import type { CalendarView } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
-import { w } from "../../i18n/work.pt-PT";
+import { p } from "../../i18n/locale";
+import { w } from "../../i18n/locale";
 import {
   addDays,
   addMonths,
@@ -157,7 +158,7 @@ export function CalendarPanel(props: Props) {
         <div className="summary-grid">
           {totals.map(([label, count]) => (
             <div className="summary-item" key={label}>
-              <strong>{count}</strong>
+              <strong>{numberLabel(Number(count))}</strong>
               <span>{label}</span>
             </div>
           ))}
@@ -213,7 +214,7 @@ export function CalendarPanel(props: Props) {
               </button>
               <span>
                 {selected.length > 0
-                  ? `${selected.length} ${p.days}`
+                  ? p.countDays(selected.length)
                   : p.selectHelp}
               </span>
               <button
@@ -257,6 +258,8 @@ export function CalendarPanel(props: Props) {
                     <div role="gridcell" key={date}>
                       <button
                         data-date={date}
+                        data-location={plan?.location}
+                        data-pending={proposals.length > 0}
                         className={`calendar-day ${date < range.from || date > range.to ? "outside" : ""} ${date === active ? "active" : ""}`}
                         aria-label={`${label}${obligations.length ? `. ${obligations.map((r) => `${w.mandatory}: ${w.state[r.state]}`).join(". ")}` : ""}`}
                         aria-pressed={

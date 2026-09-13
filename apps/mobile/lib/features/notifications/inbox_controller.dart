@@ -12,11 +12,12 @@ class InboxController extends ChangeNotifier {
   NotificationView? detail;
   int unreadCount = 0;
   int offset = 0;
-  String filter = 'all';
+  String filter = 'unread';
   bool loading = false;
   bool busy = false;
   bool error = false;
   bool unavailable = false;
+  bool readFailed = false;
   bool visible = true;
   bool inboxOpen = false;
   bool _disposed = false;
@@ -62,6 +63,14 @@ class InboxController extends ChangeNotifier {
   }
 
   void showInbox(bool show) {
+    if (show && !inboxOpen) {
+      filter = 'unread';
+      offset = 0;
+      page = null;
+      detail = null;
+      readFailed = false;
+      _generation++;
+    }
     inboxOpen = show;
     if (show) unawaited(refresh());
   }
@@ -90,6 +99,7 @@ class InboxController extends ChangeNotifier {
     busy = true;
     detail = null;
     error = false;
+    readFailed = false;
     unavailable = false;
     _notify();
     try {
@@ -107,22 +117,34 @@ class InboxController extends ChangeNotifier {
   }
 
   Future<void> read(NotificationView item) async {
-    if (busy || _disposed) return;
+    if (busy || _disposed || item.readAt != null) return;
     final generation = _generation;
     busy = true;
-    error = false;
+    readFailed = false;
     _notify();
     try {
-      final result = await repository.markRead(item.id, item.readAt == null);
+      final result = await repository.markRead(item.id, true);
       if (!_disposed && generation == _generation) {
         if (detail?.id == result.id) detail = result;
+        if (result.readAt != null) {
+          if (unreadCount > 0) unreadCount--;
+          if (page != null) {
+            page = page!.copyWith(
+              items: page!.items
+                  .where((entry) => filter != 'unread' || entry.id != result.id)
+                  .map((entry) => entry.id == result.id ? result : entry)
+                  .toList(),
+              unreadCount: unreadCount,
+            );
+          }
+        }
         while (loading && !_disposed) {
           await Future<void>.delayed(const Duration(milliseconds: 30));
         }
         await refresh();
       }
     } catch (_) {
-      if (!_disposed && generation == _generation) error = true;
+      if (!_disposed && generation == _generation) readFailed = true;
     } finally {
       busy = false;
       _notify();

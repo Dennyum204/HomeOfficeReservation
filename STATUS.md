@@ -1,5 +1,15 @@
 # Estado do projeto
 
+Atualizado: 2026-09-14.
+
+HO-021 integrado pelo responsável no commit `bda687c76428eb854aef43c65e7de049e0ca394f`; confirmação da CI de integração ainda pendente, [PR #52](https://github.com/Dennyum204/HomeOfficeReservation/pull/52), [issue #50](https://github.com/Dennyum204/HomeOfficeReservation/issues/50): PT/EN/DE na Web e Android, preferência persistente por dispositivo e formatos regionais. [Implementação e limites](docs/HO-021-LANGUAGES-PLAN.md), [34 capturas reais](docs/evidence/ho021/README.md). Verificação local: 18 unitários Web, 58 Flutter, 36 E2E existentes e 4 de idiomas; ensaio nativo com 18 capturas; 178 contratos sem divergência. Os quatro checks remotos do head final e ausência de conflitos são obrigatórios antes de retirar draft. Emails/push do servidor continuam em português; os eventos da caixa de notificações são traduzidos. Sem deployment.
+
+HO-020 concluída por merge humano do [PR #51](https://github.com/Dennyum204/HomeOfficeReservation/pull/51), commit `e00bd1c3eb5b638a4e8dab35378ee47fd16ad8e0`, confirmado na história de origin/main. Aceitação manual comunicada pelo responsável; os quatro checks de integração passaram nos runs [34784701259](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34784701259) e [34784701252](https://github.com/Dennyum204/HomeOfficeReservation/actions/runs/34784701252). [Evidência HO-020](docs/HO-020-UI-NOTIFICATIONS.md).
+
+HO-016 concluída por merge humano do PR #45 em main (`f07c3dd7185743c62f5c47d15c4b8a5198d92cbb`) e CI de integração verificados. PR #37, piloto Pi, configuração privada e ambientes habituais preservados. A preparação operacional atual de HO-012 está preservada nesta branch.
+
+Atualização do Pi autorizada em 2026-09-14 para incluir HO-020/021. Preparação ARM64 em curso; SSH para o endereço conhecido expirou antes da autenticação. Nenhuma alteração no Pi nesta tentativa. [Procedimento](docs/HO-012-APP-UPDATE.md).
+
 ## Âmbito vigente aprovado
 
 Âmbito aprovado: piloto inicial Web no Pi, aceitação funcional anterior válida. HO-017/#46 Android, HO-018/#47 staging/produção e HO-019/#48 TLS/monitorização geral separados e não concluídos. Renovação da origem antes de 11/10/2026. Bloqueios do PR: evidência do backup diário agendado e sinal externo, CI final e conflitos; não acrescentar gates.

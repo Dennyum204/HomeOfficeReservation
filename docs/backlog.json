@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project": "HomeOfficeReservation",
-  "updated_at": "2026-09-13",
+  "updated_at": "2026-09-14",
   "planning_note": "Âmbito aprovado: piloto inicial Web no Pi, aceitação funcional anterior válida. HO-017/#46 Android, HO-018/#47 staging/produção e HO-019/#48 TLS/monitorização geral separados e não concluídos. Renovação da origem antes de 11/10/2026. Bloqueios do PR: evidência do backup diário agendado e sinal externo, CI final e conflitos; não acrescentar gates.",
   "releases": [
     {
@@ -1578,6 +1578,92 @@
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/48",
       "pr_urls": []
+    },
+    {
+      "id": "HO-020",
+      "title": "UI e leitura automática de notificações",
+      "release": "ui-refresh",
+      "area": "fullstack",
+      "status": "done",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-016"
+      ],
+      "features": [],
+      "acceptance": [
+        "Ao entrar em Notificações, selecionar “Por ler” e mostrar apenas notificações ainda não abertas.",
+        "Manter a possibilidade de consultar todas e as já lidas.",
+        "Mostrar um estado vazio claro quando não houver notificações por ler.",
+        "Ao abrir uma notificação e apresentar o respetivo contexto com sucesso, marcá-la automaticamente como lida.",
+        "Atualizar lista e contador sem exigir refresh manual; ao regressar à lista “Por ler”, essa notificação já não deve aparecer.",
+        "Retirar o botão individual “Marcar como lida” do percurso normal.",
+        "Não marcar apenas por listar, receber uma push ou tentar uma navegação que falhou.",
+        "Tratar falhas de persistência sem apresentar como guardada uma leitura que o servidor rejeitou.",
+        "Ler uma notificação nunca aprova pedidos, confirma presenças ou altera tarefas.",
+        "Aplicar este comportamento também no Android, incluindo abertura por push quando aplicável.",
+        "Corrigir o tamanho excessivo dos checkboxes e a disposição dos respetivos nomes.",
+        "Colocar cada checkbox junto do seu texto, com dimensões normais e alinhamento consistente.",
+        "Centrar o modal e manter todo o conteúdo dentro da largura disponível.",
+        "Eliminar o scroll horizontal pela correção do layout, sem simplesmente esconder ou cortar conteúdo.",
+        "Preservar scroll vertical quando necessário, labels acessíveis e os controlos de papéis existentes.",
+        "Acrescentar um fundo subtil ou indicador de cor nos quadrados dos dias para distinguir presencial, remoto e pendente.",
+        "Usar tons suaves compatíveis com Claude + em claro e escuro; evitar verdes fortes.",
+        "Manter texto e ícones: a distinção não pode depender apenas da cor.",
+        "Preservar a identificação de hoje, seleção, foco e dias fora do mês.",
+        "Distinguir localização de estado de decisão: um pedido pendente sobre um dia já aprovado não deve fazer desaparecer a situação aprovada.",
+        "Aplicar a mesma linguagem visual ao calendário Android, respeitando o seu layout.",
+        "Em “Resumo dos dias”, colocar a data no cabeçalho do cartão e os dois dropdowns alinhados lado a lado, com labels e alturas consistentes.",
+        "Em ecrãs estreitos, empilhar os campos de forma organizada.",
+        "Substituir “× Remover dia” por um botão com ícone de lixo no canto superior direito do cartão.",
+        "Dar-lhe nome acessível “Remover dia”, área de toque adequada e comportamento exclusivo de remoção desse dia, sem submeter o formulário.",
+        "Modernizar os dropdowns da Web para combinar com Claude +, incluindo a lista aberta e os estados de foco, seleção, erro e desativado.",
+        "Eliminar o aspeto cinzento nativo mostrado na captura.",
+        "Reutilizar os componentes e dependências adequados já existentes no projeto.",
+        "Garantir utilização por teclado, leitores de ecrã e toque, incluindo dentro de modais, sem menus cortados ou problemas de foco.",
+        "Aplicar o componente de forma consistente nos formulários e filtros existentes.",
+        "Verificar os ecrãs afetados em claro/escuro, desktop e largura de telemóvel.",
+        "Acrescentar regressões relevantes para leitura automática, contador e falhas, e verificar os layouts com capturas reais.",
+        "Executar as verificações exigidas pelo repositório.",
+        "Disponibilizar ambiente local isolado e capturas antes/depois para a minha revisão. Preservar as contas e os dados habituais.",
+        "Reportar o commit verificado, resultados e passos curtos de teste manual."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/49",
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/51"
+      ],
+      "notes": [
+        "Aceitação manual confirmada pelo responsável. Merge humano do PR #51 em main: e00bd1c3eb5b638a4e8dab35378ee47fd16ad8e0, ancestral de origin/main verificado por fetch. CI de integração verde: project-docs run 34784701259; backend-contracts, web e flutter-android run 34784701252."
+      ]
+    },
+    {
+      "id": "HO-021",
+      "title": "Português, inglês e alemão",
+      "release": "ui-refresh",
+      "area": "fullstack",
+      "status": "review",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-020"
+      ],
+      "features": [],
+      "acceptance": [
+        "Manter português e acrescentar inglês e alemão na Web e Android.",
+        "Adicionar seleção de idioma em Definições, com preferência persistente e comportamento inicial documentado.",
+        "Traduzir navegação, formulários, modais, estados, formulários, modais, estados, validações e mensagens visíveis, incluindo acessibilidade e plurais.",
+        "Usar formatação de datas e números adequada ao idioma, preservando os valores de data e as regras de fuso horário do domínio.",
+        "Não traduzir conteúdo escrito pelos utilizadores nem alterar códigos de estados ou contratos da API.",
+        "Verificar textos alemães mais longos, evitar strings por traduzir e reutilizar a infraestrutura de localização existente.",
+        "Identificar explicitamente como ficam os emails e as notificações produzidos pelo servidor, para não declarar suporte completo deixando essas mensagens esquecidas."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/50",
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/52"
+      ],
+      "notes": [
+        "Implementação PT/EN/DE Web/Android no PR #52, após integração verificada de HO-020. Preferência local persistente e formatos pt-PT/en-GB/de-CH; contratos e dados preservados.",
+        "Verificação local: 18 unitários Web, 58 Flutter, 36 E2E existentes e 4 de idiomas; 178 contratos sem divergência; 34 capturas reais. Quatro checks remotos do head final obrigatórios antes de retirar draft.",
+        "Emails e texto push do servidor continuam explicitamente em português; caixa de notificações traduz eventos. Não existe preferência global de destinatário. Sem deployment; PR #37 e piloto Pi preservados."
+      ]
     }
   ],
   "repository_url": "https://github.com/Dennyum204/HomeOfficeReservation"

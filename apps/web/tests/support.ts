@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 const file = process.env.HO_DEV_ACCOUNTS;
 if (!file)
@@ -20,4 +20,24 @@ export async function signIn(
   await expect(
     page.getByRole("region", { name: "Conta", exact: true }),
   ).toBeVisible();
+}
+
+// Exercise the visible combobox, including its open list and selection.
+export async function choose(
+  control: Locator,
+  value: string | { label: string },
+) {
+  await control.click();
+  if (typeof value === "string") {
+    await control
+      .page()
+      .locator('[role="option"]')
+      .locator(`:scope[data-value="${value}"]`)
+      .click();
+  } else {
+    await control
+      .page()
+      .getByRole("option", { name: value.label, exact: true })
+      .click();
+  }
 }

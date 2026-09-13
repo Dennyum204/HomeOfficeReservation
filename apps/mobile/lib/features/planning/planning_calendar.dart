@@ -62,7 +62,7 @@ class PlanningCalendar extends StatelessWidget {
               icon: const Icon(Icons.chevron_left),
             ),
             Text(
-              DateFormat.yMMMM('pt_PT').format(c.month),
+              DateFormat.yMMMM(Intl.defaultLocale ?? 'pt_PT').format(c.month),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             IconButton(
@@ -95,9 +95,9 @@ class PlanningCalendar extends StatelessWidget {
             (i) => Expanded(
               child: Center(
                 child: Text(
-                  DateFormat.E('pt_PT')
+                  DateFormat.E(Intl.defaultLocale ?? 'pt_PT')
                       .format(DateTime(2026, 9, 7 + i))
-                      .substring(0, 3),
+                      .replaceAll('.', ''),
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ),
@@ -159,13 +159,30 @@ class PlanningCalendar extends StatelessWidget {
                   color: chosen
                       ? Theme.of(context).colorScheme.primaryContainer
                       : date.month == c.month.month
-                      ? Theme.of(context).colorScheme.surface
+                      ? Color.alphaBlend(
+                          (day?.location == WorkLocation.remotePortugal
+                                  ? const Color(0xffb56545)
+                                  : const Color(0xff72849a))
+                              .withValues(
+                                alpha:
+                                    day?.availability == Availability.working &&
+                                        (day?.location ==
+                                                WorkLocation.remotePortugal ||
+                                            day?.location ==
+                                                WorkLocation.officeSwitzerland)
+                                    ? 0.12
+                                    : 0,
+                              ),
+                          Theme.of(context).colorScheme.surface,
+                        )
                       : Theme.of(context).colorScheme.surfaceContainerLow,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(9),
                     side: BorderSide(
                       color: chosen
                           ? Theme.of(context).colorScheme.primary
+                          : waiting > 0
+                          ? const Color(0xffb89455)
                           : Theme.of(context).colorScheme.outlineVariant,
                       width: chosen ? 2 : 1,
                     ),
@@ -368,7 +385,7 @@ class PlanningCalendar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Text(
-              '${s.planUpdated}: ${DateFormat.Hm('pt_PT').format(c.updatedAt!)}',
+              '${s.planUpdated}: ${DateFormat.Hm(Intl.defaultLocale ?? 'pt_PT').format(c.updatedAt!)}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),

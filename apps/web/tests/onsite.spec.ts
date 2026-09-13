@@ -1,3 +1,4 @@
+import { choose } from "./support";
 import { randomUUID } from "node:crypto";
 import {
   test,
@@ -206,9 +207,9 @@ test("onsite reading, preserved remote conflict, explicit resolution and linked 
 }, info) => {
   await signIn(page);
   await ready(page);
-  const employee = await page
+  const employee = (await page
     .getByLabel("Colaborador selecionado", { exact: true })
-    .inputValue();
+    .getAttribute("data-value"))!;
   const dates = await freeDates(page, employee);
   const tag = `${info.project.name} ${randomUUID().slice(0, 6)}`;
   const title = `Instalação da máquina XPTO · ${tag}`;
@@ -221,9 +222,10 @@ test("onsite reading, preserved remote conflict, explicit resolution and linked 
   try {
     await signIn(manager, "manager");
     await ready(manager);
-    await manager
-      .getByLabel("Colaborador selecionado", { exact: true })
-      .selectOption(employee);
+    await choose(
+      manager.getByLabel("Colaborador selecionado", { exact: true }),
+      employee,
+    );
     await ready(manager);
     await createOnsite(manager, title, dates[0], "Ativa", true);
     await openOnsite(page, title);
@@ -439,13 +441,13 @@ test("onsite inputs survive stale versions and reauthentication; uncertain commi
 }, info) => {
   await signIn(page, "manager");
   await ready(page);
-  await page
-    .getByLabel("Colaborador selecionado", { exact: true })
-    .selectOption({ label: "Colaborador de teste" });
+  await choose(page.getByLabel("Colaborador selecionado", { exact: true }), {
+    label: "Colaborador de teste",
+  });
   await ready(page);
-  const employee = await page
+  const employee = (await page
     .getByLabel("Colaborador selecionado", { exact: true })
-    .inputValue();
+    .getAttribute("data-value"))!;
   const dates = await freeDates(page, employee);
   const tag = `${info.project.name} ${randomUUID().slice(0, 6)}`;
   const context = await createOnsite(
@@ -509,9 +511,10 @@ test("onsite inputs survive stale versions and reauthentication; uncertain commi
   ).toBeVisible();
   await signIn(page, "manager");
   await ready(page);
-  await page
-    .getByLabel("Colaborador selecionado", { exact: true })
-    .selectOption(employee);
+  await choose(
+    page.getByLabel("Colaborador selecionado", { exact: true }),
+    employee,
+  );
   await ready(page);
   await navigate(page, "Presenças");
   await page

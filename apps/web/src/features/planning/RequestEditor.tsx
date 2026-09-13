@@ -1,3 +1,5 @@
+import { localizedFeedback } from "../../i18n/locale";
+import { Select } from "../../theme/Select";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   DayInputToJSON,
@@ -6,8 +8,8 @@ import {
   type WorkLocation,
   type Availability,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
-import { appearance as v } from "../../i18n/appearance.pt-PT";
+import { p } from "../../i18n/locale";
+import { appearance as v } from "../../i18n/locale";
 import { EDITOR_KEY } from "../auth/session";
 import { planningApi, sessionFailure } from "./api";
 import { dateKey, dateValue, dayLabel, todayInZone } from "./dates";
@@ -163,7 +165,7 @@ export function RequestEditor({
             <div className="form-row">
               <label>
                 {p.workLocation}
-                <select
+                <Select
                   value={location}
                   disabled={availability !== "Working"}
                   onChange={(e) => setLocation(e.target.value as WorkLocation)}
@@ -174,11 +176,11 @@ export function RequestEditor({
                   <option value="OfficeSwitzerland">
                     {p.location.OfficeSwitzerland}
                   </option>
-                </select>
+                </Select>
               </label>
               <label>
                 {p.availabilityLabel}
-                <select
+                <Select
                   value={availability}
                   onChange={(e) =>
                     setAvailability(e.target.value as Availability)
@@ -189,7 +191,7 @@ export function RequestEditor({
                       {label}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
             </div>
           </fieldset>
@@ -265,7 +267,7 @@ export function RequestEditor({
                 {preview.length > 0 && (
                   <div className="range-preview">
                     <strong>
-                      {p.included} · {preview.length} {p.days}
+                      {p.included} · {p.countDays(preview.length)}
                     </strong>
                     <ul>
                       {preview.map((date) => (
@@ -302,7 +304,7 @@ export function RequestEditor({
             <legend>{v.summary}</legend>
             <p className="muted">{v.summaryHint}</p>
             <h3>
-              {p.selectedDates} · {days.length} {p.days}
+              {p.selectedDates} · {p.countDays(days.length)}
             </h3>
             {days.length === 0 && <p className="muted">{p.emptyDates}</p>}
             <div className="editor-days">
@@ -310,10 +312,8 @@ export function RequestEditor({
                 <div className="editor-day" key={dateKey(day.localDate)}>
                   <strong>{dayLabel(dateKey(day.localDate))}</strong>
                   <label>
-                    <span className="sr-only">
-                      {p.availabilityLabel} {dayLabel(dateKey(day.localDate))}
-                    </span>
-                    <select
+                    <span>{p.availabilityLabel}</span>
+                    <Select
                       aria-label={`${p.availabilityLabel} ${dateKey(day.localDate)}`}
                       disabled={day.cancel}
                       value={day.availability}
@@ -331,14 +331,12 @@ export function RequestEditor({
                           {label}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   </label>
                   {day.availability === "Working" && !day.cancel && (
                     <label>
-                      <span className="sr-only">
-                        {p.workLocation} {dayLabel(dateKey(day.localDate))}
-                      </span>
-                      <select
+                      <span>{p.workLocation}</span>
+                      <Select
                         aria-label={`${p.workLocation} ${dateKey(day.localDate)}`}
                         value={day.location}
                         onChange={(e) =>
@@ -353,7 +351,7 @@ export function RequestEditor({
                         <option value="OfficeSwitzerland">
                           {p.location.OfficeSwitzerland}
                         </option>
-                      </select>
+                      </Select>
                     </label>
                   )}
                   {day.baseDayId && (
@@ -376,15 +374,25 @@ export function RequestEditor({
                   )}
                   <button
                     type="button"
-                    className="text-button"
-                    aria-label={`${p.removeDate} ${dateKey(day.localDate)}`}
+                    aria-label={p.removeDate}
+                    className="remove-day"
                     onClick={() =>
                       setDays((current) =>
                         current.filter((_, i) => i !== index),
                       )
                     }
                   >
-                    × {p.removeDate}
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    >
+                      <path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7m4-7v7" />
+                    </svg>
                   </button>
                 </div>
               ))}
@@ -407,7 +415,7 @@ export function RequestEditor({
         </fieldset>
         {error && (
           <p role="alert" className="notice error">
-            {error}
+            {localizedFeedback(error)}
           </p>
         )}
         <div className="dialog-actions">

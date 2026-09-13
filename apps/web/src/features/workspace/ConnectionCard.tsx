@@ -1,7 +1,8 @@
+import { locale } from "../../i18n/locale";
 import { useEffect, useState } from "react";
 import type { WorkspaceInfo } from "../../../../../contracts/typescript";
 import { workspaceApi } from "./api";
-import { strings as s } from "../../i18n/pt-PT";
+import { strings as s } from "../../i18n/locale";
 
 export function ConnectionCard() {
   const [attempt, setAttempt] = useState(0);
@@ -51,7 +52,7 @@ export function ConnectionCard() {
             <dt>{s.received}</dt>
             <dd>
               <time dateTime={state.data.serverTimeUtc.toISOString()}>
-                {new Intl.DateTimeFormat("pt-PT", {
+                {new Intl.DateTimeFormat(locale(), {
                   dateStyle: "short",
                   timeStyle: "medium",
                 }).format(state.data.serverTimeUtc)}

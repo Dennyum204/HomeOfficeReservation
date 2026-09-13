@@ -42,6 +42,29 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
     }
   }
 
+  Future<void> acknowledgeContext() async {
+    final displayed = widget.inbox?.detail;
+    if (displayed != null) await readDisplayedContext(displayed);
+  }
+
+  Future<void> readDisplayedContext(NotificationView displayed) async {
+    final inbox = widget.inbox;
+    if (inbox == null) return;
+    await inbox.read(displayed);
+    if (!mounted || !inbox.readFailed) return;
+    final s = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 15),
+        content: Text(s.notificationSaveReadError),
+        action: SnackBarAction(
+          label: s.notificationRetryRead,
+          onPressed: () => readDisplayedContext(displayed),
+        ),
+      ),
+    );
+  }
+
   bool _openingNotification = false;
   Future<void> openNotification(String id) async {
     if (_openingNotification) return;
@@ -67,6 +90,12 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
         );
         if (!mounted || !planning.active) return;
         selectSection(1);
+        if (opened) {
+          await WidgetsBinding.instance.endOfFrame;
+          if (mounted && planning.active && widget.inbox?.detail != null) {
+            await acknowledgeContext();
+          }
+        }
         if (opened ||
             planning.failure == PlanningFailure.missing ||
             planning.failure == PlanningFailure.forbidden) {
@@ -85,6 +114,12 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
         );
         if (!mounted || !planning.active) return;
         selectSection(2);
+        if (opened) {
+          await WidgetsBinding.instance.endOfFrame;
+          if (mounted && planning.active && widget.inbox?.detail != null) {
+            await acknowledgeContext();
+          }
+        }
         if (opened ||
             planning.failure == PlanningFailure.missing ||
             planning.failure == PlanningFailure.forbidden) {
@@ -184,7 +219,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                 labels.length,
                 (i) => NavigationDestination(
                   icon: navIcon(i, icons[i]),
-                  label: labels[i],
+                  label: i == 3 ? s.notificationNavigation : labels[i],
                 ),
               ),
             ),
@@ -249,6 +284,7 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SectionHeading(labels[_section]),
+                                if (_section == 4) const LanguagePicker(),
                                 if (_section == 4 &&
                                     widget.accountSection != null)
                                   widget.accountSection!,
@@ -508,12 +544,13 @@ class WorkspaceScreenState extends State<WorkspaceScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      DateFormat.yMd('pt_PT')
-                                                          .add_Hms()
-                                                          .format(
-                                                            data.serverTimeUtc
-                                                                .toLocal(),
-                                                          ),
+                                                      DateFormat.yMd(
+                                                        Intl.defaultLocale ??
+                                                            'pt_PT',
+                                                      ).add_Hms().format(
+                                                        data.serverTimeUtc
+                                                            .toLocal(),
+                                                      ),
                                                     ),
                                                     const SizedBox(height: 12),
                                                     Text(

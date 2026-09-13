@@ -3,7 +3,7 @@ import type {
   MutationReceipt,
   PlanningApi,
 } from "../../../../../contracts/typescript";
-import { p } from "../../i18n/planning.pt-PT";
+import { p } from "../../i18n/locale";
 import { statusOf } from "../auth/api";
 import { JOURNAL_KEY } from "../auth/session";
 import {
