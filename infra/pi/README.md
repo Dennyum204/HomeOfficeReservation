@@ -6,7 +6,7 @@ Instalação isolada autorizada e executada: [evidência real](../../docs/HO-012
 
 ## Evidência e acesso
 
-Preparação posterior: [backups cifrados automatizados](../../docs/HO-012-BACKUPS.md) para o perfil HTTPS ativo, incluindo PFX/key ring, configuração e imagens. R2 UE por autorizar; não confundir testes locais/CI com envio/restauro externo real. O comando `trial.sh backup` abaixo continua a alternativa local histórica, não cobre sozinho a configuração HTTPS atual.
+Preparação posterior: [backups cifrados automatizados](../../docs/HO-012-BACKUPS.md) para o perfil HTTPS ativo, incluindo PFX/key ring, configuração e imagens. R2 UE autorizado: primeiro envio/restauro externo e recuperação independente no PC verificados; timers ativos, disparos agendados e alertas externos pendentes. Não confundir execução manual com disparo agendado. O comando `trial.sh backup` abaixo continua a alternativa local histórica, não cobre sozinho a configuração HTTPS atual.
 
 SSH com chave dedicada confirmado. Engine 29.8.0 ARM64/Compose 5.5.1, sem contentores/volumes; ~3,57 GiB disponíveis, ~49,6 GiB livres e swap/OOM zero em repouso. Leituras sudo executadas pelo responsável no terminal. Após alteração mínima de arranque e um reinício autorizados, **Memory=true/Swap=true/CFS=true** confirmados pelo Docker; controlador memory V2 disponível. O kernel processou o disable herdado do DTB e depois o enable explícito, conforme suportado pelo fornecedor. Original preservado. Suporte não equivale a teste de aplicação ou de imposição dos limites. HomeOffice entretanto instalado e testado no perfil isolado; ver evidência real acima. [Inventário atualizado](../../docs/HO-012-PI-INVENTORY.md).
 

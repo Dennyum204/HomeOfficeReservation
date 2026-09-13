@@ -1,6 +1,6 @@
 # ADR-021 — Backups cifrados do Pi com restic e destino externo
 
-Data: 2026-09-13. Estado: preparação adotada; R2 autorizado e bucket privado EU criado, envio/restauro e automação pendentes. Complementa ADR-019/020 sem declarar o piloto concluído.
+Data: 2026-09-13. Estado: adotada e ativada após envio/restauro R2 verificados; disparos agendados e alertas externos pendentes. Complementa ADR-019/020 sem declarar o piloto concluído.
 
 O responsável exige backups automáticos independentes do PC, recuperação após perda total do Pi e restauro sem sobrescrever a base usada. O NAS tem uma discrepância de armazenamento ainda não esclarecida; a cópia manual cifrada no PC permanece complementar. O acesso HTTPS e a aceitação parcial Web no telemóvel são preservados.
 
@@ -15,3 +15,7 @@ Configuração/credenciais root-only; token S3 só leitura/escrita de objetos no
 Falhas ficam em systemd/journal e recibo privado com última execução/último sucesso; status falha às 36 h sem sucesso ou após erro. Um Pi desligado não consegue alertar: monitorização externa da frescura continua gate separado de HO-012. Não há garantia de imutabilidade contra um Pi comprometido: a credencial de retenção consegue eliminar objetos. Avaliar cópia imutável independente antes de alargar o risco do piloto.
 
 RPO atual pretendido de 24 h (mais até 15 min de jitter e duração), substituindo a proposta intermédia mensal; RTO pretendido de 4 h após existir hardware substituto, ainda não medido. Limite adicional 512 MiB/0,5 CPU, swap zero, prioridade baixa e upload máximo 2 MiB/s; medir impacto antes de ativação regular. [Runbook, fontes, custo, testes e gates](../HO-012-BACKUPS.md).
+
+## Execução autorizada — 2026-09-13
+
+O responsável aprovou destino, custo e agenda finais. Primeiro upload cifrado, leitura integral e restauro numa base nova passaram; PC recuperou SQL/configuração/PFX/key ring diretamente do R2 com a password do Bitwarden. Timers foram ativados só após sucesso. LastTrigger vazio: ainda sem execução agendada observada. Retenção 7/6 configurada, não seis meses de histórico demonstrados. Falhas apenas no journal, sem aviso externo; esta limitação mantém HO-012 incompleta. [Evidência e medições](../HO-012-BACKUPS.md#ensaio-externo-concluído-em-2026-09-13). Histórico de propostas e gates acima preservado.
