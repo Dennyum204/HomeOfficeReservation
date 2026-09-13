@@ -16,7 +16,7 @@ public sealed record RetryNotificationInput(Guid Id, bool Push);
 
 public interface INotificationService
 {
-    Task<NotificationPage> List(Guid actor, int offset, int limit, bool unreadOnly, bool historical, CancellationToken ct);
+    Task<NotificationPage> List(Guid actor, int offset, int limit, bool unreadOnly, bool historical, CancellationToken ct, bool readOnly = false);
     Task<NotificationCount> Count(Guid actor, CancellationToken ct);
     Task<NotificationView> Detail(Guid actor, Guid id, CancellationToken ct);
     Task<NotificationView> Read(Guid actor, Guid id, bool read, CancellationToken ct);

@@ -34,15 +34,6 @@ class NotificationScreen extends StatelessWidget {
       final s = AppLocalizations.of(context)!;
       final c = controller;
       final detail = c.detail;
-      Widget readButton(NotificationView item) => OutlinedButton(
-        key: Key('read-${item.id}'),
-        onPressed: c.busy ? null : () => c.read(item),
-        child: Text(
-          item.readAt == null
-              ? s.notificationMarkRead
-              : s.notificationMarkUnread,
-        ),
-      );
       Widget info(NotificationView item) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -67,6 +58,15 @@ class NotificationScreen extends StatelessWidget {
           if (c.loading || c.busy) const LinearProgressIndicator(),
           if (c.error)
             Semantics(liveRegion: true, child: Text(s.notificationError)),
+          if (c.readFailed) ...[
+            Text(s.notificationSaveReadError),
+            TextButton(
+              onPressed: c.busy || c.detail == null
+                  ? null
+                  : () => c.read(c.detail!),
+              child: Text(s.notificationRetryRead),
+            ),
+          ],
           if (c.unavailable) Text(s.notificationUnavailable),
           if (detail != null || c.unavailable) ...[
             TextButton(
@@ -99,7 +99,6 @@ class NotificationScreen extends StatelessWidget {
                         ),
                       ],
                       const SizedBox(height: 12),
-                      readButton(detail),
                       if (onOpen != null && detail.destination != null)
                         FilledButton(
                           onPressed: c.busy ? null : () => onOpen!(detail.id),
@@ -115,6 +114,10 @@ class NotificationScreen extends StatelessWidget {
               initialValue: c.filter,
               decoration: InputDecoration(labelText: s.notificationFilter),
               items: [
+                DropdownMenuItem(
+                  value: 'read',
+                  child: Text(s.notificationReadFilter),
+                ),
                 DropdownMenuItem(value: 'all', child: Text(s.notificationAll)),
                 DropdownMenuItem(
                   value: 'unread',
@@ -138,7 +141,11 @@ class NotificationScreen extends StatelessWidget {
               label: Text(s.notificationRefresh),
             ),
             if (!c.loading && c.page?.items.isEmpty == true)
-              Text(s.notificationEmpty),
+              Text(
+                c.filter == 'unread'
+                    ? s.notificationEmptyUnread
+                    : s.notificationEmpty,
+              ),
             for (final item in c.page?.items ?? <NotificationView>[])
               Card(
                 key: Key('notification-${item.id}'),
@@ -160,7 +167,6 @@ class NotificationScreen extends StatelessWidget {
                                       : c.open(item.id),
                             child: Text(s.notificationOpen),
                           ),
-                          readButton(item),
                         ],
                       ),
                     ],

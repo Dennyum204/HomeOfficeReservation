@@ -1,8 +1,12 @@
+import { ContextRead } from "./features/notifications/contextRead";
+import { notificationsApi } from "./features/notifications/api";
+import { csrf } from "./features/auth/api";
+import { sessionFailure } from "./features/planning/api";
 import { AdminWorkspace } from "./features/admin/AdminWorkspace";
 import { a } from "./i18n/admin.pt-PT";
 import { Appearance, AppearanceProvider } from "./theme/Appearance";
 import { AppIcon } from "./theme/AppIcon";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { strings as s } from "./i18n/pt-PT";
 import { p } from "./i18n/planning.pt-PT";
 import { w } from "./i18n/work.pt-PT";
@@ -45,6 +49,7 @@ export function WorkspaceShell() {
   const [launch, setLaunch] = useState<{
     key: number;
     destination: NotificationDestination;
+    notificationId: string;
   }>();
   const inbox = useNotificationPolling();
   const member = useMember();
@@ -56,8 +61,47 @@ export function WorkspaceShell() {
         : key === "onsite" || key === "tasks"
           ? w[key]
           : p[key];
-  function openNotification(destination: NotificationDestination) {
-    setLaunch((old) => ({ key: (old?.key ?? 0) + 1, destination }));
+  const reading = useRef<string | null>(null);
+  const [readError, setReadError] = useState(false);
+  const contextOpened = useCallback(
+    (id: string) => {
+      if (
+        !launch ||
+        launch.destination.resourceId !== id ||
+        reading.current === launch.notificationId
+      )
+        return;
+      const notificationId = launch.notificationId;
+      reading.current = notificationId;
+      void (async () => {
+        try {
+          await notificationsApi.setNotificationRead(
+            { notificationId, notificationReadInput: { read: true } },
+            await csrf(),
+          );
+          if (reading.current !== notificationId) return;
+          setReadError(false);
+          inbox.refresh();
+        } catch (error) {
+          if (reading.current !== notificationId) return;
+          sessionFailure(error);
+          setReadError(true);
+        }
+      })();
+    },
+    [launch, inbox],
+  );
+  function openNotification(
+    destination: NotificationDestination,
+    notificationId: string,
+  ) {
+    reading.current = null;
+    setReadError(false);
+    setLaunch((old) => ({
+      key: (old?.key ?? 0) + 1,
+      destination,
+      notificationId,
+    }));
     setSection(
       destination.kind === "Requirement"
         ? "onsite"
@@ -159,17 +203,38 @@ export function WorkspaceShell() {
           <div
             hidden={section === "notifications" || section === "administration"}
           >
-            <PlanningWorkspace
-              key={launch?.key ?? 0}
-              initialDestination={launch?.destination}
-              section={
+            <ContextRead.Provider
+              value={
                 section === "notifications" || section === "administration"
-                  ? "calendar"
-                  : section
+                  ? () => {}
+                  : contextOpened
               }
-              onSection={setSection}
-            />
+            >
+              <PlanningWorkspace
+                key={launch?.key ?? 0}
+                initialDestination={launch?.destination}
+                section={
+                  section === "notifications" || section === "administration"
+                    ? "calendar"
+                    : section
+                }
+                onSection={setSection}
+              />
+            </ContextRead.Provider>
           </div>
+          {readError && (
+            <p role="alert">
+              {n.readFailed}{" "}
+              <button
+                onClick={() => {
+                  reading.current = null;
+                  if (launch) contextOpened(launch.destination.resourceId);
+                }}
+              >
+                {n.retryRead}
+              </button>
+            </p>
+          )}
           {section === "administration" && <AdminWorkspace />}
           {section === "notifications" && (
             <NotificationCentre

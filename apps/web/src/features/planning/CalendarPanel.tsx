@@ -257,6 +257,8 @@ export function CalendarPanel(props: Props) {
                     <div role="gridcell" key={date}>
                       <button
                         data-date={date}
+                        data-location={plan?.location}
+                        data-pending={proposals.length > 0}
                         className={`calendar-day ${date < range.from || date > range.to ? "outside" : ""} ${date === active ? "active" : ""}`}
                         aria-label={`${label}${obligations.length ? `. ${obligations.map((r) => `${w.mandatory}: ${w.state[r.state]}`).join(". ")}` : ""}`}
                         aria-pressed={

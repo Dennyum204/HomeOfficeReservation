@@ -47,8 +47,21 @@ void main() {
         inbox.activity(false);
         final key = GlobalKey<WorkspaceScreenState>(),
             response = Completer<http.Response>();
-        var reads = 0;
+        var reads = 0, savedReads = 0;
         f.workIntercept = (r) async {
+          if (r.url.path.endsWith('/notifications/note/read')) {
+            savedReads++;
+            return json(
+              NotificationView(
+                createdAt: DateTime.utc(2026),
+                eventType: 'task.updated',
+                historical: false,
+                id: 'note',
+                readAt: DateTime.utc(2026),
+                destination: null,
+              ),
+            );
+          }
           if (r.url.path.endsWith('/notifications/note')) {
             reads++;
             return response.future;
@@ -90,14 +103,17 @@ void main() {
             ),
           ),
         );
+        await t.pumpAndSettle();
         await opening;
         await t.pumpAndSettle();
+        expect(savedReads, 1);
         expect(
           f.c.workId,
           kind == NotificationContext.task ? 'task' : 'onsite',
         );
         expect(f.auth.notificationIntent, isNull);
-        expect(f.writes, isEmpty);
+        expect(f.writes, hasLength(1));
+        expect(f.writes.single.url.path, '/api/v1/notifications/note/read');
         expect(f.c.requirement?.readAt, isNull);
         await f.auth.logout();
         await t.pumpAndSettle();

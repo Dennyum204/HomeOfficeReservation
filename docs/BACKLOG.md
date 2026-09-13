@@ -24,7 +24,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-013 | Titular administrador e colaborador: bootstrap seguro | v1.0 | backend | Concluído | HO-003, HO-004 |
 | HO-014 | Convites de acesso: estado, entrega e revogação | v1.0 | backend | Concluído | HO-003, HO-007 |
 | HO-015 | Administração Web de membros e convites | v1.0 | web | Concluído | HO-011, HO-013, HO-014 |
-| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Em revisão | HO-011, HO-015 |
+| HO-016 | Tema Claude + e hierarquia visual Web/Android | ui-refresh | fullstack | Concluído | HO-011, HO-015 |
 | HO-101 | Lembretes e resumo semanal por email | v1.1 | fullstack | Planeado | HO-012 |
 | HO-102 | Exportação e resumos mensais | v1.1 | fullstack | Planeado | HO-012 |
 | HO-103 | Preferências de notificação e idiomas | v1.1 | fullstack | Planeado | HO-012 |
@@ -37,6 +37,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-304 | Anexos e tarefas avançadas | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
 | HO-306 | Reativação futura de iOS | ios-reactivation | mobile | Em espera | HO-012 |
+| HO-020 | UI e leitura automática de notificações | ui-refresh | fullstack | Em revisão | HO-016 |
+| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Planeado | HO-020 |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
@@ -431,7 +433,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/44
 
 ## HO-016 — Tema Claude + e hierarquia visual Web/Android
 
-Release: ui-refresh · Área: fullstack · Estado: Em revisão
+Release: ui-refresh · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -697,3 +699,79 @@ Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/31
 PR: ainda não criado.
 
 Motivo: Adiado por decisão explícita em HO-005; sem data e sem gate core.
+
+## HO-020 — UI e leitura automática de notificações
+
+Release: ui-refresh · Área: fullstack · Estado: Em revisão
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-016
+
+Funcionalidades: Preparação/fundação da release.
+
+Critérios de aceitação:
+
+- Ao entrar em Notificações, selecionar “Por ler” e mostrar apenas notificações ainda não abertas.
+- Manter a possibilidade de consultar todas e as já lidas.
+- Mostrar um estado vazio claro quando não houver notificações por ler.
+- Ao abrir uma notificação e apresentar o respetivo contexto com sucesso, marcá-la automaticamente como lida.
+- Atualizar lista e contador sem exigir refresh manual; ao regressar à lista “Por ler”, essa notificação já não deve aparecer.
+- Retirar o botão individual “Marcar como lida” do percurso normal.
+- Não marcar apenas por listar, receber uma push ou tentar uma navegação que falhou.
+- Tratar falhas de persistência sem apresentar como guardada uma leitura que o servidor rejeitou.
+- Ler uma notificação nunca aprova pedidos, confirma presenças ou altera tarefas.
+- Aplicar este comportamento também no Android, incluindo abertura por push quando aplicável.
+- Corrigir o tamanho excessivo dos checkboxes e a disposição dos respetivos nomes.
+- Colocar cada checkbox junto do seu texto, com dimensões normais e alinhamento consistente.
+- Centrar o modal e manter todo o conteúdo dentro da largura disponível.
+- Eliminar o scroll horizontal pela correção do layout, sem simplesmente esconder ou cortar conteúdo.
+- Preservar scroll vertical quando necessário, labels acessíveis e os controlos de papéis existentes.
+- Acrescentar um fundo subtil ou indicador de cor nos quadrados dos dias para distinguir presencial, remoto e pendente.
+- Usar tons suaves compatíveis com Claude + em claro e escuro; evitar verdes fortes.
+- Manter texto e ícones: a distinção não pode depender apenas da cor.
+- Preservar a identificação de hoje, seleção, foco e dias fora do mês.
+- Distinguir localização de estado de decisão: um pedido pendente sobre um dia já aprovado não deve fazer desaparecer a situação aprovada.
+- Aplicar a mesma linguagem visual ao calendário Android, respeitando o seu layout.
+- Em “Resumo dos dias”, colocar a data no cabeçalho do cartão e os dois dropdowns alinhados lado a lado, com labels e alturas consistentes.
+- Em ecrãs estreitos, empilhar os campos de forma organizada.
+- Substituir “× Remover dia” por um botão com ícone de lixo no canto superior direito do cartão.
+- Dar-lhe nome acessível “Remover dia”, área de toque adequada e comportamento exclusivo de remoção desse dia, sem submeter o formulário.
+- Modernizar os dropdowns da Web para combinar com Claude +, incluindo a lista aberta e os estados de foco, seleção, erro e desativado.
+- Eliminar o aspeto cinzento nativo mostrado na captura.
+- Reutilizar os componentes e dependências adequados já existentes no projeto.
+- Garantir utilização por teclado, leitores de ecrã e toque, incluindo dentro de modais, sem menus cortados ou problemas de foco.
+- Aplicar o componente de forma consistente nos formulários e filtros existentes.
+- Verificar os ecrãs afetados em claro/escuro, desktop e largura de telemóvel.
+- Acrescentar regressões relevantes para leitura automática, contador e falhas, e verificar os layouts com capturas reais.
+- Executar as verificações exigidas pelo repositório.
+- Disponibilizar ambiente local isolado e capturas antes/depois para a minha revisão. Preservar as contas e os dados habituais.
+- Reportar o commit verificado, resultados e passos curtos de teste manual.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/49
+
+PR: ainda não criado.
+
+## HO-021 — Português, inglês e alemão
+
+Release: ui-refresh · Área: fullstack · Estado: Planeado
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-020
+
+Funcionalidades: Preparação/fundação da release.
+
+Critérios de aceitação:
+
+- Manter português e acrescentar inglês e alemão na Web e Android.
+- Adicionar seleção de idioma em Definições, com preferência persistente e comportamento inicial documentado.
+- Traduzir navegação, formulários, modais, estados, formulários, modais, estados, validações e mensagens visíveis, incluindo acessibilidade e plurais.
+- Usar formatação de datas e números adequada ao idioma, preservando os valores de data e as regras de fuso horário do domínio.
+- Não traduzir conteúdo escrito pelos utilizadores nem alterar códigos de estados ou contratos da API.
+- Verificar textos alemães mais longos, evitar strings por traduzir e reutilizar a infraestrutura de localização existente.
+- Identificar explicitamente como ficam os emails e as notificações produzidos pelo servidor, para não declarar suporte completo deixando essas mensagens esquecidas.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/50
+
+PR: ainda não criado.

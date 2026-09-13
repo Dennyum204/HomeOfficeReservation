@@ -1,5 +1,7 @@
 # HomeOfficeReservation
 
+**HO-020 — UI e notificações:** caixa Por ler, leitura após contexto autorizado, dropdowns acessíveis e ajustes de calendário/formulários Web/Android. [Implementação, testes e revisão visual](docs/HO-020-UI-NOTIFICATIONS.md).
+
 **HO-016 — Identidade visual Web/Android:** tema Claude + adaptado, claro/escuro/sistema, secções de formulário e estados separados por rótulos e ícones. [Tema, contraste e revisão visual](docs/HO-016-VISUAL-THEME.md). Sem alteração de API, dados ou permissões.
 
 **HO-015 — Administração Web:** membros, convites, estado de entrega, papéis e chefias com confirmação e recuperação de respostas perdidas. [Guia e teste isolado](docs/HO-015-WEB-ADMINISTRATION.md). O titular mantém a sua conta de colaborador; o chefe associado decide os pedidos.

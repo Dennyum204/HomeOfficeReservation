@@ -1,3 +1,4 @@
+import { choose } from "./support";
 import { test, expect, type Page } from "@playwright/test";
 import { signIn } from "./support";
 import { addDays, todayInZone } from "../src/features/planning/dates";
@@ -74,16 +75,16 @@ test("theme follows system, persists explicit choice and keeps real screens acce
     .getByRole("banner")
     .getByRole("combobox", { name: "Tema da interface" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await theme.selectOption("light");
+  await choose(theme, "light");
   await page.reload();
-  await expect(theme).toHaveValue("light");
+  await expect(theme).toHaveText(/Claro/);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  await theme.selectOption("system");
+  await choose(theme, "system");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   for (const mode of ["light", "dark"]) {
-    await theme.selectOption(mode);
+    await choose(theme, mode);
     for (const label of [
       "Calendário",
       "Pedidos",

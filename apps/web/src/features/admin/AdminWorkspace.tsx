@@ -1,3 +1,4 @@
+import { Select } from "../../theme/Select";
 import { useEffect, useRef, useState } from "react";
 import type {
   InvitationProfile,
@@ -569,7 +570,7 @@ function MemberDetails({
         >
           <label>
             {a.selectManager}
-            <select
+            <Select
               aria-label={a.selectManager}
               disabled={locked}
               value={managerId}
@@ -592,7 +593,7 @@ function MemberDetails({
                       : ""}
                   </option>
                 ))}
-            </select>
+            </Select>
           </label>
           <button disabled={locked}>{a.saveManager}</button>
         </form>
