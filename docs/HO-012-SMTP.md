@@ -1,6 +1,6 @@
 # HO-012 — SMTP real: proposta para revisão
 
-2026-09-13. Preparação apenas, PR #37 draft. Nenhuma conta Brevo criada, chave obtida, alteração DNS/Pi ou mensagem enviada nesta etapa. Backups, timers e monitorização não alterados nem executados.
+2026-09-13. Preparação apenas, PR #37 draft. Conta gratuita agora preparada pelo responsável; sessão confirmada e registos reais obtidos. Nenhuma chave SMTP obtida, alteração DNS/Pi ou mensagem enviada pelo agente. Backups, timers e monitorização não alterados nem executados.
 
 ## Estado inspecionado
 
@@ -63,3 +63,9 @@ Revisão do adaptador, configuração base/HTTPS, rede e caminhos já capturados
 - [Novo fluxo de domínio, em disponibilização gradual](https://help.brevo.com/hc/en-us/articles/35337929909778-Set-up-your-domain-in-Brevo).
 
 HO-012 permanece incompleta: além do SMTP, evidência correlacionada de ciclos agendados, renovação TLS/monitorização geral, ambientes definitivos, Android físico/distribuição e aceitação final.
+
+## Evolução da preparação da conta
+
+Brevo Free e remetente aprovados; sessão da conta confirmada e registos reais obtidos no fluxo manual em 2026-09-13. Manifesto guardado fora do Git para revisão; nenhum DNS publicado. Painel pede verificação de telefone antes de envio. SMTP key não criada/obtida; remetente ainda não confirmado. DMARC sugerido pelo fornecedor inclui rua para Brevo, sujeito a decisão distinta. Pi/backups/envios preservados.
+
+O fluxo novo permitiu omitir branded subdomain, escolher Individual DNS records e Manual. Registos obtidos: TXT de verificação com prefixo real `brevo-code:` (dois pontos, substitui o placeholder anterior com igual), CNAME brevo1._domainkey.notificacoes → b1.notificacoes-ferbatech-com.dkim.brevo.com e brevo2._domainkey.notificacoes → b2.notificacoes-ferbatech-com.dkim.brevo.com, TXT _dmarc.notificacoes. Sem delegação NS ou ligação automática Cloudflare. Valor único de verificação guardado no manifesto privado. O DMARC do painel é `v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com`; alternativa proposta sem relatórios conserva `v=DMARC1; p=none; adkim=r; aspf=r`. Publicação e escolha de relatórios ainda pendentes; não clicar Authenticate como se o DNS estivesse validado.
