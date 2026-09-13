@@ -6,10 +6,19 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from backup import Backup, TAG, PROJECT, FILES, HTTPS_FILES, database_name, manifest, verify_bundle, write_json, status
+from backup import Backup, TAG, PROJECT, FILES, HTTPS_FILES, database_name, manifest, verify_bundle, write_json, status, validate_source
 
 
 class SafetyTests(unittest.TestCase):
+    def test_active_source_and_protection_must_match_the_capture(self):
+        config = {'ConnectionStrings': {'Database': 'Host=database;Database=homeoffice;Username=homeoffice;Password=synthetic'},
+                  'DataProtection': {'KeyDirectory': '/var/lib/homeoffice/keys', 'CertificatePath': '/run/config/protection.pfx', 'CertificatePassword': 'synthetic'}}
+        validate_source(config)
+        config['ConnectionStrings']['Database'] += ';Database=other'
+        with self.assertRaises(ValueError): validate_source(config)
+        config['ConnectionStrings']['Database'] = 'Host=database;Database=other;Username=homeoffice;'
+        with self.assertRaises(ValueError): validate_source(config)
+
     def test_database_refuses_source_and_injection(self):
         for value in ['homeoffice', 'postgres', 'ho012_restore_', 'ho012_restore_x;DROP DATABASE homeoffice', 'ho012_restore_' + 'a' * 36]:
             with self.assertRaises(ValueError):

@@ -75,6 +75,19 @@ def database_name(name):
     return name
 
 
+def validate_source(config):
+    # This runner targets the prepared trial, not arbitrary connection strings.
+    connection = config['ConnectionStrings']['Database']
+    fields = [part.split('=', 1) for part in connection.split(';') if '=' in part]
+    for key, expected in [('host', 'database'), ('database', 'homeoffice'), ('username', 'homeoffice')]:
+        values = [value for name, value in fields if name.strip().lower() == key]
+        if values != [expected]:
+            raise ValueError('Active configuration points outside the expected source database')
+    protection = config['DataProtection']
+    if protection['KeyDirectory'] != '/var/lib/homeoffice/keys' or protection['CertificatePath'] != '/run/config/protection.pfx' or not protection['CertificatePassword']:
+        raise ValueError('Unexpected Data Protection recovery configuration')
+
+
 class Backup:
     def __init__(self, config, local_test=False):
         self.c = config
@@ -105,8 +118,10 @@ class Backup:
             credentials = json.loads(private_file(config['s3_credentials_file']).read_text())
             self.env.update({key: credentials[key] for key in ('AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY')})
         self.dc = ['docker', 'compose', '-p', PROJECT, '-f', str(self.trial / 'compose.yaml')]
+        self.active_config = self.trial / 'private/application.json'
         if (self.trial / 'private/https/compose.json').is_file():
             self.dc += ['-f', str(self.trial / 'private/https/compose.json'), '--profile', 'publish']
+            self.active_config = self.trial / 'private/https/application.json'
 
     def run(self, args, **kw):
         # Never echo commands, stdout, stderr or exception strings containing secrets.
@@ -137,6 +152,14 @@ class Backup:
             labels = container['Config']['Labels']
             if labels['com.docker.compose.project.working_dir'] != str(self.trial):
                 raise ValueError('Compose project collision')
+            if labels['com.docker.compose.service'] == 'app':
+                source = self.active_config
+                mounts = [x['Source'] for x in container['Mounts'] if x['Destination'] == '/run/config/application.json']
+                if mounts != [str(source)]:
+                    raise ValueError('Running app uses a different configuration mount')
+                validate_source(json.loads(source.read_text()))
+                if 'ASPNETCORE_ENVIRONMENT=Staging' not in container['Config']['Env']:
+                    raise ValueError('Unexpected application environment; recovery purpose may differ')
         if shutil.disk_usage(self.state).free < 8 * 1024**3:
             raise ValueError('Less than 8 GiB free for capture and recovery')
 
