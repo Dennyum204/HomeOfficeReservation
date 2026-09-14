@@ -7,7 +7,16 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
 }, info) => {
   await signIn(page, "admin");
   for (const mode of ["light", "dark"]) {
-    await choose(page.getByRole("banner").getByRole("combobox"), mode);
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button", { name: /Definições/ })
+      .click();
+    await choose(
+      page.locator(".appearance-card").getByRole("combobox", {
+        name: /^(Tema da interface|Interface theme|Oberflächendesign)$/,
+      }),
+      mode,
+    );
     await page
       .getByRole("navigation")
       .getByRole("button", { name: /Administração/ })
@@ -38,12 +47,25 @@ test("invitation labels and checkboxes fit, and editor selects retain keyboard f
       .click();
   }
   await page
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
+  await page
     .getByRole("button", { name: "Terminar sessão", exact: true })
     .click();
   await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
   await signIn(page);
   for (const mode of ["light", "dark"]) {
-    await choose(page.getByRole("banner").getByRole("combobox"), mode);
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button", { name: /Definições/ })
+      .click();
+    await choose(
+      page.locator(".appearance-card").getByRole("combobox", {
+        name: /^(Tema da interface|Interface theme|Oberflächendesign)$/,
+      }),
+      mode,
+    );
     await page
       .getByRole("navigation")
       .getByRole("button", { name: /^Calendário/ })

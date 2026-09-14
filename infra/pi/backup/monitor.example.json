@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "recipient_confirmed": false,
+  "checks": {
+    "daily": "REPLACE_PRIVATELY",
+    "weekly": "REPLACE_PRIVATELY",
+    "rehearsal": "REPLACE_PRIVATELY_WITH_A_DISTINCT_TEST_CHECK"
+  }
+}

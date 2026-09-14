@@ -1,6 +1,6 @@
 # Plano — HomeOfficeReservation
 
-Atualizado: 2026-09-08. Direção confirmada: core autónomo, Outlook opcional. [ADR-004](docs/adr/ADR-004-independent-core.md) substitui os pressupostos Microsoft anteriores.
+Atualizado: 2026-09-10. Direção confirmada: core autónomo, Outlook opcional. [ADR-004](docs/adr/ADR-004-independent-core.md) substitui os pressupostos Microsoft anteriores. HO-012 permanece draft; domínio ferbatech.com escolhido, alojamento por aprovar. [Proposta corrente](docs/HO-012-PILOT.md) e [acesso privado por convite](docs/HO-012-PRIVATE-ACCESS.md).
 
 ## Core V1
 
@@ -18,15 +18,16 @@ HO-002 prepara projetos/SDKs/lockfiles/CI/contratos e PostgreSQL local. HO-003 i
 
 | Marco | Âmbito / gate |
 |---|---|
-| Core v1.0 | HO-000 a HO-007, HO-010 a HO-012; duas contas locais e piloto de duas semanas, sem Microsoft |
+| Core v1.0 | HO-000 a HO-007, HO-010 a HO-015; contas locais por convite, titular administrador/colaborador e piloto de duas semanas, sem Microsoft |
+| ui-refresh | HO-016: Claude +, claro/escuro e hierarquia Web/Android, só quando selecionado; sem gate do piloto |
 | outlook-publish | HO-008 após core: ligar opcionalmente em Definições, publicar dias explícitos confirmados como livres, eventos próprios, sem convites |
 | outlook-sync | HO-009 após publicação: disponibilidade, delta/páginas/recorrência, webhooks/lifecycle e reconciliação externa |
 | v1.1 | Lembretes/resumo semanal, exportação e preferências após piloto core |
 | v1.2 | Recorrência de pedidos, meios dias/viagens e planeamento flexível |
 | v2.0 | Expansão por necessidade: equipa, calendários adicionais, Google, anexos e offline |
 
-Outlook não decide aprovações nem condiciona lançamento. Onboarding Microsoft foi interrompido; a validação real foi adiada, nunca declarada aprovada. Pesquisa/probe ficam como referência opcional. O [backlog](docs/BACKLOG.md) conserva os 24 IDs e histórico, com milestones independentes; datas não são promessas.
+Outlook não decide aprovações nem condiciona lançamento. Onboarding Microsoft foi interrompido; a validação real foi adiada, nunca declarada aprovada. Pesquisa/probe ficam como referência opcional. O [backlog](docs/BACKLOG.md) conserva os IDs originais e histórico e acrescenta novas tarefas sem renumeração, com milestones independentes; datas não são promessas.
 
 ## Continuidade
 
-PR #27 integrou documentação/decisões e tracking, com merge/CI verificados. HO-002 entrega fundações executáveis no [PR #28](https://github.com/Dennyum204/HomeOfficeReservation/pull/28); depois de integração humana verificada, a próxima tarefa é HO-003. Fernando revê e faz merge; Codex não integra nem ativa auto-merge. Consultar [STATUS](STATUS.md), [DEVELOPMENT](docs/DEVELOPMENT.md) e os [prompts](docs/CODEX_TASKS.md); não iniciar outro item sem pedido.
+Histórico: PR #27 integrou documentação/decisões e tracking; HO-002 entregou fundações no [PR #28](https://github.com/Dennyum204/HomeOfficeReservation/pull/28), seguido por HO-003 e pelos fluxos core. Estado atual e evidência de integração até HO-011 em [STATUS](STATUS.md). HO-012 continua no PR draft #37: decidir alojamento; HO-013/014/015 registam lacunas de acesso por convite em tarefas próprias e HO-016 a melhoria visual futura. Nenhuma implementação destes novos itens foi iniciada. Fernando revê e faz merge; Codex não integra nem ativa auto-merge. Consultar [DEVELOPMENT](docs/DEVELOPMENT.md) e os [prompts](docs/CODEX_TASKS.md); não iniciar outro item sem pedido.

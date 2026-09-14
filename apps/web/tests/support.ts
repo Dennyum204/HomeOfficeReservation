@@ -17,9 +17,7 @@ export async function signIn(
     .getByLabel("Palavra-passe", { exact: true })
     .fill(accounts[role].password);
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
-  await expect(
-    page.getByRole("region", { name: "Conta", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator("#workspace-navigation")).toBeVisible();
 }
 
 // Exercise the visible combobox, including its open list and selection.

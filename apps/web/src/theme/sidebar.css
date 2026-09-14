@@ -1,0 +1,165 @@
+/* Keep navigation within its own track, including long translated labels. */
+.app-shell > .sidebar {
+  width: 264px;
+  min-width: 0;
+  padding: 24px 12px;
+}
+.sidebar-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.sidebar-heading .brand {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+.sidebar .brand-copy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sidebar-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+}
+.sidebar-toggle:hover {
+  background: var(--secondary);
+}
+.sidebar nav {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+.sidebar nav button {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px;
+  gap: 10px;
+  text-align: left;
+}
+.sidebar .nav-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+.sidebar .nav-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+}
+.sidebar .notification-badge {
+  margin: 0;
+}
+.sidebar .route-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sidebar .route-line span {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  border-top: 1px dotted currentColor;
+}
+.sidebar-collapsed > .sidebar {
+  width: 80px;
+}
+.sidebar-collapsed .sidebar-heading {
+  flex-direction: column;
+}
+.sidebar-collapsed .brand {
+  flex: none;
+}
+.sidebar-collapsed .brand-copy,
+.sidebar-collapsed .nav-label,
+.sidebar-collapsed .nav-caption,
+.sidebar-collapsed .sidebar-note {
+  display: none;
+}
+.sidebar-collapsed .sidebar nav {
+  margin-top: 24px;
+}
+.sidebar-collapsed .sidebar nav button {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  padding: 12px 0;
+}
+.sidebar-collapsed .notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  min-width: 16px;
+  min-height: 16px;
+  padding: 1px 3px;
+}
+.sidebar-collapsed .sidebar-toggle svg {
+  transform: rotate(180deg);
+}
+@media (max-width: 650px) {
+  .app-shell > .sidebar {
+    width: 100%;
+    padding: 16px;
+  }
+  .sidebar nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 16px;
+  }
+  .sidebar nav button {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    padding: 10px 4px;
+  }
+  .sidebar-heading .brand-copy {
+    display: block;
+  }
+  .sidebar-collapsed .sidebar-heading {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .sidebar-collapsed .brand-copy {
+    display: none;
+  }
+  .sidebar-collapsed .sidebar nav {
+    grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+    gap: 4px;
+    margin-top: 12px;
+  }
+}
+
+.account-settings {
+  margin-bottom: 24px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.account-settings h2 {
+  margin-top: 0;
+}
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.account-actions button:hover:not(:disabled) {
+  background: var(--secondary);
+}

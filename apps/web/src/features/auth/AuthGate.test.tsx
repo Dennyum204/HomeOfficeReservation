@@ -1,3 +1,4 @@
+import { AccountSettings } from "./AccountSettings";
 import {
   act,
   fireEvent,
@@ -40,6 +41,7 @@ describe("session guard with simulated responses", () => {
     render(
       <AuthGate>
         <div>Private account data</div>
+        <AccountSettings />
       </AuthGate>,
     );
     expect(
@@ -64,6 +66,7 @@ describe("session guard with simulated responses", () => {
     render(
       <AuthGate>
         <div>Private account data</div>
+        <AccountSettings />
       </AuthGate>,
     );
     await screen.findByText("Private account data");
@@ -93,6 +96,7 @@ describe("session guard with simulated responses", () => {
     render(
       <AuthGate>
         <div>Private account data</div>
+        <AccountSettings />
       </AuthGate>,
     );
     await screen.findByText("Private account data");

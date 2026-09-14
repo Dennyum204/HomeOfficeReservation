@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "HomeOfficeReservation",
   "updated_at": "2026-09-14",
-  "planning_note": "HO-021 selecionado: idiomas PT/EN/DE Web e Android, após aceitação e merge de HO-020. PR #37 e piloto no Pi preservados. IDs HO-017/018/019 reservados nas issues #46/47/48 do PR #37.",
+  "planning_note": "Âmbito aprovado: piloto inicial Web no Pi, com aceitação funcional confirmada. Backup diário realmente agendado em 14/09/2026, 03:16:23–03:17:50 UTC, recibo/snapshot e reconhecimento HTTPS da monitorização correlacionados. HO-017/#46 Android, HO-018/#47 ambientes e HO-019/#48 TLS/monitorização geral continuam separados e não concluídos; renovar a origem antes de 11/10/2026. Resta verificar CI do commit final e conflitos antes de ready; merge humano. O primeiro disparo semanal permanece por observar, sem ser gate adicional.",
   "releases": [
     {
       "id": "v1.0",
@@ -13,6 +13,10 @@
       "status": "planned",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/1",
       "scope_history": [
+        {
+          "date": "2026-09-10",
+          "reason": "Acesso privado escolhido pelo responsável; acrescentados gates HO-013/014/015 sem iniciar implementação nem bloquear a decisão de alojamento."
+        },
         {
           "date": "2026-09-11",
           "reason": "Preservar gate privado acordado no PR #37; apenas HO-013 importada nesta entrega.",
@@ -78,10 +82,10 @@
     {
       "id": "ui-refresh",
       "title": "Identidade visual Claude + — Web e Android",
-      "timing": "Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.",
+      "timing": "HO-016 integrado pelo PR #45 em 2026-09-11; claro/escuro e regressão verificados.",
       "gate": "HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.",
       "review_trigger": "Ao selecionar o próximo trabalho visual e após feedback de utilização.",
-      "status": "planned",
+      "status": "done",
       "milestone_url": "https://github.com/Dennyum204/HomeOfficeReservation/milestone/8"
     }
   ],
@@ -911,7 +915,7 @@
     },
     {
       "id": "HO-012",
-      "title": "Staging, distribuição privada e piloto V1",
+      "title": "Piloto inicial Web no Raspberry Pi",
       "release": "v1.0",
       "area": "operations",
       "status": "review",
@@ -919,16 +923,17 @@
       "depends_on": [
         "HO-011",
         "HO-013",
-        "HO-014"
+        "HO-014",
+        "HO-015"
       ],
       "features": [],
       "acceptance": [
-        "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
-        "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
-        "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
-        "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
-        "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
-        "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+        "Piloto inicial Web no Pi identificado como piloto em homeoffice.ferbatech.com; sem declarar produção definitiva ou distribuição Android. HO-017 e HO-018 preservam os requisitos transferidos.",
+        "Instalação ARM64, migração, worker, persistência e proteção de chaves/segredos demonstrados; HTTPS e autenticação/autorizações preservados.",
+        "Percurso titular submete, chefe aprova e resultado no calendário/notificação aceite funcionalmente pelo responsável; SMTP real, receção de convite e ativação pela aplicação validados.",
+        "Backup externo cifrado com restauro em base nova e recuperação independente demonstrados; agenda diária e retenção sete diários/seis mensais e verificação semanal configuradas. Confirmar execução diária realmente agendada com recibo e sinal externo, sem a substituir por execução manual.",
+        "Monitorização externa de falha/ausência/recuperação validada; observação do primeiro disparo semanal continua registada separadamente sem bloquear a aceitação do diário nem simular resultados.",
+        "Quatro checks core verdes no commit final, verificações Pi aplicáveis e ausência de conflitos antes de ready. Merge humano; sem auto-merge, release ou declaração de V1 completa."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/13",
       "pr_urls": [
@@ -964,14 +969,48 @@
           ]
         },
         {
-          "date": "2026-09-11",
-          "reason": "HO-013 selecionada separadamente. Referenciar apenas o gate de titular; proposta operacional completa e outras novas entradas continuam no PR draft #37.",
+          "date": "2026-09-10",
+          "reason": "Responsável escolheu ferbatech.com existente, acesso privado por convite e titular administrador/colaborador; lacunas de acesso separadas do PR operacional, sem autorizar ações externas.",
           "previous_depends_on": [
             "HO-011"
+          ],
+          "previous_acceptance": [
+            "Alojamento/região, domínio, retenção e plataformas de piloto definidos pelo responsável.",
+            "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+            "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
+            "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+            "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega."
+          ]
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou preparar ensaio NAS isolado antes de escolher alojamento; Hetzner não aprovado. Instalação é próximo passo, sem mudar critérios finais de piloto/distribuição. HO-013/014/015/016 entretanto integrados."
+        },
+        {
+          "date": "2026-09-11",
+          "reason": "Responsável selecionou Raspberry Pi 5 de 4 GB, Debian 13 aarch64, como alvo do ensaio isolado. NAS fica inalterado e histórico. Preparação/CI ARM64 autorizadas, instalação ainda sujeita a revisão. Critérios finais HO-012 preservados."
+        },
+        {
+          "date": "2026-09-12",
+          "reason": "Após ensaio Pi e aceitação manual parcial, o responsável autorizou publicação exclusiva Web/API em homeoffice.ferbatech.com quando a CI pendente passasse. Gate d232709 verde; publicação e verificação externa executadas. Não autoriza SMTP real, Android/distribuição, DNS adicional ou lançamento; critérios finais HO-012 preservados."
+        },
+        {
+          "date": "2026-09-13",
+          "reason": "Responsável aprovou limitar PR #37 ao piloto inicial Web no Pi e confirmou aceitação funcional anterior. Android físico/distribuição transferido para HO-017/#46; staging/produção para HO-018/#47; renovação TLS/monitorização geral para HO-019/#48, origem antes de 11/10/2026. Requisitos preservados e não concluídos.",
+          "previous_title": "Staging, distribuição privada e piloto V1",
+          "previous_acceptance": [
+            "Alojamento/região, retenção e plataformas definidos pelo responsável. Domínio existente ferbatech.com: homeoffice.ferbatech.com em produção e staging.homeoffice.ferbatech.com em staging, sem compra/transferência e preservando DNS/email existentes.",
+            "Staging/produção isolados; segredos externos; migração e restauro demonstrados.",
+            "Worker de notificações ativo, filas/falhas observáveis e chaves Data Protection persistidas/protegidas; webhook Graph e consentimento Microsoft não são requisitos de alojamento core.",
+            "Apps disponibilizadas nos alvos acordados com assinatura/distribuição válidas.",
+            "Duas contas locais autorizadas concluem os critérios core sem ligação Microsoft; release/tag v1.0 só após aceitação. Publicação e importação Outlook têm milestones próprios.",
+            "Alvos atuais Web/Android; iOS adiado para HO-306, sem requisito de implementação, CI, distribuição ou data nesta entrega.",
+            "Antes de convidar pessoas reais: titular administrador/colaborador e chefe associado configuráveis com segurança (HO-013), ciclo de convite recuperável e revogável (HO-014), SMTP real e autorização ensaiados. Antes da gestão autónoma de convidados/piloto aceite: administração Web HO-015 concluída. Convites da aplicação não são convites Firebase para APK."
           ]
         }
       ],
-      "notes": "Incompleta; PR #37 continua draft na branch ops/ho-012-pilot-preparation, preservada. Alojamento aguarda decisão; sem contratação/DNS/deployment/emails reais/distribuição. Domínio existente ferbatech.com, homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Convites HO-014 (#39) e administração Web HO-015 (#40) continuam gates do piloto conforme PR #37; tema HO-016 (#41) separado. Apenas HO-013 importada para esta branch. HO-014 passa a tracking nesta branch; HO-015/016 ainda no PR #37. NAS: só conectividade de túnel reportada, sem instalação/medição ou alojamento pago."
+      "notes": "PR #37 draft e issue #13 aberta. HO-013/014/015/016 integrados: docs/HO-012-INTEGRATION.md. Pi 5/4 GB Debian 13.4 ARM64, Docker 29.8.0/Compose 5.5.1, memory/swap/CFS verificados. Instalação isolada autorizada com imagens 21a2f21, contas sintéticas, migração, convites capturados, chefia distinta, submissão/aprovação, autoaprovação recusada, worker, persistência e restauro numa base nova verificados; ensaio curto não certifica produção. Responsável aceitou manualmente submissão pelo titular, aprovação pelo chefe, calendário e notificação. Preparação HTTPS privada passou no Pi após correção Id Docker clássico/containerd para RepoDigest + OS/ARM64. Publicação autorizada após CI d232709 verde (project-docs/backend-contracts/web/flutter-android/pi-preparation). homeoffice.ferbatech.com ativo por túnel homeoffice-pi: cinco serviços/1600 MiB/3,25 CPU, reinício automático, sem portas host, token privado. TLS público/origem, redirect 308, Web CSRF/cookies/login/logout, bearer/refresh e bloqueio de endpoints internos verificados; browser real abre login, Android físico não testado. Quatro DNS preexistentes preservados; NAS/router intactos. Novo backup antes da publicação e cópia manual AES-GCM no PC verificados, não automatizados. Observação 125,3 s: pico agregado 194 MiB, conector 19,4 MiB, host disponível mínimo 3196 MiB, 57,3 C, zram 1 MiB, sem OOM/throttling. Reinício automático do conector observado; docs/HO-012-HTTPS-PUBLICATION.md. Aceitação manual reportada em 2026-09-13: browser do telemóvel no hostname público, titular submete, chefe aprova e titular confirma calendário/notificações internas. Dificuldade inicial de login esclarecida pelo responsável como erro de cópia da password; sem alteração de contas/autenticação. Wi-Fi desligado não confirmado, aplicação Android instalada e push físico não validados por este percurso. Faltam destino definitivo/separação staging–produção, SMTP real, disparos agendados/alertas dos backups, monitorização/renovação, Android físico/assinatura/distribuição e aceitação piloto final. Origem TLS vence em 2026-10-11, renovação manual. Nenhum email real, APK, contratação, merge/auto-merge/release. NAS/Hetzner históricos, iOS/Outlook adiados. Backups externos ativados (2026-09-13): docs/HO-012-BACKUPS.md. Primeiro upload cifrado R2 EU/Standard, leitura integral e restauro para base nova passaram; recuperação independente no PC com password do Bitwarden e hashes SQL/configuração/PFX/key ring passou. Fonte preservada e HTTPS 200. Ensaio 396 s: mínimo 3042 MiB disponíveis, swap 0, pico 63,35 °C, OOM zero. Dados restic ~313 MB; painel 118 A/124 B (24 h, métricas de armazenamento atrasadas). Estimativa US$0 nas franquias da conta, alerta US$1 não é limite. Timers ativos diário 03:15 UTC + jitter, sete diários/seis mensais, leitura integral semanal. LastTrigger vazio: nenhum disparo agendado verificado. Handler local testado, sem aviso externo; próximo requisito é monitorização de falhas/ausência de sucesso. PR #37 draft; não equivale a aceitação final. Monitorização Healthchecks.io Hobbyist ativada em 2026-09-13, três checks gratuitos e destinatário aprovado guardado privadamente. Ensaio isolado real confirmou falha, ausência de sinal e duas recuperações; responsável confirmou quatro emails recebidos. Rehearsal pausado ignorando pings. Hooks instalados no Pi; backup e leitura integral iniciais MANUAIS terminaram com success reconhecido (cerca de 81 s e 75 s). Timers ativos; LastTrigger 16:25:13 UTC não correlacionado com operação concluída, não prova execução agendada. Próximos prazos locais 14/09 03:23:13 UTC e 20/09 06:09:36 UTC. Ciclos realmente agendados permanecem por comprovar. docs/HO-012-BACKUP-MONITORING.md. SMTP real preparado para revisão: Brevo Free proposto, remetente no-reply@notificacoes.ferbatech.com, manifesto DNS dependente dos valores reais do fornecedor. Cinco DNS existentes consultados e preservados. Sem conta/credenciais/publicação/envio ou alteração no Pi/backups. docs/HO-012-SMTP.md. Brevo Free e remetente aprovados; sessão da conta confirmada e registos reais obtidos no fluxo manual em 2026-09-13. Manifesto guardado fora do Git para revisão; nenhum DNS publicado. Painel pede verificação de telefone antes de envio. SMTP key não criada/obtida; remetente ainda não confirmado. DMARC sugerido pelo fornecedor inclui rua para Brevo, sujeito a decisão distinta. Pi/backups/envios preservados. Publicação DNS autorizada em 2026-09-13: quatro registos adicionados, TTL Auto/DNS only, DMARC v=DMARC1; p=none; adkim=r; aspf=r sem rua/ruf. Releitura API confirmou nove registos e preservação exata dos cinco anteriores. DNS público devolve CNAME corretos. Brevo reconhece código, mas DKIM/DMARC ainda pendentes; autenticação não declarada concluída. Nenhum SMTP/envio/Pi/backup alterado. DMARC rua=mailto:rua@dmarc.brevo.com acrescentado por autorização explícita em 2026-09-13, preservando p=none/adkim=r/aspf=r. DNS público confirmado; Brevo reconheceu os quatro registos e apresentou Your domain has been authenticated. Autenticação DNS concluída, não equivale a envio SMTP. Sem alteração no Pi/backups ou mensagens da aplicação; chave SMTP e verificação de telefone continuam pendentes. Preparação SMTP concluída no fornecedor: verificação de telefone reportada pelo responsável e aviso removido; remetente HomeOffice <no-reply@notificacoes.ferbatech.com> Verified. Chave HomeOffice Pi SMTP criada pelo responsável, Active, expira em 2027-09-13 (também após 90 dias de inatividade segundo painel). Login/chave guardados apenas na pasta privada do PC com ACL restrita, transferência cifrada e releitura validada. Cópia Bitwarden confirmada pelo responsável. Sem aplicação ao Pi, autenticação SMTP ou envio de teste; estes continuam pendentes de autorização. Ensaio SMTP isolado autorizado em 2026-09-13: Python 3.13.5 no host Pi, STARTTLS com validação pública, autenticação Brevo e uma única mensagem sintética aceite pelo relay; destinatário autorizado e recibo mantidos privados. Exit 0 e recibo descarregado no PC. Receção da mensagem confirmada pelo responsável em 2026-09-13; pasta inbox/spam não especificada e cabeçalhos DKIM/DMARC não inspecionados. Não valida MailKit nem rede do contentor: configuração da aplicação e backups/timers não alterados, nenhum convite/conta criado. Ativação SMTP na aplicação confirmada pelo recibo do operador em 2026-09-13: Brevo configurado, app saudável, fila novamente verificada durante pausa; zero mensagens enviadas pelo procedimento e nenhum backup executado. Rede smtp_egress apenas na app, saída geral não restrita ao destino; override da CA privada removido e configuração anterior preservada com comando de recuperação privado. Entrega via aplicação/MailKit continua não testada. PR #37 draft e HO-012 incompleta. Validação manual SMTP pela aplicação confirmada pelo responsável: convite enviado pela Administração, email recebido e ativação concluída. Captura mostra membro de teste Colaborador, Ativo e Aceite/conta ativada, sem chefe associado. Evidência confirma o percurso de entrega/aceitação na aplicação alojada no Pi; não comprova cabeçalhos DKIM/DMARC nem todos os casos de falha de entrega. Endereço e captura permanecem privados. Nenhum backup executado para esta validação. PR #37 mantém-se draft; HO-012 permanece aberta. Atualização autorizada para 9dcc371 instalada no Pi em 2026-09-14: imagem/ficheiro Web públicos verificados, captura local de recuperação e configuração/serviços preservados, sem migração. Correção posterior solicitada: codificação do menu, contenção de nomes longos e navegação recolhível; seis E2E locais e 24 capturas sintéticas, nova CI/deployment ainda por verificar. Não altera os gates acordados. Refinamento Web autorizado: retirar cabeçalhos globais, mover Conta e sessão/Verificar sessão/Terminar sessão para Definições e usar Calendário como título localizado. Preservar validação automática, identidade, dados e configuração. Evidência em docs/HO-012-WEB-HEADER.md; atualização app-only sujeita à CI final. Evidência de 14/09: primeiro diário realmente agendado confirmado por timer/serviço (87 s, exit 0), snapshot 62402f23 e monitor success/acknowledged; hashes dos executáveis coincidem com o repositório. docs/HO-012-SCHEDULED-BACKUP.md. Review até merge humano; semanal ainda não observado e não gate."
     },
     {
       "id": "HO-013",
@@ -997,7 +1036,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/42"
       ],
-      "notes": "HO-013 integrado pelo PR #42, merge f62408eaab4bd47bdf039d53b210a7798fc76dc3, com quatro checks de integração verificados em HO-014 (Android retry 2). Bootstrap legado/titular, extensão idempotente e dados/credenciais preservados. Teste manual aprovado pelo responsável. Convites HO-014 selecionados separadamente; HO-015/016 e preparação HO-012 mantêm âmbito próprio.",
+      "notes": "HO-013 integrado pelo PR #42, merge f62408eaab4bd47bdf039d53b210a7798fc76dc3, com quatro checks de integração verificados em HO-014 (Android retry 2). Bootstrap legado/titular, extensão idempotente e dados/credenciais preservados. Teste manual aprovado pelo responsável. Convites HO-014 selecionados separadamente; HO-015/016 e preparação HO-012 mantêm âmbito próprio. Reconciliação HO-012 em 2026-09-11: PR #42 MERGED em main; f62408eaab4bd47bdf039d53b210a7798fc76dc3 ancestral de origin/main; project-docs 34539320219, backend-contracts/web/flutter-android 34539320227 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/38",
       "scope_history": [
         {
@@ -1043,7 +1082,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/43"
       ],
-      "notes": "PR #43 integrado em main, teste manual aprovado pelo responsável e integração remota confirmada. Primeira falha Android e repetição verde da mesma base preservadas na evidência; SMTP externo continua gate operacional HO-012.",
+      "notes": "PR #43 integrado em main, teste manual aprovado pelo responsável e integração remota confirmada. Primeira falha Android e repetição verde da mesma base preservadas na evidência; SMTP externo continua gate operacional HO-012. Reconciliação HO-012 em 2026-09-11: PR #43 MERGED em main; e12d5ccafaa8a2e336743eacf6f2b1ef5a1ee8e9 ancestral de origin/main; project-docs 34576735019, backend-contracts/web/flutter-android 34576735065 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/39",
       "scope_history": [
         {
@@ -1089,7 +1128,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/44"
       ],
-      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks. HO-016 verificou merge humano #44 e os quatro checks de integração verdes no commit dcda6e2; trabalho concluído.",
+      "notes": "Implementação no PR #44: administração Web, versão/recibos administrativos, remoção de chefia e testes API/PostgreSQL/browser. Ambiente manual isolado demonstrou aceitação Web/Android, decisão e SMTP local recuperável; limite de exportação da captura Android documentado. Quatro checks no head final e ausência de conflitos são gate para retirar draft, registados no PR. Issue aberta até merge humano. SMTP externo/piloto pertencem a HO-012; PR #37 preservado. CI Android de 8e4b593 revelou recusa ao guardar rascunho; janela de expiração reproduzida e corrigida com uma repetição após 401 explícito, mesma sessão/ator/corpo/chave. CI acrescenta expiração controlada real, sem enfraquecer checks. HO-016 verificou merge humano #44 e os quatro checks de integração verdes no commit dcda6e2; trabalho concluído. Reconciliação HO-012 em 2026-09-11: PR #44 MERGED em main; dcda6e2cceef570b3f8ab6dc5d5905d6af6212ec ancestral de origin/main; project-docs 34591956785, backend-contracts/web/flutter-android 34591956766 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/40",
       "scope_history": [
         {
@@ -1141,7 +1180,7 @@
       "pr_urls": [
         "https://github.com/Dennyum204/HomeOfficeReservation/pull/45"
       ],
-      "notes": "Merge humano PR #45 em main, f07c3dd7185743c62f5c47d15c4b8a5198d92cbb, confirmado por fetch; integração Project documentation e Core application success. Evidência visual anterior preservada.",
+      "notes": "Implementação selecionada na branch codex/ho-016-claude-visual-theme; base dcda6e2 após merge e CI HO-015 verificados. HO-012/PR #37 permanece incompleta, NAS apenas conectividade. Implementação HO-016 em worktree próprio: tokens reais, adaptação de contraste, temas Web/Android e hierarquia; 84 capturas reais com manifesto em docs/evidence/ho016. API/contratos/permissões preservados. CI remota será verificada no head final antes de retirar draft. PR #45 aberto; entrega para revisão humana apenas após os quatro checks do head final verdes e sem conflitos. 51 testes Flutter passaram; aplicação normal de revisão sem credenciais compiladas. HO-016 permanece review até integração humana. Refinamento Android: 52 testes locais, análise/format e ensaio nativo com 26 capturas adicionais passaram; scroll por conta, identidade em Definições e seletor da chefia preservados. As 84 capturas iniciais ficam como histórico. Quatro checks remotos devem ser novamente verificados no head final; issue permanece aberta até merge humano. Reconciliação HO-012 em 2026-09-11: PR #45 MERGED em main; f07c3dd7185743c62f5c47d15c4b8a5198d92cbb ancestral de origin/main; project-docs 34605827077, backend-contracts/web/flutter-android 34605827090 verdes na integração. Teste manual aprovado pelo responsável.",
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/41",
       "scope_history": [
         {
@@ -1483,6 +1522,64 @@
       "pr_urls": []
     },
     {
+      "id": "HO-017",
+      "title": "Android físico e distribuição privada",
+      "release": "v1.0",
+      "area": "mobile",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [],
+      "acceptance": [
+        "Preservar o alvo Android anteriormente incluído em HO-012; selecionar e autorizar a distribuição privada antes de distribuir APKs.",
+        "Assinatura válida com chaves protegidas fora do Git e procedimento de atualização/recuperação documentado.",
+        "Instalar num Android físico e validar convite/ativação, login, pedido, decisão e notificações com os papéis autorizados; não inferir sucesso a partir do browser ou emulador.",
+        "Registar aceitação e limitações da distribuição; não bloquear o piloto inicial Web aprovado."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/46",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-018",
+      "title": "Separação definitiva staging e produção",
+      "release": "v1.0",
+      "area": "operations",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [],
+      "acceptance": [
+        "Definir e aprovar os ambientes definitivos; o ambiente atual homeoffice.ferbatech.com é piloto, não prova de produção definitiva.",
+        "Isolar dados, segredos, chaves e serviços entre staging e produção; preservar o domínio ferbatech.com e os restantes registos DNS/email.",
+        "Preparar homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com conforme decisão de promoção autorizada; demonstrar migração e restauro sem sobrescrever o piloto.",
+        "Documentar promoção e recuperação; não efetuar alterações externas sem autorização nem bloquear o piloto Web atual."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/47",
+      "pr_urls": []
+    },
+    {
+      "id": "HO-019",
+      "title": "Renovação TLS da origem e monitorização geral",
+      "release": "v1.0",
+      "area": "operations",
+      "status": "planned",
+      "owner": "Fernando + Codex",
+      "depends_on": [],
+      "features": [],
+      "acceptance": [
+        "Renovar o certificado da origem antes de 11/10/2026 (2026-10-11), preservando validação TLS/SNI; Fernando é o responsável operacional até execução autorizada.",
+        "Documentar e ensaiar renovação/recuperação sem perda dos dados e sem confundir certificado TLS com chaves Data Protection.",
+        "Definir monitorização de disponibilidade e validade do certificado com alertas autorizados, reutilizando serviços existentes quando adequado.",
+        "Preservar os backups e a sua monitorização; este acompanhamento não reabre o âmbito do PR #37."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/48",
+      "pr_urls": []
+    },
+    {
       "id": "HO-020",
       "title": "UI e leitura automática de notificações",
       "release": "ui-refresh",
@@ -1543,7 +1640,7 @@
       "title": "Português, inglês e alemão",
       "release": "ui-refresh",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-020"
@@ -1565,7 +1662,8 @@
       "notes": [
         "Implementação PT/EN/DE Web/Android no PR #52, após integração verificada de HO-020. Preferência local persistente e formatos pt-PT/en-GB/de-CH; contratos e dados preservados.",
         "Verificação local: 18 unitários Web, 58 Flutter, 36 E2E existentes e 4 de idiomas; 178 contratos sem divergência; 34 capturas reais. Quatro checks remotos do head final obrigatórios antes de retirar draft.",
-        "Emails e texto push do servidor continuam explicitamente em português; caixa de notificações traduz eventos. Não existe preferência global de destinatário. Sem deployment; PR #37 e piloto Pi preservados."
+        "Emails e texto push do servidor continuam explicitamente em português; caixa de notificações traduz eventos. Não existe preferência global de destinatário. Sem deployment; PR #37 e piloto Pi preservados.",
+        "Merge humano PR #52 em bda687c76428eb854aef43c65e7de049e0ca394f; ancestral de origin/main; quatro checks de integração verdes nos runs 34790177193 e 34790177165."
       ]
     }
   ],

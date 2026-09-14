@@ -1,0 +1,11 @@
+{
+  "trial": "/home/dennyum/ho012-pi-trial",
+  "state": "/var/lib/homeoffice-backup",
+  "restic": "/opt/homeoffice-backup/restic",
+  "repository": "s3:https://ACCOUNT_ID.eu.r2.cloudflarestorage.com/homeoffice-pi-backups/restic-v1",
+  "repository_id": "REPLACE_AFTER_EXPLICIT_INIT",
+  "password_file": "/etc/homeoffice-backup/repository-password",
+  "s3_credentials_file": "/etc/homeoffice-backup/s3.json",
+  "external_authorized": false,
+  "recovery_kit_confirmed": false
+}

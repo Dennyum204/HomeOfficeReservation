@@ -1,0 +1,14 @@
+[Unit]
+Description=HomeOffice private encrypted backup
+Requires=docker.service
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+EnvironmentFile=/etc/homeoffice/backup.env
+ExecStart=/bin/bash /opt/homeoffice/infra/pilot/backup-once.sh
+TimeoutStartSec=30min
+StandardOutput=null
+StandardError=journal

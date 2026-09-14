@@ -1,4 +1,5 @@
 import java.io.File
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -21,6 +22,21 @@ if (firebaseConfigPath != null) {
     }
 }
 
+// Optional release signing. Neither the properties nor the keystore may be in Git.
+val signingPath = providers.environmentVariable("HO_ANDROID_SIGNING_PROPERTIES").orNull
+val releaseKeys = signingPath?.let {
+    val file = File(it)
+    val repository = rootDir.parentFile.parentFile.parentFile.canonicalFile.toPath()
+    require(file.isAbsolute && file.isFile && !file.canonicalFile.toPath().startsWith(repository)) { "Signing properties must be an absolute private file outside the repository." }
+    Properties().apply { file.inputStream().use { load(it) } }.also { keys ->
+        listOf("storeFile", "storePassword", "keyAlias", "keyPassword").forEach { name ->
+            require(!keys.getProperty(name).isNullOrBlank()) { "Incomplete private signing configuration." }
+        }
+        val store = File(keys.getProperty("storeFile"))
+        require(store.isAbsolute && store.isFile && !store.canonicalFile.toPath().startsWith(repository)) { "Keystore must be an absolute private file outside the repository." }
+    }
+}
+
 android {
     namespace = "dev.homeoffice.homeoffice_mobile"
     compileSdk = 37 // flutter_secure_storage 11.0.0 requires API 37; target/min remain Flutter defaults.
@@ -32,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        // Development identifier; distribution identity is confirmed in HO-012.
+        // Preserve installed app identity and the existing Firebase Android registration.
         applicationId = "dev.homeoffice.homeoffice_mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -46,10 +62,18 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (releaseKeys != null) create("pilot") {
+            storeFile = File(releaseKeys.getProperty("storeFile"))
+            storePassword = releaseKeys.getProperty("storePassword")
+            keyAlias = releaseKeys.getProperty("keyAlias")
+            keyPassword = releaseKeys.getProperty("keyPassword")
+        }
+    }
     buildTypes {
         release {
-            // Unsigned release build for CI. Store signing is configured outside Git in HO-012.
-            signingConfig = null
+            // Core CI can still compile unsigned; never silently sign with a debug key.
+            signingConfig = if (releaseKeys != null) signingConfigs.getByName("pilot") else null
         }
     }
 }

@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-14.
 
-HO-021 selecionado: idiomas PT/EN/DE Web e Android, após aceitação e merge de HO-020. PR #37 e piloto no Pi preservados. IDs HO-017/018/019 reservados nas issues #46/47/48 do PR #37.
+Âmbito aprovado: piloto inicial Web no Pi, com aceitação funcional confirmada. Backup diário realmente agendado em 14/09/2026, 03:16:23–03:17:50 UTC, recibo/snapshot e reconhecimento HTTPS da monitorização correlacionados. HO-017/#46 Android, HO-018/#47 ambientes e HO-019/#48 TLS/monitorização geral continuam separados e não concluídos; renovar a origem antes de 11/10/2026. Resta verificar CI do commit final e conflitos antes de ready; merge humano. O primeiro disparo semanal permanece por observar, sem ser gate adicional.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
@@ -113,7 +113,7 @@ A sequência detalhada e os critérios estão em [docs/BACKLOG.md](docs/BACKLOG.
 
 ## ui-refresh — Identidade visual Claude + — Web e Android
 
-**Quando:** Próxima melhoria de UI quando selecionada; sem data e sem bloquear alojamento ou piloto core.
+**Quando:** HO-016 integrado pelo PR #45 em 2026-09-11; claro/escuro e regressão verificados.
 
 **Gate:** HO-016 integrado com regressão funcional e acessibilidade em claro/escuro; iOS permanece adiado.
 

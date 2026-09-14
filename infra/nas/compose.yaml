@@ -1,0 +1,106 @@
+# Deliberately compatible with Compose file 2.4; no !override, --wait or build on NAS.
+version: '2.4'
+x-logging: &logging
+  driver: json-file
+  options: {max-size: '5m', max-file: '2'}
+services:
+  edge:
+    image: ${HO_EDGE_IMAGE:?load the trial Caddy image}
+    restart: 'no'
+    read_only: true
+    tmpfs: ['/data', '/config', '/tmp']
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./private/server.pem:/run/tls/server.pem:ro
+      - ./private/server.key:/run/tls/server.key:ro
+    networks:
+      trial: {ipv4_address: 10.78.16.2}
+    mem_limit: 64m
+    memswap_limit: 64m
+    cpus: 0.15
+    logging: *logging
+    security_opt: [no-new-privileges:true]
+  app:
+    image: ${HO_IMAGE:?prepare immutable trial image}
+    restart: 'no'
+    read_only: true
+    tmpfs: ['/tmp:uid=1654,gid=1654,mode=700,size=64m']
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+      HO_CONFIG_FILE: /run/config/application.json
+      HO_PUBLIC_HOST: localhost
+      SSL_CERT_FILE: /run/config/ca.pem
+      # .NET environment percentages use hexadecimal: 3C = 60% of the container limit.
+      DOTNET_GCHeapHardLimitPercent: '3C'
+    volumes:
+      - ./private/application.json:/run/config/application.json:ro
+      - ./private/protection.pfx:/run/config/protection.pfx:ro
+      - ./private/ca.pem:/run/config/ca.pem:ro
+      - ./private/bootstrap.json:/run/config/bootstrap.json:ro
+      - ./private/keys:/var/lib/homeoffice/keys
+    networks: [trial]
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.75
+    pids_limit: 128
+    logging: *logging
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+  database:
+    image: ${HO_DATABASE_IMAGE:?load the trial PostgreSQL image}
+    restart: 'no'
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+      HO_DATABASE_PASSWORD_FILE: /run/secrets/database-password
+    command: ['postgres', '-c', 'shared_buffers=64MB', '-c', 'work_mem=2MB', '-c', 'maintenance_work_mem=32MB', '-c', 'max_connections=20', '-c', 'max_parallel_workers=0']
+    volumes:
+      - database:/var/lib/postgresql
+      - ./private/postgres-password:/run/secrets/postgres-password:ro
+      - ./private/database-password:/run/secrets/database-password:ro
+      - ./init-database.sh:/docker-entrypoint-initdb.d/10-homeoffice.sh:ro
+    networks: [trial]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d homeoffice']
+      interval: 5s
+      timeout: 3s
+      retries: 24
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.5
+    shm_size: 64m
+    logging: *logging
+  mailpit:
+    image: ${HO_MAIL_IMAGE:?load the trial Mailpit image}
+    restart: 'no'
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: '100'
+      MP_SMTP_TLS_CERT: /run/tls/server.pem
+      MP_SMTP_TLS_KEY: /run/tls/server.key
+      MP_SMTP_REQUIRE_STARTTLS: 'true'
+      MP_SMTP_AUTH_FILE: /run/tls/smtp-auth
+      MP_DISABLE_VERSION_CHECK: 'true'
+    volumes:
+      - mail:/data
+      - ./private/server.pem:/run/tls/server.pem:ro
+      - ./private/server.key:/run/tls/server.key:ro
+      - ./private/smtp-auth:/run/tls/smtp-auth:ro
+    networks:
+      trial: {ipv4_address: 10.78.16.3}
+    mem_limit: 64m
+    memswap_limit: 64m
+    cpus: 0.2
+    logging: *logging
+    security_opt: [no-new-privileges:true]
+volumes:
+  database:
+    labels: {org.homeoffice.trial: '${HO_TRIAL_ID:?prepare a new trial identity}'}
+  mail:
+    labels: {org.homeoffice.trial: '${HO_TRIAL_ID:?prepare a new trial identity}'}
+networks:
+  trial:
+    labels: {org.homeoffice.trial: '${HO_TRIAL_ID:?prepare a new trial identity}'}
+    internal: true
+    ipam:
+      config: [{subnet: 10.78.16.0/24, ip_range: 10.78.16.128/25}]
+# No published ports, Docker socket, host network, DSM mounts, relay, Cloudflare or auto-updater.

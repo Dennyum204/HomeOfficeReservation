@@ -38,9 +38,7 @@ try {
     .getByLabel("Palavra-passe", { exact: true })
     .fill(employee.password);
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
-  await expect(
-    page.getByRole("region", { name: "Conta", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator("#workspace-navigation")).toBeVisible();
   await ready();
   const employeeId = await page
     .getByLabel("Colaborador selecionado", { exact: true })
