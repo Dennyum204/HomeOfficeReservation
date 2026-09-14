@@ -119,9 +119,7 @@ async function accept(page: Page, email: string, password: string) {
   ).toBeVisible();
   await page.getByLabel("Palavra-passe", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
-  await expect(
-    page.getByRole("region", { name: "Conta", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator("#workspace-navigation")).toBeVisible();
 }
 
 test("admin UI invites owner and chief, accepts, preserves dual roles, suspends and denies ordinary access", async ({
@@ -280,6 +278,10 @@ test("admin UI invites owner and chief, accepts, preserves dual roles, suspends 
   await confirm(owner);
   await confirmed(owner);
   expect((await extraPage.request.get("/api/v1/me")).status()).toBe(403);
+  await extraPage
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
   await extraPage
     .getByRole("button", { name: "Verificar sessão", exact: true })
     .click();

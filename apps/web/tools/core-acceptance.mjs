@@ -38,18 +38,23 @@ const ready = () => expect(button("Atualizar dados")).toBeEnabled();
 async function login(role) {
   await page.goto("/");
   await expect(
-    button("Terminar sessão").or(page.getByLabel("Email", { exact: true })),
+    page
+      .locator("#workspace-navigation")
+      .or(page.getByLabel("Email", { exact: true })),
   ).toBeVisible();
-  if (await button("Terminar sessão").count())
+  if (await page.locator("#workspace-navigation").count()) {
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button", { name: /Definições/ })
+      .click();
     await button("Terminar sessão").click();
+  }
   await page.getByLabel("Email", { exact: true }).fill(accounts[role].email);
   await page
     .getByLabel("Palavra-passe", { exact: true })
     .fill(accounts[role].password);
   await button("Entrar").click();
-  await expect(
-    page.getByRole("region", { name: "Conta", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator("#workspace-navigation")).toBeVisible();
   await ready();
   if (state.TEST_CORE_EMPLOYEE) {
     await page

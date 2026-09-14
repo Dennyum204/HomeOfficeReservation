@@ -1,6 +1,6 @@
 # Atualização do piloto Web — 2026-09-14
 
-A imagem 9dcc371 foi instalada com saúde e checksum público verificados; dados/configuração/serviços preservados e backup local de recuperação confirmado. HO-021 integrada com CI de main verde. Correção de navegação solicitada posteriormente: [causa, testes e evidência](docs/HO-012-SIDEBAR.md). Nova publicação ainda sujeita aos checks do commit corrigido. O disparo real do backup continua pendente, sem execução manual para o substituir.
+A imagem 3f8e8ac foi instalada com saúde e hashes públicos JS/CSS verificados; dados/configuração/serviços preservados e backup local de recuperação confirmado. Os quatro checks e pi-preparation passaram. HO-021 integrada com CI de main verde. [Navegação corrigida](docs/HO-012-SIDEBAR.md). Novo refinamento solicitado: [Web sem cabeçalhos globais, Conta e sessão em Definições](docs/HO-012-WEB-HEADER.md); publicação desta alteração ainda sujeita à CI final. O disparo real do backup continua pendente, sem execução manual para o substituir.
 
 ## Histórico preservado
 

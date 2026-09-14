@@ -4,6 +4,15 @@ export const MemberContext = createContext<MemberProfile | undefined>(
   undefined,
 );
 export const useMember = () => useContext(MemberContext);
+export const SessionActionsContext = createContext<
+  | {
+      busy: boolean;
+      message: string;
+      check: () => void;
+      logout: () => void;
+    }
+  | undefined
+>(undefined);
 export const SESSION_EVENT = "homeoffice:check-session";
 export const JOURNAL_KEY = "homeoffice:planning-command";
 export const OWNER_KEY = "homeoffice:planning-owner";

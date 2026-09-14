@@ -8,6 +8,7 @@ import { accessApi, authApi, csrf, statusOf } from "./api";
 import {
   clearPlanningSession,
   MemberContext,
+  SessionActionsContext,
   OWNER_KEY,
   SESSION_EVENT,
 } from "./session";
@@ -153,44 +154,22 @@ export function AuthGate({ children }: { children: ReactNode }) {
     );
   if (member)
     return (
-      <>
-        <section className="account-bar" aria-label={s.auth.account}>
-          <div>
-            <span>{s.auth.signedInAs}</span>
-            <strong>{member.displayName}</strong>
-            <span>
-              {member.organizationName} ·{" "}
-              {[
-                member.isEmployee && s.auth.employee,
-                member.isManager && s.auth.manager,
-                member.isAccountAdministrator && s.auth.admin,
-              ]
-                .filter(Boolean)
-                .join(" · ")}
-            </span>
-          </div>
-          <button
-            disabled={busy}
-            onClick={() => {
+      <MemberContext.Provider key={member.memberId} value={member}>
+        <SessionActionsContext.Provider
+          value={{
+            busy,
+            message: message ? s.auth[message] : "",
+            check: () => {
               void check();
-            }}
-          >
-            {s.auth.check}
-          </button>
-          <button
-            disabled={busy}
-            onClick={() => {
+            },
+            logout: () => {
               void logout();
-            }}
-          >
-            {s.auth.logout}
-          </button>
-          {message && <p role="alert">{s.auth[message]}</p>}
-        </section>
-        <MemberContext.Provider key={member.memberId} value={member}>
+            },
+          }}
+        >
           {children}
-        </MemberContext.Provider>
-      </>
+        </SessionActionsContext.Provider>
+      </MemberContext.Provider>
     );
   return (
     <main className="auth-page">

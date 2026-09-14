@@ -1,3 +1,4 @@
+import { AccountSettings } from "./features/auth/AccountSettings";
 import { useLanguage } from "./i18n/locale";
 import { LanguagePicker } from "./i18n/LanguagePicker";
 import { sidebarCopy } from "./i18n/sidebar";
@@ -219,14 +220,6 @@ export function WorkspaceShell() {
         </div>
       </aside>
       <div className="main-wrap">
-        <header className="topbar">
-          <span>
-            {s.workspace}
-            <span className="breadcrumb"> / {label(section)}</span>
-          </span>
-          <span className="stage">{s.locations}</span>
-          <Appearance compact />
-        </header>
         <main id="content" tabIndex={-1}>
           <div className="intro">
             <p className="eyebrow">{s.brandCaption}</p>
@@ -236,7 +229,7 @@ export function WorkspaceShell() {
                 : section === "notifications"
                   ? n.title
                   : section === "calendar"
-                    ? p.title
+                    ? p.calendar
                     : section === "requests"
                       ? p.requests
                       : section === "onsite" || section === "tasks"
@@ -257,6 +250,7 @@ export function WorkspaceShell() {
                         : p.intro}
             </p>
           </div>
+          {section === "settings" && <AccountSettings />}
           <div
             hidden={section === "notifications" || section === "administration"}
           >

@@ -71,8 +71,13 @@ test("theme follows system, persists explicit choice and keeps real screens acce
 }) => {
   await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
   await signIn(page);
+  await page
+    .locator("#workspace-navigation")
+    .getByRole("button")
+    .nth(5)
+    .click();
   const theme = page
-    .getByRole("banner")
+    .locator(".appearance-card")
     .getByRole("combobox", { name: "Tema da interface" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await choose(theme, "light");
@@ -84,6 +89,11 @@ test("theme follows system, persists explicit choice and keeps real screens acce
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   for (const mode of ["light", "dark"]) {
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button")
+      .nth(5)
+      .click();
     await choose(theme, mode);
     for (const label of [
       "Calendário",
