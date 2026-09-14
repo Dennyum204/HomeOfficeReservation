@@ -13,3 +13,15 @@ flutter build apk --release --target-platform android-arm64 --build-number=20260
 Validar assinatura com `apksigner verify` antes de instalar por `adb -s SERIAL install -r APK`. Não incluir serial, credenciais ou keystore no tracking público. Abrir a aplicação normal após instalação; iniciar sessão com a conta existente, sem novo convite obrigatório.
 
 Esta entrega cobre preparação do ícone e instalação privada direta. FCM permanece desativado neste build; a caixa interna funciona com a aplicação aberta. Aceitação/ativação, decisões, recuperação de sessão e push em dispositivo físico ainda exigem evidência própria. HO-017 mantém-se incompleta; PR #37/piloto Web, DNS, Pi, NAS e backups não são alterados nesta tarefa.
+
+## Avisos flutuantes — preparação HO-017 (2026-09-14)
+
+O APK anterior não incluía FCM. O perfil privado passa a compilar com a configuração Firebase externa existente e `FCM_ENABLED=true`, mantendo package e assinatura. O canal `homeoffice_updates` é criado com `IMPORTANCE_HIGH`, som padrão e visibilidade privada. O FCM usa esse canal por defeito em background; em foreground o callback de uma notificação real apresenta o mesmo aviso do sistema, com texto genérico e ID opaco. Tocar no aviso abre o contexto autenticado; não decide pedidos. O canal respeita escolhas anteriores do utilizador, permissões, Não incomodar e políticas de bateria do Android. Não se recria um canal para contornar uma recusa.
+
+Não se pede full-screen intent, overlay sobre outras aplicações ou acesso às notificações de outras apps. Sem FCM/permissão continua disponível a caixa interna. Logout limpa os avisos da própria app após revogar o registo. O transporte do servidor existente mantém prioridade normal e TTL de uma hora; não há promessa de receção instantânea em Doze.
+
+Ensaio físico anterior no Samsung: login/troca de contas sintéticas, rascunho/submissão, aprovação pelo chefe, notificação interna/contexto/leitura, calendário confirmado e sessão/plano após force-stop/reabertura passaram. Pedido identificado como sintético para 30/09/2026; dados anteriores preservados. Convite/ativação nativa e apresentação FCM real ainda pendentes. Capturas e recibos privados, sem credenciais no tracking.
+
+Conflitos do PR com main resolvidos importando a integração humana de #37. A integração Android de main falhou por um tap em Entrar que não atingiu o botão durante a animação nativa do teclado. O teste passa a exigir insets de teclado a zero e alvo estável/hittable antes do único tap; as verificações de login, expiração, conta e logout não são removidas.
+
+Fontes: [canais Android](https://developer.android.com/develop/ui/views/notifications/channels), [receção Flutter/FCM](https://firebase.google.com/docs/cloud-messaging/flutter/receive-messages). A compilação/CI não substitui a captura do aviso no telefone.
