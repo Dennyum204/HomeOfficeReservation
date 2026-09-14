@@ -25,6 +25,19 @@ HTTPS_FILES = ['application.json', 'compose.json', 'Caddyfile', 'origin.pem', 'o
                'route.json', 'blocked-route.json', 'ingress.json', 'tunnel-token']
 
 
+def push_recovery_files(trial, active_config):
+    config = json.loads(active_config.read_text())
+    if str(config.get('Notifications', {}).get('PushProvider', 'Disabled')).lower() != 'fcm':
+        return []
+    name = 'private/push/server.json'
+    source = trial / name
+    if source.is_symlink() or not source.is_file():
+        raise ValueError('FCM recovery credential missing or symlink')
+    if os.name == 'posix' and source.stat().st_mode & 0o077:
+        raise ValueError('FCM recovery credential permissions invalid')
+    return [name]
+
+
 def digest(path):
     with Path(path).open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
@@ -211,6 +224,7 @@ class Backup:
                 self.run(self.dc + ['exec', '-T', 'database', 'pg_dump', '-U', 'postgres', '-d', 'homeoffice',
                                     '-Fc', '--no-owner'], stdout=output, timeout=300)
             files = list(FILES)
+            files += push_recovery_files(self.trial, self.active_config)
             if (self.trial / 'private/https').exists():
                 files += ['private/https/' + name for name in HTTPS_FILES]
             keys = list((self.trial / 'private/keys').glob('key-*.xml'))

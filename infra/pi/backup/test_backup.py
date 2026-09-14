@@ -7,6 +7,35 @@ import unittest
 from unittest.mock import patch
 
 from backup import Backup, TAG, PROJECT, FILES, HTTPS_FILES, database_name, manifest, verify_bundle, write_json, status, validate_source
+from backup import push_recovery_files
+
+
+class PushRecoveryTests(unittest.TestCase):
+    def test_enabled_push_requires_private_recovery_key_and_integrity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = root / 'application.json'
+            config.write_text(json.dumps({'Notifications': {'PushProvider': 'Fcm'}}))
+            with self.assertRaises(ValueError):
+                push_recovery_files(root, config)
+            key = root / 'private/push/server.json'
+            key.parent.mkdir(parents=True)
+            key.write_text('synthetic recovery material')
+            key.chmod(0o400)
+            self.assertEqual(push_recovery_files(root, config), ['private/push/server.json'])
+            manifest(root)
+            verify_bundle(root)
+            key.chmod(0o600)
+            key.write_text('tampered')
+            with self.assertRaises(ValueError):
+                verify_bundle(root)
+
+    def test_disabled_push_preserves_existing_backup_without_extra_credentials(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = root / 'application.json'
+            config.write_text('{}')
+            self.assertEqual(push_recovery_files(root, config), [])
 
 
 class SafetyTests(unittest.TestCase):
@@ -111,10 +140,14 @@ class SafetyTests(unittest.TestCase):
             b.state = Path(tmp) / 'state'; b.state.mkdir()
             b.trial = Path(tmp) / 'trial'; b.trial.mkdir()
             b.dc = ['docker', 'compose']; b.trial_check = lambda: None; b.resume = lambda: None
-            files = FILES + ['private/https/' + p for p in HTTPS_FILES] + ['private/keys/key-test.xml']
+            files = FILES + ['private/https/' + p for p in HTTPS_FILES] + ['private/keys/key-test.xml', 'private/push/server.json']
+            expected = {name: 'synthetic:' + name for name in files}
+            expected['private/https/application.json'] = json.dumps({'Notifications': {'PushProvider': 'Fcm'}})
             for name in files:
                 path = b.trial / name; path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text('synthetic:' + name)
+                path.write_text(expected[name])
+                path.chmod(0o600)
+            b.active_config = b.trial / 'private/https/application.json'
             runtime = b.state / 'runtime'; runtime.mkdir()
             write_json(runtime / 'images.json', [{'id': 'id', 'tags': ['tag']}])
             (runtime / 'images.tar').write_bytes(b'image'); manifest(runtime)
@@ -128,8 +161,8 @@ class SafetyTests(unittest.TestCase):
             b.capture()
             verify_bundle(b.state / 'current')
             for name in files:
-                self.assertEqual((b.state / 'current/trial' / name).read_text(), 'synthetic:' + name)
-                self.assertEqual((b.trial / name).read_text(), 'synthetic:' + name)
+                self.assertEqual((b.state / 'current/trial' / name).read_text(), expected[name])
+                self.assertEqual((b.trial / name).read_text(), expected[name])
 
 
 class RealResticTests(unittest.TestCase):
