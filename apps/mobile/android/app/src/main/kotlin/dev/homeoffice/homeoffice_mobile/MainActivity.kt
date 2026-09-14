@@ -9,10 +9,47 @@ import com.google.firebase.installations.FirebaseInstallations
 
 class MainActivity : FlutterActivity() {
     private var registrationChannel: MethodChannel? = null
+    private var alertsChannel: MethodChannel? = null
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        NotificationAlerts.createChannel(this)
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val id = intent.getStringExtra(NotificationAlerts.EXTRA)
+        if (NotificationAlerts.valid(id) && alertsChannel != null) {
+            intent.removeExtra(NotificationAlerts.EXTRA)
+            alertsChannel?.invokeMethod("opened", id)
+        }
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
+        alertsChannel = MethodChannel(messenger, "homeoffice/notification-alerts").also { channel ->
+            channel.setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "initial" -> {
+                        val id = intent.getStringExtra(NotificationAlerts.EXTRA)
+                        intent.removeExtra(NotificationAlerts.EXTRA)
+                        result.success(if (NotificationAlerts.valid(id)) id else null)
+                    }
+                    "show" -> {
+                        val id = call.arguments as? String
+                        if (NotificationAlerts.valid(id)) NotificationAlerts.show(this, id!!)
+                        result.success(null)
+                    }
+                    "clear" -> {
+                        getSystemService(android.app.NotificationManager::class.java).cancelAll()
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+        }
         // Enabling FID auto-init may wait for Firebase Installations. Flutter's
         // serial background queue keeps this SDK work off Android's UI thread.
         registrationChannel = MethodChannel(messenger, "homeoffice/fcm-registration", StandardMethodCodec.INSTANCE,
@@ -54,6 +91,8 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        alertsChannel?.setMethodCallHandler(null)
+        alertsChannel = null
         if (FcmRegistrationEvents.channel === registrationChannel) FcmRegistrationEvents.channel = null
         registrationChannel?.setMethodCallHandler(null)
         registrationChannel = null

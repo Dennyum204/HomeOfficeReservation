@@ -61,6 +61,29 @@ Future<void> main() async {
       // Native IME animations can move the button between text entry and the tap.
       FocusManager.instance.primaryFocus?.unfocus();
       await tester.pumpAndSettle();
+      // Android IME insets animate outside Flutter's scheduled-frame queue.
+      // Require a stable, actually hittable button before the one real tap.
+      var stable = 0;
+      Offset? previous;
+      for (var attempt = 0; attempt < 40 && stable < 3; attempt++) {
+        await tester.ensureVisible(find.byKey(const Key('submit')));
+        await tester.pump(const Duration(milliseconds: 100));
+        final button = find.byKey(const Key('submit'));
+        final center = tester.getCenter(button);
+        if (tester.view.viewInsets.bottom == 0 &&
+            button.hitTestable().evaluate().length == 1 &&
+            center == previous) {
+          stable++;
+        } else {
+          stable = 0;
+        }
+        previous = center;
+      }
+      expect(
+        stable,
+        3,
+        reason: 'Native login button must settle after IME dismissal',
+      );
       await tester.ensureVisible(find.byKey(const Key('submit')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('submit')));

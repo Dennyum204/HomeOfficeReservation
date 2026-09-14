@@ -1,0 +1,5 @@
+<resources>
+    <string name="notification_channel_name">Atualizações HomeOffice</string>
+    <string name="notification_channel_description">Novos pedidos, decisões e atualizações do trabalho.</string>
+    <string name="notification_body">Tem uma nova atualização. Abra a aplicação para consultar.</string>
+</resources>

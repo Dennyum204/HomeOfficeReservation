@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'fcm_registration.dart';
+import 'notification_alerts.dart';
 
 abstract class PushGateway {
   bool get configured;
@@ -55,6 +56,15 @@ class FirebasePushGateway implements PushGateway {
     await Firebase.initializeApp();
     await FirebaseMessaging.instance.setAutoInitEnabled(false);
     _ready = true;
+    NotificationAlerts.channel.setMethodCallHandler((call) async {
+      final id = notificationLink({
+        'schema': '1',
+        'notificationId': call.arguments,
+      });
+      if (call.method == 'opened' && id != null && !_opened.isClosed) {
+        _opened.add(id);
+      }
+    });
     void emit(RemoteMessage message, StreamController<String> channel) {
       final id = notificationLink(message.data);
       if (id != null && !channel.isClosed) channel.add(id);
@@ -74,6 +84,11 @@ class FirebasePushGateway implements PushGateway {
     );
     final initial = await FirebaseMessaging.instance.getInitialMessage();
     if (initial != null) emit(initial, _opened);
+    final alert = await NotificationAlerts.channel.invokeMethod<String>(
+      'initial',
+    );
+    final alertId = notificationLink({'schema': '1', 'notificationId': alert});
+    if (alertId != null && !_opened.isClosed) _opened.add(alertId);
   }
 
   @override
@@ -96,10 +111,12 @@ class FirebasePushGateway implements PushGateway {
     if (!_ready) return;
     await FirebaseMessaging.instance.setAutoInitEnabled(false);
     await _registration.reset();
+    await NotificationAlerts.channel.invokeMethod<void>('clear');
   }
 
   @override
   void dispose() {
+    NotificationAlerts.channel.setMethodCallHandler(null);
     _registration.dispose();
     for (final subscription in _subscriptions) {
       unawaited(subscription.cancel());

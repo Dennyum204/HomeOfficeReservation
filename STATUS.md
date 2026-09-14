@@ -1,3 +1,9 @@
+# HO-017 — Android físico e avisos do sistema
+
+PR #53 em revisão draft. Login, troca de conta, pedido, decisão, caixa interna e restauro de sessão após reinício do processo passaram no Samsung em 14/09/2026. Avisos flutuantes FCM reais e abertura do contexto passaram em foreground, background e processo ausente no Samsung. Convite/ativação nativa nova e aceitação completa de distribuição continuam pendentes. Inclusão da nova credencial no coletor cifrado instalada e hash confirmado pelo recibo operacional; timers/disparos preservados, sem forçar backups. Próxima captura agendada ainda não observada.
+
+PR #37 integrado por merge humano 700a80a, pertencente a origin/main. CI de integração: docs/Web/API/Pi passaram; Android falhou ao voltar a entrar depois de expirar a sessão, em diagnóstico. HO-012 ainda não reconciliada como concluída sem CI de integração verde.
+
 # Atualização do piloto Web — 2026-09-14
 
 A imagem 3f8e8ac foi instalada com saúde e hashes públicos JS/CSS verificados; dados/configuração/serviços preservados e backup local de recuperação confirmado. Os quatro checks e pi-preparation passaram. HO-021 integrada com CI de main verde. [Navegação corrigida](docs/HO-012-SIDEBAR.md). Novo refinamento solicitado: [Web sem cabeçalhos globais, Conta e sessão em Definições](docs/HO-012-WEB-HEADER.md); CI de bc55aad passou; instalação desse refinamento ainda aguarda recibo do operador. [Primeiro backup diário agendado confirmado](docs/HO-012-SCHEDULED-BACKUP.md), sem execução manual. Esta atualização documental não altera a imagem da aplicação.

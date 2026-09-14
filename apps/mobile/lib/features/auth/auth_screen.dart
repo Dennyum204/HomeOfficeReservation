@@ -1,3 +1,4 @@
+import '../notifications/notification_alerts.dart';
 import '../../theme/appearance.dart';
 
 import 'dart:async';
@@ -302,16 +303,7 @@ class _AccountWorkspaceState extends State<_AccountWorkspace>
     onForeground: (id) {
       if (!mounted) return;
       unawaited(inbox.refresh());
-      final s = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(s.notificationNew),
-          action: SnackBarAction(
-            label: s.notificationOpen,
-            onPressed: () => workspaceKey.currentState?.openNotification(id),
-          ),
-        ),
-      );
+      unawaited(NotificationAlerts.show(id));
     },
   );
   @override

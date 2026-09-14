@@ -1526,7 +1526,7 @@
       "title": "Android físico e distribuição privada",
       "release": "v1.0",
       "area": "mobile",
-      "status": "planned",
+      "status": "review",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-012"
@@ -1539,7 +1539,9 @@
         "Registar aceitação e limitações da distribuição; não bloquear o piloto inicial Web aprovado."
       ],
       "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/46",
-      "pr_urls": []
+      "pr_urls": [
+        "https://github.com/Dennyum204/HomeOfficeReservation/pull/53"
+      ]
     },
     {
       "id": "HO-018",

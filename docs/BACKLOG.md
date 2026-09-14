@@ -37,7 +37,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-304 | Anexos e tarefas avançadas | v2.0 | fullstack | Planeado | HO-201, HO-202, HO-203 |
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
 | HO-306 | Reativação futura de iOS | ios-reactivation | mobile | Em espera | HO-012 |
-| HO-017 | Android físico e distribuição privada | v1.0 | mobile | Planeado | HO-012 |
+| HO-017 | Android físico e distribuição privada | v1.0 | mobile | Em revisão | HO-012 |
 | HO-018 | Separação definitiva staging e produção | v1.0 | operations | Planeado | HO-012 |
 | HO-019 | Renovação TLS da origem e monitorização geral | v1.0 | operations | Planeado | — |
 | HO-020 | UI e leitura automática de notificações | ui-refresh | fullstack | Concluído | HO-016 |
@@ -705,7 +705,7 @@ Motivo: Adiado por decisão explícita em HO-005; sem data e sem gate core.
 
 ## HO-017 — Android físico e distribuição privada
 
-Release: v1.0 · Área: mobile · Estado: Planeado
+Release: v1.0 · Área: mobile · Estado: Em revisão
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -722,7 +722,7 @@ Critérios de aceitação:
 
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/46
 
-PR: ainda não criado.
+PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/53
 
 ## HO-018 — Separação definitiva staging e produção
 
