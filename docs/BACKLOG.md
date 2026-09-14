@@ -38,7 +38,8 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-305 | Funcionamento offline | v2.0 | mobile | Planeado | HO-201, HO-202, HO-203 |
 | HO-306 | Reativação futura de iOS | ios-reactivation | mobile | Em espera | HO-012 |
 | HO-020 | UI e leitura automática de notificações | ui-refresh | fullstack | Concluído | HO-016 |
-| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Em revisão | HO-020 |
+| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Concluído | HO-020 |
+| HO-017 | Android físico e distribuição privada | v1.0 | mobile | Em curso | HO-012 |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
@@ -754,7 +755,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/51
 
 ## HO-021 — Português, inglês e alemão
 
-Release: ui-refresh · Área: fullstack · Estado: Em revisão
+Release: ui-refresh · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
@@ -775,3 +776,24 @@ Critérios de aceitação:
 Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/50
 
 PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/52
+
+## HO-017 — Android físico e distribuição privada
+
+Release: v1.0 · Área: mobile · Estado: Em curso
+
+Responsável pelo trabalho: Fernando + Codex.
+
+Dependências: HO-012
+
+Funcionalidades: Preparação/fundação da release.
+
+Critérios de aceitação:
+
+- Preservar o alvo Android anteriormente incluído em HO-012; selecionar e autorizar a distribuição privada antes de distribuir APKs.
+- Assinatura válida com chaves protegidas fora do Git e procedimento de atualização/recuperação documentado.
+- Instalar num Android físico e validar convite/ativação, login, pedido, decisão e notificações com os papéis autorizados; não inferir sucesso a partir do browser ou emulador.
+- Registar aceitação e limitações da distribuição; não bloquear o piloto inicial Web aprovado.
+
+Issue: https://github.com/Dennyum204/HomeOfficeReservation/issues/46
+
+PR: ainda não criado.

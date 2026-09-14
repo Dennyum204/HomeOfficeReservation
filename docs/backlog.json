@@ -1543,7 +1543,7 @@
       "title": "Português, inglês e alemão",
       "release": "ui-refresh",
       "area": "fullstack",
-      "status": "review",
+      "status": "done",
       "owner": "Fernando + Codex",
       "depends_on": [
         "HO-020"
@@ -1565,8 +1565,30 @@
       "notes": [
         "Implementação PT/EN/DE Web/Android no PR #52, após integração verificada de HO-020. Preferência local persistente e formatos pt-PT/en-GB/de-CH; contratos e dados preservados.",
         "Verificação local: 18 unitários Web, 58 Flutter, 36 E2E existentes e 4 de idiomas; 178 contratos sem divergência; 34 capturas reais. Quatro checks remotos do head final obrigatórios antes de retirar draft.",
-        "Emails e texto push do servidor continuam explicitamente em português; caixa de notificações traduz eventos. Não existe preferência global de destinatário. Sem deployment; PR #37 e piloto Pi preservados."
+        "Emails e texto push do servidor continuam explicitamente em português; caixa de notificações traduz eventos. Não existe preferência global de destinatário. Sem deployment; PR #37 e piloto Pi preservados.",
+        "Merge humano PR #52 em bda687c76428eb854aef43c65e7de049e0ca394f, ancestral de origin/main; quatro checks de integração verdes nos runs 34790177193 e 34790177165."
       ]
+    },
+    {
+      "id": "HO-017",
+      "title": "Android físico e distribuição privada",
+      "release": "v1.0",
+      "area": "mobile",
+      "status": "in_progress",
+      "owner": "Fernando + Codex",
+      "depends_on": [
+        "HO-012"
+      ],
+      "features": [],
+      "acceptance": [
+        "Preservar o alvo Android anteriormente incluído em HO-012; selecionar e autorizar a distribuição privada antes de distribuir APKs.",
+        "Assinatura válida com chaves protegidas fora do Git e procedimento de atualização/recuperação documentado.",
+        "Instalar num Android físico e validar convite/ativação, login, pedido, decisão e notificações com os papéis autorizados; não inferir sucesso a partir do browser ou emulador.",
+        "Registar aceitação e limitações da distribuição; não bloquear o piloto inicial Web aprovado."
+      ],
+      "issue_url": "https://github.com/Dennyum204/HomeOfficeReservation/issues/46",
+      "pr_urls": [],
+      "notes": "Instalação privada USB selecionada pelo responsável: Android físico ligado ao piloto HTTPS e ícone com o monograma da Web. Assinatura protegida fora do Git; instalação/percursos e limitações registados separadamente. Não declarar HO-017 concluída antes dos critérios restantes."
     }
   ],
   "repository_url": "https://github.com/Dennyum204/HomeOfficeReservation"

@@ -1,3 +1,9 @@
+# Instalação Android privada
+
+HO-017 selecionada para instalação USB no telemóvel do responsável, ligada ao piloto HTTPS. Ícone baseado no monograma da Web; assinatura privada. Não equivale a validação de todos os percursos físicos ou push. [Procedimento](docs/HO-017-PHONE.md).
+
+HO-021 integrada por PR #52, bda687c, com quatro checks de integração verdes (34790177193/34790177165). Histórico abaixo preservado.
+
 # Estado do projeto
 
 Atualizado: 2026-09-14.
