@@ -1,5 +1,6 @@
 import { useLanguage } from "./i18n/locale";
 import { LanguagePicker } from "./i18n/LanguagePicker";
+import { sidebarCopy } from "./i18n/sidebar";
 import { ContextRead } from "./features/notifications/contextRead";
 import { notificationsApi } from "./features/notifications/api";
 import { csrf } from "./features/auth/api";
@@ -26,6 +27,7 @@ import {
 import "./features/planning/planning.css";
 import "./features/planning/work.css";
 import "./theme/theme.css";
+import "./theme/sidebar.css";
 
 export function App() {
   useLanguage();
@@ -48,6 +50,9 @@ const sections: ShellSection[] = [
   "administration",
 ];
 export function WorkspaceShell() {
+  const language = useLanguage();
+  const [collapsed, setCollapsed] = useState(false);
+  const navigationCopy = sidebarCopy[language];
   const currentSection = (): ShellSection => {
     const path = window.location.pathname.slice(1);
     return sections.includes(path as ShellSection)
@@ -130,22 +135,47 @@ export function WorkspaceShell() {
     );
   }
   return (
-    <div className="app-shell">
+    <div className={`app-shell${collapsed ? " sidebar-collapsed" : ""}`}>
       <a href="#content" className="skip-link">
         {s.skip}
       </a>
       <aside className="sidebar">
-        <a href="#content" className="brand">
-          <span className="brand-mark" aria-hidden="true">
-            h<span>o</span>
-          </span>
-          <span>
-            {s.brand}
-            <small>{s.brandCaption}</small>
-          </span>
-        </a>
+        <div className="sidebar-heading">
+          <a href="#content" className="brand" aria-label={s.brand}>
+            <span className="brand-mark" aria-hidden="true">
+              h<span>o</span>
+            </span>
+            <span className="brand-copy">
+              {s.brand}
+              <small>{s.brandCaption}</small>
+            </span>
+          </a>
+          <button
+            type="button"
+            className="sidebar-toggle"
+            aria-expanded={!collapsed}
+            aria-controls="workspace-navigation"
+            aria-label={
+              collapsed ? navigationCopy.expand : navigationCopy.collapse
+            }
+            title={collapsed ? navigationCopy.expand : navigationCopy.collapse}
+            onClick={() => setCollapsed((value) => !value)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="m14 6-6 6 6 6" />
+            </svg>
+          </button>
+        </div>
         <p className="nav-caption">{s.workspace}</p>
-        <nav aria-label={s.navigation}>
+        <nav id="workspace-navigation" aria-label={s.navigation}>
           {sections
             .filter(
               (key) =>
@@ -155,27 +185,35 @@ export function WorkspaceShell() {
             .map((key) => (
               <button
                 key={key}
+                aria-label={collapsed ? label(key) : undefined}
+                aria-describedby={
+                  collapsed && key === "notifications"
+                    ? "navigation-unread-count"
+                    : undefined
+                }
+                title={collapsed ? label(key) : undefined}
                 aria-current={section === key ? "page" : undefined}
                 onClick={() => setSection(key)}
               >
                 <span className="nav-icon" aria-hidden="true">
                   <AppIcon name={key} />
                 </span>
-                {label(key)}
+                <span className="nav-label">{label(key)}</span>
                 {key === "notifications" && (
-                  <span className="notification-badge" aria-label={n.unread}>
+                  <span
+                    id="navigation-unread-count"
+                    className="notification-badge"
+                    aria-label={n.unread}
+                  >
                     {inbox.count}
                   </span>
                 )}
-                <span className="nav-arrow" aria-hidden="true">
-                  â€º
-                </span>
               </button>
             ))}
         </nav>
         <div className="sidebar-note">
           <div aria-hidden="true" className="route-line">
-            PT <span>Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·Â·</span> CH
+            PT <span /> CH
           </div>
           <p>{s.independent}</p>
         </div>
@@ -273,7 +311,7 @@ export function WorkspaceShell() {
         </main>
         <footer>
           {s.footer}
-          <span>HomeOffice Â· 0.1</span>
+          <span>HomeOffice · 0.1</span>
         </footer>
       </div>
     </div>

@@ -1,3 +1,9 @@
+# Atualização do piloto Web — 2026-09-14
+
+A imagem 9dcc371 foi instalada com saúde e checksum público verificados; dados/configuração/serviços preservados e backup local de recuperação confirmado. HO-021 integrada com CI de main verde. Correção de navegação solicitada posteriormente: [causa, testes e evidência](docs/HO-012-SIDEBAR.md). Nova publicação ainda sujeita aos checks do commit corrigido. O disparo real do backup continua pendente, sem execução manual para o substituir.
+
+## Histórico preservado
+
 # Estado do projeto
 
 Atualizado: 2026-09-14.

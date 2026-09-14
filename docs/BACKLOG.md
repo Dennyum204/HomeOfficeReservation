@@ -41,7 +41,7 @@ Cada linha é um pacote de trabalho delimitado. Pode ser dividido em novos IDs/P
 | HO-018 | Separação definitiva staging e produção | v1.0 | operations | Planeado | HO-012 |
 | HO-019 | Renovação TLS da origem e monitorização geral | v1.0 | operations | Planeado | — |
 | HO-020 | UI e leitura automática de notificações | ui-refresh | fullstack | Concluído | HO-016 |
-| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Em revisão | HO-020 |
+| HO-021 | Português, inglês e alemão | ui-refresh | fullstack | Concluído | HO-020 |
 
 ## HO-000 — Repositório, documentação e tracking GitHub
 
@@ -820,7 +820,7 @@ PR: https://github.com/Dennyum204/HomeOfficeReservation/pull/51
 
 ## HO-021 — Português, inglês e alemão
 
-Release: ui-refresh · Área: fullstack · Estado: Em revisão
+Release: ui-refresh · Área: fullstack · Estado: Concluído
 
 Responsável pelo trabalho: Fernando + Codex.
 
