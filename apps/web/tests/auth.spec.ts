@@ -5,6 +5,10 @@ test("real cookie login restores on reload, expires, and logout removes the sess
   page,
 }) => {
   await signIn(page, "manager");
+  await page
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
   await expect(
     page.getByText("Chefia de teste", { exact: true }),
   ).toBeVisible();
@@ -13,6 +17,10 @@ test("real cookie login restores on reload, expires, and logout removes the sess
     page.getByRole("button", { name: "Terminar sessão", exact: true }),
   ).toBeVisible();
   await page.waitForTimeout(5200); // Real server cookie expiry, short Development-only lifetime.
+  await page
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
   await page
     .getByRole("button", { name: "Verificar sessão", exact: true })
     .click();
@@ -23,6 +31,10 @@ test("real cookie login restores on reload, expires, and logout removes the sess
     0,
   );
   await signIn(page);
+  await page
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
   await page
     .getByRole("button", { name: "Terminar sessão", exact: true })
     .click();

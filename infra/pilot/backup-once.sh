@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Install/activate on the approved Linux host only. No credentials in arguments or logs.
+set -euo pipefail
+umask 077
+: "${HO_CHECKOUT:?absolute checkout}"
+: "${HO_ENV_FILE:?private environment file}"
+: "${HO_EXPORT_ROOT:?private export directory}"
+: "${RESTIC_REPOSITORY:?approved repository}"
+: "${RESTIC_PASSWORD_FILE:?private password file}"
+[[ "$HO_EXPORT_ROOT" == /* && "$HO_CHECKOUT" == /* && "$HO_ENV_FILE" == /* ]]
+case "$HO_EXPORT_ROOT" in
+  /srv/homeoffice-staging/exports|/srv/homeoffice-production/exports) ;;
+  *) echo 'Use the documented environment-specific export directory.' >&2; exit 1 ;;
+esac
+[[ "$(realpath -m -- "$HO_EXPORT_ROOT")" == "$HO_EXPORT_ROOT" ]]
+install -d -m 0700 "$HO_EXPORT_ROOT"
+exec 9>"$HO_EXPORT_ROOT/backup.lock"
+flock -n 9
+target="$HO_EXPORT_ROOT/$(date -u +%Y%m%dT%H%M%SZ)"
+python3 "$HO_CHECKOUT/infra/pilot/operations.py" --env-file "$HO_ENV_FILE" snapshot "$target"
+restic backup "$target" --tag "$(basename "$(dirname "$HO_EXPORT_ROOT")")" --quiet
+restic check --quiet
+date -u +%FT%TZ > "$HO_EXPORT_ROOT/last-success.tmp"
+mv -- "$HO_EXPORT_ROOT/last-success.tmp" "$HO_EXPORT_ROOT/last-success"
+# Retention/prune and local export removal remain explicit operator steps after a verified restore.

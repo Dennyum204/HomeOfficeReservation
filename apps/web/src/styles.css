@@ -715,7 +715,7 @@ footer {
   resize: vertical;
 }
 .auth-card button,
-.account-bar button {
+.account-settings button {
   min-height: 44px;
   padding: 8px 14px;
   border: 1px solid var(--input);
@@ -729,7 +729,7 @@ footer {
   color: var(--primary-foreground);
 }
 .auth-card button:disabled,
-.account-bar button:disabled {
+.account-settings button:disabled {
   opacity: 0.55;
   cursor: wait;
 }

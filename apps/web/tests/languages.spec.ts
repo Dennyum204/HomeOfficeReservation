@@ -23,7 +23,17 @@ test("language selection persists, German forms fit, and user content survives d
     page.getByRole("button", { name: "Abmelden", exact: true }),
   ).toBeVisible();
   for (const mode of ["light", "dark"]) {
-    await choose(page.getByRole("banner").getByRole("combobox"), mode);
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button")
+      .nth(5)
+      .click();
+    await choose(
+      page.locator(".appearance-card").getByRole("combobox", {
+        name: /^(Tema da interface|Interface theme|Oberflächendesign)$/,
+      }),
+      mode,
+    );
     await page
       .getByRole("navigation")
       .getByRole("button", { name: /^Kalender/ })
@@ -82,7 +92,17 @@ test("language selection persists, German forms fit, and user content survives d
   }
   await changeLanguage(page, "Einstellungen", "en");
   for (const mode of ["light", "dark"]) {
-    await choose(page.getByRole("banner").getByRole("combobox"), mode);
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button")
+      .nth(5)
+      .click();
+    await choose(
+      page.locator(".appearance-card").getByRole("combobox", {
+        name: /^(Tema da interface|Interface theme|Oberflächendesign)$/,
+      }),
+      mode,
+    );
     await page
       .getByRole("combobox", { name: "Language" })
       .scrollIntoViewIfNeeded();
@@ -100,6 +120,11 @@ test("language selection persists, German forms fit, and user content survives d
   await expect(
     page.getByRole("combobox", { name: "Filter notifications" }),
   ).toHaveText(/Unread/);
+  await page
+    .locator("#workspace-navigation")
+    .getByRole("button")
+    .nth(5)
+    .click();
   await page.getByRole("button", { name: "Sign out", exact: true }).click();
   await expect(page.getByLabel("Password", { exact: true })).toBeVisible();
   await expect(page.getByRole("combobox", { name: "Language" })).toHaveText(
@@ -117,7 +142,17 @@ test("German administration labels and invitation review remain usable on narrow
   await signIn(page, "admin");
   await changeLanguage(page, "Definições", "de");
   for (const mode of ["light", "dark"]) {
-    await choose(page.getByRole("banner").getByRole("combobox"), mode);
+    await page
+      .locator("#workspace-navigation")
+      .getByRole("button")
+      .nth(5)
+      .click();
+    await choose(
+      page.locator(".appearance-card").getByRole("combobox", {
+        name: /^(Tema da interface|Interface theme|Oberflächendesign)$/,
+      }),
+      mode,
+    );
     await page
       .getByRole("navigation")
       .getByRole("button", { name: /^Administration/ })

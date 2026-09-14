@@ -51,13 +51,14 @@ Não impor cobertura de 100% como substituto dos cenários. Não escrever testes
 
 ## Gate de lançamento core V1
 
-1. HO-000 a HO-007 e HO-010 a HO-012 integrados; HO-008/HO-009 explicitamente excluídos do gate.
+1. HO-000 a HO-007 e HO-010 a HO-015 integrados; HO-008/HO-009 e melhoria visual HO-016 explicitamente excluídos do gate. HO-013/014/015 acrescentados pela decisão de acesso privado em 2026-09-10, sem alterar a evidência dos itens já integrados.
 2. Duas contas locais da aplicação percorrem login/recuperação, pedido, decisão, presença com motivo, conflito e tarefa, sem Microsoft/Outlook configurado.
 3. Calendário próprio autoritativo consistente entre Web/mobile, incluindo Portugal/Suíça, pendentes, alterações e datas/DST; autorização negativa e concorrência validadas.
 4. Web utilizável em desktop e Android distribuído nos alvos acordados. iOS adiado em HO-005 para HO-306, fora dos gates core e sem data. Builds sem assinatura não equivalem a distribuição.
 5. Push real validado no dispositivo; caixa interna funciona com push recusado e falhas externas não perdem notificações.
 6. Migrações, restauro, keyring persistente/protegido, ativação/recuperação de conta e worker de notificações demonstrados em staging. Email de conta não exige fornecedor Microsoft; desenvolvimento usa entrega local segura.
 7. Nenhum defeito que comprometa autorização, datas, perda de decisões ou calendário; limitações/canais de suporte e aceitação do piloto registados.
+8. Titular administrador/colaborador numa conta, chefe associado distinto, sem registo público nem autoaprovação. Convites da aplicação recuperáveis/revogáveis e gestão Web demonstrados; aceitação de APK Firebase não dá acesso aos dados. [Gates por etapa antes de pessoas reais](HO-012-PRIVATE-ACCESS.md).
 
 ## Gates opcionais de integração
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WorkspaceShell } from "./App";
 import { workspaceApi } from "./features/workspace/api";
 
@@ -12,6 +12,24 @@ const metadata = {
 };
 
 describe("workspace shell", () => {
+  beforeEach(() => window.history.replaceState(null, "", "/"));
+  it("restores a direct client route and follows browser back", async () => {
+    window.history.replaceState(null, "", "/tasks");
+    render(<WorkspaceShell />);
+    expect(screen.getByRole("button", { name: "Tarefas" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Pedidos" }));
+    expect(window.location.pathname).toBe("/requests");
+    window.history.back();
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Tarefas" })).toHaveAttribute(
+        "aria-current",
+        "page",
+      ),
+    );
+  });
   it("recovers from an API failure through the real retry control", async () => {
     const call = vi
       .spyOn(workspaceApi, "getWorkspaceInfo")

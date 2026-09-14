@@ -1,0 +1,6 @@
+[Unit]
+Description=Record sanitized HomeOffice backup failure
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/logger -p daemon.err -t homeoffice-backup HO012_BACKUP_FAILED: inspect failed units and backup status; no external backup success claimed

@@ -54,3 +54,6 @@ Com Web/API já em execução e contas privadas autorizadas, `node tools/android
 ## Aceitação Web/Android HO-011
 
 Os rótulos distinguem **Pedir os meus dias de trabalho** de **Exigir presença do colaborador**, e a conta autenticada do colaborador selecionado. Em ecrã estreito, abrir presença/tarefa mostra o detalhe antes da lista, recebe foco e devolve-o à lista ao fechar. As ações de resolução não usam UUIDs como nomes. `tools/core-acceptance.mjs` coordena ensaios reais com Android, sem mocks nem reset de dados. [Matriz, estado privado e sequência exata](../../docs/HO-011-CORE-ACCEPTANCE.md).
+# Build integrado de produção
+
+HO-012 prepara os assets React dentro da imagem ASP.NET, na mesma origem da API, sem Vite em produção. `/calendar`, `/requests`, `/onsite`, `/tasks`, `/notifications` e `/settings` abrem diretamente e acompanham voltar/avançar do browser; login mantém a rota. API inexistente continua 404. [Procedimentos e limites de validação](../../infra/pilot/README.md).

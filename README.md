@@ -4,6 +4,10 @@
 
 **HO-020 — UI e notificações:** caixa Por ler, leitura após contexto autorizado, dropdowns acessíveis e ajustes de calendário/formulários Web/Android. [Implementação, testes e revisão visual](docs/HO-020-UI-NOTIFICATIONS.md).
 
+
+**HO-012 — piloto inicial Web no Raspberry Pi:** [stack e comandos para revisão](infra/pi/README.md), [proposta atual](docs/HO-012-PILOT.md). NAS preservado como histórico; [Ensaio isolado real e medições iniciais](docs/HO-012-PI-TRIAL.md); aceitação manual parcial confirmada (submissão, aprovação, calendário e notificação). [HTTPS público autorizado e verificado](docs/HO-012-HTTPS-PUBLICATION.md) em homeoffice.ferbatech.com; SMTP Brevo ativo, convite recebido e ativado pela aplicação em teste manual; aceitação funcional confirmada, [backup diário agendado confirmado](docs/HO-012-SCHEDULED-BACKUP.md). CI final e conflitos verificados antes de revisão do PR #37; sem lançamento V1.
+
+[Backups externos: envio e restauro verificados](docs/HO-012-BACKUPS.md). R2 privado UE, timers diário/semanal ativos, retenção sete diárias/seis mensais. Alertas externos de falha/ausência/recuperação verificados; primeiro diário agendado confirmado e semanal ainda por observar; recuperação independente com Bitwarden passou. Cópia no PC continua complementar.
 **HO-016 — Identidade visual Web/Android:** tema Claude + adaptado, claro/escuro/sistema, secções de formulário e estados separados por rótulos e ícones. [Tema, contraste e revisão visual](docs/HO-016-VISUAL-THEME.md). Sem alteração de API, dados ou permissões.
 
 **HO-015 — Administração Web:** membros, convites, estado de entrega, papéis e chefias com confirmação e recuperação de respostas perdidas. [Guia e teste isolado](docs/HO-015-WEB-ADMINISTRATION.md). O titular mantém a sua conta de colaborador; o chefe associado decide os pedidos.
@@ -101,4 +105,10 @@ O workflow documental permite `outlook-probe-tests` apenas manualmente com `run_
 
 [Issues com IDs estáveis](https://github.com/Dennyum204/HomeOfficeReservation/issues), [labels](https://github.com/Dennyum204/HomeOfficeReservation/labels) e [milestones core/opcionais](https://github.com/Dennyum204/HomeOfficeReservation/milestones). URLs reais e histórico de mudanças de âmbito no backlog canónico. Repositório público; segredos, configuração privada e dados de calendário ficam fora do Git. Lockfiles, migrações e exemplos seguros devem ser versionados quando existirem.
 
-Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. Alojamento continua pendente; preparação operacional no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), sem autorização de contratação, DNS, deployment ou distribuição. O domínio existente escolhido é ferbatech.com, com `homeoffice.ferbatech.com` e `staging.homeoffice.ferbatech.com`; nenhuma configuração DNS foi aplicada nesta tarefa.
+Codex prepara branches, commits, issues e PRs; Fernando revê e faz merge. Sem auto-merge. HO-013/014/015/016 integrados com [evidência de merge/CI](docs/HO-012-INTEGRATION.md). HO-012 continua no [PR draft #37](https://github.com/Dennyum204/HomeOfficeReservation/pull/37), issue #13 aberta.
+
+Domínio existente **ferbatech.com**, nomes futuros homeoffice.ferbatech.com e staging.homeoffice.ferbatech.com. Nenhum DNS/email alterado, domínio comprado ou alojamento contratado. NAS apenas candidato; conectividade Cloudflare reportada não prova instalação/desempenho. [Acesso privado já implementado e gates operacionais restantes](docs/HO-012-PRIVATE-ACCESS.md). Convites Firebase não concedem acesso à aplicação. Dados/emuladores privados preservados; iOS/Outlook adiados.
+
+Monitorização externa: [integração preparada e decisão pendente](docs/HO-012-BACKUP-MONITORING.md). Healthchecks.io Hobbyist proposto, três checks/US$0, destinatário por indicar; sem conta ou alertas reais. Ensaios simulados não substituem validação externa.
+
+[SMTP real: proposta para revisão](docs/HO-012-SMTP.md). SMTP real preparado para revisão: Brevo Free proposto, remetente no-reply@notificacoes.ferbatech.com, manifesto DNS dependente dos valores reais do fornecedor. Cinco DNS existentes consultados e preservados. Sem conta/credenciais/publicação/envio ou alteração no Pi/backups. docs/HO-012-SMTP.md.

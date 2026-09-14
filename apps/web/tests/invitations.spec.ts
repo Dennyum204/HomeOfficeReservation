@@ -80,6 +80,10 @@ test("administratively invited member accepts through the existing Web screen an
     .getByLabel("Palavra-passe", { exact: true })
     .fill(accounts.employee.password);
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
+  await page
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
   await expect(
     page.getByRole("region", { name: "Conta", exact: true }),
   ).toContainText("Convite Web sintético");

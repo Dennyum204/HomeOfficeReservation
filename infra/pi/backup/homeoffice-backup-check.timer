@@ -1,0 +1,11 @@
+[Unit]
+Description=Weekly full read of encrypted backup repository
+
+[Timer]
+OnCalendar=Sun *-*-* 06:00:00 UTC
+RandomizedDelaySec=15min
+Persistent=true
+Unit=homeoffice-backup-check.service
+
+[Install]
+WantedBy=timers.target

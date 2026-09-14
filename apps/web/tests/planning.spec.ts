@@ -422,6 +422,10 @@ test("lost response replays the exact command after reload; logout clears privat
   await page.keyboard.press("Escape");
   await expect(dialog(page)).toHaveCount(0);
   await page
+    .locator("#workspace-navigation")
+    .getByRole("button", { name: /Definições/ })
+    .click();
+  await page
     .getByRole("button", { name: "Terminar sessão", exact: true })
     .click();
   await expect(

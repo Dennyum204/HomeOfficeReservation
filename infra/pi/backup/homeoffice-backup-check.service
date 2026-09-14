@@ -1,0 +1,23 @@
+[Unit]
+Description=Read and authenticate all HomeOffice remote backup data
+Wants=network-online.target
+After=network-online.target
+OnFailure=homeoffice-backup-failure.service homeoffice-backup-monitor-failure@weekly.service
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStartPre=-/usr/bin/python3 /opt/homeoffice-backup/monitor.py weekly start
+ExecStart=/usr/bin/python3 /opt/homeoffice-backup/backup.py check-full
+ExecStartPost=/usr/bin/python3 /opt/homeoffice-backup/monitor.py weekly success
+TimeoutStartSec=4h
+MemoryMax=512M
+MemorySwapMax=0
+CPUQuota=50%
+Nice=10
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/homeoffice-backup
