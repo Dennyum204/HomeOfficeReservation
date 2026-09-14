@@ -1,5 +1,14 @@
 # HO-012 — Preparação de backups externos automatizados
 
+## Estado atual — 14/09/2026
+
+[Primeiro backup diário realmente agendado confirmado](HO-012-SCHEDULED-BACKUP.md): 03:16:23–03:17:50 UTC, exit 0, snapshot e recibo correlacionados com start/success e reconhecimento HTTPS do monitor ativo. Nenhum backup ou ping foi forçado para esta confirmação. O disparo semanal continua não observado, sem gate adicional. SMTP/convite/ativação e aceitação funcional do piloto Web já validados. HO-017/018/019 preservam o trabalho separado; CI final e ausência de conflitos antes de ready, sem merge automático.
+
+## Histórico e procedimentos
+
+As situações pendentes nas entradas datadas abaixo descrevem o estado anterior e não substituem a evidência atual.
+
+
 2026-09-13 · [PR #37 draft](https://github.com/Dennyum204/HomeOfficeReservation/pull/37) · [issue #13 aberta](https://github.com/Dennyum204/HomeOfficeReservation/issues/13). [ADR-021](adr/ADR-021-pi-encrypted-external-backups.md). **Primeiro envio/restauro R2 verificados e timers ativados; disparos agendados e monitorização externa pendentes.**
 
 ## Ensaio externo concluído em 2026-09-13

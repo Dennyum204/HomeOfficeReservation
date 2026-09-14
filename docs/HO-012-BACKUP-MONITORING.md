@@ -1,5 +1,14 @@
 # HO-012 — Monitorização externa dos backups
 
+## Estado atual — 14/09/2026
+
+[Primeiro backup diário realmente agendado confirmado](HO-012-SCHEDULED-BACKUP.md): 03:16:23–03:17:50 UTC, exit 0, snapshot e recibo correlacionados com start/success e reconhecimento HTTPS do monitor ativo. Nenhum backup ou ping foi forçado para esta confirmação. O disparo semanal continua não observado, sem gate adicional. SMTP/convite/ativação e aceitação funcional do piloto Web já validados. HO-017/018/019 preservam o trabalho separado; CI final e ausência de conflitos antes de ready, sem merge automático.
+
+## Histórico e procedimentos
+
+As situações pendentes nas entradas datadas abaixo descrevem o estado anterior e não substituem a evidência atual.
+
+
 2026-09-13. PR #37 draft: integração instalada e ensaio externo validado; **execuções agendadas ainda por comprovar**. [Backup manual real](HO-012-BACKUPS.md) preservado. [ADR-022](adr/ADR-022-hosted-backup-monitoring.md).
 
 ## Decisão aprovada

@@ -1,6 +1,6 @@
 # Atualização do piloto Web — 2026-09-14
 
-A imagem 3f8e8ac foi instalada com saúde e hashes públicos JS/CSS verificados; dados/configuração/serviços preservados e backup local de recuperação confirmado. Os quatro checks e pi-preparation passaram. HO-021 integrada com CI de main verde. [Navegação corrigida](docs/HO-012-SIDEBAR.md). Novo refinamento solicitado: [Web sem cabeçalhos globais, Conta e sessão em Definições](docs/HO-012-WEB-HEADER.md); publicação desta alteração ainda sujeita à CI final. O disparo real do backup continua pendente, sem execução manual para o substituir.
+A imagem 3f8e8ac foi instalada com saúde e hashes públicos JS/CSS verificados; dados/configuração/serviços preservados e backup local de recuperação confirmado. Os quatro checks e pi-preparation passaram. HO-021 integrada com CI de main verde. [Navegação corrigida](docs/HO-012-SIDEBAR.md). Novo refinamento solicitado: [Web sem cabeçalhos globais, Conta e sessão em Definições](docs/HO-012-WEB-HEADER.md); CI de bc55aad passou; instalação desse refinamento ainda aguarda recibo do operador. [Primeiro backup diário agendado confirmado](docs/HO-012-SCHEDULED-BACKUP.md), sem execução manual. Esta atualização documental não altera a imagem da aplicação.
 
 ## Histórico preservado
 
@@ -18,7 +18,7 @@ Atualização do Pi autorizada em 2026-09-14 para incluir HO-020/021. Preparaç�
 
 ## Âmbito vigente aprovado
 
-Âmbito aprovado: piloto inicial Web no Pi, aceitação funcional anterior válida. HO-017/#46 Android, HO-018/#47 staging/produção e HO-019/#48 TLS/monitorização geral separados e não concluídos. Renovação da origem antes de 11/10/2026. Bloqueios do PR: evidência do backup diário agendado e sinal externo, CI final e conflitos; não acrescentar gates.
+Âmbito aprovado: piloto inicial Web no Pi, com aceitação funcional confirmada. Backup diário realmente agendado em 14/09/2026, 03:16:23–03:17:50 UTC, recibo/snapshot e reconhecimento HTTPS da monitorização correlacionados. HO-017/#46 Android, HO-018/#47 ambientes e HO-019/#48 TLS/monitorização geral continuam separados e não concluídos; renovar a origem antes de 11/10/2026. Resta verificar CI do commit final e conflitos antes de ready; merge humano. O primeiro disparo semanal permanece por observar, sem ser gate adicional.
 
 As referências abaixo ao âmbito mais amplo são históricas e não substituem esta decisão.
 

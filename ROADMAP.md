@@ -4,7 +4,7 @@ Gerado a partir de [docs/backlog.json](docs/backlog.json). Não editar diretamen
 
 Atualizado: 2026-09-14.
 
-Âmbito aprovado: piloto inicial Web no Pi, aceitação funcional anterior válida. HO-017/#46 Android, HO-018/#47 staging/produção e HO-019/#48 TLS/monitorização geral separados e não concluídos. Renovação da origem antes de 11/10/2026. Bloqueios do PR: evidência do backup diário agendado e sinal externo, CI final e conflitos; não acrescentar gates.
+Âmbito aprovado: piloto inicial Web no Pi, com aceitação funcional confirmada. Backup diário realmente agendado em 14/09/2026, 03:16:23–03:17:50 UTC, recibo/snapshot e reconhecimento HTTPS da monitorização correlacionados. HO-017/#46 Android, HO-018/#47 ambientes e HO-019/#48 TLS/monitorização geral continuam separados e não concluídos; renovar a origem antes de 11/10/2026. Resta verificar CI do commit final e conflitos antes de ready; merge humano. O primeiro disparo semanal permanece por observar, sem ser gate adicional.
 
 Cada funcionalidade tem uma release e pelo menos uma tarefa. Mudanças de âmbito/versão exigem um PR com motivo; ideias canceladas mantêm o ID e o histórico.
 
