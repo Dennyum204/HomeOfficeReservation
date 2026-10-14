@@ -67,7 +67,7 @@ jobs:
       - name: iOS device release compilation (unsigned, no deployment)
         run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api.example.invalid
         working-directory: apps/mobile
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ios-evidence
           path: ${{ runner.temp }}/ios-shell.png
